@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: DanaBold;
+  src: url("/font/dana-fanum/dana-fanum\ bold.woff"),
+    url("/font/dana-fanum/dana-fanum\ bold.woff2");
+}
+
+@font-face {
+  font-family: Dana;
+  src: url("/font/dana-fanum/dana-fanum\ regular.woff"),
+    url("/font/dana-fanum/dana-fanum\ regular.woff2");
+}
+
 :root {
   --whiteColor: #fff;
   --blackColor: #121315;
@@ -17,13 +29,22 @@
 @layer base {
   * {
     @apply p-0 m-0 border-0 outline-0 decoration-0 list-none box-border transition-all duration-150;
+    font-family: Dana;
   }
 
   body {
     @apply bg-jv-white w-full max-w-full h-screen min-h-screen relative;
   }
+}
 
+@layer components {
   #root {
     @apply bg-jv-white w-full max-w-full h-full relative;
+  }
+}
+
+@layer utilities {
+  .danaBold {
+    font-family: DanaBold;
   }
 }

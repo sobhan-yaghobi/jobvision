@@ -3,10 +3,9 @@ import { Button } from "antd";
 
 function Home() {
   return (
-    <div className="bg-red-400 ">
-      <Button className="text-jv-primary bg-jv-danger" type="primary">
-        Click Me
-      </Button>
+    <div className="">
+      <Button type="primary">جاب ویژن</Button>
+      <h1>تازه ترین اگهی ها برای شما</h1>
     </div>
   );
 }
