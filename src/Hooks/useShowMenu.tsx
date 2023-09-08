@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { SubMenu } from "../Components/MenuItem/menuItem.type";
+import { Item, SubMenu, menu } from "../Components/MenuItem/menuItem.type";
 
 interface typer {
     isShow: boolean;
@@ -7,13 +7,27 @@ interface typer {
     id: string;
     x: number | null;
     y: number | null;
+    width: number | null;
+}
+
+interface UseShowMenuProps {
+    filtredMenuItem: (ID: string) => void;
 }
 
 const UseShowMenu = (
-    menuData: SubMenu[]
-): [React.RefObject<HTMLLIElement>, boolean, typer, () => void, (ID: string, isMega: boolean) => typer | void, SubMenu] => {
+    menu: SubMenu[]
+): [
+    React.RefObject<HTMLLIElement>,
+    SubMenu,
+    boolean,
+    typer,
+    () => void,
+    (ID: string, isMega: boolean) => typer | void
+] => {
+    console.log("useShowMenu Run");
+
     const elm = useRef<HTMLLIElement>(null);
-    const [mainMenuItem, setMainMenuItem] = useState<SubMenu>({} as SubMenu);
+    const [mainItem, setMainItem] = useState<SubMenu>({} as SubMenu);
     const [isMenuMobile, setIsMenuMobile] = useState(false);
     const [isMenuDesktop, setIsMenuDesktop] = useState<typer>({
         isShow: false,
@@ -21,6 +35,7 @@ const UseShowMenu = (
         id: "",
         x: null,
         y: null,
+        width: null,
     });
 
     const menuMobileFire = () => {
@@ -29,6 +44,7 @@ const UseShowMenu = (
 
     const menuDesktopFire = (ID: string, isMega: boolean) => {
         const position = elm.current?.getBoundingClientRect();
+        setMainItem(menu.filter((item) => item.id === ID)[0]);
 
         setIsMenuDesktop((prev) => {
             if (ID === prev.id) {
@@ -36,27 +52,24 @@ const UseShowMenu = (
                     id: "",
                     isShow: false,
                     isMega,
-                    x: position?.x ? position?.x : null,
-                    y: position?.y ? position?.y : null,
+                    x: position?.x ? position.x : null,
+                    y: position?.y ? position.y : null,
+                    width: position?.width ? position.width : null,
                 };
             } else {
                 return {
                     id: ID,
                     isShow: true,
                     isMega,
-                    x: position?.x ? position?.x : null,
-                    y: position?.y ? position?.y : null,
+                    x: position?.x ? position.x : null,
+                    y: position?.y ? position.y : null,
+                    width: position?.width ? position.width : null,
                 };
             }
         });
     };
 
-    useEffect(() => {
-        const filtredMenu = menuData.filter((item) => item.id === isMenuDesktop.id);
-        setMainMenuItem(filtredMenu[0]);
-    }, [isMenuDesktop.id]);
-
-    return [elm, isMenuMobile, isMenuDesktop, menuMobileFire, menuDesktopFire, mainMenuItem];
+    return [elm, mainItem, isMenuMobile, isMenuDesktop, menuMobileFire, menuDesktopFire];
 };
 
 export default UseShowMenu;

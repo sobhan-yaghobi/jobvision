@@ -489,28 +489,28 @@ export const menu: SubMenu[] = [
                 title: "نوع همکاری",
                 link: "Cooperation",
                 links: [
-                    {
-                        id: uuidGenerator(),
-                        title: "دورکاری",
-                        link: "remote",
-                        sublinks: [
-                            {
-                                id: uuidGenerator(),
-                                title: "در تهران",
-                                link: "remote-in-tehran",
-                            },
-                            {
-                                id: uuidGenerator(),
-                                title: "در مشهد",
-                                link: "remote-in-mashhad",
-                            },
-                            {
-                                id: uuidGenerator(),
-                                title: "با بالاترین حقوق",
-                                link: "remote-max-salary",
-                            },
-                        ],
-                    },
+                    // {
+                    //     id: uuidGenerator(),
+                    //     title: "دورکاری",
+                    //     link: "remote",
+                    //     sublinks: [
+                    //         {
+                    //             id: uuidGenerator(),
+                    //             title: "در تهران",
+                    //             link: "remote-in-tehran",
+                    //         },
+                    //         {
+                    //             id: uuidGenerator(),
+                    //             title: "در مشهد",
+                    //             link: "remote-in-mashhad",
+                    //         },
+                    //         {
+                    //             id: uuidGenerator(),
+                    //             title: "با بالاترین حقوق",
+                    //             link: "remote-max-salary",
+                    //         },
+                    //     ],
+                    // },
                 ],
             },
         ],

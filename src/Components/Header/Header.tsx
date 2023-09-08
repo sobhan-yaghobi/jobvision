@@ -4,10 +4,11 @@ import WhiteLogo from "/Svg/Logo/WhiteColorLogo.svg";
 import MenuIcon from "/Svg/Menu.svg";
 import Button from "../Button/Button";
 import { AnimatePresence, motion } from "framer-motion";
-import { menu } from "../MenuItem/menuItem.type";
+import { Item, SubMenu, menu } from "../MenuItem/menuItem.type";
 import UseShowMenu from "../../Hooks/useShowMenu";
 import MenuItem from "../MenuItem/MenuItem";
-
+import { TreeNode } from "antd/es/tree-select";
+import TreeSelect from "rc-tree-select";
 //? -------------------- Start Mobile Header DropDown Animation --------------------
 const MobileContainerVariants = {
     hidden: {
@@ -77,7 +78,14 @@ const DesktopChildVariants = {
 //? -------------------- Finish Desktop Header DropDown Animation --------------------
 
 const Header: React.FC = () => {
-    const [elm, isMenuMobile, isMenuDesktop, menuMobileFire, menuDesktopFire, filtredMenuItem] = UseShowMenu(menu);
+    // const filtredMenuItem = (ID: string): void => {
+    //     const items = menu.filter((submenu) => submenu.id === ID);
+    //     console.log("items", items);
+
+    //     setMainItem(items[0]);
+    // };
+
+    const [elm, mainItem, isMenuMobile, isMenuDesktop, menuMobileFire, menuDesktopFire] = UseShowMenu(menu);
 
     return (
         <>
@@ -182,7 +190,7 @@ const Header: React.FC = () => {
             </div>
             {/*//? -------------------- Start Desktop Header DropDown -------------------- */}
             <AnimatePresence>
-                {isMenuDesktop.isShow ? (
+                {isMenuDesktop.isShow && mainItem ? (
                     <motion.div
                         variants={DesktopContainerVariants}
                         initial="hidden"
@@ -192,20 +200,44 @@ const Header: React.FC = () => {
                             isMenuDesktop.isMega ? "flex justify-center" : ""
                         }`}
                     >
-                        {isMenuDesktop.isMega && filtredMenuItem ? (
+                        {isMenuDesktop.isMega ? (
                             <motion.div
                                 className="w-11/12 h-[95%] absolute bg-jv-light rounded-b-lg p-2"
                                 variants={DesktopChildVariants}
                             >
-                                <MenuItem menuData={filtredMenuItem} type="DESKTOP"></MenuItem>
+                                <MenuItem menuData={mainItem} type="DESKTOP"></MenuItem>
                             </motion.div>
                         ) : (
                             <motion.div
-                                style={{ left: `${isMenuDesktop.x}px`, top: `${isMenuDesktop.y}px` }}
-                                className="absolute w-24"
+                                style={{
+                                    width: `${isMenuDesktop.width}px`,
+                                    left: `${isMenuDesktop.x}px`,
+                                    top: `${isMenuDesktop.y}px`,
+                                }}
+                                className={`absolute`}
                                 variants={DesktopChildVariants}
                             >
-                                <p className={` bg-red-500`}>ddd</p>
+                                <ul className=" w-72 absolute top-0 right-0 bg-jv-light py-2 px-4 rounded-b-lg">
+                                    {mainItem.items.map((item) => (
+                                        <li
+                                            key={item.id}
+                                            className={`${
+                                                item.links.length ? "cursor-default group" : "cursor-pointer"
+                                            }  mt-2 truncate hover:text-jv-primary`}
+                                        >
+                                            <span className="">{item.title}</span>
+                                            {item.links.length ? (
+                                                <ul className=" w-72 py-2 px-4 rounded-l-lg bg-jv-light -translate-x-1/2 -translate-y-1/2 absolute top-1/2 right-[30%] opacity-0 invisible group-hover:right-1/2 group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                                                    {item.links.map((link) => (
+                                                        <li className="mt-1 text-jv-black hover:text-jv-primary cursor-pointer">
+                                                            {link.title}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            ) : null}
+                                        </li>
+                                    ))}
+                                </ul>
                             </motion.div>
                         )}
                     </motion.div>
@@ -220,7 +252,9 @@ const Header: React.FC = () => {
                         initial="hidden"
                         animate="visible"
                         exit="exit"
-                        className="header-dropwodn-mobile w-full h-full fixed lg:hidden top-0 right-0 bg-jv-primary z-10 text-right"
+                        className={`header-dropwodn-mobile w-full h-full fixed lg:hidden top-0 right-0 bg-jv-primary  text-right ${
+                            isMenuMobile ? "z-20" : "z-10"
+                        }`}
                     >
                         <div className="p-2 sm:px-5 w-full flex items-center justify-between">
                             <Button noBorder ClickHandler={menuMobileFire} textColor="light" isLoading={false}>
@@ -233,6 +267,7 @@ const Header: React.FC = () => {
 
                         <motion.div className="px-5" variants={MobileChildVariants}>
                             {/* <Menu type="Mobile" menuData={megaMenus}></Menu> */}
+                            <div></div>
                         </motion.div>
                     </motion.div>
                 ) : null}
