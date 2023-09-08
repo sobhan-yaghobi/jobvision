@@ -3,49 +3,92 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: DanaBold;
-  src: url("/font/dana-fanum/dana-fanum\ bold.woff"),
-    url("/font/dana-fanum/dana-fanum\ bold.woff2");
+    font-family: DanaBold;
+    src: url("/font/dana-fanum/dana-fanum\ bold.woff"), url("/font/dana-fanum/dana-fanum\ bold.woff2");
 }
 
 @font-face {
-  font-family: Dana;
-  src: url("/font/dana-fanum/dana-fanum\ regular.woff"),
-    url("/font/dana-fanum/dana-fanum\ regular.woff2");
+    font-family: Dana;
+    src: url("/font/dana-fanum/dana-fanum\ regular.woff"), url("/font/dana-fanum/dana-fanum\ regular.woff2");
 }
 
 :root {
-  --whiteColor: #fff;
-  /* --whiteColor: #e9e9e9; */
-  --blackColor: #121315;
-  --primaryColor: #5660f2;
-  --lightColor: #f8f9fa;
-  --darkColor: #4a4e57;
-  --dangerColor: #fa5555;
-  --successColor: #45c26f;
-  --warningColor: #e1bc29;
-  --blueColor: #0fa5e9;
+    --whiteColor: #fff;
+    /* --whiteColor: #e9e9e9; */
+    --blackColor: #121315;
+    --primaryColor: #5660f2;
+    --lightColor: #f8f9fa;
+    --darkColor: #4a4e57;
+    --dangerColor: #fa5555;
+    --successColor: #45c26f;
+    --warningColor: #e1bc29;
+    --blueColor: #0fa5e9;
 }
 
 @layer base {
-  * {
-    @apply p-0 m-0 border-0 outline-0 decoration-0 list-none box-border transition-all duration-150;
-    font-family: Dana;
-  }
+    * {
+        @apply p-0 m-0 border-0 outline-0 decoration-transparent list-none box-border transition-all duration-150;
+        font-family: Dana;
+        direction: rtl;
+    }
 
-  body {
-    @apply bg-jv-white w-full max-w-full h-screen min-h-screen relative;
-  }
+    body {
+        @apply bg-jv-white w-full max-w-full h-screen min-h-screen relative;
+    }
 }
 
 @layer components {
-  #root {
-    @apply bg-jv-white w-full max-w-full h-full relative;
-  }
+    #root {
+        @apply bg-jv-white w-full max-w-full h-full relative;
+    }
+
+    .current-mega-height {
+        height: calc(100dvh - 5rem);
+        background-color: rgba(0, 0, 0, 0.5);
+    }
 }
 
 @layer utilities {
-  .danaBold {
-    font-family: DanaBold;
-  }
+    .danaBold {
+        font-family: DanaBold;
+    }
+
+    .menu__item {
+        @apply select-none cursor-pointer h-full flex items-center mx-2 text-sm hover:text-jv-primary border-b-2 border-solid;
+    }
+
+    /* .menu__item__item {
+        @apply w-full h-[27rem] max-h-[27rem] overflow-y-auto  absolute top-14 mx-2 right-0
+      transition-none duration-0 group-hover:visible group-hover:opacity-100;
+    } */
+
+    .li__item {
+        width: 20%;
+        margin: 0.3rem;
+        border-radius: 8px;
+        /*flex grow may alter aspect ratio depending on images */
+        flex-grow: 1;
+    }
+
+    /* .li__item:nth-of-type(4n + 1) {
+        order: 1;
+    }
+    .li__item:nth-of-type(4n + 2) {
+        order: 2;
+    }
+    .li__item:nth-of-type(4n + 3) {
+        order: 3;
+    }
+    .li__item:nth-of-type(4n) {
+        order: 4;
+    }
+
+    .break {
+        flex-basis: 100%;
+        width: 10px;
+        margin: 0;
+        content: "";
+        padding: 0;
+        background-color: red;
+    } */
 }
