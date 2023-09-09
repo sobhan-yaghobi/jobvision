@@ -23,6 +23,7 @@
     --successColor: #45c26f;
     --warningColor: #e1bc29;
     --blueColor: #0fa5e9;
+    --backgroundColor: rgba(0, 0, 0, 0.5);
 }
 
 @layer base {
@@ -44,7 +45,6 @@
 
     .current-mega-height {
         height: calc(100dvh - 5rem);
-        background-color: rgba(0, 0, 0, 0.5);
     }
 }
 
@@ -56,39 +56,4 @@
     .menu__item {
         @apply select-none cursor-pointer h-full flex items-center mx-2 text-sm hover:text-jv-primary border-b-2 border-solid;
     }
-
-    /* .menu__item__item {
-        @apply w-full h-[27rem] max-h-[27rem] overflow-y-auto  absolute top-14 mx-2 right-0
-      transition-none duration-0 group-hover:visible group-hover:opacity-100;
-    } */
-
-    .li__item {
-        width: 20%;
-        margin: 0.3rem;
-        border-radius: 8px;
-        /*flex grow may alter aspect ratio depending on images */
-        flex-grow: 1;
-    }
-
-    /* .li__item:nth-of-type(4n + 1) {
-        order: 1;
-    }
-    .li__item:nth-of-type(4n + 2) {
-        order: 2;
-    }
-    .li__item:nth-of-type(4n + 3) {
-        order: 3;
-    }
-    .li__item:nth-of-type(4n) {
-        order: 4;
-    }
-
-    .break {
-        flex-basis: 100%;
-        width: 10px;
-        margin: 0;
-        content: "";
-        padding: 0;
-        background-color: red;
-    } */
 }

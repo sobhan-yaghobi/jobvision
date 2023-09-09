@@ -4,8 +4,8 @@ import Button from "../../Components/Button/Button";
 function Home() {
     return (
         <>
-            <div className="px-24 py-10">
-                <div className="w-full h-[80dvh] bg-jv-primary flex items-center justify-center text-jv-white">landing</div>
+            <div className="px-3 py-5 lg:px-24 lg:py-10">
+                <div className="w-full h-[80dvh] flex items-center justify-center text-jv-white">landing</div>
                 {/* <nav className="bg-white border-gray-200 dark:bg-gray-900">
           <div className="flex flex-wrap items-center justify-between max-w-screen-xl mx-auto p-4">
             <div

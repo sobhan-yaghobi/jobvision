@@ -1,7 +1,8 @@
-import React, { useRef, useState, useEffect } from "react";
-import { Item, SubMenu, menu } from "../Components/MenuItem/menuItem.type";
+import React, { useRef, useState } from "react";
+import { Item, Link, SubMenu, menu } from "../Components/MenuItem/menuItem.type";
 
-interface typer {
+interface DesktopMenuType {
+    mainItem: SubMenu;
     isShow: boolean;
     isMega: boolean;
     id: string;
@@ -10,26 +11,31 @@ interface typer {
     width: number | null;
 }
 
-interface UseShowMenuProps {
-    filtredMenuItem: (ID: string) => void;
+interface MobileMenuType {
+    menuData: SubMenu[] | SubMenu | Item | Link;
+    isShow: boolean;
+    type: "Submenus" | "Item" | "Link";
+    goAnimationTo: "Forward" | "Back";
 }
 
 const UseShowMenu = (
     menu: SubMenu[]
 ): [
     React.RefObject<HTMLLIElement>,
-    SubMenu,
-    boolean,
-    typer,
+    MobileMenuType,
+    DesktopMenuType,
     () => void,
-    (ID: string, isMega: boolean) => typer | void
+    (ID: string, isMega: boolean) => DesktopMenuType | void
 ] => {
-    console.log("useShowMenu Run");
-
     const elm = useRef<HTMLLIElement>(null);
-    const [mainItem, setMainItem] = useState<SubMenu>({} as SubMenu);
-    const [isMenuMobile, setIsMenuMobile] = useState(false);
-    const [isMenuDesktop, setIsMenuDesktop] = useState<typer>({
+    const [isMenuMobile, setIsMenuMobile] = useState<MobileMenuType>({
+        menuData: [] as SubMenu[],
+        isShow: false,
+        type: "Submenus",
+        goAnimationTo: "Back",
+    });
+    const [isMenuDesktop, setIsMenuDesktop] = useState<DesktopMenuType>({
+        mainItem: {} as SubMenu,
         isShow: false,
         isMega: false,
         id: "",
@@ -39,16 +45,17 @@ const UseShowMenu = (
     });
 
     const menuMobileFire = () => {
-        setIsMenuMobile((prev) => (prev = !prev));
+        setIsMenuMobile((prev) => ({ ...prev, isShow: !prev.isShow }));
     };
 
     const menuDesktopFire = (ID: string, isMega: boolean) => {
         const position = elm.current?.getBoundingClientRect();
-        setMainItem(menu.filter((item) => item.id === ID)[0]);
+        const mainItem = menu.filter((item) => item.id === ID)[0];
 
         setIsMenuDesktop((prev) => {
             if (ID === prev.id) {
                 return {
+                    mainItem: {} as SubMenu,
                     id: "",
                     isShow: false,
                     isMega,
@@ -58,6 +65,7 @@ const UseShowMenu = (
                 };
             } else {
                 return {
+                    mainItem: mainItem,
                     id: ID,
                     isShow: true,
                     isMega,
@@ -69,7 +77,7 @@ const UseShowMenu = (
         });
     };
 
-    return [elm, mainItem, isMenuMobile, isMenuDesktop, menuMobileFire, menuDesktopFire];
+    return [elm, isMenuMobile, isMenuDesktop, menuMobileFire, menuDesktopFire];
 };
 
 export default UseShowMenu;

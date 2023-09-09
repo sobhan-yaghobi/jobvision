@@ -1,12 +1,12 @@
 import uuidGenerator from "../../Utils/UuidGenerator";
 
-interface SubLink {
+export interface SubLink {
     id: string;
     title: string;
     link: string;
 }
 
-interface Link extends SubLink {
+export interface Link extends SubLink {
     sublinks: SubLink[];
 }
 
