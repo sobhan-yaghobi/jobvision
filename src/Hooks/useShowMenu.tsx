@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
-import { Item, Link, SubMenu, menu } from "../Components/MenuItem/menuItem.type";
+import { Link, SubMenu } from "../Components/MenuItem/menuItem.type";
+import { mapValues } from "lodash";
 
 interface DesktopMenuType {
     mainItem: SubMenu;
@@ -10,11 +11,33 @@ interface DesktopMenuType {
     y: number | null;
     width: number | null;
 }
+interface isForSubMenu {
+    SpecialType: "isShowSubMenu";
+    data: SubMenu[];
+}
+interface isForItems {
+    SpecialType: "isShowItem";
+    data: SubMenu;
+}
+interface isForLinks {
+    SpecialType: "isShowLinks";
+    data: Link[];
+}
+type menuMobileFireProps = isForSubMenu | isForItems | isForLinks;
 
 interface MobileMenuType {
-    menuData: SubMenu[] | SubMenu | Item | Link;
-    isShow: boolean;
-    type: "Submenus" | "Item" | "Link";
+    menuData: {
+        SubMenu: SubMenu[];
+        Item: SubMenu;
+        Links: Link[];
+    };
+    isOpen: boolean;
+    isShow: {
+        SubMenu: boolean;
+        Item: boolean;
+        Links: boolean;
+    };
+    goButtonTitle: string;
     goAnimationTo: "Forward" | "Back";
 }
 
@@ -23,15 +46,27 @@ const UseShowMenu = (
 ): [
     React.RefObject<HTMLLIElement>,
     MobileMenuType,
+    () => void,
     DesktopMenuType,
+    ({}: menuMobileFireProps) => void,
     () => void,
     (ID: string, isMega: boolean) => DesktopMenuType | void
 ] => {
     const elm = useRef<HTMLLIElement>(null);
+
     const [isMenuMobile, setIsMenuMobile] = useState<MobileMenuType>({
-        menuData: [] as SubMenu[],
-        isShow: false,
-        type: "Submenus",
+        menuData: {
+            SubMenu: [] as SubMenu[],
+            Item: {} as SubMenu,
+            Links: [] as Link[],
+        },
+        isOpen: false,
+        isShow: {
+            SubMenu: false,
+            Item: false,
+            Links: false,
+        },
+        goButtonTitle: "بازگشت",
         goAnimationTo: "Back",
     });
     const [isMenuDesktop, setIsMenuDesktop] = useState<DesktopMenuType>({
@@ -44,8 +79,87 @@ const UseShowMenu = (
         width: null,
     });
 
-    const menuMobileFire = () => {
-        setIsMenuMobile((prev) => ({ ...prev, isShow: !prev.isShow }));
+    const menuMobileFire = ({ SpecialType, data }: menuMobileFireProps) => {
+        if (SpecialType === "isShowSubMenu") {
+            setIsMenuMobile((prev) => ({
+                ...prev,
+                goAnimationTo: "Back",
+                isOpen: true,
+                isShow: {
+                    SubMenu: !prev.isShow.SubMenu,
+                    Item: false,
+                    Links: false,
+                },
+                menuData: {
+                    SubMenu: menu,
+                    Item: {} as SubMenu,
+                    Links: [] as Link[],
+                },
+            }));
+        } else if (SpecialType === "isShowItem") {
+            setIsMenuMobile((prev) => ({
+                ...prev,
+                goAnimationTo: "Back",
+                isOpen: true,
+                isShow: {
+                    SubMenu: false,
+                    Item: !prev.isShow.Item,
+                    Links: false,
+                },
+                menuData: {
+                    SubMenu: prev.menuData.SubMenu,
+                    Item: data,
+                    Links: [] as Link[],
+                },
+            }));
+        } else if (SpecialType === "isShowLinks") {
+            setIsMenuMobile((prev) => ({
+                ...prev,
+                goAnimationTo: "Back",
+                isOpen: true,
+                isShow: {
+                    SubMenu: false,
+                    Item: false,
+                    Links: !prev.isShow.Links,
+                },
+                menuData: {
+                    SubMenu: menu,
+                    Item: prev.menuData.Item,
+                    Links: data,
+                },
+            }));
+        }
+    };
+
+    const backButtonAcion = () => {
+        if (isMenuMobile.isShow.Item) {
+            setIsMenuMobile((prev) => ({
+                ...prev,
+                goAnimationTo: "Forward",
+                isShow: { Item: false, Links: false, SubMenu: true },
+            }));
+        } else if (isMenuMobile.isShow.Links) {
+            setIsMenuMobile((prev) => ({
+                ...prev,
+                goAnimationTo: "Forward",
+                isShow: { Item: true, Links: false, SubMenu: false },
+            }));
+        }
+    };
+
+    const menuMobileClose = () => {
+        const filter = mapValues(isMenuMobile.isShow, (value, property) => {
+            if (property.toString() === "SubMenu") {
+                return true;
+            }
+            return false;
+        });
+        setIsMenuMobile((prev) => ({
+            ...prev,
+            isShow: { ...filter },
+            goAnimationTo: "Back",
+            isOpen: !prev.isOpen,
+        }));
     };
 
     const menuDesktopFire = (ID: string, isMega: boolean) => {
@@ -77,7 +191,7 @@ const UseShowMenu = (
         });
     };
 
-    return [elm, isMenuMobile, isMenuDesktop, menuMobileFire, menuDesktopFire];
+    return [elm, isMenuMobile, backButtonAcion, isMenuDesktop, menuMobileFire, menuMobileClose, menuDesktopFire];
 };
 
 export default UseShowMenu;
