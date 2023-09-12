@@ -136,8 +136,8 @@ const Header: React.FC = () => {
                     {/*//? -------------------- Finish Mobile Header -------------------- */}
 
                     {/*//? -------------------- Start Desktop Header -------------------- */}
-                    <div className="header-desktop w-full h-full lg:px-11 px-24 hidden lg:flex items-center justify-between">
-                        <div className="header-desktop-right w-6/12 h-full mx-2 flex items-center">
+                    <div className="header-desktop w-full h-full px-24 hidden lg:flex items-center justify-between">
+                        <div className="header-desktop-right w-6/12 h-full flex items-center">
                             <section className="flex w-full h-full justify-around">
                                 <div className="lg:w-full flex items-center">
                                     <SubMenuGenerator
@@ -164,8 +164,8 @@ const Header: React.FC = () => {
                                 </div>
                             </section>
                         </div>
-                        <div className="header-desktop-left w-6/12 mx-2 flex items-center justify-end">
-                            <div className="mx-5 flex">
+                        <div className="header-desktop-left w-6/12 flex items-center justify-end">
+                            <div className="mx-5 flex border-l-[1px] border-jv-primary border-solid">
                                 <Button
                                     ClickHandler={() => {
                                         console.log("click");

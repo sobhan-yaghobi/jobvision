@@ -54,6 +54,56 @@
     }
 
     .menu__item {
-        @apply select-none cursor-pointer h-full flex items-center mx-2 text-sm hover:text-jv-primary border-b-2 border-solid;
+        @apply select-none cursor-pointer h-full flex items-center ml-5 text-sm hover:text-jv-primary border-b-2 border-solid;
+    }
+
+    .ShowBox {
+        position: absolute;
+        left: 50%;
+    }
+
+    .ShowBox::before,
+    .ShowBox::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 0;
+        left: 50%;
+    }
+    .ShowBox::before {
+        margin-left: -9px;
+        border-left: 9px solid transparent;
+        border-right: 9px solid transparent;
+    }
+    .ShowBox::after {
+        margin-left: -6px;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+    }
+
+    .ShowBox:is(.ArrowBottom) {
+        top: 100%;
+        transform: translate(-50%, -130%);
+    }
+    .ShowBox:is(.ArrowBottom)::before {
+        top: 100%;
+        border-top: 9px solid #c1c7cd;
+    }
+    .ShowBox:is(.ArrowBottom)::after {
+        bottom: -6px;
+        border-top: 6px solid var(--lightColor);
+    }
+
+    .ShowBox:is(.ArrowTop) {
+        top: 0%;
+        transform: translate(-50%, 30%);
+    }
+    .ShowBox:is(.ArrowTop)::before {
+        bottom: 100%;
+        border-bottom: 9px solid #c1c7cd;
+    }
+    .ShowBox:is(.ArrowTop)::after {
+        top: -6px;
+        border-bottom: 6px solid var(--lightColor);
     }
 }
