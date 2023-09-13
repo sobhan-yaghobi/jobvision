@@ -2,6 +2,7 @@ import React from "react";
 import Button from "../../Components/Button/Button";
 import MapCircle from "../../Components/MapCircle/MapCircle";
 import { motion } from "framer-motion";
+import SearchFrom from "../../Components/SearchFrom/SearchFrom";
 
 const titleSideVariantWrapper = {
     hidden: { opacity: 0 },
@@ -65,7 +66,10 @@ const Home: React.FC = () => {
                     animate="visible"
                     className="col-span-2 row-span-1 h-5/6"
                 >
-                    <div className="w-full h-full bg-jv-primary text-jv-light flex items-center justify-center">d</div>
+                    <div className="w-full h-full flex flex-col items-start justify-end">
+                        <h2 className="my-2 pr-2">دنبال چه شغلی می‌گردید؟</h2>
+                        <SearchFrom></SearchFrom>
+                    </div>
                 </motion.div>
             </div>
         </>

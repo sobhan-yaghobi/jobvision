@@ -54,7 +54,7 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
             >
                 {isLoading ? (
                     <span role="img">
-                        <span className="mr-3">
+                        <span className="ml-3">
                             <motion.svg
                                 animate={{ rotate: 2500 }}
                                 transition={{
