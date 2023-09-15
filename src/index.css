@@ -23,6 +23,8 @@
     --successColor: #45c26f;
     --warningColor: #e1bc29;
     --blueColor: #0fa5e9;
+    --purpleColor: #787ff6;
+    --lightBlueColor: #78d5f5;
     --backgroundColor: rgba(0, 0, 0, 0.5);
 }
 
@@ -44,7 +46,11 @@
     }
 
     .current-mega-height {
-        height: calc(100dvh - 5rem);
+        height: calc(100vh - 5rem);
+    }
+
+    .h-d-screen {
+        height: 100dvh;
     }
 }
 

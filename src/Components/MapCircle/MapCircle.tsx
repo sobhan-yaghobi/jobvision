@@ -86,7 +86,7 @@ const MapCircle: React.FC = () => {
     return (
         <>
             <svg
-                width="100%"
+                xHeight="100%"
                 className="relative"
                 height="100%"
                 viewBox="0 0 500 300"

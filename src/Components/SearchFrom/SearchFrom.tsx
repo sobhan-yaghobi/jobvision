@@ -1,15 +1,13 @@
-import React, { useState } from "react";
-import {} from "antd";
+import React from "react";
 import Input from "../Input/Input";
 import Button from "../Button/Button";
 
 const SearchFrom: React.FC = () => {
-    const [count, setCount] = useState(0);
     return (
         <>
-            <div className="w-full flex items-center justify-between">
+            <div className="w-full flex flex-col items-center justify-between md:flex-row">
                 <Input
-                    ClassName="mx-1"
+                    ClassName="m-1"
                     Placeholder="عنوان شغلی یا شرکت"
                     IsIcon
                     IconSide="Right"
@@ -23,10 +21,10 @@ const SearchFrom: React.FC = () => {
                     }
                 ></Input>
                 <Input
-                    ClassName="mx-1"
+                    ClassName="m-1"
                     Placeholder="گروه شغلی"
                     IsIcon
-                    IconSide="Right"
+                    IconSide="Both"
                     IconRight={
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -51,12 +49,22 @@ const SearchFrom: React.FC = () => {
                             />
                         </svg>
                     }
+                    IconLeft={
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M17 10L15.2527 11.763C13.8592 13.1689 13.1625 13.8719 12.3133 13.9801C12.1053 14.0066 11.8947 14.0066 11.6867 13.9801C10.8375 13.8719 10.1408 13.1689 8.74731 11.763L7 10"
+                                stroke="#2D264B"
+                                strokeWidth="1.5"
+                                strokeLinecap="round"
+                            />
+                        </svg>
+                    }
                 ></Input>
                 <Input
-                    ClassName="mx-1"
+                    ClassName="m-1"
                     Placeholder="شهر"
                     IsIcon
-                    IconSide="Right"
+                    IconSide="Both"
                     IconRight={
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -65,11 +73,21 @@ const SearchFrom: React.FC = () => {
                             />
                         </svg>
                     }
+                    IconLeft={
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M17 10L15.2527 11.763C13.8592 13.1689 13.1625 13.8719 12.3133 13.9801C12.1053 14.0066 11.8947 14.0066 11.6867 13.9801C10.8375 13.8719 10.1408 13.1689 8.74731 11.763L7 10"
+                                stroke="#2D264B"
+                                strokeWidth="1.5"
+                                strokeLinecap="round"
+                            />
+                        </svg>
+                    }
                 ></Input>
                 <Button
                     textColor="primary"
                     size="small"
-                    ClassName="hover:!bg-jv-primary hover:!text-jv-light"
+                    ClassName="hover:!bg-jv-primary hover:!text-jv-light w-full my-1 md:w-auto"
                     isLoading={false}
                     ClickHandler={() => {}}
                 >
