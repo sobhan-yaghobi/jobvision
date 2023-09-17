@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
-import Button from "../../Components/Button/Button";
-import MapCircle from "../../Components/MapCircle/MapCircle";
-import { AnimatePresence, motion } from "framer-motion";
-import SearchFrom from "../../Components/SearchFrom/SearchFrom";
-import AdvertisingBox from "../../Components/AdvertisingBox/AdvertisingBox";
-import { includes, chunk } from "lodash";
 import uuidGenerator from "../../Utils/UuidGenerator";
-import CloseIcon from "/Svg/Close.svg";
 import useWindowsSize from "../../Hooks/useWindowsSize";
+import Button from "../../Components/Button/Button";
+import SearchFrom from "../../Components/SearchFrom/SearchFrom";
+import MapCircle from "../../Components/MapCircle/MapCircle";
+import AdvertisingBox from "../../Components/AdvertisingBox/AdvertisingBox";
+import CloseIcon from "/Svg/Close.svg";
+import { includes, chunk } from "lodash";
+import { AnimatePresence, motion } from "framer-motion";
 
+//? ---------------------------------- Animations
 const titleSideVariantWrapper = {
     hidden: { opacity: 0 },
     visible: {
@@ -86,13 +87,63 @@ const showBoxVarinet = {
     }),
     exit: { opacity: 0, scale: 0.6 },
 };
+//! ---------------------------------- Animations
 
+//? ---------------------------------- ABOUT US
+interface AboutUsBoxType {
+    id: string;
+    title: string;
+    desc: string;
+    iconSrc: string;
+    customClass: string;
+}
+
+const AboutUsItemArray: AboutUsBoxType[] = [
+    {
+        id: uuidGenerator(),
+        title: "کارجوی همراه",
+        desc: "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده گرافیک است.",
+        iconSrc: "/images/worker.webp",
+        customClass: "from-[#f8f9fa] to-[#ec8386] shadow-[-10px_10px_30px_-9px_#ff979a,10px_10px_30px_-9px_#c96f72]",
+    },
+    {
+        id: uuidGenerator(),
+        title: "سازمان های در حال همکاری",
+        desc: "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده گرافیک است.",
+        iconSrc: "/images/skyline.webp",
+        customClass: "from-[#f8f9fa] to-[#A5A8F2] shadow-[-10px_10px_30px_-9px_#9396d7,10px_10px_30px_-9px_#b7baff]",
+    },
+    {
+        id: uuidGenerator(),
+        title: "موقعیت شغلی فعال",
+        desc: "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده گرافیک است.",
+        iconSrc: "/images/job-search.webp",
+        customClass: "from-[#f8f9fa] to-[#90D1F4] shadow-[-10px_10px_30px_-9px_#80bad9,10px_10px_30px_-9px_#a0e8ff]",
+    },
+    {
+        id: uuidGenerator(),
+        title: "استخدام موفق",
+        desc: "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده گرافیک است.",
+        iconSrc: "/images/hiring.webp",
+        customClass: "from-[#f8f9fa] to-[#F5CD8D] shadow-[-10px_10px_30px_-9px_#dab67d,10px_10px_30px_-9px_#ffe49d]",
+    },
+];
+
+//! ---------------------------------- ABOUT US
+
+//? ---------------------------------- WHY Us
 interface WhyUsDescType {
     id: string;
     title: string;
     svg: string;
     iconColor: string;
     iconSrc: string;
+}
+
+interface WhyUsType {
+    mainItems: WhyUsDescType[];
+    mainNumber: number;
+    isShow: boolean;
 }
 
 const whyUsArray: WhyUsDescType[] = [
@@ -153,16 +204,13 @@ const whyUsArray: WhyUsDescType[] = [
         iconSrc: "/images/teamwork.webp",
     },
 ];
-interface WhyUsType {
-    mainItems: WhyUsDescType[];
-    mainNumber: number;
-    isShow: boolean;
-}
+//! ---------------------------------- WHY Us
 
 const Home: React.FC = () => {
     const isEven = (num: number): boolean => num === 0 || !!(num && !(num % 2));
     const [WindowsSize] = useWindowsSize();
 
+    //? ---------------------------------- WHY Us
     const [whyUs, setWhyUs] = useState<WhyUsType>({
         mainItems: [] as WhyUsDescType[],
         isShow: false,
@@ -193,6 +241,7 @@ const Home: React.FC = () => {
     useEffect(() => {
         showWhyUs();
     }, []);
+    //! ---------------------------------- WHY Us
     return (
         <>
             {/*//? -------------------------------------- Landing -------------------------------------- */}
@@ -293,7 +342,13 @@ const Home: React.FC = () => {
             {/*//? -------------------------------------- Advertising & About Us -------------------------------------- */}
             <div className="p-2 md:px-24">
                 <div className="bg-jv-light rounded-3xl">
-                    <div className="py-5 rounded-xl flex flex-col items-center lg:px-4 lg:flex-row-reverse">
+                    <motion.div
+                        variants={showBoxVariants}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        className="py-5 rounded-xl flex flex-col items-center lg:px-4 lg:flex-row-reverse"
+                    >
                         <div className="flex items-center justify-center lg:w-1/2">
                             <img className="w-full sm:w-2/3 md:w-1/2 lg:hidden" src="/images/newsMobile.webp" alt="" />
                             <img className="w-full hidden lg:block" src="/images/newsDesktop.webp" alt="" />
@@ -309,59 +364,42 @@ const Home: React.FC = () => {
                                 مشاهده فرصت های شغلی
                             </Button>
                         </div>
-                    </div>
+                    </motion.div>
                     <div className="mt-28 lg:mt-16 flex flex-col items-center justify-start lg:h-56 lg:relative">
-                        <h1 className="text-jv-primary">جاب ویژن</h1>
+                        <motion.h1
+                            variants={showBoxVariants}
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true }}
+                            className="text-jv-primary"
+                        >
+                            جاب ویژن
+                        </motion.h1>
                         <h2>دستیار استخدامی شما</h2>
                         <div className="w-full h-auto grid grid-cols-4 mt-5">
-                            <div className="col-span-4 md:col-span-2 lg:col-span-1 my-5 h-72 px-3">
-                                <div className="AboutUsBox">
-                                    <span className="AboutUsIconBox from-[#f8f9fa] to-[#ec8386] shadow-[-10px_10px_30px_-9px_#ff979a,10px_10px_30px_-9px_#c96f72]">
-                                        <img className="w-full" src="/images/worker.webp" alt="" />
-                                    </span>
-                                    <h4 className="my-7 danaBold">کارجوی همراه</h4>
-                                    <p>
-                                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده گرافیک
-                                        است.
-                                    </p>
+                            {AboutUsItemArray.map((box, index) => (
+                                <div key={box.id} className="col-span-4 md:col-span-2 lg:col-span-1 my-5 h-72 px-3">
+                                    <motion.div
+                                        initial={{ opacity: 0 }}
+                                        whileInView={{ opacity: 1 }}
+                                        transition={{ delay: index * 0.5 }}
+                                        viewport={{ once: true }}
+                                        className="AboutUsBox"
+                                    >
+                                        <motion.span
+                                            initial={{ scale: 0, rotate: 360 }}
+                                            transition={{ ease: "circIn", bounce: 20, delay: index * 0.5 }}
+                                            whileInView={{ scale: 1, rotate: 0 }}
+                                            viewport={{ once: true }}
+                                            className={`AboutUsIconBox ${box.customClass}`}
+                                        >
+                                            <img className="w-full" src={box.iconSrc} alt="" />
+                                        </motion.span>
+                                        <h4 className="my-7 danaBold">{box.title}</h4>
+                                        <p>{box.desc}</p>
+                                    </motion.div>
                                 </div>
-                            </div>
-                            <div className="col-span-4 md:col-span-2 lg:col-span-1 my-5 h-72 px-3">
-                                <div className="AboutUsBox">
-                                    <span className="AboutUsIconBox from-[#f8f9fa] to-[#A5A8F2] shadow-[-10px_10px_30px_-9px_#9396d7,10px_10px_30px_-9px_#b7baff]">
-                                        <img className="w-full" src="/images/skyline.webp" alt="" />
-                                    </span>
-                                    <h4 className="my-7 danaBold">سازمان‌ های در حال همکاری</h4>
-                                    <p>
-                                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده گرافیک
-                                        است.
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="col-span-4 md:col-span-2 lg:col-span-1 my-5 h-72 px-3">
-                                <div className="AboutUsBox">
-                                    <span className="AboutUsIconBox from-[#f8f9fa] to-[#90D1F4] shadow-[-10px_10px_30px_-9px_#80bad9,10px_10px_30px_-9px_#a0e8ff]">
-                                        <img className="w-full" src="/images/job-search.webp" alt="" />
-                                    </span>
-                                    <h4 className="my-7 danaBold">موقعیت‌ شغلی فعال</h4>
-                                    <p>
-                                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده گرافیک
-                                        است.
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="col-span-4 md:col-span-2 lg:col-span-1 my-5 h-72 px-3">
-                                <div className="AboutUsBox">
-                                    <span className="AboutUsIconBox from-[#f8f9fa] to-[#F5CD8D] shadow-[-10px_10px_30px_-9px_#dab67d,10px_10px_30px_-9px_#ffe49d]">
-                                        <img className="w-full" src="/images/hiring.webp" alt="" />
-                                    </span>
-                                    <h4 className="my-7 danaBold">استخدام موفق</h4>
-                                    <p>
-                                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده گرافیک
-                                        است.
-                                    </p>
-                                </div>
-                            </div>
+                            ))}
                         </div>
                     </div>
                 </div>
@@ -371,7 +409,13 @@ const Home: React.FC = () => {
             <div className="py-10"></div>
             {/*//? -------------------------------------- WHY US ? -------------------------------------- */}
             <div className="w-full min-h-screen lg:h-screen px-4 flex items-center flex-col md:px-10 lg:px-24 lg:flex-row">
-                <div className="lg:w-4/12">
+                <motion.div
+                    variants={showBoxVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    className="lg:w-4/12"
+                >
                     <h1>
                         <p>چرااا ، </p>
                         <span className="text-jv-primary">جاب ویژن</span> ؟
@@ -382,7 +426,7 @@ const Home: React.FC = () => {
                         مورد نیاز، و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد، کتابهای زیادی در شصت و سه
                         درصد گذشت.
                     </p>
-                </div>
+                </motion.div>
                 <div className="w-full h-auto overflow-hidden lg:w-8/12 lg:h-full lg:px-16">
                     <svg
                         className={`hidden lg:block w-full h-full pr-32 relative overflow-visible`}
@@ -462,7 +506,7 @@ const Home: React.FC = () => {
                                 viewport={{ once: true }}
                                 custom={index}
                             >
-                                <div className="w-3/12 md:w-2/12">
+                                <div className="w-2/12 md:w-1/12">
                                     <img className="w-full" src={item.iconSrc} alt="" />
                                 </div>
                                 <p className="mr-5">{item.title}</p>
