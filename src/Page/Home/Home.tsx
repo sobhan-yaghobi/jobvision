@@ -1,10 +1,13 @@
-import React, { useRef, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../../Components/Button/Button";
 import MapCircle from "../../Components/MapCircle/MapCircle";
-import { motion, useAnimation, useInView } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import SearchFrom from "../../Components/SearchFrom/SearchFrom";
 import AdvertisingBox from "../../Components/AdvertisingBox/AdvertisingBox";
-import { includes } from "lodash";
+import { includes, chunk } from "lodash";
+import uuidGenerator from "../../Utils/UuidGenerator";
+import CloseIcon from "/Svg/Close.svg";
+import useWindowsSize from "../../Hooks/useWindowsSize";
 
 const titleSideVariantWrapper = {
     hidden: { opacity: 0 },
@@ -29,7 +32,7 @@ const svgVarinetWrapper = {
     },
 };
 
-const showAdvertisingBoxVariants = {
+const showBoxVariants = {
     hidden: { opacity: 0, scale: 0.8 },
     visible: {
         opacity: 1,
@@ -41,7 +44,7 @@ const showAdvertisingBoxVariants = {
     },
 };
 
-const showAdvertisingBoxVariantsRight = {
+const showAdvertisingBoxRight = {
     hidden: { opacity: 0, x: "100%" },
     visible: {
         opacity: 1,
@@ -53,7 +56,7 @@ const showAdvertisingBoxVariantsRight = {
     },
 };
 
-const showAdvertisingBoxVariantsLeft = {
+const showAdvertisingBoxLeft = {
     hidden: { opacity: 0, x: "-100%" },
     visible: {
         opacity: 1,
@@ -65,11 +68,135 @@ const showAdvertisingBoxVariantsLeft = {
     },
 };
 
+const showWrapperBoxVariant = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+    exit: { opacity: 0 },
+};
+
+const showBoxVarinet = {
+    hidden: { opacity: 0 },
+    visible: (i: number) => ({
+        opacity: 1,
+        transition: {
+            ease: "linear",
+            bounce: 9,
+            delay: i * 0.2,
+        },
+    }),
+    exit: { opacity: 0, scale: 0.6 },
+};
+
+interface WhyUsDescType {
+    id: string;
+    title: string;
+    svg: string;
+    iconColor: string;
+    iconSrc: string;
+}
+
+const whyUsArray: WhyUsDescType[] = [
+    {
+        id: uuidGenerator(),
+        title: "مورد اعتماد",
+        svg: CloseIcon,
+        iconColor: "#F06263",
+        iconSrc: "/images/trust.webp",
+    },
+    {
+        id: uuidGenerator(),
+        title: "هوشمند",
+        svg: CloseIcon,
+        iconColor: "#7551F5",
+        iconSrc: "/images/smart-city.webp",
+    },
+    {
+        id: uuidGenerator(),
+        title: "رزومه ساز",
+        svg: CloseIcon,
+        iconColor: "#F4885F",
+        iconSrc: "/images/resume.webp",
+    },
+    {
+        id: uuidGenerator(),
+        title: "آزمون خودشناسی",
+        svg: CloseIcon,
+        iconColor: "#28BBF3",
+        iconSrc: "/images/mindset.webp",
+    },
+    {
+        id: uuidGenerator(),
+        title: "توانایی ملاقات با مدیران",
+        svg: CloseIcon,
+        iconColor: "#90D142",
+        iconSrc: "/images/conversation.webp",
+    },
+    {
+        id: uuidGenerator(),
+        title: "امکان معرفی کامل به کارفرما",
+        svg: CloseIcon,
+        iconColor: "#F56564",
+        iconSrc: "/images/teacher.webp",
+    },
+    {
+        id: uuidGenerator(),
+        title: "جز شبکه های قوی اجتماعی",
+        svg: CloseIcon,
+        iconColor: "#D1C5F2",
+        iconSrc: "/images/social-media.webp",
+    },
+    {
+        id: uuidGenerator(),
+        title: "همکاری با موسسات ایران",
+        svg: CloseIcon,
+        iconColor: "#F5895D",
+        iconSrc: "/images/teamwork.webp",
+    },
+];
+interface WhyUsType {
+    mainItems: WhyUsDescType[];
+    mainNumber: number;
+    isShow: boolean;
+}
+
 const Home: React.FC = () => {
+    const isEven = (num: number): boolean => num === 0 || !!(num && !(num % 2));
+    const [WindowsSize] = useWindowsSize();
+
+    const [whyUs, setWhyUs] = useState<WhyUsType>({
+        mainItems: [] as WhyUsDescType[],
+        isShow: false,
+        mainNumber: -1,
+    });
+    const showWhyUs = () => {
+        const interVal = setInterval(() => {
+            setWhyUs((prev) => {
+                const arrays = chunk(whyUsArray, 3);
+                console.log("prev.mainnumber", prev.mainNumber);
+
+                const mainNumber = prev.mainNumber === arrays.length - 1 ? 0 : ++prev.mainNumber;
+                console.log("mainNumber", mainNumber);
+
+                const mainItems: WhyUsDescType[] = [...arrays[mainNumber]];
+                return { isShow: true, mainNumber, mainItems };
+            });
+            setTimeout(() => {
+                setWhyUs((prev) => ({
+                    mainItems: [] as WhyUsDescType[],
+                    isShow: false,
+                    mainNumber: prev.mainNumber,
+                }));
+                return () => clearInterval(interVal);
+            }, 3500);
+        }, 4000);
+    };
+    useEffect(() => {
+        showWhyUs();
+    }, []);
     return (
         <>
             {/*//? -------------------------------------- Landing -------------------------------------- */}
-            <div className="current-mega-height overflow-hidden pt-5 px-2 grid grid-cols-2 grid-rows-2 justify-between md:py-2 md:px-10 md:grid-rows-2 md:items-center lg:grid-rows-3 lg:px-24">
+            <div className="h-auto md:current-mega-height-dvh overflow-hidden pt-5 px-2 grid grid-cols-2 grid-rows-2 justify-between  md:py-2 md:px-10 md:grid-rows-2 md:items-center lg:grid-rows-3 lg:px-24">
                 <motion.div
                     variants={titleSideVariantWrapper}
                     initial="hidden"
@@ -121,22 +248,24 @@ const Home: React.FC = () => {
             {/*//! -------------------------------------- Landing -------------------------------------- */}
 
             {/*//? -------------------------------------- Advertising -------------------------------------- */}
-            <div className="xl:h-d-screen px-1 pt-5 flex overflow-hidden justify-center flex-col md:px-10 lg:px-24">
+            <div className="min-h-screen px-1 pt-5 flex overflow-hidden justify-center flex-col md:px-10 lg:px-24">
                 <h1 className="px-2 mb-5 text-xl lg:h-20 lg:mb-0 lg:text-3xl">تازه‌ترین آگهی‌های شغلی برای شما</h1>
-                <div className="w-full xl:current-mega-height grid grid-cols-12 grid-rows-3">
+                <div className="w-full grid grid-cols-12 grid-rows-3">
                     {Array(8)
                         .fill("")
                         .map((value, index) => (
                             <motion.div
                                 key={index + 1}
                                 variants={
-                                    includes([1, 6], index)
-                                        ? showAdvertisingBoxVariants
-                                        : includes([0, 3, 5], index)
-                                        ? showAdvertisingBoxVariantsRight
-                                        : includes([2, 4, 7], index)
-                                        ? showAdvertisingBoxVariantsLeft
-                                        : undefined
+                                    includes([1, 6], index) && WindowsSize.innerWidth >= 1280
+                                        ? showBoxVariants
+                                        : includes([0, 3, 5], index) && WindowsSize.innerWidth >= 1280
+                                        ? showAdvertisingBoxRight
+                                        : includes([2, 4, 7], index) && WindowsSize.innerWidth >= 1280
+                                        ? showAdvertisingBoxLeft
+                                        : WindowsSize.innerWidth < 1280 && isEven(index)
+                                        ? showAdvertisingBoxRight
+                                        : showAdvertisingBoxLeft
                                 }
                                 initial="hidden"
                                 whileInView="visible"
@@ -166,8 +295,8 @@ const Home: React.FC = () => {
                 <div className="bg-jv-light rounded-3xl">
                     <div className="py-5 rounded-xl flex flex-col items-center lg:px-4 lg:flex-row-reverse">
                         <div className="flex items-center justify-center lg:w-1/2">
-                            <img className="w-full sm:w-2/3 md:w-1/2 lg:hidden" src="/images/newsMobile.png" alt="" />
-                            <img className="w-full hidden lg:block" src="/images/newsDesktop.png" alt="" />
+                            <img className="w-full sm:w-2/3 md:w-1/2 lg:hidden" src="/images/newsMobile.webp" alt="" />
+                            <img className="w-full hidden lg:block" src="/images/newsDesktop.webp" alt="" />
                         </div>
                         <div className="flex flex-col justify-center items-center text-center lg:w-1/2 lg:text-right lg:items-start lg:pr-5">
                             <h3>استخدام‌های سراسری و دولتی</h3>
@@ -188,7 +317,7 @@ const Home: React.FC = () => {
                             <div className="col-span-4 md:col-span-2 lg:col-span-1 my-5 h-72 px-3">
                                 <div className="AboutUsBox">
                                     <span className="AboutUsIconBox from-[#f8f9fa] to-[#ec8386] shadow-[-10px_10px_30px_-9px_#ff979a,10px_10px_30px_-9px_#c96f72]">
-                                        <img className="w-full" src="/images/worker.png" alt="" />
+                                        <img className="w-full" src="/images/worker.webp" alt="" />
                                     </span>
                                     <h4 className="my-7 danaBold">کارجوی همراه</h4>
                                     <p>
@@ -200,7 +329,7 @@ const Home: React.FC = () => {
                             <div className="col-span-4 md:col-span-2 lg:col-span-1 my-5 h-72 px-3">
                                 <div className="AboutUsBox">
                                     <span className="AboutUsIconBox from-[#f8f9fa] to-[#A5A8F2] shadow-[-10px_10px_30px_-9px_#9396d7,10px_10px_30px_-9px_#b7baff]">
-                                        <img className="w-full" src="/images/skyline.png" alt="" />
+                                        <img className="w-full" src="/images/skyline.webp" alt="" />
                                     </span>
                                     <h4 className="my-7 danaBold">سازمان‌ های در حال همکاری</h4>
                                     <p>
@@ -212,7 +341,7 @@ const Home: React.FC = () => {
                             <div className="col-span-4 md:col-span-2 lg:col-span-1 my-5 h-72 px-3">
                                 <div className="AboutUsBox">
                                     <span className="AboutUsIconBox from-[#f8f9fa] to-[#90D1F4] shadow-[-10px_10px_30px_-9px_#80bad9,10px_10px_30px_-9px_#a0e8ff]">
-                                        <img className="w-full" src="/images/job-search.png" alt="" />
+                                        <img className="w-full" src="/images/job-search.webp" alt="" />
                                     </span>
                                     <h4 className="my-7 danaBold">موقعیت‌ شغلی فعال</h4>
                                     <p>
@@ -224,7 +353,7 @@ const Home: React.FC = () => {
                             <div className="col-span-4 md:col-span-2 lg:col-span-1 my-5 h-72 px-3">
                                 <div className="AboutUsBox">
                                     <span className="AboutUsIconBox from-[#f8f9fa] to-[#F5CD8D] shadow-[-10px_10px_30px_-9px_#dab67d,10px_10px_30px_-9px_#ffe49d]">
-                                        <img className="w-full" src="/images/hiring.png" alt="" />
+                                        <img className="w-full" src="/images/hiring.webp" alt="" />
                                     </span>
                                     <h4 className="my-7 danaBold">استخدام موفق</h4>
                                     <p>
@@ -239,6 +368,111 @@ const Home: React.FC = () => {
             </div>
             <div className="lg:py-32"></div>
             {/*//! -------------------------------------- Advertising & About Us -------------------------------------- */}
+            <div className="py-10"></div>
+            {/*//? -------------------------------------- WHY US ? -------------------------------------- */}
+            <div className="w-full min-h-screen lg:h-screen px-4 flex items-center flex-col md:px-10 lg:px-24 lg:flex-row">
+                <div className="lg:w-4/12">
+                    <h1>
+                        <p>چرااا ، </p>
+                        <span className="text-jv-primary">جاب ویژن</span> ؟
+                    </h1>
+                    <p className="py-5 text-justify">
+                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است،
+                        چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی
+                        مورد نیاز، و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد، کتابهای زیادی در شصت و سه
+                        درصد گذشت.
+                    </p>
+                </div>
+                <div className="w-full h-auto overflow-hidden lg:w-8/12 lg:h-full lg:px-16">
+                    <svg
+                        className={`hidden lg:block w-full h-full pr-32 relative overflow-visible`}
+                        viewBox="0 0 200 200"
+                    >
+                        <path
+                            className="fill-jv-primary opacity-50"
+                            d="M39.5,-34.9C48.8,-19.8,52.3,-3.6,50.5,14.4C48.7,32.3,41.5,51.9,26.9,60.9C12.2,70,-10,68.4,-31.9,60.2C-53.8,52,-75.3,37,-82,16.2C-88.8,-4.6,-80.8,-31.3,-64.6,-48C-48.5,-64.6,-24.2,-71.3,-4.6,-67.6C15.1,-64,30.2,-50.1,39.5,-34.9Z"
+                            transform="translate(100 100)"
+                        />
+                        <AnimatePresence mode="wait">
+                            {whyUs?.isShow && whyUs.mainItems.length ? (
+                                <motion.foreignObject
+                                    variants={showWrapperBoxVariant}
+                                    initial="hidden"
+                                    animate="visible"
+                                    exit="exit"
+                                    x="10%"
+                                    y="20%"
+                                    className="w-32 h-28 relative overflow-visible cursor-default"
+                                >
+                                    {whyUs.mainItems[0] ? (
+                                        <motion.div
+                                            variants={showBoxVarinet}
+                                            custom={1}
+                                            className="whyUsBox w-28 h-14 p-1 rounded-xl bg-jv-light flex flex-col justify-center top-2 absolute -right-16"
+                                        >
+                                            <div className="w-5 h-5">
+                                                <img className="w-full" src={whyUs.mainItems[0].iconSrc} alt="" />
+                                            </div>
+                                            <p className="text-[8px] mt-1">{whyUs.mainItems[0].title}</p>
+                                        </motion.div>
+                                    ) : null}
+
+                                    {whyUs.mainItems[1] ? (
+                                        <motion.div
+                                            variants={showBoxVarinet}
+                                            custom={2}
+                                            className="whyUsBox w-24 h-16 p-1 rounded-xl bg-jv-light flex flex-col justify-center absolute top-0 -left-6"
+                                        >
+                                            <div className="w-5 h-5">
+                                                <img className="w-full" src={whyUs.mainItems[1].iconSrc} alt="" />
+                                            </div>
+                                            <p className="text-[8px] mt-1">{whyUs.mainItems[1].title}</p>
+                                        </motion.div>
+                                    ) : null}
+
+                                    {whyUs.mainItems[2] ? (
+                                        <motion.div
+                                            variants={showBoxVarinet}
+                                            custom={3}
+                                            className="whyUsBox w-24 h-16 p-1 rounded-xl bg-jv-light flex flex-col justify-center absolute -bottom-8 right-4"
+                                        >
+                                            <div className="w-5 h-5">
+                                                <img className="w-full" src={whyUs.mainItems[2].iconSrc} alt="" />
+                                            </div>
+                                            <p className="text-[8px] mt-1">{whyUs.mainItems[2].title}</p>
+                                        </motion.div>
+                                    ) : null}
+                                </motion.foreignObject>
+                            ) : null}
+                        </AnimatePresence>
+                    </svg>
+                    <div className="w-full h-full grid grid-cols-4 lg:hidden">
+                        {whyUsArray.map((item, index) => (
+                            <motion.div
+                                key={item.id}
+                                style={{ zIndex: -index }}
+                                variants={
+                                    WindowsSize.innerWidth < 1280 && isEven(index)
+                                        ? showAdvertisingBoxRight
+                                        : showAdvertisingBoxLeft
+                                }
+                                className="whyUsBox h-32 m-2 p-1 rounded-xl bg-jv-light flex items-center justify-start col-span-4 md:col-span-2"
+                                initial="hidden"
+                                whileInView="visible"
+                                viewport={{ once: true }}
+                                custom={index}
+                            >
+                                <div className="w-3/12 md:w-2/12">
+                                    <img className="w-full" src={item.iconSrc} alt="" />
+                                </div>
+                                <p className="mr-5">{item.title}</p>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+            {/*//! -------------------------------------- WHY US ? -------------------------------------- */}
+            <div className="py-10"></div>
         </>
     );
 };

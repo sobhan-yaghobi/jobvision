@@ -48,6 +48,9 @@
     .current-mega-height {
         height: calc(100vh - 5rem);
     }
+    .current-mega-height-dvh {
+        height: calc(100dvh - 5rem);
+    }
 
     .h-d-screen {
         height: 100dvh;
@@ -128,5 +131,12 @@
         @apply w-14 p-2 rounded-2xl bg-jv-primary bg-gradient-to-tl;
         background-size: 1000%, 1000%;
         background-position: 2000% 100%;
+    }
+
+    .whyUsBox {
+        /* background: #f8f9fa;
+        box-shadow: inset -20px -20px 60px #d3d4d5, inset 20px 20px 60px #ffffff; */
+        background: #f8f9fa;
+        box-shadow: inset -19px -19px 29px #dadbdc, inset 19px 19px 29px #ffffff;
     }
 }

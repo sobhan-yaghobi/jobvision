@@ -17,7 +17,7 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = ({ data, IsResponsive, IsI
             <div id="ContentBox" className="flex h-4/6">
                 <div id="LogoCompany" className="w-2/12 h-full flex flex-col items-center justify-between p-1">
                     <div className="w-full h-full">
-                        <img className="h-1/2 rounded-lg" src="/images/CompanyLogo.png" alt="" />
+                        <img className="h-1/2 rounded-lg" src="/images/CompanyLogo.webp" alt="" />
                         <span className="flex justify-start gap-1 items-center text-xs">
                             <span id="ScoreSvg" className="w-5">
                                 <svg className="w-full fill-yellow-400" viewBox="0 0 24 24" fill="none">

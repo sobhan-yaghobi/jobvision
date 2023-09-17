@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { sample } from "lodash";
+import uuidGenerator from "../../Utils/UuidGenerator";
 
 interface Messages {
-    id: number;
+    id: string;
     title: string;
 }
 
 const MessageArray: Messages[] = [
-    { id: 1, title: "رایان گستر" },
-    { id: 2, title: "صنعت رایان پارس" },
-    { id: 3, title: "از کی وام" },
-    { id: 4, title: "بانک خاورمیانه" },
-    { id: 5, title: "بازرگانی الماس امید" },
-    { id: 6, title: "بینالود" },
-    { id: 7, title: "ستاک" },
-    { id: 8, title: "خوشگوار" },
-    { id: 9, title: "شرکت و صنایع چوبی پاسارگاد" },
+    { id: uuidGenerator(), title: "رایان گستر" },
+    { id: uuidGenerator(), title: "صنعت رایان پارس" },
+    { id: uuidGenerator(), title: "از کی وام" },
+    { id: uuidGenerator(), title: "بانک خاورمیانه" },
+    { id: uuidGenerator(), title: "بازرگانی الماس امید" },
+    { id: uuidGenerator(), title: "بینالود" },
+    { id: uuidGenerator(), title: "ستاک" },
+    { id: uuidGenerator(), title: "خوشگوار" },
+    { id: uuidGenerator(), title: "شرکت و صنایع چوبی پاسارگاد" },
 ];
 
 interface messageType {
@@ -76,7 +77,6 @@ const MapCircle: React.FC = () => {
                 return () => clearInterval(interVal);
             }, 4000);
         }, 6000);
-        interVal;
     };
 
     useEffect(() => {
