@@ -12,9 +12,11 @@ import { includes, chunk } from "lodash";
 import { AnimatePresence, motion } from "framer-motion";
 import CompanyBox from "../../Components/CompanyBox/CompanyBox";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Navigation } from "swiper/modules";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+
+import Accordion from "../../Components/Accordion/Accordion";
 
 //? ---------------------------------- Animations
 const titleSideVariantWrapper = {
@@ -145,6 +147,7 @@ interface WhyUsDescType {
     svg: string;
     iconColor: string;
     iconSrc: string;
+    desc: string;
 }
 
 interface WhyUsType {
@@ -160,6 +163,7 @@ const whyUsArray: WhyUsDescType[] = [
         svg: CloseIcon,
         iconColor: "#F06263",
         iconSrc: "/images/trust.webp",
+        desc: "دسترسی به بهترین موقعیت‌های کاریابی و مشاهده فرصت‌های استخدام معتبرترین سازمان‌های ایران از جمله مهم‌ترین مزیت‌های سایت کاریابی جاب ویژن است.",
     },
     {
         id: uuidGenerator(),
@@ -167,6 +171,7 @@ const whyUsArray: WhyUsDescType[] = [
         svg: CloseIcon,
         iconColor: "#7551F5",
         iconSrc: "/images/smart-city.webp",
+        desc: "سایت کاریابی جاب ویژن با استفاده از هوش مصنوعی (AI)، عملکرد شما را در سیستم رصد کرده و بر همین اساس، آگهی‌های استخدام مرتبط را از طریق پنل کاربری، ایمیل، ربات تلگرام و در برخی موارد پیامک و نوتیفیکشن به شما پیشنهاد می‌دهد.",
     },
     {
         id: uuidGenerator(),
@@ -174,6 +179,7 @@ const whyUsArray: WhyUsDescType[] = [
         svg: CloseIcon,
         iconColor: "#F4885F",
         iconSrc: "/images/resume.webp",
+        desc: "سایت کاریابی جاب ویژن با استفاده از هوش مصنوعی (AI)، عملکرد شما را در سیستم رصد کرده و بر همین اساس، آگهی‌های استخدام مرتبط را از طریق پنل کاربری، ایمیل، ربات تلگرام و در برخی موارد پیامک و نوتیفیکشن به شما پیشنهاد می‌دهد.",
     },
     {
         id: uuidGenerator(),
@@ -181,6 +187,7 @@ const whyUsArray: WhyUsDescType[] = [
         svg: CloseIcon,
         iconColor: "#28BBF3",
         iconSrc: "/images/mindset.webp",
+        desc: "قبل از اینکه به دنبال فرصت‌های استخدام مناسب بگردید باید خود را بشناسید. سایت استخدام جاب ویژن به کمک معتبرترین آزمون‌ها و با ارائه‌ی گزارش‌های تحلیلی به شما کمک می‌کند به شناخت دقیق‌تری از ویژگی‌های شخصیتی، علائق شغلی، هوش هیجانی (EQ) و سایر جنبه‌های هوش خود مثل حل مسئله، قدرت تحلیل و استدلال برسید.",
     },
     {
         id: uuidGenerator(),
@@ -188,6 +195,7 @@ const whyUsArray: WhyUsDescType[] = [
         svg: CloseIcon,
         iconColor: "#90D142",
         iconSrc: "/images/conversation.webp",
+        desc: "جاب‌ویژن برگزارکننده بزرگترین نمایشگاه‌های کار در کشور است.سازمانها در این رویداد به دنبال ارتقای برند کارفرمایی خود و استخدام بهترین استعدادهای بازار کار هستند پس فرصت مناسبی برای نیروی متخصص فراهم شده تا اطلاعات کافی از سازمانها کسب کرده و شانس خود را برای استخدام شدن در آنها امتحان کنند.",
     },
     {
         id: uuidGenerator(),
@@ -195,6 +203,7 @@ const whyUsArray: WhyUsDescType[] = [
         svg: CloseIcon,
         iconColor: "#F56564",
         iconSrc: "/images/teacher.webp",
+        desc: "در سایت استخدامی جاب ویژن می‌توانید علاوه بر رزومه، اطلاعات بیشتری از خود به کارفرما ارائه کنید تا شانس استخدام بالاتری داشته باشید. نتیجه آزمون‌‌های خودشناسی، نمونه کار، معرفی صوتی، تلفن تماس مدیران و همکاران سابق و نیز نامه اختصاصی برای سازمان‌ها، از جمله امکاناتی هستند که به کمک آن‌ها می‌توانید خود و توانمندی‌هایتان را بهتر به کارفرما معرفی کنید.",
     },
     {
         id: uuidGenerator(),
@@ -202,6 +211,7 @@ const whyUsArray: WhyUsDescType[] = [
         svg: CloseIcon,
         iconColor: "#D1C5F2",
         iconSrc: "/images/social-media.webp",
+        desc: "جاب ویژن در شبکه‌های اجتماعی نیز حضور فعالی دارد و بیش از 400 هزار متخصص و کارجو، صفحه جاب ویژن در لینکدین، تلگرام، اینستاگرام و توییتر را دنبال می‌کنند.",
     },
     {
         id: uuidGenerator(),
@@ -209,6 +219,7 @@ const whyUsArray: WhyUsDescType[] = [
         svg: CloseIcon,
         iconColor: "#F5895D",
         iconSrc: "/images/teamwork.webp",
+        desc: "هرچه مهارت‌های بیشتری داشته باشید در موقعیت‌های شغلی بهتری می‌توانید استخدام شوید. سایت کاریابی جاب ویژن با همکاری بهترین موسسات آموزشی کشور، دوره‌های آموزشی مفید و کاربردی را به شما معرفی می‌کند. پس از شرکت در این دوره‌ها، مدالی در کنار رزومه شما قرار می‌گیرد که باعث تمایز شما از سایر کارجویان می‌شود؛ به این ترتیب، می‌توانید در رقابت کاریابی پیروز شده و در موقعیت شغلی بهتری استخدام شوید.",
     },
 ];
 //! ---------------------------------- WHY Us
@@ -216,11 +227,6 @@ const whyUsArray: WhyUsDescType[] = [
 const Home: React.FC = () => {
     const isEven = (num: number): boolean => num === 0 || !!(num && !(num % 2));
     const [WindowsSize] = useWindowsSize();
-
-    //? ---------------------------------- Company Box
-    const nextElmSwiperElm = useRef<HTMLDivElement>(null);
-    const prevElmSwiperElm = useRef<HTMLDivElement>(null);
-    //! ---------------------------------- Company Box
 
     //? ---------------------------------- WHY Us
     const [whyUs, setWhyUs] = useState<WhyUsType>({
@@ -232,10 +238,8 @@ const Home: React.FC = () => {
         const interVal = setInterval(() => {
             setWhyUs((prev) => {
                 const arrays = chunk(whyUsArray, 3);
-                console.log("prev.mainnumber", prev.mainNumber);
 
                 const mainNumber = prev.mainNumber === arrays.length - 1 ? 0 : ++prev.mainNumber;
-                console.log("mainNumber", mainNumber);
 
                 const mainItems: WhyUsDescType[] = [...arrays[mainNumber]];
                 return { isShow: true, mainNumber, mainItems };
@@ -319,9 +323,8 @@ const Home: React.FC = () => {
             >
                 <Swiper
                     className={`rounded-md`}
-                    slidesPerView={2}
+                    slidesPerView={"auto"}
                     spaceBetween={16}
-                    loop={true}
                     breakpoints={{
                         540: {
                             slidesPerView: 3,
@@ -333,47 +336,20 @@ const Home: React.FC = () => {
                             slidesPerView: 5,
                         },
                     }}
-                    navigation={{
-                        prevEl: prevElmSwiperElm.current,
-                        nextEl: nextElmSwiperElm.current,
-                    }}
+                    navigation={true}
                     autoplay={{
-                        delay: 3500,
+                        delay: 3000,
                         disableOnInteraction: false,
-                        pauseOnMouseEnter: true,
                     }}
                     modules={[Autoplay, Navigation]}
                 >
-                    {Array(20)
+                    {Array(7)
                         .fill("")
                         .map((item, index) => (
                             <SwiperSlide key={index + 1} className="!w-52 !h-64 select-none">
                                 <CompanyBox></CompanyBox>
                             </SwiperSlide>
                         ))}
-
-                    <div className="swiper-button-next after:hidden ml-2" ref={nextElmSwiperElm}>
-                        <Button
-                            ClassName="flex items-center justify-center !py-1"
-                            textColor="light"
-                            size="small"
-                            isLoading={false}
-                            ClickHandler={() => {}}
-                        >
-                            <img src={ArrowLeftSvgWhite} alt="" />
-                        </Button>
-                    </div>
-                    <div className="swiper-button-prev after:hidden mr-2" ref={prevElmSwiperElm}>
-                        <Button
-                            ClassName="flex items-center justify-center !py-1"
-                            textColor="light"
-                            size="small"
-                            isLoading={false}
-                            ClickHandler={() => {}}
-                        >
-                            <img className="rotate-180" src={ArrowLeftSvgWhite} alt="" />
-                        </Button>
-                    </div>
                 </Swiper>
             </motion.div>
             {/*//! -------------------------------------- Company Box Slider -------------------------------------- */}
@@ -423,7 +399,7 @@ const Home: React.FC = () => {
             <div className="py-5"></div>
 
             {/*//? -------------------------------------- Advertising & About Us -------------------------------------- */}
-            <div className="p-2 md:px-24">
+            <div className="p-2 md:px-10 lg:px-24">
                 <div className="bg-jv-light rounded-3xl">
                     <motion.div
                         variants={showBoxVariants}
@@ -465,13 +441,13 @@ const Home: React.FC = () => {
                                     <motion.div
                                         initial={{ opacity: 0 }}
                                         whileInView={{ opacity: 1 }}
-                                        transition={{ delay: index * 0.5 }}
+                                        transition={{ delay: index * 0.3 }}
                                         viewport={{ once: true }}
                                         className="AboutUsBox"
                                     >
                                         <motion.span
                                             initial={{ scale: 0, rotate: 360 }}
-                                            transition={{ ease: "circIn", bounce: 20, delay: index * 0.5 }}
+                                            transition={{ ease: "circIn", bounce: 20, delay: index * 0.4 }}
                                             whileInView={{ scale: 1, rotate: 0 }}
                                             viewport={{ once: true }}
                                             className={`AboutUsIconBox ${box.customClass}`}
@@ -489,11 +465,10 @@ const Home: React.FC = () => {
             </div>
             <div className="lg:py-32"></div>
             {/*//! -------------------------------------- Advertising & About Us -------------------------------------- */}
-
-            <div className="py-10"></div>
+            <div className="py-10 lg:hidden"></div>
 
             {/*//? -------------------------------------- WHY US ? -------------------------------------- */}
-            <div className="w-full min-h-screen lg:h-screen px-4 flex items-center flex-col md:px-10 lg:px-24 lg:flex-row">
+            <div className="w-full min-h-fit lg:h-screen px-4 flex items-center flex-col md:px-10 lg:px-24 lg:flex-row">
                 <motion.div
                     variants={showBoxVariants}
                     initial="hidden"
@@ -575,36 +550,44 @@ const Home: React.FC = () => {
                             ) : null}
                         </AnimatePresence>
                     </svg>
-                    <div className="w-full h-full grid grid-cols-4 lg:hidden">
+                    <div className="w-full h-full flex flex-col lg:hidden">
                         {whyUsArray.map((item, index) => (
-                            <motion.div
+                            <Accordion
                                 key={item.id}
-                                style={{ zIndex: -index }}
-                                variants={
-                                    WindowsSize.innerWidth < 1280 && isEven(index)
-                                        ? showAdvertisingBoxRight
-                                        : showAdvertisingBoxLeft
-                                }
-                                className="whyUsBox h-32 m-2 p-1 rounded-xl bg-jv-light flex items-center justify-start col-span-4 md:col-span-2"
-                                initial="hidden"
-                                whileInView="visible"
-                                viewport={{ once: true }}
-                                custom={index}
-                            >
-                                <div className="w-2/12 md:w-1/12">
-                                    <img className="w-full" src={item.iconSrc} alt="" />
-                                </div>
-                                <p className="mr-5">{item.title}</p>
-                            </motion.div>
+                                title={item.title}
+                                content={item.desc}
+                                isOpen={index === 0 ? true : false}
+                            ></Accordion>
                         ))}
                     </div>
                 </div>
             </div>
             {/*//! -------------------------------------- WHY US ? -------------------------------------- */}
-
             <div className="py-10"></div>
         </>
     );
 };
 
 export default Home;
+
+// {whyUsArray.map((item, index) => (
+//     <motion.div
+//         key={item.id}
+//         style={{ zIndex: -index }}
+//         variants={
+//             WindowsSize.innerWidth < 1280 && isEven(index)
+//                 ? showAdvertisingBoxRight
+//                 : showAdvertisingBoxLeft
+//         }
+//         className="whyUsBox h-32 m-2 p-1 rounded-xl bg-jv-light flex items-center justify-start col-span-4 md:col-span-2"
+//         initial="hidden"
+//         whileInView="visible"
+//         viewport={{ once: true }}
+//         custom={index}
+//     >
+//         <div className="w-2/12 md:w-1/12">
+//             <img className="w-full" src={item.iconSrc} alt="" />
+//         </div>
+//         <p className="mr-5">{item.title}</p>
+//     </motion.div>
+// ))}
