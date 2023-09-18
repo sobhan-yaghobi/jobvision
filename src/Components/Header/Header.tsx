@@ -3,7 +3,7 @@ import PrimaryLogo from "/Svg/Logo/PrimaryColorLogo.svg";
 import WhiteLogo from "/Svg/Logo/WhiteColorLogo.svg";
 import MenuIcon from "/Svg/Menu.svg";
 import CloseIcon from "/Svg/Close.svg";
-import ArrowLeftIcon from "/Svg/ArrowLeft.svg";
+import ArrowLeftIconWhite from "/Svg/ArrowLeftWhiteColor.svg";
 import LeftIcon from "/Svg/Left.svg";
 import Button from "../Button/Button";
 import { AnimatePresence, motion } from "framer-motion";
@@ -257,7 +257,7 @@ const Header: React.FC = () => {
                                         ClassName="w-full flex justify-between items-center border-b-2 border-solid border-jv-light"
                                     >
                                         <span>{MenuMobile.goButtonTitle}</span>
-                                        <img className="rotate-180" src={ArrowLeftIcon} alt="" />
+                                        <img className="rotate-180" src={ArrowLeftIconWhite} alt="" />
                                     </Button>
                                 </div>
                             )}
@@ -272,7 +272,7 @@ const Header: React.FC = () => {
                                         ClickHandler={menuMobileFire}
                                         Data={menu}
                                     >
-                                        <img src={ArrowLeftIcon} alt="" />
+                                        <img src={ArrowLeftIconWhite} alt="" />
                                     </SubMenuGenerator>
                                 ) : MenuMobile.isShow.Item ? (
                                     <ItemGenerator
@@ -284,7 +284,7 @@ const Header: React.FC = () => {
                                         ClickHandler={menuMobileFire}
                                         Data={MenuMobile.menuData.Item}
                                     >
-                                        <img src={ArrowLeftIcon} alt="" />
+                                        <img src={ArrowLeftIconWhite} alt="" />
                                     </ItemGenerator>
                                 ) : MenuMobile.isShow.Links ? (
                                     <LinkGenerator

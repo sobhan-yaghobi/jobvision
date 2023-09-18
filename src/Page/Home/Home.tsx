@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import uuidGenerator from "../../Utils/UuidGenerator";
 import useWindowsSize from "../../Hooks/useWindowsSize";
 import Button from "../../Components/Button/Button";
@@ -6,8 +6,15 @@ import SearchFrom from "../../Components/SearchFrom/SearchFrom";
 import MapCircle from "../../Components/MapCircle/MapCircle";
 import AdvertisingBox from "../../Components/AdvertisingBox/AdvertisingBox";
 import CloseIcon from "/Svg/Close.svg";
+import ArrowLeftSvgWhite from "/Svg/ArrowLeftWhiteColor.svg";
+
 import { includes, chunk } from "lodash";
 import { AnimatePresence, motion } from "framer-motion";
+import CompanyBox from "../../Components/CompanyBox/CompanyBox";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
 
 //? ---------------------------------- Animations
 const titleSideVariantWrapper = {
@@ -210,6 +217,11 @@ const Home: React.FC = () => {
     const isEven = (num: number): boolean => num === 0 || !!(num && !(num % 2));
     const [WindowsSize] = useWindowsSize();
 
+    //? ---------------------------------- Company Box
+    const nextElmSwiperElm = useRef<HTMLDivElement>(null);
+    const prevElmSwiperElm = useRef<HTMLDivElement>(null);
+    //! ---------------------------------- Company Box
+
     //? ---------------------------------- WHY Us
     const [whyUs, setWhyUs] = useState<WhyUsType>({
         mainItems: [] as WhyUsDescType[],
@@ -245,7 +257,7 @@ const Home: React.FC = () => {
     return (
         <>
             {/*//? -------------------------------------- Landing -------------------------------------- */}
-            <div className="h-auto md:current-mega-height-dvh overflow-hidden pt-5 px-2 grid grid-cols-2 grid-rows-2 justify-between  md:py-2 md:px-10 md:grid-rows-2 md:items-center lg:grid-rows-3 lg:px-24">
+            <div className="current-mega-height-dvh md:h-auto overflow-hidden pt-5 px-2 grid grid-cols-2 grid-rows-2 justify-between  md:py-2 md:px-10 md:grid-rows-2 md:items-center lg:grid-rows-3 lg:px-24">
                 <motion.div
                     variants={titleSideVariantWrapper}
                     initial="hidden"
@@ -295,6 +307,77 @@ const Home: React.FC = () => {
                 </motion.div>
             </div>
             {/*//! -------------------------------------- Landing -------------------------------------- */}
+
+            <div className="py-5"></div>
+            {/*//? -------------------------------------- Company Box Slider -------------------------------------- */}
+            <motion.div
+                variants={showBoxVarinet}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="w-full px-2 md:px-10 lg:px-24"
+            >
+                <Swiper
+                    className={`rounded-md`}
+                    slidesPerView={2}
+                    spaceBetween={16}
+                    loop={true}
+                    breakpoints={{
+                        540: {
+                            slidesPerView: 3,
+                        },
+                        768: {
+                            slidesPerView: 4,
+                        },
+                        1024: {
+                            slidesPerView: 5,
+                        },
+                    }}
+                    navigation={{
+                        prevEl: prevElmSwiperElm.current,
+                        nextEl: nextElmSwiperElm.current,
+                    }}
+                    autoplay={{
+                        delay: 3500,
+                        disableOnInteraction: false,
+                        pauseOnMouseEnter: true,
+                    }}
+                    modules={[Autoplay, Navigation]}
+                >
+                    {Array(20)
+                        .fill("")
+                        .map((item, index) => (
+                            <SwiperSlide key={index + 1} className="!w-52 !h-64 select-none">
+                                <CompanyBox></CompanyBox>
+                            </SwiperSlide>
+                        ))}
+
+                    <div className="swiper-button-next after:hidden ml-2" ref={nextElmSwiperElm}>
+                        <Button
+                            ClassName="flex items-center justify-center !py-1"
+                            textColor="light"
+                            size="small"
+                            isLoading={false}
+                            ClickHandler={() => {}}
+                        >
+                            <img src={ArrowLeftSvgWhite} alt="" />
+                        </Button>
+                    </div>
+                    <div className="swiper-button-prev after:hidden mr-2" ref={prevElmSwiperElm}>
+                        <Button
+                            ClassName="flex items-center justify-center !py-1"
+                            textColor="light"
+                            size="small"
+                            isLoading={false}
+                            ClickHandler={() => {}}
+                        >
+                            <img className="rotate-180" src={ArrowLeftSvgWhite} alt="" />
+                        </Button>
+                    </div>
+                </Swiper>
+            </motion.div>
+            {/*//! -------------------------------------- Company Box Slider -------------------------------------- */}
+            <div className="py-10"></div>
 
             {/*//? -------------------------------------- Advertising -------------------------------------- */}
             <div className="min-h-screen px-1 pt-5 flex overflow-hidden justify-center flex-col md:px-10 lg:px-24">
@@ -406,7 +489,9 @@ const Home: React.FC = () => {
             </div>
             <div className="lg:py-32"></div>
             {/*//! -------------------------------------- Advertising & About Us -------------------------------------- */}
+
             <div className="py-10"></div>
+
             {/*//? -------------------------------------- WHY US ? -------------------------------------- */}
             <div className="w-full min-h-screen lg:h-screen px-4 flex items-center flex-col md:px-10 lg:px-24 lg:flex-row">
                 <motion.div
@@ -516,6 +601,7 @@ const Home: React.FC = () => {
                 </div>
             </div>
             {/*//! -------------------------------------- WHY US ? -------------------------------------- */}
+
             <div className="py-10"></div>
         </>
     );
