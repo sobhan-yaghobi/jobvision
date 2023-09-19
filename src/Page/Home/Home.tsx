@@ -301,7 +301,7 @@ const Home: React.FC = () => {
                     animate="visible"
                     className="left-landing col-span-1 row-span-1 hidden md:block lg:row-span-2"
                 >
-                    <MapCircle></MapCircle>
+                    {WindowsSize.innerWidth <= 768 ? null : <MapCircle></MapCircle>}
                 </motion.div>
                 <motion.div
                     variants={titleSideVariantWrapper}
@@ -493,68 +493,71 @@ const Home: React.FC = () => {
                     </p>
                 </motion.div>
                 <div className="w-full h-auto overflow-hidden lg:w-8/12 lg:h-full lg:px-16">
-                    <svg
-                        className={`hidden lg:block w-full h-full pr-32 relative overflow-visible`}
-                        viewBox="0 0 200 200"
-                    >
-                        <path
-                            className="fill-jv-primary opacity-50"
-                            d="M39.5,-34.9C48.8,-19.8,52.3,-3.6,50.5,14.4C48.7,32.3,41.5,51.9,26.9,60.9C12.2,70,-10,68.4,-31.9,60.2C-53.8,52,-75.3,37,-82,16.2C-88.8,-4.6,-80.8,-31.3,-64.6,-48C-48.5,-64.6,-24.2,-71.3,-4.6,-67.6C15.1,-64,30.2,-50.1,39.5,-34.9Z"
-                            transform="translate(100 100)"
-                        />
-                        <AnimatePresence mode="wait">
-                            {whyUs?.isShow && whyUs.mainItems.length ? (
-                                <motion.foreignObject
-                                    variants={showWrapperBoxVariant}
-                                    initial="hidden"
-                                    animate="visible"
-                                    exit="exit"
-                                    x="10%"
-                                    y="20%"
-                                    className="w-32 h-28 relative overflow-visible cursor-default"
-                                >
-                                    {whyUs.mainItems[0] ? (
-                                        <motion.div
-                                            variants={showBoxVarinet}
-                                            custom={1}
-                                            className="whyUsBox w-28 h-14 p-1 rounded-xl bg-jv-light flex flex-col justify-center top-2 absolute -right-16"
-                                        >
-                                            <div className="w-5 h-5">
-                                                <img className="w-full" src={whyUs.mainItems[0].iconSrc} alt="" />
-                                            </div>
-                                            <p className="text-[8px] mt-1">{whyUs.mainItems[0].title}</p>
-                                        </motion.div>
-                                    ) : null}
+                    {WindowsSize.innerWidth <= 1024 ? null : (
+                        <svg
+                            className={`hidden lg:block w-full h-full pr-32 relative overflow-visible`}
+                            viewBox="0 0 200 200"
+                        >
+                            <path
+                                className="fill-jv-primary opacity-50"
+                                d="M39.5,-34.9C48.8,-19.8,52.3,-3.6,50.5,14.4C48.7,32.3,41.5,51.9,26.9,60.9C12.2,70,-10,68.4,-31.9,60.2C-53.8,52,-75.3,37,-82,16.2C-88.8,-4.6,-80.8,-31.3,-64.6,-48C-48.5,-64.6,-24.2,-71.3,-4.6,-67.6C15.1,-64,30.2,-50.1,39.5,-34.9Z"
+                                transform="translate(100 100)"
+                            />
+                            <AnimatePresence mode="wait">
+                                {whyUs?.isShow && whyUs.mainItems.length ? (
+                                    <motion.foreignObject
+                                        variants={showWrapperBoxVariant}
+                                        initial="hidden"
+                                        animate="visible"
+                                        exit="exit"
+                                        x="10%"
+                                        y="20%"
+                                        className="w-32 h-28 relative overflow-visible cursor-default"
+                                    >
+                                        {whyUs.mainItems[0] ? (
+                                            <motion.div
+                                                variants={showBoxVarinet}
+                                                custom={1}
+                                                className="whyUsBox w-28 h-14 p-1 rounded-xl bg-jv-light flex flex-col justify-center top-2 absolute -right-16"
+                                            >
+                                                <div className="w-5 h-5">
+                                                    <img className="w-full" src={whyUs.mainItems[0].iconSrc} alt="" />
+                                                </div>
+                                                <p className="text-[8px] mt-1">{whyUs.mainItems[0].title}</p>
+                                            </motion.div>
+                                        ) : null}
 
-                                    {whyUs.mainItems[1] ? (
-                                        <motion.div
-                                            variants={showBoxVarinet}
-                                            custom={2}
-                                            className="whyUsBox w-24 h-16 p-1 rounded-xl bg-jv-light flex flex-col justify-center absolute top-0 -left-6"
-                                        >
-                                            <div className="w-5 h-5">
-                                                <img className="w-full" src={whyUs.mainItems[1].iconSrc} alt="" />
-                                            </div>
-                                            <p className="text-[8px] mt-1">{whyUs.mainItems[1].title}</p>
-                                        </motion.div>
-                                    ) : null}
+                                        {whyUs.mainItems[1] ? (
+                                            <motion.div
+                                                variants={showBoxVarinet}
+                                                custom={2}
+                                                className="whyUsBox w-24 h-16 p-1 rounded-xl bg-jv-light flex flex-col justify-center absolute top-0 -left-6"
+                                            >
+                                                <div className="w-5 h-5">
+                                                    <img className="w-full" src={whyUs.mainItems[1].iconSrc} alt="" />
+                                                </div>
+                                                <p className="text-[8px] mt-1">{whyUs.mainItems[1].title}</p>
+                                            </motion.div>
+                                        ) : null}
 
-                                    {whyUs.mainItems[2] ? (
-                                        <motion.div
-                                            variants={showBoxVarinet}
-                                            custom={3}
-                                            className="whyUsBox w-24 h-16 p-1 rounded-xl bg-jv-light flex flex-col justify-center absolute -bottom-8 right-4"
-                                        >
-                                            <div className="w-5 h-5">
-                                                <img className="w-full" src={whyUs.mainItems[2].iconSrc} alt="" />
-                                            </div>
-                                            <p className="text-[8px] mt-1">{whyUs.mainItems[2].title}</p>
-                                        </motion.div>
-                                    ) : null}
-                                </motion.foreignObject>
-                            ) : null}
-                        </AnimatePresence>
-                    </svg>
+                                        {whyUs.mainItems[2] ? (
+                                            <motion.div
+                                                variants={showBoxVarinet}
+                                                custom={3}
+                                                className="whyUsBox w-24 h-16 p-1 rounded-xl bg-jv-light flex flex-col justify-center absolute -bottom-8 right-4"
+                                            >
+                                                <div className="w-5 h-5">
+                                                    <img className="w-full" src={whyUs.mainItems[2].iconSrc} alt="" />
+                                                </div>
+                                                <p className="text-[8px] mt-1">{whyUs.mainItems[2].title}</p>
+                                            </motion.div>
+                                        ) : null}
+                                    </motion.foreignObject>
+                                ) : null}
+                            </AnimatePresence>
+                        </svg>
+                    )}
+
                     <div className="w-full h-full flex flex-col lg:hidden">
                         {whyUsArray.map((item, index) => (
                             <Accordion

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { sample } from "lodash";
 import uuidGenerator from "../../Utils/UuidGenerator";
+import { log } from "console";
 
 interface Messages {
     id: string;
