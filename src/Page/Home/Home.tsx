@@ -1,22 +1,27 @@
-import React, { useEffect, useRef, useState } from "react";
-import uuidGenerator from "../../Utils/UuidGenerator";
-import useWindowsSize from "../../Hooks/useWindowsSize";
-import Button from "../../Components/Button/Button";
-import SearchFrom from "../../Components/SearchFrom/SearchFrom";
-import MapCircle from "../../Components/MapCircle/MapCircle";
-import AdvertisingBox from "../../Components/AdvertisingBox/AdvertisingBox";
-import CloseIcon from "/Svg/Close.svg";
-import ArrowLeftSvgWhite from "/Svg/ArrowLeftWhiteColor.svg";
+import React, { useEffect, useState } from "react";
 
+// Functions
+import uuidGenerator from "@/Utils/UuidGenerator";
+import useWindowsSize from "@/Hooks/useWindowsSize";
 import { includes, chunk } from "lodash";
 import { AnimatePresence, motion } from "framer-motion";
-import CompanyBox from "../../Components/CompanyBox/CompanyBox";
+
+// Components
+import Button from "@/Components/Button/Button";
+import SearchFrom from "@/Components/SearchFrom/SearchFrom";
+import MapCircle from "@/Components/MapCircle/MapCircle";
+import AdvertisingBox from "@/Components/AdvertisingBox/AdvertisingBox";
+import CompanyBox from "@/Components/CompanyBox/CompanyBox";
+import Accordion from "@/Components/Accordion/Accordion";
+
+// Icons
+import CloseIcon from "/Svg/Close.svg";
+
+// Slider
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-
-import Accordion from "../../Components/Accordion/Accordion";
 
 //? ---------------------------------- Animations
 const titleSideVariantWrapper = {
@@ -569,25 +574,3 @@ const Home: React.FC = () => {
 };
 
 export default Home;
-
-// {whyUsArray.map((item, index) => (
-//     <motion.div
-//         key={item.id}
-//         style={{ zIndex: -index }}
-//         variants={
-//             WindowsSize.innerWidth < 1280 && isEven(index)
-//                 ? showAdvertisingBoxRight
-//                 : showAdvertisingBoxLeft
-//         }
-//         className="whyUsBox h-32 m-2 p-1 rounded-xl bg-jv-light flex items-center justify-start col-span-4 md:col-span-2"
-//         initial="hidden"
-//         whileInView="visible"
-//         viewport={{ once: true }}
-//         custom={index}
-//     >
-//         <div className="w-2/12 md:w-1/12">
-//             <img className="w-full" src={item.iconSrc} alt="" />
-//         </div>
-//         <p className="mr-5">{item.title}</p>
-//     </motion.div>
-// ))}

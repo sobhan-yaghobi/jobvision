@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { AiOutlineDown } from "react-icons/ai";
 
-import { AnimatePresence, motion } from "framer-motion";
-
 interface AccordionProps {
     title: string;
     content: string;
@@ -26,13 +24,13 @@ const Accordion: React.FC<AccordionProps> = ({ title, content, isOpen }) => {
                 <span className="truncate text-xl">{title}</span>
                 <AiOutlineDown className={`${isActive ? "rotate-180" : ""}`}></AiOutlineDown>
             </div>
-            <div className={`${isActive ? "block" : "hidden"} border border-solid border-jv-primary my-3`}></div>
+            {/* <div className={`${isActive ? "block" : "hidden"} border border-solid border-jv-primary my-3`}></div> */}
             <div
-                className={`accordion-content p-2 relative transition-all duration-300 ${
-                    isActive ? "h-auto visible opacity-1" : "h-0 invisible opacity-0"
+                className={`wrapper overflow-hidden grid transition-all duration-700 ${
+                    isActive ? "grid-rows-1" : "grid-rows-[0fr]"
                 }`}
             >
-                {content}
+                <div className={`accordion-content p-2 relative transition-all duration-300 h-full`}>{content}</div>
             </div>
         </div>
     );
