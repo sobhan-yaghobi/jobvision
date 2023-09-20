@@ -1,8 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState } from "react";
+
+// Functions
 import { sample } from "lodash";
 import uuidGenerator from "../../Utils/UuidGenerator";
-import { log } from "console";
+
+// Custom Hooks
+import useAnimationStop from "../../Hooks/useAnimationStop";
+
+// Components
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Messages {
     id: string;
@@ -26,8 +32,9 @@ interface messageType {
     y: number | undefined;
     title: string;
     isShow: boolean;
-    ArrowIcon: "Top" | "Bottom";
+    ArrowIcon: "Top" | "Bottom" | undefined;
 }
+
 const MapCircle: React.FC = () => {
     const showBoxVariant = {
         hidden: { opacity: 0, scale: 0.8 },
@@ -43,46 +50,48 @@ const MapCircle: React.FC = () => {
 
     const [message, setMessage] = useState<messageType>({} as messageType);
 
-    const activeRandomSvgElm = () => {
-        const interVal = setInterval(() => {
-            const newItem = sample(MessageArray);
-            const number = Math.floor(Math.random() * (916 - 476 + 1) + 476);
-
-            const newElm = document.querySelector<SVGCircleElement>(`#dot-${number}`);
-            newElm?.classList.add("fill-jv-primary");
-
-            const mainIcon = number < 686 && number > 459 ? "Bottom" : "Top";
-            const deActive = (): void =>
-                setMessage({
-                    x: undefined,
-                    y: undefined,
-                    title: "",
-                    isShow: false,
-                    ArrowIcon: mainIcon,
-                });
-
-            if (typeof newElm?.cx !== "undefined" && typeof newItem !== "undefined") {
-                setMessage({
-                    x: Math.ceil(newElm?.cx.animVal.value) - 4,
-                    y: Math.ceil(newElm?.cy.animVal.value) - 4,
-                    title: newItem?.title,
-                    isShow: true,
-                    ArrowIcon: mainIcon,
-                });
-            } else {
-                deActive();
-            }
-            setTimeout(() => {
-                newElm?.classList.remove("fill-jv-primary");
-                deActive();
-                return () => clearInterval(interVal);
-            }, 4000);
-        }, 6000);
+    const stopAnimate = () => {
+        setMessage({
+            x: undefined,
+            y: undefined,
+            title: "",
+            isShow: false,
+            ArrowIcon: undefined,
+        });
     };
 
-    useEffect(() => {
-        activeRandomSvgElm();
-    }, []);
+    const doAnimate = () => {
+        const newItem = sample(MessageArray);
+        const number = Math.floor(Math.random() * (916 - 476 + 1) + 476);
+
+        const newElm = document.querySelector<SVGCircleElement>(`#dot-${number}`);
+        newElm?.classList.add("fill-jv-primary");
+
+        const mainIcon = number < 686 && number > 459 ? "Bottom" : "Top";
+
+        if (typeof newElm?.cx !== "undefined" && typeof newItem !== "undefined") {
+            setMessage({
+                x: Math.ceil(newElm?.cx.animVal.value) - 4,
+                y: Math.ceil(newElm?.cy.animVal.value) - 4,
+                title: newItem?.title,
+                isShow: true,
+                ArrowIcon: mainIcon,
+            });
+        } else {
+            stopAnimate();
+        }
+        setTimeout(() => {
+            newElm?.classList.remove("fill-jv-primary");
+            stopAnimate();
+        }, 4000);
+    };
+
+    useAnimationStop({
+        screen: "md",
+        animation: doAnimate,
+        diActiveAnimation: stopAnimate,
+        intervalTime: 6000,
+    });
 
     return (
         <>

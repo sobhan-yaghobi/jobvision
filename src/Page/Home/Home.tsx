@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 // Functions
 import uuidGenerator from "../../Utils/UuidGenerator";
@@ -13,7 +13,6 @@ import MapCircle from "../../Components/MapCircle/MapCircle";
 import AdvertisingBox from "../../Components/AdvertisingBox/AdvertisingBox";
 import CompanyBox from "../../Components/CompanyBox/CompanyBox";
 import Accordion from "../../Components/Accordion/Accordion";
-
 // Icons
 import CloseIcon from "/Svg/Close.svg";
 
@@ -22,6 +21,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import useAnimationStop from "../../Hooks/useAnimationStop";
 
 //? ---------------------------------- Animations
 const titleSideVariantWrapper = {
@@ -239,29 +239,40 @@ const Home: React.FC = () => {
         isShow: false,
         mainNumber: -1,
     });
-    const showWhyUs = () => {
-        const interVal = setInterval(() => {
-            setWhyUs((prev) => {
-                const arrays = chunk(whyUsArray, 3);
 
-                const mainNumber = prev.mainNumber === arrays.length - 1 ? 0 : ++prev.mainNumber;
-
-                const mainItems: WhyUsDescType[] = [...arrays[mainNumber]];
-                return { isShow: true, mainNumber, mainItems };
-            });
-            setTimeout(() => {
-                setWhyUs((prev) => ({
-                    mainItems: [] as WhyUsDescType[],
-                    isShow: false,
-                    mainNumber: prev.mainNumber,
-                }));
-                return () => clearInterval(interVal);
-            }, 3500);
-        }, 4000);
+    const stopAnimate = () => {
+        setWhyUs({
+            mainItems: [] as WhyUsDescType[],
+            isShow: false,
+            mainNumber: -1,
+        });
     };
-    useEffect(() => {
-        showWhyUs();
-    }, []);
+
+    const doAnimate = () => {
+        setWhyUs((prev) => {
+            const arrays = chunk(whyUsArray, 3);
+
+            const mainNumber = prev.mainNumber === arrays.length - 1 ? 0 : ++prev.mainNumber;
+
+            const mainItems: WhyUsDescType[] = [...arrays[mainNumber]];
+            return { isShow: true, mainNumber, mainItems };
+        });
+        setTimeout(() => {
+            setWhyUs((prev) => ({
+                mainItems: [] as WhyUsDescType[],
+                isShow: false,
+                mainNumber: prev.mainNumber,
+            }));
+        }, 3500);
+    };
+
+    useAnimationStop({
+        screen: "lg",
+        animation: doAnimate,
+        diActiveAnimation: stopAnimate,
+        intervalTime: 4000,
+    });
+
     //! ---------------------------------- WHY Us
     return (
         <>
