@@ -28,26 +28,6 @@
     --backgroundColor: rgba(0, 0, 0, 0.5);
 }
 
-.swiper-button-prev,
-.swiper-button-next {
-    background: var(--primaryColor);
-    color: var(--lightColor);
-    padding: 0.5rem 1.3rem;
-    border-radius: 50%;
-}
-
-.swiper-button-prev:active,
-.swiper-button-next:active {
-    scale: 0.9;
-    box-shadow: 0 0 5px var(--primaryColor);
-}
-
-.swiper-button-prev::after,
-.swiper-button-next::after {
-    color: var(--lightColor);
-    font-size: 20px !important ;
-}
-
 @layer base {
     * {
         @apply p-0 m-0 border-0 outline-0 decoration-transparent list-none box-border transition-all duration-150;

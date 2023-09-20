@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 
 // Functions
-import uuidGenerator from "@/Utils/UuidGenerator";
-import useWindowsSize from "@/Hooks/useWindowsSize";
+import uuidGenerator from "../../Utils/UuidGenerator";
+import useWindowsSize from "../../Hooks/useWindowsSize";
 import { includes, chunk } from "lodash";
 import { AnimatePresence, motion } from "framer-motion";
 
 // Components
-import Button from "@/Components/Button/Button";
-import SearchFrom from "@/Components/SearchFrom/SearchFrom";
-import MapCircle from "@/Components/MapCircle/MapCircle";
-import AdvertisingBox from "@/Components/AdvertisingBox/AdvertisingBox";
-import CompanyBox from "@/Components/CompanyBox/CompanyBox";
-import Accordion from "@/Components/Accordion/Accordion";
+import Button from "../../Components/Button/Button";
+import SearchFrom from "../../Components/SearchFrom/SearchFrom";
+import MapCircle from "../../Components/MapCircle/MapCircle";
+import AdvertisingBox from "../../Components/AdvertisingBox/AdvertisingBox";
+import CompanyBox from "../../Components/CompanyBox/CompanyBox";
+import Accordion from "../../Components/Accordion/Accordion";
 
 // Icons
 import CloseIcon from "/Svg/Close.svg";
