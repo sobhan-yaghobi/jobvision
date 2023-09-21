@@ -42,15 +42,12 @@ const useAnimationStop = ({ screen, diActiveAnimation, animation, intervalTime }
 
     useEffect(() => {
         const isRun = WindowsSize.innerWidth > breakPointSize ? true : false;
-        console.log("isRun", isRun);
 
         if (WindowsSize.innerWidth > breakPointSize && isRun) {
             showWhyUs();
         } else if (WindowsSize.innerWidth <= breakPointSize && isRun) {
             setRunAnimation(false);
             showWhyUs()();
-            console.log(showWhyUs());
-
             diActiveAnimation();
         }
     }, [WindowsSize]);

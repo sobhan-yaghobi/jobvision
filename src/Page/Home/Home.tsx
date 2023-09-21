@@ -272,8 +272,8 @@ const Home: React.FC = () => {
         diActiveAnimation: stopAnimate,
         intervalTime: 4000,
     });
-
     //! ---------------------------------- WHY Us
+
     return (
         <>
             {/*//? -------------------------------------- Landing -------------------------------------- */}
@@ -416,13 +416,13 @@ const Home: React.FC = () => {
 
             {/*//? -------------------------------------- Advertising & About Us -------------------------------------- */}
             <div className="p-2 md:px-10 lg:px-24">
-                <div className="bg-jv-light rounded-3xl">
+                <div className="bg-jv-light rounded-3xl p-5">
                     <motion.div
                         variants={showBoxVariants}
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true }}
-                        className="py-5 rounded-xl flex flex-col items-center lg:px-4 lg:flex-row-reverse"
+                        className="bg-jv-white py-5 rounded-xl flex flex-col items-center lg:px-4 lg:flex-row-reverse"
                     >
                         <div className="flex items-center justify-center lg:w-1/2">
                             <img className="w-full sm:w-2/3 md:w-1/2 lg:hidden" src="/images/newsMobile.webp" alt="" />
@@ -440,6 +440,47 @@ const Home: React.FC = () => {
                             </Button>
                         </div>
                     </motion.div>
+                    <div className="grid grid-cols-2">
+                        <motion.div
+                            variants={showBoxVariants}
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true }}
+                            className="mt-5 py-5 px-1 rounded-xl bg-jv-white col-span-2 flex flex-col items-center justify-center text-center lg:col-span-1 lg:ml-2 lg:items-start lg:text-right lg:p-5 lg:flex-row"
+                        >
+                            <div className="flex items-center justify-center lg:h-full lg:w-1/3 ">
+                                <img className="w-2/3 md:w-1/3 lg:w-full" src="/images/createCv.webp" alt="" />
+                            </div>
+                            <div className="my-5 lg:my-0 lg:h-full lg:w-2/3 lg:flex lg:flex-col lg:justify-between items-start">
+                                <h2 className="lg:text-base">رزومه ساز جاب ویژن</h2>
+                                <p className="my-5">رزومه ای استاندارد به دو زبان فارسی و انگلیسی بسازید.</p>
+                                <Button textColor="primary" size="small" isLoading={false} ClickHandler={() => {}}>
+                                    ساخت رزومه
+                                </Button>
+                            </div>
+                        </motion.div>
+                        <motion.div
+                            variants={showBoxVariants}
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true }}
+                            className="mt-5 py-5 px-1 rounded-xl bg-jv-white col-span-2 flex flex-col items-center justify-center text-center lg:col-span-1 lg:mr-2 lg:items-start lg:text-right lg:p-5 lg:flex-row"
+                        >
+                            <div className="flex items-center justify-center lg:h-full lg:w-1/3 ">
+                                <img className="w-2/3 md:w-1/3 lg:w-full" src="/images/salary.webp" alt="" />
+                            </div>
+                            <div className="my-5 lg:my-0 lg:h-full lg:w-2/3 lg:flex lg:flex-col lg:justify-between items-start">
+                                <h2 className="lg:text-base">ماشین حساب حقوق و دستمزد</h2>
+                                <p className="my-5">
+                                    از حقوق دریافتی افراد در مشاغل مختلف آگاه شوید و تخمین دقیق تری از حقوق منصفانه خود
+                                    داشته باشید.
+                                </p>
+                                <Button textColor="primary" size="small" isLoading={false} ClickHandler={() => {}}>
+                                    حقوق خود را محاسبه کنید
+                                </Button>
+                            </div>
+                        </motion.div>
+                    </div>
                     <div className="mt-28 lg:mt-16 flex flex-col items-center justify-start lg:h-56 lg:relative">
                         <motion.h1
                             variants={showBoxVariants}
