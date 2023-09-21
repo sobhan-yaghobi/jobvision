@@ -525,7 +525,7 @@ const Home: React.FC = () => {
             <div className="py-10 lg:hidden"></div>
 
             {/*//? -------------------------------------- WHY US ? -------------------------------------- */}
-            <div className="w-full min-h-fit lg:h-screen px-4 flex items-center flex-col md:px-10 lg:px-24 lg:flex-row">
+            <div className="w-full min-h-fit lg:current-mega-height  px-4 flex items-center flex-col md:px-10 lg:px-24 lg:flex-row">
                 <motion.div
                     variants={showBoxVariants}
                     initial="hidden"
@@ -623,7 +623,7 @@ const Home: React.FC = () => {
                 </div>
             </div>
             {/*//! -------------------------------------- WHY US ? -------------------------------------- */}
-            <div className="py-10"></div>
+            <div className="py-10 lg:py-0"></div>
         </>
     );
 };

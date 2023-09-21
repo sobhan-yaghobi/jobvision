@@ -18,6 +18,8 @@ module.exports = {
                 "jv-warning": "var(--warningColor)",
                 "jv-blue": "var(--blueColor)",
                 "jv-bgColor": "var(--backgroundColor)",
+                "jv-gray": "var(--grayColor)",
+                "jv-lightGray": "var(--lightGrayColor)",
             },
         },
     },
