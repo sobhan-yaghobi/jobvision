@@ -1,26 +1,72 @@
 import React, { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { Link } from "react-router-dom";
+import Accordion from "../Accordion/Accordion";
+import uuidGenerator from "../../Utils/UuidGenerator";
+
+interface faqType {
+    id: string;
+    title: string;
+    answer: string;
+}
+
+const faqItems: faqType[] = [
+    {
+        id: uuidGenerator(),
+        title: "سایت استخدامی جاب ویژن، چه مزیتی نسبت به دیگر سایت‌های کاریابی و استخدامی دارد؟",
+        answer: "وبسایت جاب ویژن با بیش از 26 هزار آگهی استخدام فعال و استفاده از هوش مصنوعی برای پیشنهاد مرتبط‌ترین آگهی‌ها به کارجویان، فرایند کاریابی را بسیار آسان‌تر کرده است.",
+    },
+    {
+        id: uuidGenerator(),
+        title: "آیا ساخت و ارسال رزومه در جاب ویژن برای من هزینه‌ای دارد؟",
+        answer: "خیر، کارجویان می‌توانند بدون پرداخت هیچ هزینه‌ای در سایت کاریابی جاب ویژن رزومه بسازند و برای آگهی‌های استخدام ارسال کنند.",
+    },
+    {
+        id: uuidGenerator(),
+        title: "چگونه می‌توانم آگهی‌های استخدام مشاغل مرتبط با خودم را پیدا کنم؟",
+        answer: "شما می‌توانید به راحتی با استفاده از نوار جستجوی بالای سایت و انتخاب فیلترهای مختلف، آگهی‌های استخدامی حوزه مرتبط با خودتان را پیدا کنید.",
+    },
+    {
+        id: uuidGenerator(),
+        title: "چگونه می‌توانم از جدیدترین آگهی‌های استخدام مطلع شوم؟",
+        answer: "شما می‌توانید با فعالسازی گزینه ایمیل اطلاع رسانی و عضویت در بات تلگرامی جاب ویژن، از جدیدترین آگهی‌های استخدام و کاریابی حوزه شغلی خود مطلع شوید.",
+    },
+    {
+        id: uuidGenerator(),
+        title: "آیا آگهی‌های استخدام شهرستان‌ها نیز در سایت جاب ویژن منتشر می‌شوند؟",
+        answer: "بله؛ تمامی شهرها و شهرستان‌های استان‌های مختلف ایران در سایت جاب ویژن وجود دارند و شما می‌توانید با استفاده از فیلتر «شهر» در نوار جستجوی بالای سایت، هرکدام از آن‌ها را انتخاب کنید.",
+    },
+    {
+        id: uuidGenerator(),
+        title: "آیا محدودیتی در ارسال رزومه برای آگهی‌های استخدامی در سایت جاب ویژن وجود دارد؟",
+        answer: "خیر؛ شما می‌توانید رزومه خودتان را به صورت کاملا رایگان برای تعداد نامحدودی از آگهی‌های استخدام ارسال کنید.",
+    },
+];
 
 interface MoreItemType {
+    id: string;
     title: string;
     desc: string[] | string;
 }
 
 const MoreItems: MoreItemType[] = [
     {
+        id: uuidGenerator(),
         title: "مراحل و نحوه‌ی استفاده از امکانات جاب ویژن",
         desc: "در ادامه، به طور مختصر مراحل و نحوه استفاده از امکاناتی را که سایت کاریابی و استخدامی جاب ویژن در اختیار شما قرار می‌دهد بررسی می‌کنیم.",
     },
     {
+        id: uuidGenerator(),
         title: "ثبت‌نام در سایت جاب ویژن",
         desc: "برای ارسال رزومه از طریق سایت استخدامی جاب ویژن، ابتدا باید در سایت ثبت نام کنید. برای این کار روی دکمه‌ی ورود/عضویت کلیک کنید. در این جا، کافی است برای ثبت نام، ایمیل خود را وارد کرده و برای حساب کاربری‌تان یک رمز عبور انتخاب نمایید. علاوه بر آن، امکان ثبت‌نام با گوگل و لینکدین نیز به شما داده شده است.",
     },
     {
+        id: uuidGenerator(),
         title: "ساخت رزومه در سایت جاب ویژن",
         desc: "بعد از ثبت‌نام در سایت، به‌راحتی می‌توانید با رزومه‌ساز آنلاین جاب ویژن، یک رزومه‌ی‌ حرفه‌ای و جذاب بسازید. سرویس ساخت رزومه جاب ویژن، این امکان را به شما می‌دهد که هم‌زمان رزومه فارسی و انگلیسی خود را تکمیل کنید. ساختار استاندارد، طراحی جذاب، یکدست بودن رزومه همه‌ کارجویان و امکان ساخت رایگان از جمله مهم‌ترین امکاناتی است که در این مرحله در اختیار شما قرار داده شده است.",
     },
     {
+        id: uuidGenerator(),
         title: "ارسال رزومه از طریق سایت کاریابی و استخدام جاب ویژن",
         desc: [
             "در این مرحله می‌توانید با چند کلیک، رزومه خود را برای فرصت‌های شغلی مناسب خودتان در بانک مشاغل جاب ویژن ارسال کنید. برای پیدا کردن این آگهی‌ها به عنوان مثال آگهی های استخدام تهران یا شهرستان، می‌توانید به صفحه فرصت‌های شغلی و یا صفحه فرصت‌های شغلی پیشنهادی مراجعه کرده و آگهی‌های استخدام جدید را مشاهده کنید.",
@@ -31,6 +77,7 @@ const MoreItems: MoreItemType[] = [
         ],
     },
     {
+        id: uuidGenerator(),
         title: "افزایش شانس استخدام در شرکت‌های معتبر",
         desc: [
             "شما به عنوان کارجو باید کاری بیشتر از ارسال رزومه انجام دهید. بازار کار رقابتی امروز موجب شده تا برای هر آگهی استخدامی تعداد زیادی رزومه ارسال شود، بنابراین، باید به دنبال راه‌هایی برای متمایز کردن خود در میان این تعداد کارجو باشید. به ویژه در کلانشهری مثل تهران باید برای به دست آوردن موقعیت استخدام و جلب توجه کارفرمایان تلاش مضاعفی انجام داده و خود و توانایی‌هایتان را به کارفرما اثبات کنید.",
@@ -48,11 +95,121 @@ const MoreItems: MoreItemType[] = [
     },
 ];
 
+interface quickAccessSubLinkType {
+    id: string;
+    title: string;
+    link: string;
+}
+
+interface quickAccessLinkType {
+    id: string;
+    title: string;
+    link: string;
+    sublink: quickAccessSubLinkType[];
+}
+
+interface quickAccessItemType {
+    id: string;
+    title: string;
+    links: quickAccessLinkType[];
+}
+
+const quickAccessItems: quickAccessItemType[] = [
+    {
+        id: uuidGenerator(),
+        title: "کارجویان",
+        links: [
+            { id: uuidGenerator(), title: "رزومه ساز دو زبانه", link: "createCv", sublink: [] },
+            { id: uuidGenerator(), title: "جستجوی فرصت‌های شغلی", link: "jobs", sublink: [] },
+            {
+                id: uuidGenerator(),
+                title: "آزمون‌های خود شناسی",
+                link: "",
+                sublink: [
+                    {
+                        id: uuidGenerator(),
+                        title: "آزمون شخصیت شناسی MBTI",
+                        link: "test1",
+                    },
+                    {
+                        id: uuidGenerator(),
+                        title: "آزمون تیپ سنجی شغلی Holland",
+                        link: "test2",
+                    },
+                    {
+                        id: uuidGenerator(),
+                        title: "آزمون شخصیت شناسی NEO",
+                        link: "test3",
+                    },
+                    {
+                        id: uuidGenerator(),
+                        title: "آزمون هوش های چندگانه",
+                        link: "test4",
+                    },
+                    {
+                        id: uuidGenerator(),
+                        title: "آزمون هوش هیجانی Bar-On",
+                        link: "test5",
+                    },
+                ],
+            },
+            { id: uuidGenerator(), title: "سوالات متداول", link: "faqQuestion", sublink: [] },
+            { id: uuidGenerator(), title: "دوره‌های آموزشی", link: "test6", sublink: [] },
+            { id: uuidGenerator(), title: "رده بندی شرکت ها", link: "test7", sublink: [] },
+            { id: uuidGenerator(), title: "آشنایی با شرکت ها", link: "test8", sublink: [] },
+            { id: uuidGenerator(), title: "داده‌های بازار کار", link: "test9", sublink: [] },
+        ],
+    },
+    {
+        id: uuidGenerator(),
+        title: "کارفرمایان",
+        links: [
+            { id: uuidGenerator(), title: "ثبت آگهی جدید", link: "test10", sublink: [] },
+            { id: uuidGenerator(), title: "جستجوی بانک رزومه", link: "test11", sublink: [] },
+            { id: uuidGenerator(), title: "ارزیابی کارجویان", link: "test12", sublink: [] },
+            { id: uuidGenerator(), title: "پوشه‌‌ رزومه‌ها", link: "test13", sublink: [] },
+            { id: uuidGenerator(), title: "تعرفه‌ها", link: "test14", sublink: [] },
+            { id: uuidGenerator(), title: "نمایشگاه‌کار", link: "test15", sublink: [] },
+            { id: uuidGenerator(), title: "بخش کارفرمایان", link: "test16", sublink: [] },
+            { id: uuidGenerator(), title: "HR Vision", link: "test17 ", sublink: [] },
+        ],
+    },
+    {
+        id: uuidGenerator(),
+        title: "درباره جاب ویژن",
+        links: [
+            { id: uuidGenerator(), title: "درباره ما", link: "createCv", sublink: [] },
+            { id: uuidGenerator(), title: "سوالات متداول", link: "createCv", sublink: [] },
+            { id: uuidGenerator(), title: "تماس با ما", link: "createCv", sublink: [] },
+            { id: uuidGenerator(), title: "قوانین و مقررات", link: "createCv", sublink: [] },
+        ],
+    },
+];
+
 const Footer: React.FC = () => {
     const [isMore, setIsMore] = useState(false);
     return (
         <>
-            <footer className="text-jv-light pb-5 px-3 bg-jv-gray md:px-10 lg:px-24">
+            <footer className="text-jv-light pb-5 px-3 bg-jv-gray md:px-10 lg:px-24 overflow-hidden">
+                {/*//? -------------------------------------- FAQ -------------------------------------- */}
+                <div className="py-10">
+                    <h1 className="text-base mb-3 lg:text-2xl">سوالات متداول درباره سایت استخدام و کاریابی جاب ویژن</h1>
+                    <div className="grid">
+                        {faqItems.map((item, index) => (
+                            <Accordion
+                                key={item.id}
+                                index={index + 1}
+                                isResponsive
+                                theme="Dark"
+                                title={item.title}
+                                content={item.answer}
+                                isOpen={index === 0 ? true : false}
+                                listStyle="Ol"
+                            ></Accordion>
+                        ))}
+                    </div>
+                </div>
+                {/*//! -------------------------------------- FAQ -------------------------------------- */}
                 <article className="py-5 border-b-[1px] border-solid border-jv-light">
                     <div>
                         <h1 className="text-base mb-3 lg:text-2xl">
@@ -78,7 +235,7 @@ const Footer: React.FC = () => {
                         <div className={`min-h-0`}>
                             <section className="block mb-16">
                                 {MoreItems.map((item) => (
-                                    <div className="my-5">
+                                    <div key={item.id} className="my-5">
                                         <h1 className="text-sm mb-1 lg:text-xl">{item.title}</h1>
                                         {Array.isArray(item.desc) ? (
                                             item.desc.map((des) => (

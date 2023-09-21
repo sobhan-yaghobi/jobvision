@@ -614,9 +614,13 @@ const Home: React.FC = () => {
                         {whyUsArray.map((item, index) => (
                             <Accordion
                                 key={item.id}
+                                index={index + 1}
+                                isResponsive
+                                theme="Light"
                                 title={item.title}
                                 content={item.desc}
                                 isOpen={index === 0 ? true : false}
+                                listStyle="Ul"
                             ></Accordion>
                         ))}
                     </div>
