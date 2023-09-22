@@ -9,9 +9,19 @@ interface AccordionProps {
     content: string;
     isOpen?: boolean | undefined;
     listStyle: "Ol" | "Ul";
+    noSpace?: boolean;
 }
 
-const Accordion: React.FC<AccordionProps> = ({ title, content, isOpen, isResponsive, theme, listStyle, index }) => {
+const Accordion: React.FC<AccordionProps> = ({
+    title,
+    content,
+    isOpen,
+    isResponsive,
+    theme,
+    listStyle,
+    index,
+    noSpace,
+}) => {
     const [isActive, setIsActive] = useState<boolean>(typeof isOpen === "undefined" ? false : isOpen);
     const size = "text-xs md:text-sm lg:text-lg";
     const accordionItemLightClassName = `${isActive ? "border-jv-dark" : "border-transparent"}`;
@@ -23,19 +33,19 @@ const Accordion: React.FC<AccordionProps> = ({ title, content, isOpen, isRespons
 
     return (
         <div
-            className={`accordion-item transition-all duration-300 my-1 w-full border border-solid rounded-xl p-1 ${
+            className={`accordion-item transition-all duration-300 w-full border border-solid rounded-xl ${
                 theme === "Light" ? accordionItemLightClassName : theme === "Dark" ? accordionItemDarkClassName : ""
-            }`}
+            } ${!noSpace ? "" : "my-1 p-1"}`}
         >
             <div
                 onClick={() => setIsActive((prev) => !prev)}
-                className={`accordion-header cursor-pointer py-2 px-3 flex items-center justify-between transition-all duration-300 border-b-[1px] border-solid  ${
+                className={`accordion-header cursor-pointer flex items-center justify-between transition-all duration-300 border-b-[1px] border-solid  ${
                     theme === "Light"
                         ? accordionHeaderLightClassName
                         : theme === "Dark"
                         ? accordionHeaderDarkClassName
                         : ""
-                }`}
+                } ${!noSpace ? "" : "py-2 px-3"}`}
             >
                 <span className={`w-10/12 ${isResponsive ? size : null} flex items-center`}>
                     {listStyle === "Ol" ? (
@@ -47,7 +57,7 @@ const Accordion: React.FC<AccordionProps> = ({ title, content, isOpen, isRespons
                             {index}
                         </span>
                     ) : null}
-                    <span className="w-full">{title}</span>
+                    <span className="w-full text-inherit">{title}</span>
                 </span>
                 <BsBoxArrowDown className={`${isActive ? "rotate-180" : ""}`}></BsBoxArrowDown>
             </div>

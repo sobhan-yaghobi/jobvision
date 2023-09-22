@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
+import { BsInstagram, BsLinkedin } from "react-icons/bs";
+import { FaTelegramPlane } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import Accordion from "../Accordion/Accordion";
 import uuidGenerator from "../../Utils/UuidGenerator";
+import LogoWhite from "/Svg/Logo/WhiteColorLogo.svg";
 
 interface faqType {
     id: string;
@@ -190,9 +194,9 @@ const Footer: React.FC = () => {
     const [isMore, setIsMore] = useState(false);
     return (
         <>
-            <footer className="text-jv-light pb-5 px-3 bg-jv-gray md:px-10 lg:px-24 overflow-hidden">
+            <footer className="text-jv-light pb-5 bg-jv-gray overflow-hidden">
                 {/*//? -------------------------------------- FAQ -------------------------------------- */}
-                <div className="py-10">
+                <section className="py-10 px-3 md:px-10 lg:px-24">
                     <h1 className="text-base mb-3 lg:text-2xl">سوالات متداول درباره سایت استخدام و کاریابی جاب ویژن</h1>
                     <div className="grid">
                         {faqItems.map((item, index) => (
@@ -205,12 +209,15 @@ const Footer: React.FC = () => {
                                 content={item.answer}
                                 isOpen={index === 0 ? true : false}
                                 listStyle="Ol"
+                                noSpace
                             ></Accordion>
                         ))}
                     </div>
-                </div>
+                </section>
                 {/*//! -------------------------------------- FAQ -------------------------------------- */}
-                <article className="py-5 border-b-[1px] border-solid border-jv-light">
+
+                {/*//? -------------------------------------- About Compony -------------------------------------- */}
+                <article className="py-5 px-3 md:px-10 lg:px-24">
                     <div>
                         <h1 className="text-base mb-3 lg:text-2xl">
                             استخدام با معتبرترین سایت کاریابی و استخدامی ایران
@@ -320,7 +327,101 @@ const Footer: React.FC = () => {
                         </div>
                     </div>
                 </article>
-                <div className="py-5 border-b-[1px] border-solid border-jv-light"></div>
+                {/*//! -------------------------------------- About Compony -------------------------------------- */}
+
+                {/*//? -------------------------------------- Quick Access -------------------------------------- */}
+                <section className="py-5 px-3 md:px-10 lg:px-24">
+                    <div className="grid grid-cols-12">
+                        <div className="col-span-9">
+                            <ul className="desktop py-2 hidden lg:flex">
+                                {quickAccessItems.map((item) => (
+                                    <li className="w-full ml-5" key={item.id}>
+                                        <span className="danaBold mb-3 inline-block">{item.title}</span>
+                                        {item.links.length ? (
+                                            <ul className="!text-sm flex flex-col gap-2">
+                                                {item.links.map((link, index) =>
+                                                    link.sublink.length ? (
+                                                        <Accordion
+                                                            index={index + 1}
+                                                            isResponsive={false}
+                                                            theme="Light"
+                                                            title={link.title}
+                                                            content={"dddddddd"}
+                                                            listStyle="Ul"
+                                                        ></Accordion>
+                                                    ) : (
+                                                        <li>
+                                                            <Link className="text-inherit" to={link.link}>
+                                                                {link.title}
+                                                            </Link>
+                                                        </li>
+                                                    )
+                                                )}
+                                            </ul>
+                                        ) : null}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                        <div className="col-span-3 flex justify-end items-center">
+                            <div className="h-36 p-2 m-1 rounded-xl bg-jv-light flex items-center justify-center">
+                                <img className="h-full" src="/images/Enamad.webp" alt="" />
+                            </div>
+                            <div className="h-36 p-2 m-1 rounded-xl bg-jv-light flex items-center justify-center">
+                                <img className="h-full" src="/images/samandehipng.webp" alt="" />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                {/*//! -------------------------------------- Quick Access -------------------------------------- */}
+
+                {/*//? -------------------------------------- Social Media -------------------------------------- */}
+                <section className="py-5 px-3 md:px-10 lg:px-24 border-t-[1px] border-solid border-jv-lightGray">
+                    <div className="grid grid-cols-2">
+                        <div className="pl-5 flex flex-col justify-between col-span-1">
+                            <p className="w-10/12 text-justify">
+                                جاب‌ویژن بعنوان اولین ارائه دهنده بسته جامع خدمات کاریابی و استخدام، تجربه برگزاری موفق
+                                ادوار مختلف نمایشگاه‌های کار شریف و ایران را در کارنامه کاری خود دارد. سیستم هوشمند
+                                انطباق، رزومه ساز دو زبانه، تست‌های خودشناسی، ارتقای توانمندی‌ها به کمک پیشنهاد دوره‌های
+                                آموزشی و همکاری با معتبرترین سازمان‌ها برای استخدام از ویژگی‌های متمایز جاب‌ویژن است.
+                            </p>
+                            <div className="h-20 flex items-end">
+                                <img className="w-20" src={LogoWhite} alt="" />
+                            </div>
+                        </div>
+                        <div className="pr-5 flex flex-col justify-between col-span-1">
+                            <div>
+                                <p className="mb-4">جاب‌ویژن محصولی دانش بنیان شناخته شده است.</p>
+                                <p className="mb-4">
+                                    دارای مجوز رسمی کاریابی الکترونیکی از وزارت کار، تعاون و رفاه اجتماعی
+                                </p>
+                            </div>
+                            <ul className="text-jv-white text-2xl flex items-center">
+                                <li className="ml-5">
+                                    <Link title="instagram" className="text-inherit" to={"instagram"}>
+                                        <BsInstagram></BsInstagram>
+                                    </Link>
+                                </li>
+                                <li className="ml-5">
+                                    <Link title="linkedin" className="text-inherit" to={"linkedin"}>
+                                        <BsLinkedin></BsLinkedin>
+                                    </Link>
+                                </li>
+                                <li className="ml-5">
+                                    <Link title="telegram" className="text-inherit" to={"telegram"}>
+                                        <FaTelegramPlane></FaTelegramPlane>
+                                    </Link>
+                                </li>
+                                <li className="ml-5">
+                                    <Link title="twitter" className="text-inherit" to={"x"}>
+                                        <FaXTwitter></FaXTwitter>
+                                    </Link>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+                {/*//! -------------------------------------- Social Media -------------------------------------- */}
             </footer>
         </>
     );
