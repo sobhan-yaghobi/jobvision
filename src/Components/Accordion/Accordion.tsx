@@ -41,11 +41,15 @@ type AccordionProps = AccordionTypesProps & AccordionMainProps;
 const Accordion: React.FC<AccordionProps> = (props) => {
     const [isActive, setIsActive] = useState<boolean>(typeof props.isOpen === "undefined" ? false : props.isOpen);
     const size = "text-xs md:text-sm lg:text-lg";
-    const accordionItemLightClassName = `${isActive ? "border-jv-dark" : "border-transparent"}`;
+    const accordionItemLightClassName = `${
+        isActive ? "border-transparent" : "border-transparent"
+    } accordion shadow-[-10px_10px_30px_-9px_#ff979a,10px_10px_30px_-9px_#c96f72] `;
     const accordionItemDarkClassName = `bg-jv-lightGray ${isActive ? "border-jv-white" : "border-transparent"}`;
-    const accordionHeaderLightClassName = `${isActive ? "text-jv-primary border-jv-primary" : "border-jv-dark"}`;
+    const accordionHeaderLightClassName = `${
+        isActive ? "text-jv-primary border-solid border-jv-primary" : "border-jv-dark"
+    }`;
     const accordionHeaderDarkClassName = `opacity-70 ${
-        isActive ? "opacity-100 border-jv-white" : "border-transparent"
+        isActive ? "opacity-100 border-solid border-jv-white" : "border-transparent"
     }`;
 
     if (props.type === "Content") {
@@ -61,7 +65,7 @@ const Accordion: React.FC<AccordionProps> = (props) => {
             >
                 <div
                     onClick={() => setIsActive((prev) => !prev)}
-                    className={`accordion-header cursor-pointer flex items-center justify-between transition-all duration-300 border-b-[1px] border-solid  ${
+                    className={`accordion-header cursor-pointer flex items-center justify-between transition-all duration-300 border-b-[1px]  ${
                         props.theme === "Light"
                             ? accordionHeaderLightClassName
                             : props.theme === "Dark"

@@ -161,4 +161,9 @@
         background: #f8f9fa;
         box-shadow: inset -19px -19px 29px #dadbdc, inset 19px 19px 29px #ffffff;
     }
+
+    .accordion {
+        background: linear-gradient(145deg, #dfe0e1, #ffffff);
+        box-shadow: 2px 2px 1px #d3d4d5, -2px -2px 1px #ffffff;
+    }
 }
