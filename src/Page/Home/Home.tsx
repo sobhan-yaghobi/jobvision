@@ -277,7 +277,7 @@ const Home: React.FC = () => {
     return (
         <>
             {/*//? -------------------------------------- Landing -------------------------------------- */}
-            <div className="current-mega-height-dvh md:h-auto overflow-hidden pt-5 px-2 grid grid-cols-2 grid-rows-2 justify-between  md:py-2 md:px-10 md:grid-rows-2 md:items-center lg:grid-rows-3 lg:px-24">
+            <div className="current-mega-height-dvh md:h-auto overflow-hidden pt-5 px-2 grid grid-cols-2 grid-rows-2 justify-between md:py-2 md:px-10 md:grid-rows-2 md:items-center lg:grid-rows-3 lg:px-24">
                 <motion.div
                     variants={titleSideVariantWrapper}
                     initial="hidden"

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ReactHTML, useState } from "react";
 
 // Functions
 import { sample } from "lodash";
@@ -61,29 +61,48 @@ const MapCircle: React.FC = () => {
     };
 
     const doAnimate = () => {
-        const newItem = sample(MessageArray);
-        const number = Math.floor(Math.random() * (916 - 476 + 1) + 476);
+        let newElm: SVGCircleElement | null;
+        setMessage((prev) => {
+            let mainObject: messageType;
 
-        const newElm = document.querySelector<SVGCircleElement>(`#dot-${number}`);
-        newElm?.classList.add("fill-jv-primary");
+            const newItem = sample(MessageArray);
+            const number = Math.floor(Math.random() * (916 - 476 + 1) + 476);
 
-        const mainIcon = number < 686 && number > 459 ? "Bottom" : "Top";
+            newElm = document.querySelector<SVGCircleElement>(`#dot-${number}`);
+            newElm?.classList.add("fill-jv-primary");
 
-        if (typeof newElm?.cx !== "undefined" && typeof newItem !== "undefined") {
-            setMessage({
-                x: Math.ceil(newElm?.cx.animVal.value) - 4,
-                y: Math.ceil(newElm?.cy.animVal.value) - 4,
-                title: newItem?.title,
-                isShow: true,
-                ArrowIcon: mainIcon,
-            });
-        } else {
-            stopAnimate();
-        }
-        setTimeout(() => {
-            newElm?.classList.remove("fill-jv-primary");
-            stopAnimate();
-        }, 4000);
+            const mainIcon = number < 686 && number > 459 ? "Bottom" : "Top";
+
+            if (typeof newElm?.cx !== "undefined" && typeof newItem !== "undefined") {
+                mainObject = {
+                    x: Math.ceil(newElm?.cx.animVal.value) - 4,
+                    y: Math.ceil(newElm?.cy.animVal.value) - 4,
+                    title: newItem?.title,
+                    isShow: true,
+                    ArrowIcon: mainIcon,
+                };
+            } else {
+                mainObject = {
+                    x: undefined,
+                    y: undefined,
+                    title: "",
+                    isShow: false,
+                    ArrowIcon: undefined,
+                };
+            }
+            setTimeout(() => {
+                newElm?.classList.remove("fill-jv-primary");
+                setMessage({
+                    x: undefined,
+                    y: undefined,
+                    title: "",
+                    isShow: false,
+                    ArrowIcon: undefined,
+                });
+            }, 4000);
+
+            return mainObject;
+        });
     };
 
     useAnimationStop({
@@ -596,3 +615,41 @@ const MapCircle: React.FC = () => {
 };
 
 export default MapCircle;
+
+// const doAnimate = () => {
+//     const newItem = sample(MessageArray);
+//     const number = Math.floor(Math.random() * (916 - 476 + 1) + 476);
+
+//     const newElm = document.querySelector<SVGCircleElement>(`#dot-${number}`);
+//     newElm?.classList.add("fill-jv-primary");
+
+//     const mainIcon = number < 686 && number > 459 ? "Bottom" : "Top";
+
+//     if (typeof newElm?.cx !== "undefined" && typeof newItem !== "undefined") {
+//         setMessage({
+//             x: Math.ceil(newElm?.cx.animVal.value) - 4,
+//             y: Math.ceil(newElm?.cy.animVal.value) - 4,
+//             title: newItem?.title,
+//             isShow: true,
+//             ArrowIcon: mainIcon,
+//         });
+//     } else {
+//         setMessage({
+//             x: undefined,
+//             y: undefined,
+//             title: "",
+//             isShow: false,
+//             ArrowIcon: undefined,
+//         });
+//     }
+//     setTimeout(() => {
+//         newElm?.classList.remove("fill-jv-primary");
+//         setMessage({
+//             x: undefined,
+//             y: undefined,
+//             title: "",
+//             isShow: false,
+//             ArrowIcon: undefined,
+//         });
+//     }, 4000);
+// };
