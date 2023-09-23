@@ -614,6 +614,7 @@ const Home: React.FC = () => {
                         {whyUsArray.map((item, index) => (
                             <Accordion
                                 key={item.id}
+                                type="Content"
                                 index={index + 1}
                                 isResponsive
                                 theme="Light"

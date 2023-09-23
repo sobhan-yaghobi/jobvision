@@ -194,7 +194,7 @@ const Footer: React.FC = () => {
     const [isMore, setIsMore] = useState(false);
     return (
         <>
-            <footer className="text-jv-light pb-5 bg-jv-gray overflow-hidden">
+            <footer className="text-jv-light bg-jv-gray overflow-hidden">
                 {/*//? -------------------------------------- FAQ -------------------------------------- */}
                 <section className="py-10 px-3 md:px-10 lg:px-24">
                     <h1 className="text-base mb-3 lg:text-2xl">سوالات متداول درباره سایت استخدام و کاریابی جاب ویژن</h1>
@@ -202,6 +202,7 @@ const Footer: React.FC = () => {
                         {faqItems.map((item, index) => (
                             <Accordion
                                 key={item.id}
+                                type="Content"
                                 index={index + 1}
                                 isResponsive
                                 theme="Dark"
@@ -209,7 +210,6 @@ const Footer: React.FC = () => {
                                 content={item.answer}
                                 isOpen={index === 0 ? true : false}
                                 listStyle="Ol"
-                                noSpace
                             ></Accordion>
                         ))}
                     </div>
@@ -331,9 +331,9 @@ const Footer: React.FC = () => {
 
                 {/*//? -------------------------------------- Quick Access -------------------------------------- */}
                 <section className="py-5 px-3 md:px-10 lg:px-24">
-                    <div className="grid grid-cols-12">
-                        <div className="col-span-9">
-                            <ul className="desktop py-2 hidden lg:flex">
+                    <div className="flex flex-col items-start justify-between md:flex-row">
+                        <div className="w-full my-5 md:my-0 md:w-7/12">
+                            <ul className="desktop hidden lg:flex">
                                 {quickAccessItems.map((item) => (
                                     <li className="w-full ml-5" key={item.id}>
                                         <span className="danaBold mb-3 inline-block">{item.title}</span>
@@ -342,12 +342,14 @@ const Footer: React.FC = () => {
                                                 {item.links.map((link, index) =>
                                                     link.sublink.length ? (
                                                         <Accordion
+                                                            type="Content"
                                                             index={index + 1}
                                                             isResponsive={false}
                                                             theme="Light"
                                                             title={link.title}
                                                             content={"dddddddd"}
                                                             listStyle="Ul"
+                                                            noSpace
                                                         ></Accordion>
                                                     ) : (
                                                         <li>
@@ -362,8 +364,25 @@ const Footer: React.FC = () => {
                                     </li>
                                 ))}
                             </ul>
+                            <div className="mobile flex flex-col lg:hidden">
+                                {quickAccessItems.map((item, index) => (
+                                    <div className="w-full ml-5">
+                                        <Accordion
+                                            index={index + 1}
+                                            title={item.title}
+                                            type="Menu"
+                                            theme="Dark"
+                                            childArray={item.links}
+                                            propertyChildName="title"
+                                            iSubItem
+                                            propertySubName="sublink"
+                                        ></Accordion>
+                                    </div>
+                                ))}
+                                <div></div>
+                            </div>
                         </div>
-                        <div className="col-span-3 flex justify-end items-center">
+                        <div className="w-full my-5 flex items-center justify-center md:my-0 md:w-4/12 md:justify-end">
                             <div className="h-36 p-2 m-1 rounded-xl bg-jv-light flex items-center justify-center">
                                 <img className="h-full" src="/images/Enamad.webp" alt="" />
                             </div>
@@ -376,27 +395,30 @@ const Footer: React.FC = () => {
                 {/*//! -------------------------------------- Quick Access -------------------------------------- */}
 
                 {/*//? -------------------------------------- Social Media -------------------------------------- */}
-                <section className="py-5 px-3 md:px-10 lg:px-24 border-t-[1px] border-solid border-jv-lightGray">
-                    <div className="grid grid-cols-2">
-                        <div className="pl-5 flex flex-col justify-between col-span-1">
-                            <p className="w-10/12 text-justify">
-                                جاب‌ویژن بعنوان اولین ارائه دهنده بسته جامع خدمات کاریابی و استخدام، تجربه برگزاری موفق
-                                ادوار مختلف نمایشگاه‌های کار شریف و ایران را در کارنامه کاری خود دارد. سیستم هوشمند
-                                انطباق، رزومه ساز دو زبانه، تست‌های خودشناسی، ارتقای توانمندی‌ها به کمک پیشنهاد دوره‌های
-                                آموزشی و همکاری با معتبرترین سازمان‌ها برای استخدام از ویژگی‌های متمایز جاب‌ویژن است.
-                            </p>
-                            <div className="h-20 flex items-end">
-                                <img className="w-20" src={LogoWhite} alt="" />
+                <section className="pt-5 px-3 md:px-10 lg:px-24 border-t-[1px] border-solid border-jv-lightGray">
+                    <div className="">
+                        <div className="text-base py-10 lg:text-sm flex flex-col justify-between items-start row-span-1 lg:flex-row">
+                            <div className="w-full mb-5 lg:w-1/2 lg:mb-0 lg:ml-5">
+                                <p className="lg:w-9/12">
+                                    جاب‌ویژن بعنوان اولین ارائه دهنده بسته جامع خدمات کاریابی و استخدام، تجربه برگزاری
+                                    موفق ادوار مختلف نمایشگاه‌های کار شریف و ایران را در کارنامه کاری خود دارد. سیستم
+                                    هوشمند انطباق، رزومه ساز دو زبانه، تست‌های خودشناسی، ارتقای توانمندی‌ها به کمک
+                                    پیشنهاد دوره‌های آموزشی و همکاری با معتبرترین سازمان‌ها برای استخدام از ویژگی‌های
+                                    متمایز جاب‌ویژن است.
+                                </p>
                             </div>
-                        </div>
-                        <div className="pr-5 flex flex-col justify-between col-span-1">
-                            <div>
+                            <div className="w-full my-5 lg:w-1/2 lg:my-0 lg:mr-5">
                                 <p className="mb-4">جاب‌ویژن محصولی دانش بنیان شناخته شده است.</p>
                                 <p className="mb-4">
                                     دارای مجوز رسمی کاریابی الکترونیکی از وزارت کار، تعاون و رفاه اجتماعی
                                 </p>
                             </div>
-                            <ul className="text-jv-white text-2xl flex items-center">
+                        </div>
+                        <div className="py-5 flex justify-between items-start row-span-1 border-t-[1px] border-solid border-jv-lightGray lg:border-transparent">
+                            <div className="w-1/2 ml-5">
+                                <img className="w-20" src={LogoWhite} alt="" />
+                            </div>
+                            <ul className="w-1/2 mr-5 text-jv-white text-2xl flex items-center justify-end lg:justify-start">
                                 <li className="ml-5">
                                     <Link title="instagram" className="text-inherit" to={"instagram"}>
                                         <BsInstagram></BsInstagram>
