@@ -342,14 +342,14 @@ const Footer: React.FC = () => {
                                                 {item.links.map((link, index) =>
                                                     link.sublink.length ? (
                                                         <Accordion
-                                                            type="Content"
+                                                            type="ContentItem"
                                                             index={index + 1}
-                                                            isResponsive={false}
-                                                            theme="Light"
+                                                            theme="transparent"
                                                             title={link.title}
-                                                            content={"dddddddd"}
-                                                            listStyle="Ul"
+                                                            childArray={link.sublink}
+                                                            propertyChildName="title"
                                                             noSpace
+                                                            iconType="Menu"
                                                         ></Accordion>
                                                     ) : (
                                                         <li>
