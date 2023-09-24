@@ -353,10 +353,10 @@ const Home: React.FC = () => {
                         },
                     }}
                     navigation={true}
-                    autoplay={{
-                        delay: 3000,
-                        disableOnInteraction: false,
-                    }}
+                    // autoplay={{
+                    //     delay: 3000,
+                    //     disableOnInteraction: false,
+                    // }}
                     modules={[Autoplay, Navigation]}
                 >
                     {Array(7)
@@ -618,6 +618,7 @@ const Home: React.FC = () => {
                                 index={index + 1}
                                 isResponsive
                                 theme="Light"
+                                iconType="Arrow"
                                 title={item.title}
                                 content={item.desc}
                                 isOpen={index === 0 ? true : false}

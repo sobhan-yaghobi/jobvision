@@ -206,6 +206,7 @@ const Footer: React.FC = () => {
                                 index={index + 1}
                                 isResponsive
                                 theme="Dark"
+                                iconType="Arrow"
                                 title={item.title}
                                 content={item.answer}
                                 isOpen={index === 0 ? true : false}
@@ -342,7 +343,9 @@ const Footer: React.FC = () => {
                                                 {item.links.map((link, index) =>
                                                     link.sublink.length ? (
                                                         <Accordion
-                                                            type="ContentItem"
+                                                            isResponsive
+                                                            listStyle="Ul"
+                                                            type="Item"
                                                             index={index + 1}
                                                             theme="transparent"
                                                             title={link.title}
@@ -368,9 +371,12 @@ const Footer: React.FC = () => {
                                 {quickAccessItems.map((item, index) => (
                                     <div className="w-full ml-5">
                                         <Accordion
+                                            isResponsive
+                                            listStyle="Ul"
                                             index={index + 1}
                                             title={item.title}
                                             type="Menu"
+                                            iconType="Menu"
                                             theme="Dark"
                                             childArray={item.links}
                                             propertyChildName="title"
