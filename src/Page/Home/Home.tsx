@@ -401,10 +401,10 @@ const Home: React.FC = () => {
                             >
                                 {includes([3, 4], index) ? (
                                     <div className={`w-full xl:w-2/3`}>
-                                        <AdvertisingBox IsImportant data={[]}></AdvertisingBox>
+                                        <AdvertisingBox IsImportant data={[]} showSendCv></AdvertisingBox>
                                     </div>
                                 ) : (
-                                    <AdvertisingBox data={[]}></AdvertisingBox>
+                                    <AdvertisingBox data={[]} showSendCv></AdvertisingBox>
                                 )}
                             </motion.div>
                         ))}

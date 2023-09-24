@@ -4,6 +4,7 @@ import Button from "../../Components/Button/Button";
 import { MdNotificationAdd, MdNotificationsActive } from "react-icons/md";
 import { AiFillCaretDown } from "react-icons/ai";
 import uuidGenerator from "../../Utils/UuidGenerator";
+import AdvertisingBox from "../../Components/AdvertisingBox/AdvertisingBox";
 
 interface BoxsOrderType {
     id: string;
@@ -40,7 +41,7 @@ const Jobs: React.FC = () => {
     return (
         <>
             {/*//? -------------------------------------- Seacrh -------------------------------------- */}
-            <div className="py-8 px-2 md:px-10 lg:px-24 border-b-2 border-solid border-[#dde1e6]">
+            <div className="py-8 px-2 md:px-10 lg:px-24 border-b-2 border-solid border-jv-lightGray3x">
                 <SearchFrom isFilterBarShow></SearchFrom>
             </div>
             {/*//! -------------------------------------- Seacrh -------------------------------------- */}
@@ -67,7 +68,7 @@ const Jobs: React.FC = () => {
                                 <div
                                     onMouseEnter={showOrderAction}
                                     onMouseLeave={hideOrderAction}
-                                    className="relative p-2 mx-1 border border-solid border-[#dde1e6] rounded-lg "
+                                    className="relative p-2 mx-1 border border-solid border-jv-lightGray3x rounded-lg "
                                 >
                                     <span className="cursor-pointer flex items-center select-none">
                                         {orderMain.title}
@@ -97,7 +98,20 @@ const Jobs: React.FC = () => {
                             </section>
                         ) : null}
                     </div>
-                    <div></div>
+                    <div className="wrapper flex flex-col">
+                        {Array(13)
+                            .fill("")
+                            .map((item, index) => (
+                                <div className="mb-2">
+                                    <AdvertisingBox
+                                        showSendCv={false}
+                                        IsImportant={index === 2 ? true : false}
+                                        key={index + 1}
+                                        data={[]}
+                                    ></AdvertisingBox>
+                                </div>
+                            ))}
+                    </div>
                 </div>
                 {/*//! -------------------------------------- List Boxs -------------------------------------- */}
 

@@ -18,10 +18,12 @@
     --blackColor: #121315;
     --primaryColor: #5660f2;
     --lightColor: #f8f9fa;
-    --darkColor: #4a4e57;
     --grayColor: #4a4e57;
     --lightGrayColor: #5c6068;
+    --lightGray2xColor: #8e9cb2;
+    --lightGray3xColor: #dde1e6;
     --dangerColor: #fa5555;
+    --lightDangerColor: #fbedee;
     --successColor: #45c26f;
     --warningColor: #e1bc29;
     --blueColor: #0fa5e9;

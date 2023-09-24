@@ -4,7 +4,7 @@ import Button from "../Button/Button";
 
 const CompanyBox: React.FC = () => {
     return (
-        <div className="w-full h-full border-2 border-solid border-[#dde1e6] rounded-xl p-3 flex flex-col justify-between">
+        <div className="w-full h-full border-2 border-solid border-jv-lightGray3x rounded-xl p-3 flex flex-col justify-between">
             <div className="max-h-10 h-1/4 overflow-hidden">
                 <img className="h-full" src="/images/Irancell_logo.webp" alt="" />
             </div>

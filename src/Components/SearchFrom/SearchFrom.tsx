@@ -119,7 +119,7 @@ const SearchFrom: React.FC<SearchFromProps> = ({ isFilterBarShow }) => {
                     {categoryArray.map((item) => (
                         <span
                             key={item.id}
-                            className="cursor-pointer text-sm mt-2 ml-1 px-4 py-2 border border-solid border-[#dde1e6] rounded-2xl flex items-center select-none"
+                            className="cursor-pointer text-sm mt-2 ml-1 px-4 py-2 border border-solid border-jv-lightGray3x rounded-2xl flex items-center select-none"
                         >
                             <span>{item.title}</span>
                             {item.isSub ? <AiOutlineDown className="mr-1"></AiOutlineDown> : null}

@@ -53,7 +53,7 @@ export const MenuDesktopItemGenerate: React.FC<MenuDesktopItemGenerateProps> = (
                             Type="Desktop"
                             ParentClassName="bg-white w-full columns-4 absolute top-16 bottom-0 left-0 right-0 cursor-default p-3 rounded-b-xl overflow-y-auto"
                             ChildClassName="overflow-hidden max-w-max h-max max-h-max m-1"
-                            LinksWrapperClassName="text-jv-dark dana-bold w-full h-full flex flex-col px-3 py-1 hover:text-jv-primary"
+                            LinksWrapperClassName="text-jv-lightGray dana-bold w-full h-full flex flex-col px-3 py-1 hover:text-jv-primary"
                             //
                             SublinkParentClassName="w-full p-3 cursor-default hiiden"
                             SublinkChildClassName="w-full flex items-center mt-2 first:mt-0"
