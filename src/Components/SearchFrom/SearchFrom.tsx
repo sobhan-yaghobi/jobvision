@@ -2,7 +2,27 @@ import React from "react";
 import Input from "../Input/Input";
 import Button from "../Button/Button";
 
-const SearchFrom: React.FC = () => {
+import { AiOutlineDown } from "react-icons/ai";
+import uuidGenerator from "../../Utils/UuidGenerator";
+
+const categoryArray: { id: string; title: string; isSub: boolean }[] = [
+    { id: uuidGenerator(), title: "دورکاری", isSub: false },
+    { id: uuidGenerator(), title: "کارآموزی", isSub: false },
+    { id: uuidGenerator(), title: "نوع همکاری", isSub: true },
+    { id: uuidGenerator(), title: "زمان انتشار", isSub: true },
+    { id: uuidGenerator(), title: "سابقه کاری", isSub: true },
+    { id: uuidGenerator(), title: "سطح ارشدیت", isSub: true },
+    { id: uuidGenerator(), title: "مزایا و تسهیلات", isSub: true },
+    { id: uuidGenerator(), title: "صنعت", isSub: true },
+    { id: uuidGenerator(), title: "امکان استخدام معلولین", isSub: false },
+    { id: uuidGenerator(), title: "امریه سربازی", isSub: false },
+];
+
+interface SearchFromProps {
+    isFilterBarShow: boolean;
+}
+
+const SearchFrom: React.FC<SearchFromProps> = ({ isFilterBarShow }) => {
     return (
         <>
             <div className="w-full flex flex-col items-center justify-between md:flex-row">
@@ -94,6 +114,19 @@ const SearchFrom: React.FC = () => {
                     جستجو کن
                 </Button>
             </div>
+            {isFilterBarShow ? (
+                <div className="flex items-center flex-row flex-wrap mt-2">
+                    {categoryArray.map((item) => (
+                        <span
+                            key={item.id}
+                            className="cursor-pointer text-sm mt-2 ml-1 px-4 py-2 border border-solid border-[#dde1e6] rounded-2xl flex items-center select-none"
+                        >
+                            <span>{item.title}</span>
+                            {item.isSub ? <AiOutlineDown className="mr-1"></AiOutlineDown> : null}
+                        </span>
+                    ))}
+                </div>
+            ) : null}
         </>
     );
 };

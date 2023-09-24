@@ -1,9 +1,15 @@
+import { lazy } from "react";
 type routesProps = {
-  path: string;
-  element: React.ReactNode;
+    path: string;
+    element: React.ReactNode;
 };
 
-import Home from "./Page/Home/Home";
+const Home = lazy(() => import("./Page/Home/Home"));
+const Jobs = lazy(() => import("./Page/Jobs/Jobs"));
 
-const routes: routesProps[] = [{ path: "/", element: <Home></Home> }];
+const routes: routesProps[] = [
+    { path: "/", element: <Home></Home> },
+    { path: "/jobs", element: <Jobs></Jobs> },
+];
+
 export default routes;

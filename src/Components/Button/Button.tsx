@@ -1,5 +1,7 @@
 import React from "react";
-import { motion } from "framer-motion";
+import { IconType } from "react-icons";
+import { AiOutlineLoading } from "react-icons/ai";
+import { AnimatePresence, motion } from "framer-motion";
 
 type ButtonProps = {
     isLoading: boolean;
@@ -9,7 +11,16 @@ type ButtonProps = {
     ClickHandler: Function;
     isDefault?: boolean;
     noBorder?: boolean;
+    Icon?: IconType | undefined;
 };
+
+const variant = {
+    hidden: (i: number) => ({ y: 100 * i }),
+    visible: { y: 0 },
+    exit: (i: number) => ({ y: 100 * i }),
+};
+
+const transition = { duration: 0.01, ease: "easeOut", type: "tween" };
 
 const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
     children,
@@ -20,17 +31,17 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
     ClickHandler,
     isDefault,
     noBorder,
+    Icon,
 }) => {
     const loadingClass = isLoading ? "opacity-90 cursor-progress" : "cursor-pointer";
 
-    const sizeClass = size === "small" ? "text-xs" : size === "middle" ? "text-sm" : size === "large" ? "text-lg" : "";
+    const sizeClass =
+        size === "small" ? "text-xs" : size === "middle" ? "text-sm" : size === "large" ? "text-lg" : "text-lg";
 
     const borderColorStyle =
         textColor === "light" ? `border-jv-light` : textColor === "primary" ? `border-jv-primary` : "";
 
     const textColorStyle = textColor === "light" ? `text-jv-light` : textColor === "primary" ? `text-jv-primary` : "";
-
-    const fillColorStyle = textColor === "light" ? `fill-jv-light` : textColor === "primary" ? `fill-jv-primary` : "";
 
     const defaultClass = `
       select-none whitespace-nowrap px-4 py-3
@@ -42,7 +53,7 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
   ${sizeClass}
   ${textColorStyle}
   ${isDefault ? "" : defaultClass}
-  ${ClassName ? ClassName : ""}`;
+  ${ClassName ? ClassName : ""} min-w-fit flex items-center justify-center overflow-hidden`;
 
     return (
         <>
@@ -52,32 +63,134 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
                 disabled={isLoading}
                 className={classList}
             >
-                {isLoading ? (
-                    <span role="img">
-                        <span className="ml-3">
-                            <motion.svg
-                                animate={{ rotate: 2500 }}
-                                transition={{
-                                    type: "spring",
-                                    damping: 300,
-                                    repeat: Infinity,
-                                    repeatType: "mirror",
-                                }}
-                                width="12"
-                                height="12"
-                                viewBox="0 0 12 12"
-                                className={fillColorStyle}
-                                xmlns="http://www.w3.org/2000/svg"
+                <div
+                    className={`items-center justify-center relative h-full min-w-[2rem] max-w-fit ${
+                        isLoading || Icon ? "flex" : "hidden"
+                    }`}
+                >
+                    <AnimatePresence>
+                        {isLoading ? (
+                            <motion.div
+                                variants={variant}
+                                custom={-1}
+                                initial="hidden"
+                                animate="visible"
+                                exit="exit"
+                                transition={transition}
+                                className="absolute"
                             >
-                                <path d="M11.5781 6.42188C11.3449 6.42188 11.1562 6.2332 11.1562 6C11.1562 5.30391 11.0203 4.62891 10.7508 3.99258C10.4915 3.37999 10.1163 2.82329 9.6457 2.35313C9.17605 1.88193 8.61923 1.5066 8.00625 1.24805C7.37109 0.979688 6.69609 0.84375 6 0.84375C5.7668 0.84375 5.57812 0.655078 5.57812 0.421875C5.57812 0.188672 5.7668 0 6 0C6.80977 0 7.59609 0.158203 8.33555 0.472266C9.05039 0.773438 9.69141 1.20703 10.2422 1.75781C10.793 2.30859 11.2254 2.95078 11.5277 3.66445C11.8406 4.40391 11.9988 5.19023 11.9988 6C12 6.2332 11.8113 6.42188 11.5781 6.42188Z" />
-                            </motion.svg>
-                        </span>
-                    </span>
-                ) : null}
-                {children}
+                                <motion.div
+                                    animate={{ rotate: 2500 }}
+                                    transition={{
+                                        type: "spring",
+                                        damping: 300,
+                                        repeat: Infinity,
+                                        repeatType: "mirror",
+                                    }}
+                                    className="flex items-center justify-center origin-center ml-3"
+                                >
+                                    <AiOutlineLoading
+                                        className={`origin-center ${
+                                            size === "large"
+                                                ? "text-xl"
+                                                : size === "middle"
+                                                ? "text-lg"
+                                                : size === "small"
+                                                ? "text-sm"
+                                                : "text-xl"
+                                        }`}
+                                    ></AiOutlineLoading>
+                                </motion.div>
+                            </motion.div>
+                        ) : null}
+                    </AnimatePresence>
+                    <AnimatePresence mode="wait">
+                        {!isLoading && typeof Icon !== "undefined" ? (
+                            <motion.div
+                                variants={variant}
+                                custom={1}
+                                initial="hidden"
+                                animate="visible"
+                                exit="exit"
+                                transition={transition}
+                                className="flex items-center justify-center origin-center ml-3 absolute"
+                            >
+                                <Icon
+                                    className={`origin-center ${
+                                        size === "large"
+                                            ? "text-2xl"
+                                            : size === "middle"
+                                            ? "text-xl"
+                                            : size === "small"
+                                            ? "text-lg"
+                                            : "text-md"
+                                    }`}
+                                ></Icon>
+                            </motion.div>
+                        ) : null}
+                    </AnimatePresence>
+                </div>
+                <div>{children}</div>
             </motion.button>
         </>
     );
 };
 
 export default Button;
+
+{
+    /* <AnimatePresence mode="wait">
+    {isLoading ? (
+        <motion.div
+            variants={variant}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            // className="flex items-center justify-center origin-center ml-3 relative"
+        >
+            <motion.div
+                animate={{ rotate: 2500 }}
+                transition={{
+                    type: "spring",
+                    damping: 300,
+                    repeat: Infinity,
+                    repeatType: "mirror",
+                }}
+                className="flex items-center justify-center origin-center ml-3"
+            >
+                <AiOutlineLoading
+                    className={`origin-center ${
+                        size === "large"
+                            ? "text-xl"
+                            : size === "middle"
+                            ? "text-lg"
+                            : size === "small"
+                            ? "text-sm"
+                            : "text-xl"
+                    }`}
+                ></AiOutlineLoading>
+            </motion.div>
+        </motion.div>
+    ) : (
+        <motion.div
+            variants={variant}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            // className="flex items-center justify-center origin-center ml-3 relative"
+        >
+            <Icon
+                className={`origin-center ${
+                    size === "large"
+                        ? "text-xl"
+                        : size === "middle"
+                        ? "text-lg"
+                        : size === "small"
+                        ? "text-sm"
+                        : "text-xl"
+                }`}
+            ></Icon>
+        </motion.div>
+    )}
+</AnimatePresence>; */
+}

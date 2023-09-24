@@ -322,7 +322,7 @@ const Home: React.FC = () => {
                 >
                     <div className="w-full h-full flex flex-col items-start justify-center">
                         <h2 className="mb-5 pr-2 text-xl">دنبال چه شغلی می‌گردید؟</h2>
-                        <SearchFrom></SearchFrom>
+                        <SearchFrom isFilterBarShow={false}></SearchFrom>
                     </div>
                 </motion.div>
             </div>
@@ -353,10 +353,10 @@ const Home: React.FC = () => {
                         },
                     }}
                     navigation={true}
-                    // autoplay={{
-                    //     delay: 3000,
-                    //     disableOnInteraction: false,
-                    // }}
+                    autoplay={{
+                        delay: 3000,
+                        disableOnInteraction: false,
+                    }}
                     modules={[Autoplay, Navigation]}
                 >
                     {Array(7)

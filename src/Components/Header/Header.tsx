@@ -107,7 +107,7 @@ const Header: React.FC = () => {
     return (
         <>
             <div className="w-full h-20 relative">
-                <header className="fixed h-20 w-full px-0 bg-jv-primary lg:bg-jv-light z-20">
+                <header className="fixed h-20 w-full px-0 border-b-[1px] border-solid border-[#dde1e6] rounded-b-xl bg-jv-primary shadow-lg lg:bg-jv-white z-20">
                     {/*//? -------------------- Start Mobile Header -------------------- */}
                     <div className="header-mobile  w-full h-full p-2 lg:hidden flex items-center justify-between">
                         <div className="w-4/12 sm:px-3 flex items-center justify-start">

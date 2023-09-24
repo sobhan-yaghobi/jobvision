@@ -156,8 +156,6 @@
     }
 
     .whyUsBox {
-        /* background: #f8f9fa;
-        box-shadow: inset -20px -20px 60px #d3d4d5, inset 20px 20px 60px #ffffff; */
         background: #f8f9fa;
         box-shadow: inset -19px -19px 29px #dadbdc, inset 19px 19px 29px #ffffff;
     }
@@ -165,5 +163,12 @@
     .accordion {
         background: linear-gradient(145deg, #dfe0e1, #ffffff);
         box-shadow: 2px 2px 1px #d3d4d5, -2px -2px 1px #ffffff;
+    }
+
+    .showFromTop {
+        clip-path: inset(0% 50% 100% 50% round 10px);
+    }
+    .showFromTop:is(.active) {
+        clip-path: inset(0% 0% 0% 0% round 0px);
     }
 }

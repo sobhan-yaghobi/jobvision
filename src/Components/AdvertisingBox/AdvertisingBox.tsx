@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "../Button/Button";
 import StarSvg from "/Svg/Star.svg";
+import { Link } from "react-router-dom";
 
 interface AdvertisingBoxProps {
     data: [];
@@ -16,7 +17,7 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = ({ data, IsResponsive, IsI
             id="Box"
             className={`cursor-default w-full h-full min-h-[10rem] border-2 border-solid border-[#dde1e6] rounded-xl py-2 px-3 bg-transparent flex flex-col justify-between`}
         >
-            <div id="ContentBox" className="flex h-4/6">
+            <Link to={`/jobs`} id="ContentBox" className="text-inherit flex h-4/6">
                 <div id="LogoCompany" className="w-2/12 h-full flex flex-col items-center justify-between p-1">
                     <div className="w-full h-full">
                         <img className="h-1/2 rounded-lg" src="/images/CompanyLogo.webp" alt="" />
@@ -44,7 +45,7 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = ({ data, IsResponsive, IsI
                         </span>
                     </div>
                 </div>
-            </div>
+            </Link>
             <div className="h-2/6 border-t-[1px] border-solid border-[#dde1e6] pt-2 text-xs flex items-center justify-between">
                 <div className="flex items-center">
                     {IsImportant ? (
