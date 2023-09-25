@@ -173,4 +173,8 @@
     .showFromTop:is(.active) {
         clip-path: inset(0% 0% 0% 0% round 0px);
     }
+
+    .box-info-type {
+        @apply text-xs ml-1 mt-2 px-2 py-1 border border-solid border-jv-lightGray3x rounded-lg;
+    }
 }

@@ -76,8 +76,7 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = ({ data, IsResponsive, IsI
                         {IsImportant ? (
                             <>
                                 <div className="text-jv-danger text-xs bg-jv-lightDanger py-1 px-2 rounded-xl">
-                                    {" "}
-                                    فوری{" "}
+                                    فوری
                                 </div>
                                 <span className="w-5 h-[2px] bg-jv-primary -rotate-[75deg] rounded-xl"></span>
                             </>

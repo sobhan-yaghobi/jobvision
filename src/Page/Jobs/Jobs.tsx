@@ -2,21 +2,54 @@ import React, { useState, useRef } from "react";
 import SearchFrom from "../../Components/SearchFrom/SearchFrom";
 import Button from "../../Components/Button/Button";
 import { MdNotificationAdd, MdNotificationsActive } from "react-icons/md";
-import { AiFillCaretDown } from "react-icons/ai";
+import { AiFillCaretDown, AiOutlineHeart, AiOutlineShareAlt } from "react-icons/ai";
+import { VscPreview } from "react-icons/vsc";
 import uuidGenerator from "../../Utils/UuidGenerator";
 import AdvertisingBox from "../../Components/AdvertisingBox/AdvertisingBox";
-
+import { Link } from "react-router-dom";
 interface BoxsOrderType {
     id: string;
     title: string;
     order: "RELATED" | "NEW" | "HIGHEST_SALARY";
 }
-
 const boxOrderArray: BoxsOrderType[] = [
     { id: uuidGenerator(), title: "مرتبط ترین ها", order: "RELATED" },
     { id: uuidGenerator(), title: "جدید ترین ها", order: "NEW" },
     { id: uuidGenerator(), title: "بیشترین حقوق", order: "HIGHEST_SALARY" },
 ];
+
+interface BoxInfoProps {
+    type: "INFO_JOB" | "ABOUT_COMPANY" | "RELATED_ADS" | "RESUME_RECRRDS";
+    info: [];
+}
+
+const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
+    if (type === "INFO_JOB") {
+        return (
+            <>
+                <div className="p-3">Info</div>
+            </>
+        );
+    } else if (type === "ABOUT_COMPANY") {
+        return (
+            <>
+                <div className="p-3">aAbout Company</div>
+            </>
+        );
+    } else if (type === "RELATED_ADS") {
+        return (
+            <>
+                <div className="p-3">Realterd Ads</div>
+            </>
+        );
+    } else if (type === "RESUME_RECRRDS") {
+        return (
+            <>
+                <div className="p-3">Resume Records</div>
+            </>
+        );
+    }
+};
 
 const Jobs: React.FC = () => {
     //? ---------------------------------- WHY Us
@@ -46,7 +79,7 @@ const Jobs: React.FC = () => {
             </div>
             {/*//! -------------------------------------- Seacrh -------------------------------------- */}
 
-            <div className="py-5 px-2 md:px-10 lg:px-24 bg-jv-light relative flex">
+            <div className="py-5 px-2 md:px-10 lg:px-24 bg-jv-light flex">
                 {/*//? -------------------------------------- List Boxs -------------------------------------- */}
                 <div className="listBox ml-2 w-5/12 flex flex-col">
                     <Button
@@ -116,7 +149,81 @@ const Jobs: React.FC = () => {
                 {/*//! -------------------------------------- List Boxs -------------------------------------- */}
 
                 {/*//?-------------------------------------- Box Info -------------------------------------- */}
-                <div className="boxInfo mr-2 w-7/12"></div>
+                <div className="boxInfo mr-2 w-7/12 bg-jv-white table-column sticky top-24 overflow-x-hidden overflow-y-auto h-[82vh]">
+                    <div className="h-24 p-3 bg-jv-white w-full flex justify-between sticky top-0">
+                        <div className="w-9/12">
+                            <h3 className="mb-3 whitespace-break-spaces">برنامه نویس Front-End (React)</h3>
+                            <Link className="text-jv-primary truncate" to="/">
+                                وب گستران سورین
+                            </Link>
+                        </div>
+                        <div className="w-2/12 flex items-start justify-center">
+                            <Button textColor="light" size="middle" isLoading={false} ClickHandler={() => {}}>
+                                ارسال رزومه
+                            </Button>
+                        </div>
+                    </div>
+                    <div className="px-3 w-full border-b-2">
+                        <div className="flex flex-col w-full">
+                            <p className="text-jv-lightGray2x text-sm">تهران ، تهرانپارس</p>
+                            <div className="mb-2 flex flex-wrap">
+                                <div className="box-info-type">امکان جذب کارآموز</div>
+                                <div className="box-info-type">امکان دورکاری</div>
+                            </div>
+                            <div className="my-2 flex items-start justify-between">
+                                <div className="flex flex-col gap-3">
+                                    <p className="text-xs text-jv-lightGray2x">57 روز پیش / 8 - 6 میلیون تومان</p>
+                                    <Button
+                                        ClassName="bg-jv-white"
+                                        textColor="primary"
+                                        size="small"
+                                        isLoading={false}
+                                        ClickHandler={() => {}}
+                                    >
+                                        مشاهده حقوق دریافتی افراد در مشاغل مشابه
+                                    </Button>
+                                </div>
+                                <div className="flex text-2xl text-jv-primary">
+                                    <AiOutlineShareAlt className="mr-1"></AiOutlineShareAlt>
+                                    <AiOutlineHeart className="mr-1"></AiOutlineHeart>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="w-full bg-jv-light p-3 mt-5 border-t-[1px] border-solid border-jv-lightGray3x flex items-center justify-start">
+                        <div className="w-4/12 flex items-center text-jv-lightGray fill-jv-lightGray2x">
+                            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M14.25 7.75C14.25 8.99264 13.2426 10 12 10V11.5C14.0711 11.5 15.75 9.82107 15.75 7.75H14.25ZM12 10C10.7574 10 9.75 8.99264 9.75 7.75H8.25C8.25 9.82107 9.92893 11.5 12 11.5V10ZM9.75 7.75C9.75 6.50736 10.7574 5.5 12 5.5V4C9.92893 4 8.25 5.67893 8.25 7.75H9.75ZM12 5.5C13.2426 5.5 14.25 6.50736 14.25 7.75H15.75C15.75 5.67893 14.0711 4 12 4V5.5ZM9 14.5H15V13H9V14.5ZM15 19H9V20.5H15V19ZM9 19C7.75736 19 6.75 17.9926 6.75 16.75H5.25C5.25 18.8211 6.92893 20.5 9 20.5V19ZM17.25 16.75C17.25 17.9926 16.2426 19 15 19V20.5C17.0711 20.5 18.75 18.8211 18.75 16.75H17.25ZM15 14.5C16.2426 14.5 17.25 15.5074 17.25 16.75H18.75C18.75 14.6789 17.0711 13 15 13V14.5ZM9 13C6.92893 13 5.25 14.6789 5.25 16.75H6.75C6.75 15.5074 7.75736 14.5 9 14.5V13Z" />
+
+                                <path d="M7.75214 10.3887C7.59441 10.1353 7.29846 10 7 10C5.75736 10 4.75 8.99264 4.75 7.75C4.75 6.50736 5.75736 5.5 7 5.5C7.29846 5.5 7.59441 5.36473 7.75214 5.11135C7.75912 5.10014 7.76613 5.08896 7.7732 5.07782C8.0358 4.66331 7.90275 4.0764 7.415 4.0227C7.27873 4.0077 7.14027 4 7 4C4.92893 4 3.25 5.67893 3.25 7.75C3.25 9.82107 4.92893 11.5 7 11.5C7.14027 11.5 7.27873 11.4923 7.415 11.4773C7.90275 11.4236 8.0358 10.8367 7.7732 10.4222C7.76614 10.411 7.75912 10.3999 7.75214 10.3887Z" />
+
+                                <path d="M4.70829 18.3169C4.59477 18.1275 4.39439 18 4.17359 18H4C2.75736 18 1.75 16.9926 1.75 15.75C1.75 14.5074 2.75736 13.5 4 13.5H4.17359C4.39439 13.5 4.59477 13.3725 4.70829 13.1831C4.98539 12.7208 4.68468 12 4.14569 12H4C1.92893 12 0.25 13.6789 0.25 15.75C0.25 17.8211 1.92893 19.5 4 19.5H4.14569C4.68469 19.5 4.98539 18.7792 4.70829 18.3169Z" />
+
+                                <path d="M16.2268 10.4222C15.9642 10.8367 16.0973 11.4236 16.585 11.4773C16.7213 11.4923 16.8597 11.5 17 11.5C19.0711 11.5 20.75 9.82107 20.75 7.75C20.75 5.67893 19.0711 4 17 4C16.8597 4 16.7213 4.0077 16.585 4.0227C16.0973 4.0764 15.9642 4.66331 16.2268 5.07782C16.2339 5.08896 16.2409 5.10014 16.2479 5.11134C16.4056 5.36472 16.7015 5.5 17 5.5C18.2426 5.5 19.25 6.50736 19.25 7.75C19.25 8.99264 18.2426 10 17 10C16.7015 10 16.4056 10.1353 16.2479 10.3887C16.2409 10.3999 16.2339 10.411 16.2268 10.4222Z" />
+
+                                <path d="M19.2917 18.3169C19.0146 18.7792 19.3153 19.5 19.8543 19.5H20C22.0711 19.5 23.75 17.8211 23.75 15.75C23.75 13.6789 22.0711 12 20 12H19.8543C19.3153 12 19.0146 12.7208 19.2917 13.1831C19.4052 13.3725 19.6056 13.5 19.8264 13.5H20C21.2426 13.5 22.25 14.5074 22.25 15.75C22.25 16.9926 21.2426 18 20 18H19.8264C19.6056 18 19.4052 18.1275 19.2917 18.3169Z" />
+                            </svg>
+                            <p className="mr-4 text-xs truncate">201 تا 500 نفر</p>
+                        </div>
+                        <div className="w-8/12 flex items-center text-jv-lightGray">
+                            <VscPreview className="text-2xl text-jv-lightGray2x" />
+                            <p className="mr-4 text-xs truncate w-10/12">
+                                شرکت ایران فاوا گسترش، وابسته به گروه صنعتی ایران خودرو
+                            </p>
+                        </div>
+                    </div>
+                    <div className="w-full sticky top-24">
+                        <ul className="flex px-3 pt-3 border-b-[1px] border-solid border-jv-lightGray3x">
+                            <li className="ml-5 py-3 cursor-pointer text-jv-primary border-b-2 border-solid border-jv-primary">
+                                درباره شغل
+                            </li>
+                            <li className="ml-5 py-3 cursor-pointer">درباره شرکت</li>
+                            <li className="ml-5 py-3 cursor-pointer">سایر آگهی های این شرکت</li>
+                            <li className="ml-5 py-3 cursor-pointer">سوابق ارسال رزومه</li>
+                        </ul>
+                        <BoxInfo type="INFO_JOB" info={[]}></BoxInfo>
+                    </div>
+                </div>
                 {/*//! -------------------------------------- Box Info -------------------------------------- */}
             </div>
         </>
