@@ -1,12 +1,14 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, Fragment } from "react";
 import SearchFrom from "../../Components/SearchFrom/SearchFrom";
 import Button from "../../Components/Button/Button";
 import { MdNotificationAdd, MdNotificationsActive } from "react-icons/md";
 import { AiFillCaretDown, AiOutlineHeart, AiOutlineShareAlt } from "react-icons/ai";
 import { VscPreview } from "react-icons/vsc";
+import { GoReport } from "react-icons/go";
 import uuidGenerator from "../../Utils/UuidGenerator";
 import AdvertisingBox from "../../Components/AdvertisingBox/AdvertisingBox";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 interface BoxsOrderType {
     id: string;
     title: string;
@@ -18,6 +20,70 @@ const boxOrderArray: BoxsOrderType[] = [
     { id: uuidGenerator(), title: "بیشترین حقوق", order: "HIGHEST_SALARY" },
 ];
 
+interface AboutJob {
+    id: string;
+    title: string;
+    item: { id: string; itemTitle?: string; itemDesc: string } | { id: string; itemTitle?: string; itemDesc: string }[];
+}
+
+const aboutJobArray: AboutJob[] = [
+    {
+        id: uuidGenerator(),
+        title: "شرایط  کاراموزی",
+        item: [
+            { id: uuidGenerator(), itemTitle: "طول دوره", itemDesc: "3 ماه(پاره وقت و تمام وقت)" },
+            { id: uuidGenerator(), itemTitle: "محل شرکت", itemDesc: "محدوده دانشگاه شریف" },
+            { id: uuidGenerator(), itemDesc: "احتیاج به پیش‌نیاز و سابقه کاری نیست" },
+        ],
+    },
+    {
+        id: uuidGenerator(),
+        title: "آموزش ها",
+        item: [
+            { id: uuidGenerator(), itemDesc: "فروش و بازاریابی" },
+            { id: uuidGenerator(), itemDesc: "برنامه نویسی(وب و هوش)" },
+        ],
+    },
+    {
+        id: uuidGenerator(),
+        title: "حوزه فعالیت شرکت",
+        item: [
+            { id: uuidGenerator(), itemDesc: "انجام پروژه های نرم‌افزاری/ اپلیکیشن تحت وب و موبایل" },
+            { id: uuidGenerator(), itemDesc: "برگزاری و فروش دوره های آموزش برنامه‌نویسی و هوش مصنوعی" },
+        ],
+    },
+    {
+        id: uuidGenerator(),
+        title: "شرایط کاری",
+        item: [
+            { id: uuidGenerator(), itemDesc: "اموزش برنامه نویسی" },
+            { id: uuidGenerator(), itemDesc: "همکاری در بخش فروش" },
+            { id: uuidGenerator(), itemDesc: "همکاری در بخش آموزش و پشتیبانی دوره ها" },
+        ],
+    },
+    {
+        id: uuidGenerator(),
+        title: "مهارت هایی که در طول دوره فرا خواهید گرفت",
+        item: [
+            { id: uuidGenerator(), itemDesc: "برنامه نویسی وب" },
+            { id: uuidGenerator(), itemDesc: "مهارت های فروش و بازاریابی" },
+            { id: uuidGenerator(), itemDesc: "کسب درآمد از برنامه نویسی" },
+        ],
+    },
+    {
+        id: uuidGenerator(),
+        title: "قابلیت های لازم",
+        item: [
+            { id: uuidGenerator(), itemDesc: "علاقه به یادگیری" },
+            { id: uuidGenerator(), itemDesc: "روحیه کار تیمی" },
+            { id: uuidGenerator(), itemDesc: "تمرکز بر روی فعالیت های کاری" },
+            { id: uuidGenerator(), itemDesc: "نظم و انضباط" },
+            { id: uuidGenerator(), itemDesc: "انرژی بالا و روابط اجتماعی خوب" },
+            { id: uuidGenerator(), itemDesc: "عدم اشتغال به کار" },
+        ],
+    },
+];
+
 interface BoxInfoProps {
     type: "INFO_JOB" | "ABOUT_COMPANY" | "RELATED_ADS" | "RESUME_RECRRDS";
     info: [];
@@ -27,27 +93,128 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
     if (type === "INFO_JOB") {
         return (
             <>
-                <div className="p-3">Info</div>
+                <section className="mb-6">
+                    <h2>مشخصات موقعیت شغلی</h2>
+                    <div className="text-sm pr-3 flex flex-wrap">
+                        <div className="w-1/2 pl-5 mt-5">
+                            <h5>روز و ساعت کاری</h5>
+                            <p className="truncate text-jv-lightGray2x">شنبه تا چهار شنبه 10 الی 19</p>
+                        </div>
+                        <div className="w-1/2 pl-5 mt-5">
+                            <h5>نوع همکاری</h5>
+                            <p className="truncate text-jv-lightGray2x">تمام وقت یا پاره وقت</p>
+                        </div>
+                        <div className="w-1/2 pl-5 mt-5">
+                            <h5>سفرهای کاری</h5>
+                            <p className="truncate text-jv-lightGray2x">-</p>
+                        </div>
+                        <div className="w-1/2 pl-5 mt-5">
+                            <h5>مزایا و تسهیلات</h5>
+                            <p className="truncate text-jv-lightGray2x">کمک هزینه دوره آموزشی</p>
+                        </div>
+                    </div>
+                </section>
+                <section className="mb-6">
+                    <h2>شاخص های کلیدی از نظر کارفرما</h2>
+                    <div className="text-sm pr-3 pt-2 text-jv-lightGray2x">
+                        <div className="mt-3">
+                            کارشناسی مهندسی صنایع یا مدیریت / بازرگانی / کسب و کار یا علوم اجتماعی و جامعه شناسی /
+                            روانشناسی/ آموزش/ علوم تربیتی
+                        </div>
+                        <div className="mt-5 text-jv-black">
+                            <span className="box-info-type">Microsoft Word - متوسط</span>
+                            <span className="box-info-type">Microsoft Excel - متوسط</span>
+                        </div>
+                        <div className="mt-5">
+                            <span className="text-jv-lightGray">سن</span>: 18 تا 23 سال
+                        </div>
+                    </div>
+                </section>
+                <section className="mb-6">
+                    <h2>شرح شغل و وظایف</h2>
+                    <div className="mt-5 pr-3">
+                        <p className="text-sm mb-6">
+                            آکادمی آیولرن با افتخار اقدام به جذب کارآموز برای اموزش مهارت و کسب در امد از بین دانشجویان
+                            و فارغ التحصیلان مشتاق به یادگیری و کسب در آمد میکند.
+                        </p>
+                        {aboutJobArray.map((mainItem) => (
+                            <Fragment key={mainItem.id}>
+                                <div className="flex items-center">
+                                    <div className="w-2 h-2 ml-2 bg-jv-primary rounded-full"></div>
+                                    <h5 className="text-base mb-1">{mainItem.title}</h5>
+                                </div>
+                                <ul key={mainItem.id} className="mb-6 text-jv-lightGray2x text-sm">
+                                    {!Array.isArray(mainItem.item) ? (
+                                        <li key={mainItem.item.id}>- {mainItem.item.itemDesc}</li>
+                                    ) : (
+                                        mainItem.item.map((item) =>
+                                            item.itemTitle ? (
+                                                <li key={item.id}>
+                                                    <span>
+                                                        - <span className="text-jv-lightGray">{item.itemTitle}</span> :
+                                                    </span>
+                                                    <span> {item.itemDesc}</span>
+                                                </li>
+                                            ) : (
+                                                <li key={item.id}>- {item.itemDesc}</li>
+                                            )
+                                        )
+                                    )}
+                                </ul>
+                            </Fragment>
+                        ))}
+                    </div>
+                </section>
+                <section className="mb-6 pb-6 border-b-[1px] border-solid border-jv-lightGray3x">
+                    <h2>شرایط احراز شغل</h2>
+                    <div className="text-sm pr-3 flex flex-wrap">
+                        <div className="w-full pl-5 mt-5">
+                            <h4>سن</h4>
+                            <p className="truncate text-jv-lightGray2x">18 - 23 سال</p>
+                        </div>
+                        <div className="w-full pl-5 mt-5">
+                            <h4>جنسیت</h4>
+                            <p className="truncate text-jv-lightGray2x">ترجیها خانوم</p>
+                        </div>
+                        <div className="w-full pl-5 mt-5">
+                            <h4>تحصیلات</h4>
+                            <div className="text-jv-lightGray2x flex flex-row flex-wrap">
+                                <span className="box-info-type">کارشناسی | مهندسی صنایع</span>
+                                <span className="box-info-type">کارشناسی | مدیریت / بازرگانی / کسب و کار</span>
+                                <span className="box-info-type">
+                                    کارشناسی | علوم اجتماعی و جامعه شناسی / روانشناسی/ آموزش/ علوم تربیتی
+                                </span>
+                            </div>
+                        </div>
+                        <div className="w-full pl-5 mt-5">
+                            <h4>نرم افزارها</h4>
+                            <div className="text-jv-lightGray2x flex flex-row flex-wrap">
+                                <span className="box-info-type">Microsoft Word | متوسط</span>
+                                <span className="box-info-type">Microsoft Excel | متوسط</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section className="mb-6">
+                    <Button
+                        size="middle"
+                        textColor="light"
+                        ClassName="w-full !bg-jv-light !text-jv-danger rounded-lg !border-jv-danger mx-2"
+                        ClickHandler={() => {}}
+                        isLoading={false}
+                        Icon={GoReport}
+                    >
+                        ثبت مشکل و تخلف آگهی
+                    </Button>
+                </section>
             </>
         );
     } else if (type === "ABOUT_COMPANY") {
-        return (
-            <>
-                <div className="p-3">aAbout Company</div>
-            </>
-        );
+        return <></>;
     } else if (type === "RELATED_ADS") {
-        return (
-            <>
-                <div className="p-3">Realterd Ads</div>
-            </>
-        );
+        return <>Realterd Ads</>;
     } else if (type === "RESUME_RECRRDS") {
-        return (
-            <>
-                <div className="p-3">Resume Records</div>
-            </>
-        );
+        return <>Resume Records</>;
     }
 };
 
@@ -93,7 +260,7 @@ const Jobs: React.FC = () => {
                     >
                         فعال سازی اطلاع رسانی شغل ها
                     </Button>
-                    <div className="p-3 my-2 rounded-lg bg-jv-white flex items-center justify-between">
+                    <div className="p-3 mt-2 rounded-lg bg-jv-white flex items-center justify-between">
                         <section>37524 فرصت شغلی فعال</section>
                         {Object.values(orderMain).length ? (
                             <section className="flex items-center">
@@ -135,7 +302,7 @@ const Jobs: React.FC = () => {
                         {Array(13)
                             .fill("")
                             .map((item, index) => (
-                                <div className="mb-2">
+                                <div className="mt-2">
                                     <AdvertisingBox
                                         showSendCv={false}
                                         IsImportant={index === 2 ? true : false}
@@ -149,10 +316,10 @@ const Jobs: React.FC = () => {
                 {/*//! -------------------------------------- List Boxs -------------------------------------- */}
 
                 {/*//?-------------------------------------- Box Info -------------------------------------- */}
-                <div className="boxInfo mr-2 w-7/12 bg-jv-white table-column sticky top-24 overflow-x-hidden overflow-y-auto h-[82vh]">
-                    <div className="h-24 p-3 bg-jv-white w-full flex justify-between sticky top-0">
+                <div className="boxInfo mr-2 w-7/12 bg-jv-white table-column sticky top-24 overflow-x-hidden overflow-y-auto h-[82vh] rounded-xl">
+                    <div className="h-28 p-3 bg-jv-white w-full flex justify-between sticky top-0">
                         <div className="w-9/12">
-                            <h3 className="mb-3 whitespace-break-spaces">برنامه نویس Front-End (React)</h3>
+                            <h3 className="mb-3 twoLine">برنامه نویس Front-End (React)</h3>
                             <Link className="text-jv-primary truncate" to="/">
                                 وب گستران سورین
                             </Link>
@@ -212,15 +379,29 @@ const Jobs: React.FC = () => {
                             </p>
                         </div>
                     </div>
-                    <div className="w-full sticky top-24">
+                    <div className="w-full sticky top-28 bg-jv-white">
                         <ul className="flex px-3 pt-3 border-b-[1px] border-solid border-jv-lightGray3x">
-                            <li className="ml-5 py-3 cursor-pointer text-jv-primary border-b-2 border-solid border-jv-primary">
+                            <li
+                                className={`ml-5 py-3 cursor-pointer border-b-2 border-solid ${
+                                    true
+                                        ? "border-jv-primary text-jv-primary"
+                                        : "border-transparent hover:border-jv-lightGray2x"
+                                }`}
+                            >
                                 درباره شغل
                             </li>
-                            <li className="ml-5 py-3 cursor-pointer">درباره شرکت</li>
-                            <li className="ml-5 py-3 cursor-pointer">سایر آگهی های این شرکت</li>
-                            <li className="ml-5 py-3 cursor-pointer">سوابق ارسال رزومه</li>
+                            <li className="ml-5 py-3 cursor-pointer border-b-2 border-solid hover:border-jv-lightGray2x border-transparent">
+                                درباره شرکت
+                            </li>
+                            <li className="ml-5 py-3 cursor-pointer border-b-2 border-solid hover:border-jv-lightGray2x border-transparent">
+                                سایر آگهی های این شرکت
+                            </li>
+                            <li className="ml-5 py-3 cursor-pointer border-b-2 border-solid hover:border-jv-lightGray2x border-transparent">
+                                سوابق ارسال رزومه
+                            </li>
                         </ul>
+                    </div>
+                    <div className="px-3 py-6">
                         <BoxInfo type="INFO_JOB" info={[]}></BoxInfo>
                     </div>
                 </div>
