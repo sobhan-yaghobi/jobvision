@@ -5,10 +5,12 @@ import { MdNotificationAdd, MdNotificationsActive } from "react-icons/md";
 import { AiFillCaretDown, AiOutlineHeart, AiOutlineShareAlt } from "react-icons/ai";
 import { VscPreview } from "react-icons/vsc";
 import { GoReport } from "react-icons/go";
+import { FaStar, FaRegStar } from "react-icons/fa";
 import uuidGenerator from "../../Utils/UuidGenerator";
 import AdvertisingBox from "../../Components/AdvertisingBox/AdvertisingBox";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import Accordion from "../../Components/Accordion/Accordion";
 interface BoxsOrderType {
     id: string;
     title: string;
@@ -210,7 +212,130 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
             </>
         );
     } else if (type === "ABOUT_COMPANY") {
-        return <></>;
+        return (
+            <>
+                <section className="mb-6">
+                    <h2>امتیاز سازمان</h2>
+                    <div className="mt-2">
+                        <div>
+                            <Accordion
+                                type="Children"
+                                iconType="Menu"
+                                title={
+                                    <div className="flex items-center text-lg text-jv-golden">
+                                        <p className="text-jv-lightGray ml-3">4.8</p>
+                                        <FaStar />
+                                        <FaStar />
+                                        <FaStar />
+                                        <FaRegStar />
+                                        <FaRegStar />
+                                    </div>
+                                }
+                                index={1}
+                                isResponsive
+                                listStyle="Ul"
+                                theme="Light"
+                                noSpace
+                            >
+                                <div className="flex flex-wrap text-sm py-3">
+                                    <div className="w-1/2">
+                                        <span className="danaBold">
+                                            5.0
+                                            <FaStar className="text-jv-golden mx-1 inline-block" />
+                                        </span>
+                                        <span>محبوبیت (براساس بازدید کارجویان)</span>
+                                    </div>
+                                    <div className="w-1/2">
+                                        <span className="danaBold">
+                                            4.8
+                                            <FaStar className="text-jv-golden mx-1 inline-block" />
+                                        </span>
+                                        <span>پاسخگویی به رزومه‌های دریافتی</span>
+                                    </div>
+                                    <div className="w-1/2">
+                                        <span className="danaBold">
+                                            4.1
+                                            <FaStar className="text-jv-golden mx-1 inline-block" />
+                                        </span>
+                                        <span>تجربه کارجویان از جلسه مصاحبه</span>
+                                    </div>
+                                </div>
+                            </Accordion>
+                        </div>
+                    </div>
+                </section>
+                <section className="mb-6">
+                    <div className="flex items-center justify-between">
+                        <h2 className="w-6/12 truncate">درباره آیلورن</h2>
+                        <Link to="/" className="w-4/12 truncate text-left">
+                            aiolearn.com
+                        </Link>
+                    </div>
+                    <div className="my-6 text-jv-lightGray2x text-sm">
+                        <p>آکادمی مهارت آیولرن</p>
+                        <p>
+                            آیولرن از سال 1392 فعالیت خود را آغاز کرد و در سال 1400 شروع به برگذاری کلاس های آموزشی برای
+                            افراد مختلف در سراسر ایران کرده است. هدف اصلی آیولرن این است افراد با شناسایی اهداف خود
+                            بتوانند مسیر درست زندگی را تشخیص داده و در مدت زمان کوتاه به نتیجه برسند.
+                        </p>
+                    </div>
+                    <div className="flex items-center justify-center">
+                        <Button textColor="primary" size="middle" isLoading={false} ClickHandler={() => {}}>
+                            مشاهده سایر موقعیت های شغلی این سازمان
+                        </Button>
+                    </div>
+                </section>
+                <section className="mb-6 py-4">
+                    <div
+                        style={{
+                            backgroundImage: "url('/images/company-image.webp')",
+                        }}
+                        className="w-full h-36 bg-fixed bg-center bg-no-repeat bg-contain"
+                    ></div>
+                </section>
+                <section className="mb-6">
+                    <h2>مزایا و امکانات رفاهی</h2>
+                    <div className="flex flex-wrap py-3">
+                        <span className="box-info-type__success">وام</span>
+                        <span className="box-info-type__success">پاداش</span>
+                        <span className="box-info-type__success">بیمه درمان تکمیلی</span>
+                        <span className="box-info-type__success">پارکینگ</span>
+                        <span className="box-info-type__success">ناهار</span>
+                        <span className="box-info-type__success">پزشک سازمانی</span>
+                        <span className="box-info-type__success">بسته ها و هدایای مناسبتی</span>
+                    </div>
+                </section>
+                <section>
+                    <h3>در یک نگاه</h3>
+                    <div className="text-sm pr-3 flex flex-wrap">
+                        <div className="w-1/2 pl-5 mt-5">
+                            <h5>سال تاسیس</h5>
+                            <p className="truncate text-jv-lightGray2x">1383</p>
+                        </div>
+                        <div className="w-1/2 pl-5 mt-5">
+                            <h5>اندازه سازمان</h5>
+                            <p className="truncate text-jv-lightGray2x">501 تا 1000 نفر</p>
+                        </div>
+                        <div className="w-1/2 pl-5 mt-5">
+                            <h5>نوع فعالیت</h5>
+                            <p className="truncate text-jv-lightGray2x">شرکت ایرانی دارای مشتریان داخلی</p>
+                        </div>
+                        <div className="w-1/2 pl-5 mt-5">
+                            <h5>مالکیت</h5>
+                            <p className="truncate text-jv-lightGray2x">خصوصی</p>
+                        </div>
+                        <div className="w-1/2 pl-5 mt-5">
+                            <h5>صنعت</h5>
+                            <p className="truncate text-jv-lightGray2x">خودرو و صنایع وابسته</p>
+                        </div>
+                        <div className="w-1/2 pl-5 mt-5">
+                            <h5>برند</h5>
+                            <p className="truncate text-jv-lightGray2x">BMW-MINI</p>
+                        </div>
+                    </div>
+                </section>
+            </>
+        );
     } else if (type === "RELATED_ADS") {
         return <>Realterd Ads</>;
     } else if (type === "RESUME_RECRRDS") {

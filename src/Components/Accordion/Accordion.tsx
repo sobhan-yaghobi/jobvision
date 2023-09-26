@@ -4,7 +4,7 @@ import { AiFillCaretDown } from "react-icons/ai";
 
 interface AccordionMainProps {
     index: number;
-    title: string;
+    title: string | React.ReactNode;
     isOpen?: boolean | undefined;
     theme: "Dark" | "Light" | "transparent";
     noSpace?: boolean;
@@ -29,11 +29,15 @@ type AccordionTypesProps =
           propertyChildName: string;
           iSubItem: boolean;
           propertySubName: string;
+      }
+    | {
+          type: "Children";
+          children: React.ReactNode;
       };
 
 type AccordionProps = AccordionTypesProps & AccordionMainProps;
 
-const Accordion: React.FC<AccordionProps> = (props) => {
+const Accordion: React.FC<React.PropsWithChildren<AccordionProps>> = (props) => {
     const [isActive, setIsActive] = useState<boolean>(typeof props.isOpen === "undefined" ? false : props.isOpen);
 
     // !---------------------- Custom ClassLists
@@ -213,6 +217,8 @@ const Accordion: React.FC<AccordionProps> = (props) => {
                         <MenuAccordionGenerator></MenuAccordionGenerator>
                     ) : props.type === "Item" ? (
                         <ItemAccordionGenaretor></ItemAccordionGenaretor>
+                    ) : props.type === "Children" ? (
+                        props.children
                     ) : null}
                 </div>
             </div>

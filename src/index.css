@@ -25,7 +25,9 @@
     --dangerColor: #fa5555;
     --lightDangerColor: #fbedee;
     --successColor: #45c26f;
+    --lightSuccessColor: #dbffe6;
     --warningColor: #e1bc29;
+    --goldenColor: #facc15;
     --blueColor: #0fa5e9;
     --purpleColor: #787ff6;
     --lightBlueColor: #78d5f5;
@@ -86,6 +88,14 @@
         -webkit-line-clamp: 2;
         line-clamp: 2;
         -webkit-box-orient: vertical;
+    }
+
+    .box-info-type {
+        @apply text-xs ml-1 mt-2 px-2 py-1 border border-solid border-jv-lightGray3x rounded-lg;
+    }
+
+    .box-info-type__success {
+        @apply box-info-type border-jv-success bg-jv-lightSuccess text-jv-success;
     }
 }
 
@@ -180,9 +190,5 @@
     }
     .showFromTop:is(.active) {
         clip-path: inset(0% 0% 0% 0% round 0px);
-    }
-
-    .box-info-type {
-        @apply text-xs ml-1 mt-2 px-2 py-1 border border-solid border-jv-lightGray3x rounded-lg;
     }
 }
