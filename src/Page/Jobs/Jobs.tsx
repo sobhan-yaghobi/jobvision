@@ -9,8 +9,24 @@ import { FaStar, FaRegStar } from "react-icons/fa";
 import uuidGenerator from "../../Utils/UuidGenerator";
 import AdvertisingBox from "../../Components/AdvertisingBox/AdvertisingBox";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { Variant, motion } from "framer-motion";
 import Accordion from "../../Components/Accordion/Accordion";
+
+const showMainItemVariant = {
+    hidden: { y: 30, opacity: 0.1, zIndex: 0 },
+    visible: {
+        y: 0,
+        opacity: 1,
+        transition: {
+            type: "spring",
+            duration: 0.1,
+            ease: "backOut",
+            opacity: {
+                delay: 0.1,
+            },
+        },
+    },
+};
 interface BoxsOrderType {
     id: string;
     title: string;
@@ -86,8 +102,23 @@ const aboutJobArray: AboutJob[] = [
     },
 ];
 
+type InfoTypes = "INFO_JOB" | "ABOUT_COMPANY" | "RELATED_ADS" | "RESUME_RECRRDS";
+
+interface MainItemBoxInfoType {
+    id: string;
+    title: string;
+    type: InfoTypes;
+}
+
+const mainItemsBoxInfos: MainItemBoxInfoType[] = [
+    { id: uuidGenerator(), title: "درباره شغل", type: "INFO_JOB" },
+    { id: uuidGenerator(), title: "درباره شرکت", type: "ABOUT_COMPANY" },
+    { id: uuidGenerator(), title: "سایر آگهی های این شرکت", type: "RELATED_ADS" },
+    { id: uuidGenerator(), title: "سوابق ارسال ززمه", type: "RESUME_RECRRDS" },
+];
+
 interface BoxInfoProps {
-    type: "INFO_JOB" | "ABOUT_COMPANY" | "RELATED_ADS" | "RESUME_RECRRDS";
+    type: InfoTypes;
     info: [];
 }
 
@@ -236,6 +267,7 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
                                 listStyle="Ul"
                                 theme="Light"
                                 noSpace
+                                isOpen
                             >
                                 <div className="flex flex-wrap text-sm py-3">
                                     <div className="w-1/2">
@@ -337,9 +369,32 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
             </>
         );
     } else if (type === "RELATED_ADS") {
-        return <>Realterd Ads</>;
+        return (
+            <>
+                <section className="mb-6">
+                    {Array(8)
+                        .fill("")
+                        .map((value, index) => (
+                            <div className="mt-3">
+                                <AdvertisingBox key={index + 1} data={[]} showSendCv></AdvertisingBox>
+                            </div>
+                        ))}
+                </section>
+            </>
+        );
     } else if (type === "RESUME_RECRRDS") {
-        return <>Resume Records</>;
+        return (
+            <>
+                <section>
+                    <h2>سوابق ارسال رزومه برای این شرکت</h2>
+                    <div className="pt-24 text-center">
+                        <p className="text-jv-lightGray2x">
+                            برای دیدن سوابق ارسال رزومه، لطفا وارد حساب کاربری خود شوید.
+                        </p>
+                    </div>
+                </section>
+            </>
+        );
     }
 };
 
@@ -362,6 +417,11 @@ const Jobs: React.FC = () => {
     const showOrderAction = () => orderMenu.current?.classList.add("active");
     const hideOrderAction = () => orderMenu.current?.classList.remove("active");
     //! ---------------------------------- Box Order
+
+    //? ---------------------------------- Box Info
+    const [mainItemInfo, setMainItemInfo] = useState<MainItemBoxInfoType>(mainItemsBoxInfos[0]);
+
+    //! ---------------------------------- Box Info
 
     return (
         <>
@@ -442,7 +502,7 @@ const Jobs: React.FC = () => {
 
                 {/*//?-------------------------------------- Box Info -------------------------------------- */}
                 <div className="boxInfo mr-2 w-7/12 bg-jv-white table-column sticky top-24 overflow-x-hidden overflow-y-auto h-[82vh] rounded-xl">
-                    <div className="h-28 p-3 bg-jv-white w-full flex justify-between sticky top-0">
+                    <div className="h-28 p-3 bg-jv-white w-full flex justify-between sticky top-0 z-40">
                         <div className="w-9/12">
                             <h3 className="mb-3 twoLine">برنامه نویس Front-End (React)</h3>
                             <Link className="text-jv-primary truncate" to="/">
@@ -504,31 +564,34 @@ const Jobs: React.FC = () => {
                             </p>
                         </div>
                     </div>
-                    <div className="w-full sticky top-28 bg-jv-white">
+                    <div className="w-full sticky top-28 bg-jv-white z-40">
                         <ul className="flex px-3 pt-3 border-b-[1px] border-solid border-jv-lightGray3x">
-                            <li
-                                className={`ml-5 py-3 cursor-pointer border-b-2 border-solid ${
-                                    true
-                                        ? "border-jv-primary text-jv-primary"
-                                        : "border-transparent hover:border-jv-lightGray2x"
-                                }`}
-                            >
-                                درباره شغل
-                            </li>
-                            <li className="ml-5 py-3 cursor-pointer border-b-2 border-solid hover:border-jv-lightGray2x border-transparent">
-                                درباره شرکت
-                            </li>
-                            <li className="ml-5 py-3 cursor-pointer border-b-2 border-solid hover:border-jv-lightGray2x border-transparent">
-                                سایر آگهی های این شرکت
-                            </li>
-                            <li className="ml-5 py-3 cursor-pointer border-b-2 border-solid hover:border-jv-lightGray2x border-transparent">
-                                سوابق ارسال رزومه
-                            </li>
+                            {mainItemsBoxInfos.map((item) => (
+                                <li
+                                    onClick={() => setMainItemInfo(item)}
+                                    className={`ml-5 py-3 cursor-pointer border-b-2 border-solid ${
+                                        mainItemInfo.id === item.id
+                                            ? "border-jv-primary text-jv-primary"
+                                            : "border-transparent hover:border-jv-lightGray2x"
+                                    }`}
+                                >
+                                    {" "}
+                                    {item.title}
+                                </li>
+                            ))}
                         </ul>
                     </div>
-                    <div className="px-3 py-6">
-                        <BoxInfo type="INFO_JOB" info={[]}></BoxInfo>
-                    </div>
+                    <motion.div
+                        variants={showMainItemVariant}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        key={mainItemInfo.id}
+                        transition={{ ease: "backOut" }}
+                        className="px-3 py-6 -z-10"
+                    >
+                        <BoxInfo type={mainItemInfo.type} info={[]}></BoxInfo>
+                    </motion.div>
                 </div>
                 {/*//! -------------------------------------- Box Info -------------------------------------- */}
             </div>

@@ -57,7 +57,7 @@ export const MenuDesktopItemGenerate: React.FC<MenuDesktopItemGenerateProps> = (
                             //
                             SublinkParentClassName="w-full p-3 cursor-default hiiden"
                             SublinkChildClassName="w-full flex items-center mt-2 first:mt-0"
-                            SublinkLinkWrapperClassName="text-jv-dark w-full inline-block hover:text-jv-primary"
+                            SublinkLinkWrapperClassName="text-jv-gray w-full inline-block hover:text-jv-primary"
                             Data={mainItem.links}
                             ClickHandler={() => {}}
                             isChildrenShow
