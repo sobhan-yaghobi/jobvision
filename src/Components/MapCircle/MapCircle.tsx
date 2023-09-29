@@ -2,6 +2,9 @@ import React, { useState } from "react";
 // Types
 import { messageType, MessageArray } from "./MapCircle.type";
 
+// Animations
+import { ShowAndHideScale_Ex } from "../../Animations/UtilsAnimation";
+
 // Functions
 import { sample } from "lodash";
 
@@ -12,18 +15,6 @@ import useAnimationStop from "../../Hooks/useAnimationStop";
 import { motion, AnimatePresence } from "framer-motion";
 
 const MapCircle: React.FC = () => {
-    const showBoxVariant = {
-        hidden: { opacity: 0, scale: 0.8 },
-        visible: {
-            opacity: 1,
-            scale: 1,
-            transition: {
-                scale: { delay: 0.3 },
-            },
-        },
-        exit: { opacity: 0, scale: 0.8 },
-    };
-
     const [message, setMessage] = useState<messageType>({} as messageType);
 
     const stopAnimate = () => {
@@ -563,7 +554,7 @@ const MapCircle: React.FC = () => {
                 <AnimatePresence mode="wait">
                     {message.isShow ? (
                         <motion.foreignObject
-                            variants={showBoxVariant}
+                            variants={ShowAndHideScale_Ex}
                             initial="hidden"
                             animate="visible"
                             exit="exit"
