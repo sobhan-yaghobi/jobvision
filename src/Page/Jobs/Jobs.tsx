@@ -1,13 +1,16 @@
 import React, { useState, useRef, Fragment } from "react";
-import { Link } from "react-router-dom";
+// Functions
 import uuidGenerator from "../../Utils/UuidGenerator";
 
+// Components
 import SearchFrom from "../../Components/SearchFrom/SearchFrom";
 import Button from "../../Components/Button/Button";
 import AdvertisingBox from "../../Components/AdvertisingBox/AdvertisingBox";
 import Accordion from "../../Components/Accordion/Accordion";
 import { AnimatePresence, motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
+// Icons
 import { AiFillCaretDown, AiOutlineHeart, AiOutlineShareAlt } from "react-icons/ai";
 import { MdNotificationAdd, MdNotificationsActive } from "react-icons/md";
 import { FaStar, FaRegStar } from "react-icons/fa";
