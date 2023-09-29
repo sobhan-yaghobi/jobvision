@@ -1,8 +1,7 @@
 import React from "react";
-import { AnimatePresence, motion } from "framer-motion";
-
 import { IconType } from "react-icons";
 import { AiOutlineLoading } from "react-icons/ai";
+import { AnimatePresence, motion } from "framer-motion";
 
 type ButtonProps = {
     isLoading: boolean;
