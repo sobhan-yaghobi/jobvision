@@ -3,6 +3,16 @@ import React from "react";
 import { ItemGenerator, LinkGenerator, MenuDesktopItemGenerate, SubMenuGenerator } from "../MenuItem/MenuItem";
 import { menu } from "../MenuItem/menuItem.type";
 
+// Animations
+import {
+    DelayBeforeChilds,
+    LongStripVertical_Ex,
+    ShowAndHideOpacity_Ex,
+    ShowHideClipFromBottom_Ex,
+    ShowOpacity,
+} from "../../Animations/UtilsAnimation";
+import { ShowHideMenuItemChildToLeftOrRight } from "../../Animations/HeaderAnimation";
+
 // Hooks
 import UseShowMenu from "../../Hooks/useShowMenu/useShowMenu";
 
@@ -18,11 +28,6 @@ import ArrowLeftIconWhite from "/Svg/ArrowLeftWhiteColor.svg";
 import { AiOutlineClose } from "react-icons/ai";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
 
-export const DesktopItemVarinet = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-};
-
 const Header: React.FC = () => {
     const [elm, MenuMobile, backButtonAcion, MenuDesktop, menuMobileFire, menuMobileToggle, menuDesktopFire] =
         UseShowMenu(menu);
@@ -33,83 +38,6 @@ const Header: React.FC = () => {
             menuDesktopFire("", false);
         }
     };
-
-    //? -------------------- Start Mobile Header DropDown Animation --------------------
-    const MobileContainerVariants = {
-        hidden: {
-            clipPath: "inset(100% 50% 0% 50% round 10px)",
-            transition: {
-                staggerChildren: 2.5,
-            },
-        },
-        visible: {
-            clipPath: "inset(0% 0% 0% 0% round 0px)",
-            transition: {
-                staggerChildren: 1.4,
-                when: "beforeChildren",
-            },
-        },
-        exit: {
-            clipPath: "inset(100% 50% 0% 50% round 10px)",
-        },
-    };
-    const MobileChildVariants = {
-        hidden: {
-            opacity: 0,
-            scale: 0.8,
-            ...(MenuMobile.goAnimationTo === "Forward" ? { x: "100%" } : { x: "-100%" }),
-        },
-        visible: {
-            x: 0,
-            scale: 1,
-            opacity: 1,
-            transition: {
-                scale: { delay: 0.5 },
-            },
-        },
-        exit: {
-            opacity: 0,
-            scale: 0.8,
-            ...(MenuMobile.goAnimationTo === "Forward" ? { x: "100%" } : { x: "-100%" }),
-        },
-    };
-    //? -------------------- Finish Mobile Header DropDown Animation --------------------
-
-    //? -------------------- Start Desktop Header DropDown Animation --------------------
-    const DesktopContainerVariants = {
-        hidden: {
-            opacity: 0,
-            transition: {
-                staggerChildren: 1.4,
-            },
-        },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 1.4,
-                when: "beforeChildren",
-            },
-        },
-        exit: {
-            opacity: 0,
-        },
-    };
-    const DesktopChildVariants = {
-        hidden: {
-            opacity: 0,
-            y: "-100dvh",
-        },
-        visible: {
-            y: 0,
-            opacity: 1,
-        },
-        exit: {
-            opacity: 0,
-            y: "-100dvh",
-        },
-    };
-
-    //? -------------------- Finish Desktop Header DropDown Animation --------------------
 
     return (
         <>
@@ -203,7 +131,8 @@ const Header: React.FC = () => {
             <AnimatePresence>
                 {MenuDesktop.isShow && MenuDesktop.mainItem ? (
                     <motion.div
-                        variants={DesktopContainerVariants}
+                        variants={ShowAndHideOpacity_Ex}
+                        transition={DelayBeforeChilds}
                         initial="hidden"
                         animate="visible"
                         exit="exit"
@@ -226,7 +155,7 @@ const Header: React.FC = () => {
                             className={`absolute ${
                                 MenuDesktop.isMega ? "w-11/12 h-[95%] bg-jv-light rounded-b-lg p-2" : ""
                             }`}
-                            variants={DesktopChildVariants}
+                            variants={LongStripVertical_Ex}
                         >
                             <MenuDesktopItemGenerate menuData={MenuDesktop.mainItem}></MenuDesktopItemGenerate>
                         </motion.div>
@@ -238,7 +167,8 @@ const Header: React.FC = () => {
             <AnimatePresence>
                 {MenuMobile.isOpen ? (
                     <motion.div
-                        variants={MobileContainerVariants}
+                        variants={ShowHideClipFromBottom_Ex}
+                        transition={DelayBeforeChilds}
                         initial="hidden"
                         animate="visible"
                         exit="exit"
@@ -247,7 +177,9 @@ const Header: React.FC = () => {
                         }`}
                     >
                         <motion.div
-                            variants={MobileChildVariants}
+                            variants={ShowHideMenuItemChildToLeftOrRight(
+                                Boolean(MenuMobile.goAnimationTo === "Forward")
+                            )}
                             initial="hidden"
                             animate="visible"
                             exit="exit"
@@ -268,11 +200,13 @@ const Header: React.FC = () => {
                                     </Button>
                                 </div>
                             )}
-                            <div className="h-5/6 overflow-y-auto px-4">
+                            <div className="h-5/6 overflow-y-auto px-4 no-scrollbar">
                                 {MenuMobile.isShow.SubMenu ? (
                                     <SubMenuGenerator
-                                        DesktopVarient={DesktopItemVarinet}
-                                        MobileVarient={MobileChildVariants}
+                                        DesktopVarient={ShowOpacity}
+                                        MobileVarient={ShowHideMenuItemChildToLeftOrRight(
+                                            Boolean(MenuMobile.goAnimationTo === "Forward")
+                                        )}
                                         Type="Mobile"
                                         ParentClassName=""
                                         ChildClassName="cursor-pointer text-xl text-jv-light my-5 flex items-center justify-between"
@@ -283,8 +217,10 @@ const Header: React.FC = () => {
                                     </SubMenuGenerator>
                                 ) : MenuMobile.isShow.Item ? (
                                     <ItemGenerator
-                                        DesktopVarient={DesktopItemVarinet}
-                                        MobileVarient={MobileChildVariants}
+                                        DesktopVarient={ShowOpacity}
+                                        MobileVarient={ShowHideMenuItemChildToLeftOrRight(
+                                            Boolean(MenuMobile.goAnimationTo === "Forward")
+                                        )}
                                         Type="Mobile"
                                         ParentClassName="h-5/6 overflow-y-auto px-4"
                                         ChildClassName="cursor-pointer text-xl text-jv-light my-5 flex items-center justify-between"
@@ -295,8 +231,10 @@ const Header: React.FC = () => {
                                     </ItemGenerator>
                                 ) : MenuMobile.isShow.Links ? (
                                     <LinkGenerator
-                                        DesktopVarient={DesktopItemVarinet}
-                                        MobileVarient={MobileChildVariants}
+                                        DesktopVarient={ShowOpacity}
+                                        MobileVarient={ShowHideMenuItemChildToLeftOrRight(
+                                            Boolean(MenuMobile.goAnimationTo === "Forward")
+                                        )}
                                         Type="Mobile"
                                         ParentClassName="w-full h-full"
                                         ChildClassName="cursor-pointer text-xl text-jv-light my-4 flex flex-col"
