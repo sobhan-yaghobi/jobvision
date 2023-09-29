@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+// Types
+import { WhyUsDescType, WhyUsType, AboutUsItemArray, whyUsArray } from "./Home.type";
 
 // Functions
 import uuidGenerator from "../../Utils/UuidGenerator";
@@ -13,8 +15,6 @@ import MapCircle from "../../Components/MapCircle/MapCircle";
 import AdvertisingBox from "../../Components/AdvertisingBox/AdvertisingBox";
 import CompanyBox from "../../Components/CompanyBox/CompanyBox";
 import Accordion from "../../Components/Accordion/Accordion";
-// Icons
-import CloseIcon from "/Svg/Close.svg";
 
 // Slider
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -22,212 +22,14 @@ import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import useAnimationStop from "../../Hooks/useAnimationStop";
-
-//? ---------------------------------- Animations
-const titleSideVariantWrapper = {
-    hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: {
-            opacity: {
-                delay: 1,
-            },
-        },
-    },
-};
-const svgVarinetWrapper = {
-    hidden: { opacity: 0, scale: 0 },
-    visible: {
-        opacity: 1,
-        scale: 1,
-        transition: {
-            ease: "linear",
-            bounce: 9,
-        },
-    },
-};
-
-const showBoxVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: {
-        opacity: 1,
-        scale: 1,
-        transition: {
-            ease: "linear",
-            bounce: 9,
-        },
-    },
-};
-
-const showAdvertisingBoxRight = {
-    hidden: { opacity: 0, x: "100%" },
-    visible: {
-        opacity: 1,
-        x: 0,
-        transition: {
-            ease: "linear",
-            bounce: 9,
-        },
-    },
-};
-
-const showAdvertisingBoxLeft = {
-    hidden: { opacity: 0, x: "-100%" },
-    visible: {
-        opacity: 1,
-        x: 0,
-        transition: {
-            ease: "linear",
-            bounce: 9,
-        },
-    },
-};
-
-const showWrapperBoxVariant = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-    exit: { opacity: 0 },
-};
-
-const showBoxVarinet = {
-    hidden: { opacity: 0 },
-    visible: (i: number) => ({
-        opacity: 1,
-        transition: {
-            ease: "linear",
-            bounce: 9,
-            delay: i * 0.2,
-        },
-    }),
-    exit: { opacity: 0, scale: 0.6 },
-};
-//! ---------------------------------- Animations
-
-//? ---------------------------------- ABOUT US
-interface AboutUsBoxType {
-    id: string;
-    title: string;
-    desc: string;
-    iconSrc: string;
-    customClass: string;
-}
-
-const AboutUsItemArray: AboutUsBoxType[] = [
-    {
-        id: uuidGenerator(),
-        title: "کارجوی همراه",
-        desc: "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده گرافیک است.",
-        iconSrc: "/images/worker.webp",
-        customClass: "from-[#f8f9fa] to-[#ec8386] shadow-[-10px_10px_30px_-9px_#ff979a,10px_10px_30px_-9px_#c96f72]",
-    },
-    {
-        id: uuidGenerator(),
-        title: "سازمان های در حال همکاری",
-        desc: "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده گرافیک است.",
-        iconSrc: "/images/skyline.webp",
-        customClass: "from-[#f8f9fa] to-[#A5A8F2] shadow-[-10px_10px_30px_-9px_#9396d7,10px_10px_30px_-9px_#b7baff]",
-    },
-    {
-        id: uuidGenerator(),
-        title: "موقعیت شغلی فعال",
-        desc: "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده گرافیک است.",
-        iconSrc: "/images/job-search.webp",
-        customClass: "from-[#f8f9fa] to-[#90D1F4] shadow-[-10px_10px_30px_-9px_#80bad9,10px_10px_30px_-9px_#a0e8ff]",
-    },
-    {
-        id: uuidGenerator(),
-        title: "استخدام موفق",
-        desc: "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده گرافیک است.",
-        iconSrc: "/images/hiring.webp",
-        customClass: "from-[#f8f9fa] to-[#F5CD8D] shadow-[-10px_10px_30px_-9px_#dab67d,10px_10px_30px_-9px_#ffe49d]",
-    },
-];
-
-//! ---------------------------------- ABOUT US
-
-//? ---------------------------------- WHY Us
-interface WhyUsDescType {
-    id: string;
-    title: string;
-    svg: string;
-    iconColor: string;
-    iconSrc: string;
-    desc: string;
-}
-
-interface WhyUsType {
-    mainItems: WhyUsDescType[];
-    mainNumber: number;
-    isShow: boolean;
-}
-
-const whyUsArray: WhyUsDescType[] = [
-    {
-        id: uuidGenerator(),
-        title: "مورد اعتماد",
-        svg: CloseIcon,
-        iconColor: "#F06263",
-        iconSrc: "/images/trust.webp",
-        desc: "دسترسی به بهترین موقعیت‌های کاریابی و مشاهده فرصت‌های استخدام معتبرترین سازمان‌های ایران از جمله مهم‌ترین مزیت‌های سایت کاریابی جاب ویژن است.",
-    },
-    {
-        id: uuidGenerator(),
-        title: "هوشمند",
-        svg: CloseIcon,
-        iconColor: "#7551F5",
-        iconSrc: "/images/smart-city.webp",
-        desc: "سایت کاریابی جاب ویژن با استفاده از هوش مصنوعی (AI)، عملکرد شما را در سیستم رصد کرده و بر همین اساس، آگهی‌های استخدام مرتبط را از طریق پنل کاربری، ایمیل، ربات تلگرام و در برخی موارد پیامک و نوتیفیکشن به شما پیشنهاد می‌دهد.",
-    },
-    {
-        id: uuidGenerator(),
-        title: "رزومه ساز",
-        svg: CloseIcon,
-        iconColor: "#F4885F",
-        iconSrc: "/images/resume.webp",
-        desc: "سایت کاریابی جاب ویژن با استفاده از هوش مصنوعی (AI)، عملکرد شما را در سیستم رصد کرده و بر همین اساس، آگهی‌های استخدام مرتبط را از طریق پنل کاربری، ایمیل، ربات تلگرام و در برخی موارد پیامک و نوتیفیکشن به شما پیشنهاد می‌دهد.",
-    },
-    {
-        id: uuidGenerator(),
-        title: "آزمون خودشناسی",
-        svg: CloseIcon,
-        iconColor: "#28BBF3",
-        iconSrc: "/images/mindset.webp",
-        desc: "قبل از اینکه به دنبال فرصت‌های استخدام مناسب بگردید باید خود را بشناسید. سایت استخدام جاب ویژن به کمک معتبرترین آزمون‌ها و با ارائه‌ی گزارش‌های تحلیلی به شما کمک می‌کند به شناخت دقیق‌تری از ویژگی‌های شخصیتی، علائق شغلی، هوش هیجانی (EQ) و سایر جنبه‌های هوش خود مثل حل مسئله، قدرت تحلیل و استدلال برسید.",
-    },
-    {
-        id: uuidGenerator(),
-        title: "توانایی ملاقات با مدیران",
-        svg: CloseIcon,
-        iconColor: "#90D142",
-        iconSrc: "/images/conversation.webp",
-        desc: "جاب‌ویژن برگزارکننده بزرگترین نمایشگاه‌های کار در کشور است.سازمانها در این رویداد به دنبال ارتقای برند کارفرمایی خود و استخدام بهترین استعدادهای بازار کار هستند پس فرصت مناسبی برای نیروی متخصص فراهم شده تا اطلاعات کافی از سازمانها کسب کرده و شانس خود را برای استخدام شدن در آنها امتحان کنند.",
-    },
-    {
-        id: uuidGenerator(),
-        title: "امکان معرفی کامل به کارفرما",
-        svg: CloseIcon,
-        iconColor: "#F56564",
-        iconSrc: "/images/teacher.webp",
-        desc: "در سایت استخدامی جاب ویژن می‌توانید علاوه بر رزومه، اطلاعات بیشتری از خود به کارفرما ارائه کنید تا شانس استخدام بالاتری داشته باشید. نتیجه آزمون‌‌های خودشناسی، نمونه کار، معرفی صوتی، تلفن تماس مدیران و همکاران سابق و نیز نامه اختصاصی برای سازمان‌ها، از جمله امکاناتی هستند که به کمک آن‌ها می‌توانید خود و توانمندی‌هایتان را بهتر به کارفرما معرفی کنید.",
-    },
-    {
-        id: uuidGenerator(),
-        title: "جز شبکه های قوی اجتماعی",
-        svg: CloseIcon,
-        iconColor: "#D1C5F2",
-        iconSrc: "/images/social-media.webp",
-        desc: "جاب ویژن در شبکه‌های اجتماعی نیز حضور فعالی دارد و بیش از 400 هزار متخصص و کارجو، صفحه جاب ویژن در لینکدین، تلگرام، اینستاگرام و توییتر را دنبال می‌کنند.",
-    },
-    {
-        id: uuidGenerator(),
-        title: "همکاری با موسسات ایران",
-        svg: CloseIcon,
-        iconColor: "#F5895D",
-        iconSrc: "/images/teamwork.webp",
-        desc: "هرچه مهارت‌های بیشتری داشته باشید در موقعیت‌های شغلی بهتری می‌توانید استخدام شوید. سایت کاریابی جاب ویژن با همکاری بهترین موسسات آموزشی کشور، دوره‌های آموزشی مفید و کاربردی را به شما معرفی می‌کند. پس از شرکت در این دوره‌ها، مدالی در کنار رزومه شما قرار می‌گیرد که باعث تمایز شما از سایر کارجویان می‌شود؛ به این ترتیب، می‌توانید در رقابت کاریابی پیروز شده و در موقعیت شغلی بهتری استخدام شوید.",
-    },
-];
-//! ---------------------------------- WHY Us
+import {
+    ShowAndHideOpacity_Ex,
+    ShowAndHideScale_Ex,
+    ShowFromBottom,
+    ShowFromLeft,
+    ShowFromRight,
+    ShowItemsDelay_Var,
+} from "../../Animations/UtilsAnimation";
 
 const Home: React.FC = () => {
     const isEven = (num: number): boolean => num === 0 || !!(num && !(num % 2));
@@ -279,7 +81,7 @@ const Home: React.FC = () => {
             {/*//? -------------------------------------- Landing -------------------------------------- */}
             <div className="current-mega-height-dvh md:h-auto overflow-hidden pt-5 px-2 grid grid-cols-2 grid-rows-2 justify-between md:py-2 md:px-10 md:grid-rows-2 md:items-center lg:grid-rows-3 lg:px-24">
                 <motion.div
-                    variants={titleSideVariantWrapper}
+                    variants={ShowFromRight}
                     initial="hidden"
                     animate="visible"
                     className="right-landing py-1 flex flex-col justify-evenly col-span-2 row-span-1 md:col-span-1 lg:row-span-2"
@@ -307,7 +109,7 @@ const Home: React.FC = () => {
                     </div>
                 </motion.div>
                 <motion.div
-                    variants={svgVarinetWrapper}
+                    variants={ShowFromLeft}
                     initial="hidden"
                     animate="visible"
                     className="left-landing col-span-1 row-span-1 hidden md:block lg:row-span-2"
@@ -315,7 +117,7 @@ const Home: React.FC = () => {
                     {WindowsSize.innerWidth <= 768 ? null : <MapCircle></MapCircle>}
                 </motion.div>
                 <motion.div
-                    variants={titleSideVariantWrapper}
+                    variants={ShowFromBottom}
                     initial="hidden"
                     animate="visible"
                     className="col-span-2 row-span-1 h-full"
@@ -331,7 +133,7 @@ const Home: React.FC = () => {
             <div className="py-5"></div>
             {/*//? -------------------------------------- Company Box Slider -------------------------------------- */}
             <motion.div
-                variants={showBoxVarinet}
+                variants={ShowItemsDelay_Var}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
@@ -382,14 +184,14 @@ const Home: React.FC = () => {
                                 key={index + 1}
                                 variants={
                                     includes([1, 6], index) && WindowsSize.innerWidth >= 1280
-                                        ? showBoxVariants
+                                        ? ShowAndHideScale_Ex
                                         : includes([0, 3, 5], index) && WindowsSize.innerWidth >= 1280
-                                        ? showAdvertisingBoxRight
+                                        ? ShowFromRight
                                         : includes([2, 4, 7], index) && WindowsSize.innerWidth >= 1280
-                                        ? showAdvertisingBoxLeft
+                                        ? ShowFromLeft
                                         : WindowsSize.innerWidth < 1280 && isEven(index)
-                                        ? showAdvertisingBoxRight
-                                        : showAdvertisingBoxLeft
+                                        ? ShowFromRight
+                                        : ShowFromLeft
                                 }
                                 initial="hidden"
                                 whileInView="visible"
@@ -422,7 +224,7 @@ const Home: React.FC = () => {
             <div className="p-2 md:px-10 lg:px-24">
                 <div className="bg-jv-light rounded-3xl p-5">
                     <motion.div
-                        variants={showBoxVariants}
+                        variants={ShowAndHideScale_Ex}
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true }}
@@ -446,7 +248,7 @@ const Home: React.FC = () => {
                     </motion.div>
                     <div className="grid grid-cols-2">
                         <motion.div
-                            variants={showBoxVariants}
+                            variants={ShowAndHideScale_Ex}
                             initial="hidden"
                             whileInView="visible"
                             viewport={{ once: true }}
@@ -464,7 +266,7 @@ const Home: React.FC = () => {
                             </div>
                         </motion.div>
                         <motion.div
-                            variants={showBoxVariants}
+                            variants={ShowAndHideScale_Ex}
                             initial="hidden"
                             whileInView="visible"
                             viewport={{ once: true }}
@@ -487,7 +289,7 @@ const Home: React.FC = () => {
                     </div>
                     <div className="mt-28 lg:mt-16 flex flex-col items-center justify-start lg:h-56 lg:relative">
                         <motion.h1
-                            variants={showBoxVariants}
+                            variants={ShowAndHideScale_Ex}
                             initial="hidden"
                             whileInView="visible"
                             viewport={{ once: true }}
@@ -531,7 +333,7 @@ const Home: React.FC = () => {
             {/*//? -------------------------------------- WHY US ? -------------------------------------- */}
             <div className="w-full min-h-fit px-4 flex items-center flex-col md:px-10 lg:current-mega-height lg:px-24 lg:flex-row">
                 <motion.div
-                    variants={showBoxVariants}
+                    variants={ShowAndHideScale_Ex}
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true }}
@@ -562,7 +364,7 @@ const Home: React.FC = () => {
                             <AnimatePresence mode="wait">
                                 {whyUs?.isShow && whyUs.mainItems.length ? (
                                     <motion.foreignObject
-                                        variants={showWrapperBoxVariant}
+                                        variants={ShowAndHideOpacity_Ex}
                                         initial="hidden"
                                         animate="visible"
                                         exit="exit"
@@ -572,7 +374,7 @@ const Home: React.FC = () => {
                                     >
                                         {whyUs.mainItems[0] ? (
                                             <motion.div
-                                                variants={showBoxVarinet}
+                                                variants={ShowItemsDelay_Var}
                                                 custom={1}
                                                 className="whyUsBox w-28 h-14 p-1 rounded-xl bg-jv-light flex flex-col justify-center top-2 absolute -right-16"
                                             >
@@ -585,7 +387,7 @@ const Home: React.FC = () => {
 
                                         {whyUs.mainItems[1] ? (
                                             <motion.div
-                                                variants={showBoxVarinet}
+                                                variants={ShowItemsDelay_Var}
                                                 custom={2}
                                                 className="whyUsBox w-24 h-16 p-1 rounded-xl bg-jv-light flex flex-col justify-center absolute top-0 -left-6"
                                             >
@@ -598,7 +400,7 @@ const Home: React.FC = () => {
 
                                         {whyUs.mainItems[2] ? (
                                             <motion.div
-                                                variants={showBoxVarinet}
+                                                variants={ShowItemsDelay_Var}
                                                 custom={3}
                                                 className="whyUsBox w-24 h-16 p-1 rounded-xl bg-jv-light flex flex-col justify-center absolute -bottom-8 right-4"
                                             >
