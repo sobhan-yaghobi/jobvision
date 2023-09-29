@@ -1,39 +1,15 @@
-import React, { ReactHTML, useState } from "react";
+import React, { useState } from "react";
+// Types
+import { messageType, MessageArray } from "./MapCircle.type";
 
 // Functions
 import { sample } from "lodash";
-import uuidGenerator from "../../Utils/UuidGenerator";
 
-// Custom Hooks
+// Hooks
 import useAnimationStop from "../../Hooks/useAnimationStop";
 
 // Components
 import { motion, AnimatePresence } from "framer-motion";
-
-interface Messages {
-    id: string;
-    title: string;
-}
-
-const MessageArray: Messages[] = [
-    { id: uuidGenerator(), title: "رایان گستر" },
-    { id: uuidGenerator(), title: "صنعت رایان پارس" },
-    { id: uuidGenerator(), title: "از کی وام" },
-    { id: uuidGenerator(), title: "بانک خاورمیانه" },
-    { id: uuidGenerator(), title: "بازرگانی الماس امید" },
-    { id: uuidGenerator(), title: "بینالود" },
-    { id: uuidGenerator(), title: "ستاک" },
-    { id: uuidGenerator(), title: "خوشگوار" },
-    { id: uuidGenerator(), title: "شرکت و صنایع چوبی پاسارگاد" },
-];
-
-interface messageType {
-    x: number | undefined;
-    y: number | undefined;
-    title: string;
-    isShow: boolean;
-    ArrowIcon: "Top" | "Bottom" | undefined;
-}
 
 const MapCircle: React.FC = () => {
     const showBoxVariant = {
@@ -62,7 +38,7 @@ const MapCircle: React.FC = () => {
 
     const doAnimate = () => {
         let newElm: SVGCircleElement | null;
-        setMessage((prev) => {
+        setMessage(() => {
             let mainObject: messageType;
 
             const newItem = sample(MessageArray);
