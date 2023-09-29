@@ -130,7 +130,7 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
                         ) : null}
                     </AnimatePresence>
                 </div>
-                <div>{children}</div>
+                {children}
             </motion.button>
         </>
     );

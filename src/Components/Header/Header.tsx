@@ -247,7 +247,7 @@ const Header: React.FC = () => {
                             className="py-6 px-5 h-full"
                         >
                             {MenuMobile.isShow.SubMenu ? null : (
-                                <div className="h-1/6 mb-2 flex  route Navigation">
+                                <div className="h-1/6 mb-2 flex route Navigation">
                                     <Button
                                         noBorder
                                         isLoading={false}
