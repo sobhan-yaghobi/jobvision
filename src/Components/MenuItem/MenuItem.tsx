@@ -1,8 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Item, Link, SubMenu } from "./menuItem.type";
+// Types
+import {
+    Item,
+    Link,
+    SubMenu,
+    MenuDesktopItemGenerateProps,
+    SubMenuGeneratorProps,
+    ItemGeneratorProps,
+    LinkGeneratorProps,
+} from "./menuItem.type";
+
+// Components
 import { motion } from "framer-motion";
-import { DesktopItemVarinet } from "../Header/Header";
 import Button from "../Button/Button";
+
+import { DesktopItemVarinet } from "../Header/Header";
 
 const NoMenuItemVarient = {
     hidden: { opacity: 0, pathLength: 0 },
@@ -21,9 +33,6 @@ const NoMenuItemVarient = {
         },
     },
 };
-interface MenuDesktopItemGenerateProps {
-    menuData: SubMenu;
-}
 
 export const MenuDesktopItemGenerate: React.FC<MenuDesktopItemGenerateProps> = ({ menuData }) => {
     if (menuData.megaMenu) {
@@ -100,23 +109,6 @@ export const MenuDesktopItemGenerate: React.FC<MenuDesktopItemGenerateProps> = (
     }
 };
 
-interface SubMenuGeneratorProps {
-    IsAnimation?: boolean;
-    MobileVarient?: {};
-    DesktopVarient?: {};
-    Type: "Desktop" | "Mobile";
-    ClassWhenActive?: String;
-    ParentClassName: string;
-    ChildClassName: string;
-    Data: SubMenu[];
-    ClickHandler: Function;
-    // Mobile Type
-    children?: React.ReactNode;
-    // Desktop Type
-    mainMenuDesktop?: SubMenu;
-    Ref?: React.RefObject<HTMLLIElement>;
-}
-
 export const SubMenuGenerator: React.FC<SubMenuGeneratorProps> = ({
     IsAnimation,
     MobileVarient,
@@ -190,20 +182,6 @@ export const SubMenuGenerator: React.FC<SubMenuGeneratorProps> = ({
     );
 };
 
-interface ItemGeneratorProps {
-    IsAnimation?: boolean;
-    MobileVarient?: {};
-    DesktopVarient?: {};
-    Type: "Desktop" | "Mobile";
-    ParentClassName: string;
-    ChildClassName: string;
-    Data: SubMenu;
-    ClickHandler: Function;
-    children?: React.ReactNode;
-    ChildClassActivion?: string;
-    mainItemData?: Item;
-}
-
 export const ItemGenerator: React.FC<ItemGeneratorProps> = ({
     IsAnimation,
     MobileVarient,
@@ -249,23 +227,6 @@ export const ItemGenerator: React.FC<ItemGeneratorProps> = ({
         </>
     );
 };
-
-interface LinkGeneratorProps {
-    IsAnimation?: boolean;
-    MobileVarient?: {};
-    DesktopVarient?: {};
-    Type: "Desktop" | "Mobile";
-    ParentClassName: string;
-    ChildClassName: string;
-    LinksWrapperClassName: string;
-    SublinkParentClassName: string;
-    SublinkChildClassName: string;
-    SublinkLinkWrapperClassName: string;
-    children?: React.ReactNode;
-    Data: Link[];
-    ClickHandler: Function;
-    isChildrenShow?: boolean;
-}
 
 export const LinkGenerator: React.FC<React.PropsWithChildren<LinkGeneratorProps>> = ({
     IsAnimation,

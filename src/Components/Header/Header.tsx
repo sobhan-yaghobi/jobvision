@@ -3,13 +3,11 @@ import React from "react";
 import { ItemGenerator, LinkGenerator, MenuDesktopItemGenerate, SubMenuGenerator } from "../MenuItem/MenuItem";
 import { menu } from "../MenuItem/menuItem.type";
 
-// Functions
-import { AnimatePresence, motion } from "framer-motion";
-
 // Hooks
 import UseShowMenu from "../../Hooks/useShowMenu";
 
 // Components
+import { AnimatePresence, motion } from "framer-motion";
 import Button from "../Button/Button";
 
 // Icons

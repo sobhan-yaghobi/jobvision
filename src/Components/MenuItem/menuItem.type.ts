@@ -19,6 +19,55 @@ export interface SubMenu extends SubLink {
     items: Item[];
 }
 
+export interface MenuDesktopItemGenerateProps {
+    menuData: SubMenu;
+}
+export interface SubMenuGeneratorProps {
+    IsAnimation?: boolean;
+    MobileVarient?: {};
+    DesktopVarient?: {};
+    Type: "Desktop" | "Mobile";
+    ClassWhenActive?: String;
+    ParentClassName: string;
+    ChildClassName: string;
+    Data: SubMenu[];
+    ClickHandler: Function;
+    // Mobile Type
+    children?: React.ReactNode;
+    // Desktop Type
+    mainMenuDesktop?: SubMenu;
+    Ref?: React.RefObject<HTMLLIElement>;
+}
+export interface ItemGeneratorProps {
+    IsAnimation?: boolean;
+    MobileVarient?: {};
+    DesktopVarient?: {};
+    Type: "Desktop" | "Mobile";
+    ParentClassName: string;
+    ChildClassName: string;
+    Data: SubMenu;
+    ClickHandler: Function;
+    children?: React.ReactNode;
+    ChildClassActivion?: string;
+    mainItemData?: Item;
+}
+export interface LinkGeneratorProps {
+    IsAnimation?: boolean;
+    MobileVarient?: {};
+    DesktopVarient?: {};
+    Type: "Desktop" | "Mobile";
+    ParentClassName: string;
+    ChildClassName: string;
+    LinksWrapperClassName: string;
+    SublinkParentClassName: string;
+    SublinkChildClassName: string;
+    SublinkLinkWrapperClassName: string;
+    children?: React.ReactNode;
+    Data: Link[];
+    ClickHandler: Function;
+    isChildrenShow?: boolean;
+}
+
 export const menu: SubMenu[] = [
     {
         id: uuidGenerator(),
