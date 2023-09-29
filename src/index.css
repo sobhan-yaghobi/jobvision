@@ -17,6 +17,7 @@
     /* --whiteColor: #e9e9e9; */
     --blackColor: #121315;
     --primaryColor: #5660f2;
+    --lightPrimaryColor: #5660f214;
     --lightColor: #f8f9fa;
     --grayColor: #4a4e57;
     --lightGrayColor: #5c6068;
@@ -100,6 +101,15 @@
 }
 
 @layer utilities {
+    @variants responsive {
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+    }
     .danaBold {
         font-family: DanaBold;
     }

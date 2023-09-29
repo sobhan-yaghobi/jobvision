@@ -31,7 +31,7 @@ type AccordionTypesProps =
           propertySubName: string;
       }
     | {
-          type: "Children";
+          type?: "Children";
           children: React.ReactNode;
       };
 

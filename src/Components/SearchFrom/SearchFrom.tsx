@@ -115,7 +115,8 @@ const SearchFrom: React.FC<SearchFromProps> = ({ isFilterBarShow }) => {
                 </Button>
             </div>
             {isFilterBarShow ? (
-                <div className="flex items-center flex-row flex-wrap mt-2">
+                <div className="mt-2 py-1 no-scrollbar overflow-x-auto whitespace-nowrap flex items-center md:whitespace-normal md:flex-wrap">
+                    {/* flex items-center flex-row flex-wrap mt-2 */}
                     {categoryArray.map((item) => (
                         <span
                             key={item.id}

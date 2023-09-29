@@ -401,10 +401,10 @@ const Home: React.FC = () => {
                             >
                                 {includes([3, 4], index) ? (
                                     <div className={`w-full xl:w-2/3`}>
-                                        <AdvertisingBox IsImportant data={[]} showSendCv></AdvertisingBox>
+                                        <AdvertisingBox IsImportant data={[]} type="ShowSendCv"></AdvertisingBox>
                                     </div>
                                 ) : (
-                                    <AdvertisingBox data={[]} showSendCv></AdvertisingBox>
+                                    <AdvertisingBox data={[]} type="ShowSendCv"></AdvertisingBox>
                                 )}
                             </motion.div>
                         ))}
@@ -498,14 +498,14 @@ const Home: React.FC = () => {
                                     <motion.div
                                         initial={{ opacity: 0 }}
                                         whileInView={{ opacity: 1 }}
-                                        transition={{ delay: index * 0.3 }}
+                                        transition={{ delay: index * 0.15 }}
                                         viewport={{ once: true }}
                                         className="AboutUsBox"
                                     >
                                         <motion.span
-                                            initial={{ scale: 0, rotate: 360 }}
-                                            transition={{ ease: "circIn", bounce: 20, delay: index * 0.4 }}
-                                            whileInView={{ scale: 1, rotate: 0 }}
+                                            initial={{ scale: 0 }}
+                                            transition={{ ease: "circIn", bounce: 20, delay: index * 0.2 }}
+                                            whileInView={{ scale: 1 }}
                                             viewport={{ once: true }}
                                             className={`AboutUsIconBox ${box.customClass}`}
                                         >
@@ -525,13 +525,13 @@ const Home: React.FC = () => {
             <div className="py-10 lg:hidden"></div>
 
             {/*//? -------------------------------------- WHY US ? -------------------------------------- */}
-            <div className="w-full min-h-fit lg:current-mega-height  px-4 flex items-center flex-col md:px-10 lg:px-24 lg:flex-row">
+            <div className="w-full min-h-fit px-4 flex items-center flex-col md:px-10 lg:current-mega-height lg:px-24 lg:flex-row">
                 <motion.div
                     variants={showBoxVariants}
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true }}
-                    className="lg:w-4/12 text-center"
+                    className="lg:w-4/12 text-center lg:text-right"
                 >
                     <h1>
                         <p>چرااا ، </p>

@@ -9,7 +9,7 @@ import { FaStar, FaRegStar } from "react-icons/fa";
 import uuidGenerator from "../../Utils/UuidGenerator";
 import AdvertisingBox from "../../Components/AdvertisingBox/AdvertisingBox";
 import { Link } from "react-router-dom";
-import { Variant, motion } from "framer-motion";
+import { AnimatePresence, Variant, motion } from "framer-motion";
 import Accordion from "../../Components/Accordion/Accordion";
 
 const showMainItemVariant = {
@@ -317,14 +317,6 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
                         </Button>
                     </div>
                 </section>
-                <section className="mb-6 py-4">
-                    <div
-                        style={{
-                            backgroundImage: "url('/images/company-image.webp')",
-                        }}
-                        className="w-full h-36 bg-fixed bg-center bg-no-repeat bg-contain"
-                    ></div>
-                </section>
                 <section className="mb-6">
                     <h2>مزایا و امکانات رفاهی</h2>
                     <div className="flex flex-wrap py-3">
@@ -376,7 +368,12 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
                         .fill("")
                         .map((value, index) => (
                             <div className="mt-3">
-                                <AdvertisingBox key={index + 1} data={[]} showSendCv></AdvertisingBox>
+                                <AdvertisingBox
+                                    type="HideSendCv"
+                                    key={index + 1}
+                                    data={[]}
+                                    clickHandler={() => {}}
+                                ></AdvertisingBox>
                             </div>
                         ))}
                 </section>
@@ -420,6 +417,7 @@ const Jobs: React.FC = () => {
 
     //? ---------------------------------- Box Info
     const [mainItemInfo, setMainItemInfo] = useState<MainItemBoxInfoType>(mainItemsBoxInfos[0]);
+    const [MenuMobile, setMenuMobile] = useState({ isOpen: false });
 
     //! ---------------------------------- Box Info
 
@@ -431,9 +429,10 @@ const Jobs: React.FC = () => {
             </div>
             {/*//! -------------------------------------- Seacrh -------------------------------------- */}
 
-            <div className="py-5 px-2 md:px-10 lg:px-24 bg-jv-light flex">
+            <div className="w-full py-5 px-2 md:px-10 lg:px-24 bg-jv-light flex">
                 {/*//? -------------------------------------- List Boxs -------------------------------------- */}
-                <div className="listBox ml-2 w-5/12 flex flex-col">
+                <div className="listBox ml-2 w-full flex flex-col">
+                    {/* listBox ml-2 w-5/12 flex flex-col */}
                     <Button
                         textColor="light"
                         size="middle"
@@ -489,7 +488,10 @@ const Jobs: React.FC = () => {
                             .map((item, index) => (
                                 <div className="mt-2">
                                     <AdvertisingBox
-                                        showSendCv={false}
+                                        type="HideSendCv"
+                                        clickHandler={() => {
+                                            console.log("click");
+                                        }}
                                         IsImportant={index === 2 ? true : false}
                                         key={index + 1}
                                         data={[]}
@@ -501,7 +503,16 @@ const Jobs: React.FC = () => {
                 {/*//! -------------------------------------- List Boxs -------------------------------------- */}
 
                 {/*//?-------------------------------------- Box Info -------------------------------------- */}
-                <div className="boxInfo mr-2 w-7/12 bg-jv-white table-column sticky top-24 overflow-x-hidden overflow-y-auto h-[82vh] rounded-xl">
+                <div className="hidden boxInfo mr-2 w-7/12 bg-jv-white sticky top-24 overflow-x-hidden overflow-y-auto h-[82vh] rounded-xl">
+                    {/* boxInfo mr-2 w-7/12 bg-jv-white table-column sticky top-24 overflow-x-hidden overflow-y-auto h-[82vh] rounded-xl */}
+                    <div>
+                        <div
+                            style={{
+                                backgroundImage: "url('/images/company-image.webp')",
+                            }}
+                            className="w-full bg-blend-multiply h-36 bg-[#11111165] bg-fixed bg-center bg-no-repeat bg-cover"
+                        ></div>
+                    </div>
                     <div className="h-28 p-3 bg-jv-white w-full flex justify-between sticky top-0 z-40">
                         <div className="w-9/12">
                             <h3 className="mb-3 twoLine">برنامه نویس Front-End (React)</h3>
@@ -594,9 +605,45 @@ const Jobs: React.FC = () => {
                     </motion.div>
                 </div>
                 {/*//! -------------------------------------- Box Info -------------------------------------- */}
+
+                {/*//? -------------------- Start Mobile Header DropDown -------------------- */}
+                <AnimatePresence>
+                    {MenuMobile.isOpen ? (
+                        <motion.div
+                            variants={MobileContainerVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            className={`header-dropwodn-mobile w-full h-4/6 rounded-t-3xl fixed lg:hidden bottom-0 right-0 bg-jv-primary  text-right ${
+                                MenuMobile.isOpen ? "z-20" : "z-10"
+                            }`}
+                        >
+                            <div className="w-10 h-1 bg-jv-light rounded-3xl absolute -translate-x-1/2 -translate-y-1/2 top-3 left-1/2"></div>
+                        </motion.div>
+                    ) : null}
+                </AnimatePresence>
+                {/*//? -------------------- Finish Mobile Header DropDown -------------------- */}
             </div>
         </>
     );
 };
 
+const MobileContainerVariants = {
+    hidden: {
+        clipPath: "inset(100% 50% 0% 50% round 10px)",
+        transition: {
+            staggerChildren: 2.5,
+        },
+    },
+    visible: {
+        clipPath: "inset(0% 0% 0% 0% round 0px)",
+        transition: {
+            staggerChildren: 1.4,
+            when: "beforeChildren",
+        },
+    },
+    exit: {
+        clipPath: "inset(100% 50% 0% 50% round 10px)",
+    },
+};
 export default Jobs;

@@ -11,6 +11,7 @@ module.exports = {
                 "jv-white": "var(--whiteColor)",
                 "jv-black": "var(--blackColor)",
                 "jv-primary": "var(--primaryColor)",
+                "jv-lightPrimary": "var(--lightPrimaryColor)",
                 "jv-light": "var(--lightColor)",
                 "jv-danger": "var(--dangerColor)",
                 "jv-lightDanger": "var(--lightDangerColor)",
