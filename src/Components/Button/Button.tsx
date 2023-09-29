@@ -1,5 +1,8 @@
 import React from "react";
+// Types
 import { IconType } from "react-icons";
+
+// Icons
 import { AiOutlineLoading } from "react-icons/ai";
 import { AnimatePresence, motion } from "framer-motion";
 

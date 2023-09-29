@@ -1,7 +1,11 @@
 import React from "react";
+// Types
 import { AdvertisingBoxProps } from "./AdvertisingBox.type";
+
+// Components
 import { Link } from "react-router-dom";
 
+// Icons
 import Button from "../Button/Button";
 import StarSvg from "/Svg/Star.svg";
 

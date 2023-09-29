@@ -1,4 +1,5 @@
 import React from "react";
+// Icons
 import StarSvg from "/Svg/Star.svg";
 import Button from "../Button/Button";
 
