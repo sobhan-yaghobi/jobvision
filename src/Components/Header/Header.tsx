@@ -1,8 +1,6 @@
 import React from "react";
 import PrimaryLogo from "/Svg/Logo/PrimaryColorLogo.svg";
 import WhiteLogo from "/Svg/Logo/WhiteColorLogo.svg";
-import MenuIcon from "/Svg/Menu.svg";
-import CloseIcon from "/Svg/Close.svg";
 import ArrowLeftIconWhite from "/Svg/ArrowLeftWhiteColor.svg";
 import LeftIcon from "/Svg/Left.svg";
 import Button from "../Button/Button";
@@ -10,6 +8,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import UseShowMenu from "../../Hooks/useShowMenu";
 import { menu } from "../MenuItem/menuItem.type";
 import { ItemGenerator, LinkGenerator, MenuDesktopItemGenerate, SubMenuGenerator } from "../MenuItem/MenuItem";
+import { AiOutlineClose } from "react-icons/ai";
+import { HiOutlineMenuAlt1 } from "react-icons/hi";
 
 export const DesktopItemVarinet = {
     hidden: { opacity: 0 },
@@ -112,7 +112,7 @@ const Header: React.FC = () => {
                     <div className="header-mobile  w-full h-full p-2 lg:hidden flex items-center justify-between">
                         <div className="w-4/12 sm:px-3 flex items-center justify-start">
                             <Button noBorder ClickHandler={menuMobileToggle} textColor="light" isLoading={false}>
-                                <img src={MenuMobile.isOpen ? CloseIcon : MenuIcon} alt="" />
+                                {MenuMobile.isOpen ? <AiOutlineClose /> : <HiOutlineMenuAlt1 className="rotate-180" />}
                             </Button>
                         </div>
 

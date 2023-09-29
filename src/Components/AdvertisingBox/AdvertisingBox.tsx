@@ -4,7 +4,9 @@ import StarSvg from "/Svg/Star.svg";
 import { Link } from "react-router-dom";
 
 interface AdvertisingBoxMainProps {
-    data: [];
+    data: {
+        id: string;
+    };
     IsResponsive?: boolean;
     IsImportant?: boolean;
 }
@@ -71,9 +73,9 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
         return (
             <>
                 <div id="Box" className={wrapperBoxClass}>
-                    <div className={wrapperContentClass}>
+                    <Link to="/jobs" className={wrapperContentClass}>
                         <BoxContentElm />
-                    </div>
+                    </Link>
 
                     <div className="row-span-1 border-t-[1px] border-solid border-jv-lightGray3x pt-2 text-xs flex items-center justify-between">
                         <div className="flex items-center">
@@ -103,7 +105,7 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
     } else if (props.type === "HideSendCv") {
         return (
             <>
-                <div onClick={() => props.clickHandler()} id="Box" className={wrapperBoxClass}>
+                <div onClick={() => props.clickHandler(props.data.id)} id="Box" className={wrapperBoxClass}>
                     <div className="w-full flex items-center whitespace-nowrap overflow-x-auto no-scrollbar">
                         <span className="ml-1 text-jv-danger text-xs px-2 py-1 rounded-xl bg-jv-lightDanger inline-block">
                             فوری
