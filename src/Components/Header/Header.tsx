@@ -20,7 +20,7 @@ import { HiOutlineMenuAlt1 } from "react-icons/hi";
 
 export const DesktopItemVarinet = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { delay: 0.3 } },
+    visible: { opacity: 1 },
 };
 
 const Header: React.FC = () => {
@@ -80,7 +80,7 @@ const Header: React.FC = () => {
         hidden: {
             opacity: 0,
             transition: {
-                staggerChildren: 2.5,
+                staggerChildren: 1.4,
             },
         },
         visible: {

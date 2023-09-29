@@ -2,6 +2,9 @@ import React from "react";
 // Types
 import { IconType } from "react-icons";
 
+// Animation
+import { ShortStripVerticalAnimation_Ex_Var, TweenEaseOutVeryShortly } from "../../Animations/UtilsAnimation";
+
 // Components
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -18,14 +21,6 @@ type ButtonProps = {
     noBorder?: boolean;
     Icon?: IconType | undefined;
 };
-
-const variant = {
-    hidden: (i: number) => ({ y: 100 * i }),
-    visible: { y: 0 },
-    exit: (i: number) => ({ y: 100 * i }),
-};
-
-const transition = { duration: 0.01, ease: "easeOut", type: "tween" };
 
 const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
     children,
@@ -76,12 +71,12 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
                     <AnimatePresence>
                         {isLoading ? (
                             <motion.div
-                                variants={variant}
+                                variants={ShortStripVerticalAnimation_Ex_Var}
                                 custom={-1}
                                 initial="hidden"
                                 animate="visible"
                                 exit="exit"
-                                transition={transition}
+                                transition={TweenEaseOutVeryShortly}
                                 className="absolute"
                             >
                                 <motion.div
@@ -112,12 +107,12 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
                     <AnimatePresence mode="wait">
                         {!isLoading && typeof Icon !== "undefined" ? (
                             <motion.div
-                                variants={variant}
+                                variants={ShortStripVerticalAnimation_Ex_Var}
                                 custom={1}
                                 initial="hidden"
                                 animate="visible"
                                 exit="exit"
-                                transition={transition}
+                                transition={TweenEaseOutVeryShortly}
                                 className="flex items-center justify-center origin-center ml-3 absolute"
                             >
                                 <Icon
