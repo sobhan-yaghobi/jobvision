@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { faqItems, MoreItems, quickAccessItems } from "./Footer.type";
-// Functions
 
 // Components
 import { Link } from "react-router-dom";
