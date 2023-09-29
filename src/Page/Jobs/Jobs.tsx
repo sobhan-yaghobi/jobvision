@@ -1,18 +1,19 @@
 import React, { useState, useRef, Fragment } from "react";
+import { Link } from "react-router-dom";
+import uuidGenerator from "../../Utils/UuidGenerator";
+
 import SearchFrom from "../../Components/SearchFrom/SearchFrom";
 import Button from "../../Components/Button/Button";
-import { MdNotificationAdd, MdNotificationsActive } from "react-icons/md";
-import { AiFillCaretDown, AiOutlineHeart, AiOutlineShareAlt } from "react-icons/ai";
-import { VscPreview } from "react-icons/vsc";
-import { GoReport } from "react-icons/go";
-import { FaStar, FaRegStar } from "react-icons/fa";
-import uuidGenerator from "../../Utils/UuidGenerator";
 import AdvertisingBox from "../../Components/AdvertisingBox/AdvertisingBox";
-import { Link } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
 import Accordion from "../../Components/Accordion/Accordion";
+import { AnimatePresence, motion } from "framer-motion";
 
+import { AiFillCaretDown, AiOutlineHeart, AiOutlineShareAlt } from "react-icons/ai";
+import { MdNotificationAdd, MdNotificationsActive } from "react-icons/md";
+import { FaStar, FaRegStar } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
+import { GoReport } from "react-icons/go";
+import { VscPreview } from "react-icons/vsc";
 
 const showMainItemVariant = {
     hidden: { y: 30, opacity: 0.1, zIndex: 0 },

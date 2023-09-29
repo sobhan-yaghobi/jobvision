@@ -1,7 +1,8 @@
 import React from "react";
+import { AnimatePresence, motion } from "framer-motion";
+
 import { IconType } from "react-icons";
 import { AiOutlineLoading } from "react-icons/ai";
-import { AnimatePresence, motion } from "framer-motion";
 
 type ButtonProps = {
     isLoading: boolean;
@@ -137,60 +138,3 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
 };
 
 export default Button;
-
-{
-    /* <AnimatePresence mode="wait">
-    {isLoading ? (
-        <motion.div
-            variants={variant}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            // className="flex items-center justify-center origin-center ml-3 relative"
-        >
-            <motion.div
-                animate={{ rotate: 2500 }}
-                transition={{
-                    type: "spring",
-                    damping: 300,
-                    repeat: Infinity,
-                    repeatType: "mirror",
-                }}
-                className="flex items-center justify-center origin-center ml-3"
-            >
-                <AiOutlineLoading
-                    className={`origin-center ${
-                        size === "large"
-                            ? "text-xl"
-                            : size === "middle"
-                            ? "text-lg"
-                            : size === "small"
-                            ? "text-sm"
-                            : "text-xl"
-                    }`}
-                ></AiOutlineLoading>
-            </motion.div>
-        </motion.div>
-    ) : (
-        <motion.div
-            variants={variant}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            // className="flex items-center justify-center origin-center ml-3 relative"
-        >
-            <Icon
-                className={`origin-center ${
-                    size === "large"
-                        ? "text-xl"
-                        : size === "middle"
-                        ? "text-lg"
-                        : size === "small"
-                        ? "text-sm"
-                        : "text-xl"
-                }`}
-            ></Icon>
-        </motion.div>
-    )}
-</AnimatePresence>; */
-}
