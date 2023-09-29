@@ -486,14 +486,13 @@ const Jobs: React.FC = () => {
                         {Array(13)
                             .fill("")
                             .map((item, index) => (
-                                <div className="mt-2">
+                                <div key={index + 1} className="mt-2">
                                     <AdvertisingBox
                                         type="HideSendCv"
                                         clickHandler={() => {
                                             console.log("click");
                                         }}
                                         IsImportant={index === 2 ? true : false}
-                                        key={index + 1}
                                         data={[]}
                                     ></AdvertisingBox>
                                 </div>
@@ -579,6 +578,7 @@ const Jobs: React.FC = () => {
                         <ul className="flex px-3 pt-3 border-b-[1px] border-solid border-jv-lightGray3x">
                             {mainItemsBoxInfos.map((item) => (
                                 <li
+                                    key={item.id}
                                     onClick={() => setMainItemInfo(item)}
                                     className={`ml-5 py-3 cursor-pointer border-b-2 border-solid ${
                                         mainItemInfo.id === item.id

@@ -130,8 +130,8 @@ const Accordion: React.FC<React.PropsWithChildren<AccordionProps>> = (props) => 
                 <>
                     {Array.isArray(props.childArray) &&
                         props.childArray.length &&
-                        props.childArray.map((item) => (
-                            <li className="my-3">
+                        props.childArray.map((item, index) => (
+                            <div key={index + 1} className="my-3">
                                 {typeof item === "object" &&
                                 props.propertyChildName in item &&
                                 Array.isArray(item[props.propertySubName]) &&
@@ -153,7 +153,7 @@ const Accordion: React.FC<React.PropsWithChildren<AccordionProps>> = (props) => 
                                 ) : (
                                     <span>{item[props.propertyChildName]}</span>
                                 )}
-                            </li>
+                            </div>
                         ))}
                 </>
             );
@@ -166,8 +166,10 @@ const Accordion: React.FC<React.PropsWithChildren<AccordionProps>> = (props) => 
                 <>
                     {Array.isArray(props.childArray) &&
                         props.childArray.length &&
-                        props.childArray.map((item) => (
-                            <li className="cursor-pointer text-inherit my-2">{item[props.propertyChildName]}</li>
+                        props.childArray.map((item, index) => (
+                            <div key={index + 1} className="cursor-pointer text-inherit my-2">
+                                {item[props.propertyChildName]}
+                            </div>
                         ))}
                 </>
             );

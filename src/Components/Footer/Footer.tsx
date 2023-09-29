@@ -246,8 +246,13 @@ const Footer: React.FC = () => {
                                     <div key={item.id} className="my-5">
                                         <h1 className="text-sm mb-1 lg:text-xl">{item.title}</h1>
                                         {Array.isArray(item.desc) ? (
-                                            item.desc.map((des) => (
-                                                <p className="text-xs text-justify leading-5 mb-3 lg:text-sm">{des}</p>
+                                            item.desc.map((des, index) => (
+                                                <p
+                                                    key={index + 1}
+                                                    className="text-xs text-justify leading-5 mb-3 lg:text-sm"
+                                                >
+                                                    {des}
+                                                </p>
                                             ))
                                         ) : (
                                             <p className="text-xs text-justify leading-5 lg:text-sm">{item.desc}</p>
@@ -336,13 +341,14 @@ const Footer: React.FC = () => {
                         <div className="w-full my-5 md:my-0 md:w-7/12">
                             <ul className="desktop hidden lg:flex">
                                 {quickAccessItems.map((item) => (
-                                    <li className="w-full ml-5" key={item.id}>
+                                    <li key={item.id} className="w-full ml-5">
                                         <span className="danaBold mb-3 inline-block">{item.title}</span>
                                         {item.links.length ? (
                                             <ul className="!text-sm flex flex-col gap-2">
                                                 {item.links.map((link, index) =>
                                                     link.sublink.length ? (
                                                         <Accordion
+                                                            key={link.id}
                                                             isResponsive
                                                             listStyle="Ul"
                                                             type="Item"
@@ -355,7 +361,7 @@ const Footer: React.FC = () => {
                                                             iconType="Menu"
                                                         ></Accordion>
                                                     ) : (
-                                                        <li>
+                                                        <li key={link.id}>
                                                             <Link className="text-inherit" to={link.link}>
                                                                 {link.title}
                                                             </Link>
@@ -369,7 +375,7 @@ const Footer: React.FC = () => {
                             </ul>
                             <div className="mobile flex flex-col lg:hidden">
                                 {quickAccessItems.map((item, index) => (
-                                    <div className="w-full ml-5">
+                                    <div key={item.id} className="w-full ml-5">
                                         <Accordion
                                             isResponsive
                                             listStyle="Ul"
