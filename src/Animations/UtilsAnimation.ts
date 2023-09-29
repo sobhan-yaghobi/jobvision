@@ -94,20 +94,12 @@ const ShortShowFromBottom: Variants = {
     },
 };
 
-const ShowHideClipFromBottomWithDelayChild_Ex: Variants = {
+const ShowHideClipFromBottom_Ex: Variants = {
     hidden: {
         clipPath: "inset(100% 50% 0% 50% round 10px)",
-        transition: {
-            staggerChildren: 1.4,
-            when: "beforeChildren",
-        },
     },
     visible: {
         clipPath: "inset(0% 0% 0% 0% round 0px)",
-        transition: {
-            staggerChildren: 1.4,
-            when: "beforeChildren",
-        },
     },
     exit: {
         clipPath: "inset(100% 50% 0% 50% round 10px)",
@@ -153,6 +145,11 @@ const TweenEaseOutVeryShortly: Transition = {
     type: "tween",
 };
 
+const DelayBeforeChilds: Transition = {
+    staggerChildren: 1.4,
+    when: "beforeChildren",
+};
+
 export {
     ShortStripVerticalAnimation_Ex_Var,
     LongStripVertical_Ex,
@@ -162,10 +159,11 @@ export {
     ShowItemsDelay_Var,
     ShowSvgPath,
     ShortShowFromBottom,
-    ShowHideClipFromBottomWithDelayChild_Ex,
+    ShowHideClipFromBottom_Ex,
     ShowFromBottom_Var,
     ShowFromRight,
     ShowFromLeft,
     // Transition
     TweenEaseOutVeryShortly,
+    DelayBeforeChilds,
 };

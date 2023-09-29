@@ -1,4 +1,19 @@
 import React, { useState, useRef, Fragment } from "react";
+
+// Types
+import {
+    BoxsOrderType,
+    MainItemBoxInfoType,
+    BoxInfoCardProps,
+    BoxInfoProps,
+    boxOrderArray,
+    aboutJobArray,
+    mainItemsBoxInfos,
+} from "./Jobs.type";
+
+// Animations
+import { ShortShowFromBottom, ShowHideClipFromBottom_Ex } from "../../Animations/UtilsAnimation";
+
 // Functions
 import uuidGenerator from "../../Utils/UuidGenerator";
 
@@ -17,116 +32,6 @@ import { FaStar, FaRegStar } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
 import { GoReport } from "react-icons/go";
 import { VscPreview } from "react-icons/vsc";
-
-const showMainItemVariant = {
-    hidden: { y: 30, opacity: 0.1, zIndex: 0 },
-    visible: {
-        y: 0,
-        opacity: 1,
-        transition: {
-            type: "spring",
-            duration: 0.1,
-            ease: "backOut",
-            opacity: {
-                delay: 0.1,
-            },
-        },
-    },
-};
-interface BoxsOrderType {
-    id: string;
-    title: string;
-    order: "RELATED" | "NEW" | "HIGHEST_SALARY";
-}
-const boxOrderArray: BoxsOrderType[] = [
-    { id: uuidGenerator(), title: "مرتبط ترین ها", order: "RELATED" },
-    { id: uuidGenerator(), title: "جدید ترین ها", order: "NEW" },
-    { id: uuidGenerator(), title: "بیشترین حقوق", order: "HIGHEST_SALARY" },
-];
-
-interface AboutJob {
-    id: string;
-    title: string;
-    item: { id: string; itemTitle?: string; itemDesc: string } | { id: string; itemTitle?: string; itemDesc: string }[];
-}
-
-const aboutJobArray: AboutJob[] = [
-    {
-        id: uuidGenerator(),
-        title: "شرایط  کاراموزی",
-        item: [
-            { id: uuidGenerator(), itemTitle: "طول دوره", itemDesc: "3 ماه(پاره وقت و تمام وقت)" },
-            { id: uuidGenerator(), itemTitle: "محل شرکت", itemDesc: "محدوده دانشگاه شریف" },
-            { id: uuidGenerator(), itemDesc: "احتیاج به پیش‌نیاز و سابقه کاری نیست" },
-        ],
-    },
-    {
-        id: uuidGenerator(),
-        title: "آموزش ها",
-        item: [
-            { id: uuidGenerator(), itemDesc: "فروش و بازاریابی" },
-            { id: uuidGenerator(), itemDesc: "برنامه نویسی(وب و هوش)" },
-        ],
-    },
-    {
-        id: uuidGenerator(),
-        title: "حوزه فعالیت شرکت",
-        item: [
-            { id: uuidGenerator(), itemDesc: "انجام پروژه های نرم‌افزاری/ اپلیکیشن تحت وب و موبایل" },
-            { id: uuidGenerator(), itemDesc: "برگزاری و فروش دوره های آموزش برنامه‌نویسی و هوش مصنوعی" },
-        ],
-    },
-    {
-        id: uuidGenerator(),
-        title: "شرایط کاری",
-        item: [
-            { id: uuidGenerator(), itemDesc: "اموزش برنامه نویسی" },
-            { id: uuidGenerator(), itemDesc: "همکاری در بخش فروش" },
-            { id: uuidGenerator(), itemDesc: "همکاری در بخش آموزش و پشتیبانی دوره ها" },
-        ],
-    },
-    {
-        id: uuidGenerator(),
-        title: "مهارت هایی که در طول دوره فرا خواهید گرفت",
-        item: [
-            { id: uuidGenerator(), itemDesc: "برنامه نویسی وب" },
-            { id: uuidGenerator(), itemDesc: "مهارت های فروش و بازاریابی" },
-            { id: uuidGenerator(), itemDesc: "کسب درآمد از برنامه نویسی" },
-        ],
-    },
-    {
-        id: uuidGenerator(),
-        title: "قابلیت های لازم",
-        item: [
-            { id: uuidGenerator(), itemDesc: "علاقه به یادگیری" },
-            { id: uuidGenerator(), itemDesc: "روحیه کار تیمی" },
-            { id: uuidGenerator(), itemDesc: "تمرکز بر روی فعالیت های کاری" },
-            { id: uuidGenerator(), itemDesc: "نظم و انضباط" },
-            { id: uuidGenerator(), itemDesc: "انرژی بالا و روابط اجتماعی خوب" },
-            { id: uuidGenerator(), itemDesc: "عدم اشتغال به کار" },
-        ],
-    },
-];
-
-type InfoTypes = "INFO_JOB" | "ABOUT_COMPANY" | "RELATED_ADS" | "RESUME_RECRRDS";
-
-interface MainItemBoxInfoType {
-    id: string;
-    title: string;
-    type: InfoTypes;
-}
-
-interface BoxInfoCardProps {
-    mainInfo: MainItemBoxInfoType;
-    setMainInfo: React.Dispatch<MainItemBoxInfoType>;
-}
-
-const mainItemsBoxInfos: MainItemBoxInfoType[] = [
-    { id: uuidGenerator(), title: "درباره شغل", type: "INFO_JOB" },
-    { id: uuidGenerator(), title: "درباره شرکت", type: "ABOUT_COMPANY" },
-    { id: uuidGenerator(), title: "سایر آگهی های این شرکت", type: "RELATED_ADS" },
-    { id: uuidGenerator(), title: "سوابق ارسال رزومه", type: "RESUME_RECRRDS" },
-];
 
 const BoxInfoCard: React.FC<BoxInfoCardProps> = ({ mainInfo, setMainInfo }) => {
     return (
@@ -222,11 +127,6 @@ const BoxInfoCard: React.FC<BoxInfoCardProps> = ({ mainInfo, setMainInfo }) => {
         </>
     );
 };
-
-interface BoxInfoProps {
-    type: InfoTypes;
-    info: [];
-}
 
 const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
     if (type === "INFO_JOB") {
@@ -613,7 +513,7 @@ const Jobs: React.FC = () => {
                 <div className="hidden boxInfo mr-2 w-7/12 bg-jv-white sticky top-24 overflow-x-hidden overflow-y-auto h-[82vh] rounded-xl lg:table-column lg:w-7/12">
                     <BoxInfoCard mainInfo={mainItemInfo} setMainInfo={setMainItemInfo}></BoxInfoCard>
                     <motion.div
-                        variants={showMainItemVariant}
+                        variants={ShortShowFromBottom}
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true }}
@@ -633,7 +533,7 @@ const Jobs: React.FC = () => {
                             className={`w-full h-screen fixed bg-jv-bgColor lg:hidden bottom-0 right-0 text-right ${
                                 mainJobInfo.isShow ? "z-20" : "z-10"
                             }`}
-                            variants={MobileContainerVariants}
+                            variants={ShowHideClipFromBottom_Ex}
                             initial="hidden"
                             animate="visible"
                             exit="exit"
@@ -656,7 +556,7 @@ const Jobs: React.FC = () => {
                                     <BoxInfoCard mainInfo={mainItemInfo} setMainInfo={setMainItemInfo}></BoxInfoCard>
 
                                     <motion.div
-                                        variants={showMainItemVariant}
+                                        variants={ShortShowFromBottom}
                                         initial="hidden"
                                         whileInView="visible"
                                         viewport={{ once: true }}
@@ -677,15 +577,4 @@ const Jobs: React.FC = () => {
     );
 };
 
-const MobileContainerVariants = {
-    hidden: {
-        clipPath: "inset(100% 50% 0% 50% round 10px)",
-    },
-    visible: {
-        clipPath: "inset(0% 0% 0% 0% round 0px)",
-    },
-    exit: {
-        clipPath: "inset(100% 50% 0% 50% round 10px)",
-    },
-};
 export default Jobs;
