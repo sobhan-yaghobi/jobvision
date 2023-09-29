@@ -1,45 +1,9 @@
 import React, { useRef, useState } from "react";
-import { Link, SubMenu } from "../Components/MenuItem/menuItem.type";
+// Types
+import { Link, SubMenu } from "../../Components/MenuItem/menuItem.type";
+import { DesktopMenuType, menuMobileFireProps, MobileMenuType } from "./useShowMenu.type";
+// Functions
 import { mapValues } from "lodash";
-
-interface DesktopMenuType {
-    mainItem: SubMenu;
-    isShow: boolean;
-    isMega: boolean;
-    id: string;
-    x: number | null;
-    y: number | null;
-    width: number | null;
-}
-interface isForSubMenu {
-    SpecialType: "isShowSubMenu";
-    data: SubMenu[];
-}
-interface isForItems {
-    SpecialType: "isShowItem";
-    data: SubMenu;
-}
-interface isForLinks {
-    SpecialType: "isShowLinks";
-    data: Link[];
-}
-type menuMobileFireProps = isForSubMenu | isForItems | isForLinks;
-
-interface MobileMenuType {
-    menuData: {
-        SubMenu: SubMenu[];
-        Item: SubMenu;
-        Links: Link[];
-    };
-    isOpen: boolean;
-    isShow: {
-        SubMenu: boolean;
-        Item: boolean;
-        Links: boolean;
-    };
-    goButtonTitle: string;
-    goAnimationTo: "Forward" | "Back";
-}
 
 const UseShowMenu = (
     menu: SubMenu[]
