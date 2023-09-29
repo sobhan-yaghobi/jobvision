@@ -1,26 +1,13 @@
 import React from "react";
+//  Types
+import { SearchFromProps, categoryArray } from "./SearchForm.type";
+
+// Components
 import Input from "../Input/Input";
 import Button from "../Button/Button";
 
+// Icons
 import { AiOutlineDown } from "react-icons/ai";
-import uuidGenerator from "../../Utils/UuidGenerator";
-
-const categoryArray: { id: string; title: string; isSub: boolean }[] = [
-    { id: uuidGenerator(), title: "دورکاری", isSub: false },
-    { id: uuidGenerator(), title: "کارآموزی", isSub: false },
-    { id: uuidGenerator(), title: "نوع همکاری", isSub: true },
-    { id: uuidGenerator(), title: "زمان انتشار", isSub: true },
-    { id: uuidGenerator(), title: "سابقه کاری", isSub: true },
-    { id: uuidGenerator(), title: "سطح ارشدیت", isSub: true },
-    { id: uuidGenerator(), title: "مزایا و تسهیلات", isSub: true },
-    { id: uuidGenerator(), title: "صنعت", isSub: true },
-    { id: uuidGenerator(), title: "امکان استخدام معلولین", isSub: false },
-    { id: uuidGenerator(), title: "امریه سربازی", isSub: false },
-];
-
-interface SearchFromProps {
-    isFilterBarShow: boolean;
-}
 
 const SearchFrom: React.FC<SearchFromProps> = ({ isFilterBarShow }) => {
     return (
@@ -116,7 +103,6 @@ const SearchFrom: React.FC<SearchFromProps> = ({ isFilterBarShow }) => {
             </div>
             {isFilterBarShow ? (
                 <div className="mt-2 py-1 no-scrollbar overflow-x-auto whitespace-nowrap flex items-center md:whitespace-normal md:flex-wrap">
-                    {/* flex items-center flex-row flex-wrap mt-2 */}
                     {categoryArray.map((item) => (
                         <span
                             key={item.id}
