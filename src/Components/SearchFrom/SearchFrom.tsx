@@ -1,15 +1,65 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 //  Types
+import { ChildOfFilterType, FilterType } from "./SearchForm.type";
 import { SearchFromProps, categoryArray } from "./SearchForm.type";
+
+// Animations
+import { ShowAndHideOpacity_Ex, ShowFromRight, ShowOpacity } from "../../Animations/UtilsAnimation";
+
+// Functions
+import { find } from "lodash";
 
 // Components
 import Input from "../Input/Input";
 import Button from "../Button/Button";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Icons
 import { AiOutlineDown } from "react-icons/ai";
+import { isArray } from "lodash";
+import { AiOutlineClose } from "react-icons/ai";
 
 const SearchFrom: React.FC<SearchFromProps> = ({ isFilterBarShow }) => {
+    const [filterJob, setFilterJob] = useState<(FilterType | ChildOfFilterType)[]>([]);
+    const [mainFilterMenu, setMainFilterMenu] = useState<{
+        data: FilterType;
+        position: { x: number | undefined; y: number | undefined; width: number | undefined };
+    }>({
+        data: {} as FilterType,
+        position: { x: undefined, y: undefined, width: undefined },
+    });
+
+    const filterAction = (Item: FilterType, event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+        console.log(Item);
+        if (!Item.isMultiple && typeof Item.sub === "undefined") {
+            setFilterJob((prev) => {
+                if (find(prev, Item)) {
+                    return [...prev.filter((filterItem) => filterItem.id !== Item.id)];
+                } else {
+                    return [...prev, { ...Item }];
+                }
+            });
+        } else {
+            console.log("nooooo");
+        }
+
+        // FOR MENU
+        const isExsist = Boolean(mainFilterMenu.data.id === Item.id);
+        if (isExsist) {
+            setMainFilterMenu({ data: {} as FilterType, position: { x: undefined, y: undefined, width: undefined } });
+        } else {
+            const elmPosition = event.currentTarget.getBoundingClientRect();
+            setMainFilterMenu({
+                data: Item,
+                position: { x: elmPosition.left, y: elmPosition.bottom, width: elmPosition.width },
+            });
+        }
+    };
+
+    useEffect(() => {
+        console.log(filterJob);
+    }, [filterJob]);
+
     return (
         <>
             <div className="w-full flex flex-col items-center justify-between md:flex-row">
@@ -102,16 +152,62 @@ const SearchFrom: React.FC<SearchFromProps> = ({ isFilterBarShow }) => {
                 </Button>
             </div>
             {isFilterBarShow ? (
-                <div className="mt-2 py-1 no-scrollbar overflow-x-auto whitespace-nowrap flex items-center md:whitespace-normal md:flex-wrap">
+                <div className="mt-2 py-1 no-scrollbar overflow-x-auto whitespace-nowrap flex items-center md:whitespace-normal md:flex-wrap md:overflow-x-visible">
                     {categoryArray.map((item) => (
-                        <span
+                        <div
                             key={item.id}
-                            className="cursor-pointer text-sm mt-2 ml-1 px-4 py-2 border border-solid border-jv-lightGray3x rounded-2xl flex items-center select-none"
+                            onClick={(e) => filterAction(item, e)}
+                            className={`filtredItem select-none box-info-type text-sm flex items-center px-4 py-2 rounded-2xl cursor-pointer relative ${
+                                find(filterJob, item) ? "bg-jv-lightGray2x border-jv-lightGray2x" : ""
+                            }`}
                         >
-                            <span>{item.title}</span>
-                            {item.isSub ? <AiOutlineDown className="mr-1"></AiOutlineDown> : null}
-                        </span>
+                            {find(filterJob, item) ? (
+                                <>
+                                    <span className="text-jv-white ml-1">{item.title}</span>
+                                    <AiOutlineClose className="mr-1 bg-jv-primary text-jv-white rounded-full text-xl py-1" />
+                                </>
+                            ) : (
+                                <>
+                                    <span>{item.title}</span>
+                                    {typeof item.sub !== "undefined" && isArray(item.sub) && item.sub.length ? (
+                                        <>
+                                            <AiOutlineDown
+                                                className={`mr-1 ${
+                                                    mainFilterMenu.data.id === item.id ? "rotate-180" : ""
+                                                }`}
+                                            ></AiOutlineDown>
+                                        </>
+                                    ) : null}
+                                </>
+                            )}
+                        </div>
                     ))}
+                    <AnimatePresence>
+                        {Object.entries(mainFilterMenu).length &&
+                        typeof mainFilterMenu.data.sub !== "undefined" &&
+                        Array.isArray(mainFilterMenu.data.sub) ? (
+                            <motion.div
+                                variants={ShowAndHideOpacity_Ex}
+                                initial="hidden"
+                                animate="visible"
+                                exit="exit"
+                                className="min-h-fit absolute z-20 transition-all duration-500"
+                                style={{
+                                    width: mainFilterMenu.position.width,
+                                    top: mainFilterMenu.position.y,
+                                    left: mainFilterMenu.position.x,
+                                }}
+                            >
+                                <ul className="absolute min-w-[15rem] top-3 right-0 bg-jv-light py-3 px-4 shadow-xl border-[1px] border-solid border-jv-lightGray3x rounded-xl">
+                                    {mainFilterMenu.data.sub.map((subItem) => (
+                                        <li key={subItem.id} className="py-2">
+                                            {subItem.title}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </motion.div>
+                        ) : null}
+                    </AnimatePresence>
                 </div>
             ) : null}
         </>
