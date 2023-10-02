@@ -13,7 +13,7 @@ import {
 } from "./JobsFilter.type";
 
 // Animations
-import { ShowAndHideOpacity_Ex } from "../../Animations/UtilsAnimation";
+import { DelayBeforeChilds, ShowAndHideOpacity_Ex, ShowHideClipFromBottom_Ex } from "../../Animations/UtilsAnimation";
 
 // Functions
 import { includes } from "lodash";
@@ -25,8 +25,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { AiOutlineDown } from "react-icons/ai";
 import { isArray } from "lodash";
 import { AiOutlineClose } from "react-icons/ai";
+import useWindowsSize from "../../Hooks/useWindowsSize";
+import Button from "../Button/Button";
 
 const JobsFilter: React.FC = () => {
+    const [WindowsSize] = useWindowsSize();
+    const [menuMobile, setMenuMobile] = useState(false);
     const [selectedFilters, setSelectedFilterss] = useState<selectedFiltersType[]>([]);
     const [mainFilterMenu, setMainFilterMenu] = useState<{
         data: FilterType;
@@ -55,7 +59,7 @@ const JobsFilter: React.FC = () => {
                 ? selectedFilters.filter((selectedFilter) => selectedFilter.category !== param.mainType)
                 : [...selectedFilters];
         setSelectedFilterss(newSelectedFilters);
-        diActiveMenu();
+        param.isClose ? diActiveMenu() : null;
     };
 
     const filterAction = (
@@ -75,7 +79,10 @@ const JobsFilter: React.FC = () => {
                 } else {
                     return typeof SubItem !== "undefined"
                         ? isDublicate({ mode: "CategoryType", ItemType: SubItem.category })
-                            ? [...prev.filter((filterItem) => filterItem.category !== Item.category)]
+                            ? [
+                                  ...prev.filter((filterItem) => filterItem.category !== Item.category),
+                                  { title: SubItem.title, type: SubItem.type, category: SubItem.category },
+                              ]
                             : [...prev, { title: SubItem.title, type: SubItem.type, category: SubItem.category }]
                         : [...prev];
                 }
@@ -88,10 +95,23 @@ const JobsFilter: React.FC = () => {
             }
         });
         // FOR MENU
-        const isExsist = Boolean(mainFilterMenu.data.id === Item.id);
-        if (isExsist && !Item.isMultiple) {
-            diActiveMenu();
-        } else if (!isExsist) {
+        if (WindowsSize.innerWidth >= 768) {
+            const isExsist = Boolean(mainFilterMenu.data.id === Item.id);
+            if (isExsist && !Item.isMultiple) {
+                diActiveMenu();
+            } else if (!isExsist) {
+                setMainFilterMenu({
+                    data: Item,
+                    position: {
+                        x: event.currentTarget.offsetLeft,
+                        y: event.currentTarget.offsetTop,
+                        height: event.currentTarget.clientHeight,
+                        width: event.currentTarget.clientWidth,
+                    },
+                });
+            }
+        } else {
+            setMenuMobile(true);
             setMainFilterMenu({
                 data: Item,
                 position: {
@@ -154,7 +174,11 @@ const JobsFilter: React.FC = () => {
                     <span
                         onClick={(e) => {
                             e.stopPropagation();
-                            removeFilterAction({ mode: "RemoveCategory", mainType: mainFilter[0].category });
+                            removeFilterAction({
+                                mode: "RemoveCategory",
+                                mainType: mainFilter[0].category,
+                                isClose: true,
+                            });
                         }}
                         className="flex items-center"
                     >
@@ -190,7 +214,7 @@ const JobsFilter: React.FC = () => {
                 typeof item.category !== "undefined" &&
                 !item.isMultiple
             ) {
-                removeFilterAction({ mode: "RemoveCategory", mainType: item.category });
+                removeFilterAction({ mode: "RemoveCategory", mainType: item.category, isClose: true });
             }
             if (mainFilterMenu.data.id === item.id) {
                 diActiveMenu();
@@ -242,6 +266,7 @@ const JobsFilter: React.FC = () => {
             {categoryArray.map((item) => (
                 <FilterGenerator key={item.id} item={{ ...item }}></FilterGenerator>
             ))}
+            {/*//! -------------------------------------- Filter Desktop Menu -------------------------------------- */}
             <AnimatePresence>
                 {Object.entries(mainFilterMenu).length &&
                 typeof mainFilterMenu.data.sub !== "undefined" &&
@@ -251,7 +276,7 @@ const JobsFilter: React.FC = () => {
                         initial="hidden"
                         animate="visible"
                         exit="exit"
-                        className="min-h-fit absolute z-10 transition-all duration-500"
+                        className="min-h-fit absolute z-10 transition-all duration-500 hidden md:block"
                         style={{
                             width: mainFilterMenu.position.width,
                             marginTop: mainFilterMenu.position.height ? mainFilterMenu.position.height + 10 : undefined,
@@ -259,7 +284,7 @@ const JobsFilter: React.FC = () => {
                             left: mainFilterMenu.position.x,
                         }}
                     >
-                        <ul className="absolute min-w-[15rem] top-full right-0 bg-jv-light py-3 px-4 shadow-xl border-[1px] border-solid border-jv-lightGray3x rounded-xl">
+                        <ul className="absolute min-w-[15rem] max-h-60 overflow-y-auto top-full right-0 bg-jv-light py-3 px-4 shadow-xl border-[1px] border-solid border-jv-lightGray3x rounded-xl">
                             {mainFilterMenu.data.sub.map((subItem) => (
                                 <li
                                     onClick={(e) => filterAction(mainFilterMenu.data, subItem, e)}
@@ -278,6 +303,94 @@ const JobsFilter: React.FC = () => {
                                 </li>
                             ))}
                         </ul>
+                    </motion.div>
+                ) : null}
+            </AnimatePresence>
+            {/*//? -------------------------------------- Filter Desktop Menu -------------------------------------- */}
+            <AnimatePresence>
+                {Object.entries(mainFilterMenu).length &&
+                typeof mainFilterMenu.data.sub !== "undefined" &&
+                Array.isArray(mainFilterMenu.data.sub) &&
+                menuMobile ? (
+                    <motion.div
+                        className={`w-full h-d-screen fixed bg-jv-bgColor lg:hidden bottom-0 right-0 text-right ${
+                            menuMobile ? "z-20" : "z-10"
+                        }`}
+                        variants={ShowHideClipFromBottom_Ex}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        transition={{ duration: 0.4 }}
+                    >
+                        <motion.div
+                            className="w-full pt-5 fixed overflow-hidden bottom-0 right-0 rounded-t-xl bg-jv-white"
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
+                            transition={{ delay: 0.4 }}
+                        >
+                            <div
+                                className="px-3 py-2 flex items-center justify-between"
+                                onClick={() => {
+                                    setMenuMobile(false);
+                                    diActiveMenu();
+                                }}
+                            >
+                                <h3>{mainFilterMenu.data.title}</h3>
+                                <AiOutlineClose className="text-jv-black text-2xl" />
+                            </div>
+                            <div className="max-h-full pb-10 overflow-y-auto no-scrollbar">
+                                <ul className="mb-2 py-3 px-4 max-h-52 overflow-y-auto">
+                                    {mainFilterMenu.data.sub.map((subItem) => (
+                                        <li
+                                            onClick={(e) => filterAction(mainFilterMenu.data, subItem, e)}
+                                            key={subItem.id}
+                                            className="py-2 flex items-center cursor-pointer text-jv-black"
+                                        >
+                                            <div
+                                                className={`w-4 h-4 ${
+                                                    isDublicate({ mode: "FilterType", ItemType: subItem.type })
+                                                        ? "bg-jv-primary"
+                                                        : "bg-jv-lightGray3x"
+                                                } ${mainFilterMenu.data.isMultiple ? "rounded-sm" : "rounded-full"}`}
+                                            ></div>
+
+                                            <span className="mr-2">{subItem.title}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                                <div className="flex items-center px-1">
+                                    <Button
+                                        isLoading={false}
+                                        ClassName="w-1/2 ml-1 !text-jv-danger border-jv-danger"
+                                        textColor="primary"
+                                        size="small"
+                                        ClickHandler={() =>
+                                            typeof mainFilterMenu.data.category !== "undefined" &&
+                                            removeFilterAction({
+                                                mode: "RemoveCategory",
+                                                mainType: mainFilterMenu.data.category,
+                                                isClose: false,
+                                            })
+                                        }
+                                        DoubleClickHandler={() => diActiveMenu()}
+                                    >
+                                        حذف فیلترها
+                                    </Button>
+                                    <Button
+                                        isLoading={false}
+                                        ClassName="w-1/2 mr-1 border-jv-primary"
+                                        textColor="light"
+                                        size="small"
+                                        ClickHandler={() => {
+                                            setMenuMobile(false);
+                                            diActiveMenu();
+                                        }}
+                                    >
+                                        مشاهده نتایج
+                                    </Button>
+                                </div>
+                            </div>
+                        </motion.div>
                     </motion.div>
                 ) : null}
             </AnimatePresence>

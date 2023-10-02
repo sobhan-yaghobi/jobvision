@@ -10,7 +10,7 @@ import Button from "../Button/Button";
 import StarSvg from "/Svg/Star.svg";
 
 const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
-    const wrapperBoxClass = `cursor-default w-full h-full max-h-[11.5rem] border-2 border-solid border-jv-lightGray3x rounded-xl py-3 px-3 bg-transparent grid ${
+    const wrapperBoxClass = `cursor-default w-full h-full max-h-[12rem] border-2 border-solid border-jv-lightGray3x rounded-xl py-3 px-3 bg-transparent grid ${
         props.type === "ShowSendCv" ? "grid-rows-3" : "grid-rows-4"
     }`;
 

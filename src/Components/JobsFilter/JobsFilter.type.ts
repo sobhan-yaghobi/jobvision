@@ -301,8 +301,8 @@ export interface selectedFiltersType {
 }
 
 export type removeFilterActionTypes =
-    | { mode: "RemoveType"; mainType: string }
-    | { mode: "RemoveCategory"; mainType: string };
+    | { mode: "RemoveType"; mainType: string; isClose: boolean }
+    | { mode: "RemoveCategory"; mainType: string; isClose: boolean };
 
 export type isDublicateTypes =
     | { mode: "FilterType"; ItemType: FiltreTypes | undefined }

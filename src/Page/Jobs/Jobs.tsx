@@ -374,10 +374,9 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
                     {Array(8)
                         .fill("")
                         .map((value, index) => (
-                            <div className="mt-3">
+                            <div key={index + 1} className="mt-3">
                                 <AdvertisingBox
                                     type="HideSendCv"
-                                    key={index + 1}
                                     data={{ id: uuidGenerator() }}
                                     clickHandler={() => {}}
                                 ></AdvertisingBox>

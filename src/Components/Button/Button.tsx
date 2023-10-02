@@ -17,6 +17,7 @@ type ButtonProps = {
     textColor: "light" | "primary";
     ClassName?: string;
     ClickHandler: Function;
+    DoubleClickHandler?: Function;
     isDefault?: boolean;
     noBorder?: boolean;
     Icon?: IconType | undefined;
@@ -29,6 +30,7 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
     textColor,
     ClassName,
     ClickHandler,
+    DoubleClickHandler,
     isDefault,
     noBorder,
     Icon,
@@ -60,6 +62,7 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
             <motion.button
                 whileTap={{ opacity: 0.7 }}
                 onClick={() => ClickHandler()}
+                onDoubleClick={() => typeof DoubleClickHandler !== "undefined" && DoubleClickHandler()}
                 disabled={isLoading}
                 className={classList}
             >
