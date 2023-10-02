@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from "react";
 
 //  Types
-import { CategoryTypes, ChildOfFilterType, FilterType, FiltreTypes, categoryArray } from "./JobsFilter.type";
+import {
+    ChildOfFilterType,
+    FilterType,
+    categoryArray,
+    selectedFiltersType,
+    removeFilterActionTypes,
+    isDublicateTypes,
+    FilterContentGeneratorProps,
+    FilterGeneratorProps,
+} from "./JobsFilter.type";
 
 // Animations
 import { ShowAndHideOpacity_Ex } from "../../Animations/UtilsAnimation";
@@ -17,24 +26,37 @@ import { AiOutlineDown } from "react-icons/ai";
 import { isArray } from "lodash";
 import { AiOutlineClose } from "react-icons/ai";
 
-interface selectedFiltersType {
-    title: string;
-    type: string;
-    category: string;
-}
-
 const JobsFilter: React.FC = () => {
     const [selectedFilters, setSelectedFilterss] = useState<selectedFiltersType[]>([]);
     const [mainFilterMenu, setMainFilterMenu] = useState<{
         data: FilterType;
-        position: { x: number | undefined; y: number | undefined; width: number | undefined };
+        position: {
+            x: number | undefined;
+            y: number | undefined;
+            width: number | undefined;
+            height: number | undefined;
+        };
     }>({
         data: {} as FilterType,
-        position: { x: undefined, y: undefined, width: undefined },
+        position: { x: undefined, y: undefined, width: undefined, height: undefined },
     });
 
     const diActiveMenu = () =>
-        setMainFilterMenu({ data: {} as FilterType, position: { x: undefined, y: undefined, width: undefined } });
+        setMainFilterMenu({
+            data: {} as FilterType,
+            position: { x: undefined, y: undefined, width: undefined, height: undefined },
+        });
+
+    const removeFilterAction = (param: removeFilterActionTypes) => {
+        const newSelectedFilters =
+            param.mode === "RemoveType"
+                ? selectedFilters.filter((selectedFilter) => selectedFilter.type !== param.mainType)
+                : param.mode === "RemoveCategory"
+                ? selectedFilters.filter((selectedFilter) => selectedFilter.category !== param.mainType)
+                : [...selectedFilters];
+        setSelectedFilterss(newSelectedFilters);
+        diActiveMenu();
+    };
 
     const filterAction = (
         Item: FilterType,
@@ -42,185 +64,183 @@ const JobsFilter: React.FC = () => {
         event: React.MouseEvent<HTMLSpanElement, MouseEvent>
     ) => {
         setSelectedFilterss((prev) => {
-            if (!Item.isMultiple && typeof Item.sub === "undefined" && typeof Item.type !== "undefined") {
-                if (goCheck(Item.type)) {
-                    return [...prev.filter((filterItem) => filterItem.type !== Item.type)];
+            if (!Item.isMultiple) {
+                if (typeof Item.type !== "undefined" && typeof Item.sub === "undefined") {
+                    return isDublicate({ mode: "FilterType", ItemType: Item.type })
+                        ? [...prev.filter((filterItem) => filterItem.type !== Item.type)]
+                        : [
+                              ...prev,
+                              { title: Item.title, type: Item.type, category: Item.category ? Item.category : "" },
+                          ];
                 } else {
-                    return [
-                        ...prev,
-                        { title: Item.title, type: Item.type, category: Item.category ? Item.category : "" },
-                    ];
+                    return typeof SubItem !== "undefined"
+                        ? isDublicate({ mode: "CategoryType", ItemType: SubItem.category })
+                            ? [...prev.filter((filterItem) => filterItem.category !== Item.category)]
+                            : [...prev, { title: SubItem.title, type: SubItem.type, category: SubItem.category }]
+                        : [...prev];
                 }
             } else {
-                if (!Item.isMultiple && typeof Item.sub !== "undefined" && typeof SubItem !== "undefined") {
-                    if (goCheckCategory(SubItem?.category)) {
-                        return [...prev.filter((filterItem) => filterItem.category !== Item.category)];
-                    } else {
-                        return [...prev, { title: SubItem.title, type: SubItem.type, category: SubItem.category }];
-                    }
-                } else if (Item.isMultiple && typeof Item.sub !== "undefined" && typeof SubItem !== "undefined") {
-                    if (prev.some((filterItem) => filterItem.type === SubItem.type)) {
-                        return [...prev.filter((filterItem) => filterItem.type !== SubItem.type)];
-                    } else {
-                        return [...prev, { title: SubItem.title, type: SubItem.type, category: SubItem.category }];
-                    }
-                }
-
-                return [...prev];
+                return typeof SubItem !== "undefined"
+                    ? prev.some((filterItem) => filterItem.type === SubItem.type)
+                        ? [...prev.filter((filterItem) => filterItem.type !== SubItem.type)]
+                        : [...prev, { title: SubItem.title, type: SubItem.type, category: SubItem.category }]
+                    : [...prev];
             }
         });
-
         // FOR MENU
         const isExsist = Boolean(mainFilterMenu.data.id === Item.id);
         if (isExsist && !Item.isMultiple) {
             diActiveMenu();
         } else if (!isExsist) {
-            const elmPosition = event.currentTarget.getBoundingClientRect();
             setMainFilterMenu({
                 data: Item,
-                position: { x: elmPosition.left, y: elmPosition.bottom, width: elmPosition.width },
+                position: {
+                    x: event.currentTarget.offsetLeft,
+                    y: event.currentTarget.offsetTop,
+                    height: event.currentTarget.clientHeight,
+                    width: event.currentTarget.clientWidth,
+                },
             });
         }
     };
 
-    type removeFilterActionTypes =
-        | { mode: "RemoveType"; mainType: string }
-        | { mode: "RemoveCategory"; mainType: string };
-
-    const removeFilterAction = (param: removeFilterActionTypes) => {
-        let newSelectedFilters;
-        if (param.mode === "RemoveType") {
-            newSelectedFilters = selectedFilters.filter((selectedFilter) => selectedFilter.type !== param.mainType);
-        } else if (param.mode === "RemoveCategory") {
-            newSelectedFilters = selectedFilters.filter((selectedFilter) => selectedFilter.category !== param.mainType);
-        } else {
-            newSelectedFilters = [...selectedFilters];
+    const isDublicate = ({ mode, ItemType }: isDublicateTypes): boolean => {
+        if (typeof ItemType !== "undefined") {
+            const isTrue: boolean[] = selectedFilters.map((selectedFilter) => {
+                return mode === "CategoryType"
+                    ? selectedFilter.category === ItemType
+                        ? true
+                        : false
+                    : selectedFilter.type === ItemType
+                    ? true
+                    : false;
+            });
+            return includes(isTrue, true) ? true : false;
         }
-        setSelectedFilterss(newSelectedFilters);
-        diActiveMenu();
+        return false;
     };
-
     useEffect(() => {
         console.log(selectedFilters);
     }, [selectedFilters]);
 
-    const goCheck = (ItemType: FiltreTypes | undefined): boolean => {
-        if (typeof ItemType !== "undefined") {
-            const isTrue: boolean[] = selectedFilters.map((selectedFilter) => {
-                if (selectedFilter.type === ItemType) {
-                    return true;
-                } else {
-                    return false;
-                }
-            });
+    const FilterContentGenerator: React.FC<FilterContentGeneratorProps> = (props: FilterContentGeneratorProps) => {
+        const mainFilterSelect = (): selectedFiltersType[] => {
+            return props.mode !== "NORMAL" && typeof props.ItemType !== "undefined"
+                ? selectedFilters.filter((selectedFilter) => selectedFilter.category === props.ItemType)
+                : [];
+        };
 
-            if (includes(isTrue, true)) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    };
-
-    const goCheckCategory = (ItemType: CategoryTypes | undefined): boolean => {
-        if (typeof ItemType !== "undefined") {
-            const isTrue: boolean[] = selectedFilters.map((selectedFilter) => {
-                if (selectedFilter.category === ItemType) {
-                    return true;
-                } else {
-                    return false;
-                }
-            });
-
-            if (includes(isTrue, true)) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    };
-
-    interface GoGetCategoryProps {
-        isMultiple: boolean;
-        Item?: FilterType;
-        ItemType: CategoryTypes;
-    }
-
-    const GoGetCategory: React.FC<GoGetCategoryProps> = ({ isMultiple, Item, ItemType }) => {
-        const mainFilterSelect = selectedFilters.filter((selectedFilter) => selectedFilter.category === ItemType);
-
-        if (isMultiple && typeof Item !== "undefined") {
+        if (props.mode === "SUB_FALSE_MULTIPLE_FALSE") {
             return (
                 <>
-                    <span>{Item.title}</span>
-                    <span className="mx-2">{mainFilterSelect.length}</span>
+                    <span className="text-jv-white ml-1">{props.ItemType.title}</span>
+                    <AiOutlineClose className="mr-1 text-jv-white text-xl" />
+                </>
+            );
+        } else if (props.mode === "SUB_TRUE_MULTIPLE_FALSE") {
+            const mainFilter = mainFilterSelect();
+            return (
+                <>
+                    <span className="text-jv-white ml-1">{mainFilter[0].title}</span>
+                    <AiOutlineClose className="mr-1 text-jv-white text-xl" />
+                </>
+            );
+        } else if (props.mode === "SUB_&_MULTIPLE_TRUE") {
+            const mainFilter = mainFilterSelect();
+            return (
+                <>
+                    <span>{props.Item.title}</span>
+                    <span className="mx-2">{mainFilter.length}</span>
                     <span
-                        onClick={() =>
-                            removeFilterAction({ mode: "RemoveCategory", mainType: mainFilterSelect[0].category })
-                        }
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            removeFilterAction({ mode: "RemoveCategory", mainType: mainFilter[0].category });
+                        }}
                         className="flex items-center"
                     >
                         <AiOutlineClose className="mr-1 text-jv-white text-xl" />
                     </span>
                 </>
             );
-        } else {
+        } else if (props.mode === "NORMAL") {
             return (
                 <>
-                    <span className="text-jv-white ml-1">{mainFilterSelect[0].title}</span>
-                    <span
-                        onClick={() => removeFilterAction({ mode: "RemoveType", mainType: mainFilterSelect[0].type })}
-                        className="flex items-center"
-                    >
-                        <AiOutlineClose className="mr-1 text-jv-white text-xl" />
-                    </span>
-                </>
-            );
-        }
-    };
-    return (
-        <div className=" no-scrollbar overflow-x-auto whitespace-nowrap flex items-center md:whitespace-normal md:flex-wrap md:overflow-x-visible">
-            {categoryArray.map((item) => (
-                <div
-                    key={item.id}
-                    onClick={(e) => {
-                        if (!goCheckCategory(item.category) || item.isMultiple) {
-                            filterAction(item, undefined, e);
-                        }
-                        if (Object.values(mainFilterMenu.data).length) {
-                            diActiveMenu();
-                        }
-                    }}
-                    className={`filtredItem select-none box-info-type text-sm flex items-center px-4 py-2 rounded-2xl cursor-pointer relative ${
-                        goCheck(item.type) || goCheckCategory(item.category) ? "text-jv-white bg-jv-primary" : ""
-                    }`}
-                >
-                    {goCheck(item.type) ? (
+                    <span>{props.Item.title}</span>
+                    {typeof props.Item.sub !== "undefined" && isArray(props.Item.sub) && props.Item.sub.length ? (
                         <>
-                            <span className="text-jv-white ml-1">{item.title}</span>
-                            <AiOutlineClose className="mr-1 text-jv-white text-xl" />
+                            <AiOutlineDown
+                                className={`mr-1 transition-all ${
+                                    mainFilterMenu.data.id === props.Item.id ? "rotate-180" : ""
+                                }`}
+                            ></AiOutlineDown>
                         </>
-                    ) : typeof item.category !== "undefined" && goCheckCategory(item.category) && !item.isMultiple ? (
-                        <GoGetCategory isMultiple={false} ItemType={item.category}></GoGetCategory>
-                    ) : typeof item.category !== "undefined" && goCheckCategory(item.category) && item.isMultiple ? (
-                        <GoGetCategory isMultiple={true} ItemType={item.category} Item={item}></GoGetCategory>
+                    ) : null}
+                </>
+            );
+        }
+    };
+
+    const FilterGenerator: React.FC<FilterGeneratorProps> = ({ item }) => {
+        const filterSelectAction = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+            if (!isDublicate({ mode: "CategoryType", ItemType: item.category }) || item.isMultiple) {
+                filterAction(item, undefined, e);
+            }
+            if (
+                isDublicate({ mode: "CategoryType", ItemType: item.category }) &&
+                typeof item.category !== "undefined" &&
+                !item.isMultiple
+            ) {
+                removeFilterAction({ mode: "RemoveCategory", mainType: item.category });
+            }
+            if (mainFilterMenu.data.id === item.id) {
+                diActiveMenu();
+            }
+        };
+        const FilterItemClassName = `filtredItem select-none box-info-type text-sm flex items-center px-4 py-2 rounded-2xl cursor-pointer relative ${
+            isDublicate({ mode: "FilterType", ItemType: item.type }) ||
+            isDublicate({ mode: "CategoryType", ItemType: item.category })
+                ? "text-jv-white bg-jv-primary"
+                : ""
+        }`;
+        return (
+            <>
+                <div key={item.id} onClick={filterSelectAction} className={FilterItemClassName}>
+                    {isDublicate({ mode: "FilterType", ItemType: item.type }) ? (
+                        <FilterContentGenerator
+                            mode="SUB_FALSE_MULTIPLE_FALSE"
+                            ItemType={item}
+                        ></FilterContentGenerator>
+                    ) : typeof item.category !== "undefined" &&
+                      isDublicate({ mode: "CategoryType", ItemType: item.category }) ? (
+                        <>
+                            {item.isMultiple ? (
+                                <FilterContentGenerator
+                                    mode="SUB_&_MULTIPLE_TRUE"
+                                    ItemType={item.category}
+                                    Item={item}
+                                ></FilterContentGenerator>
+                            ) : (
+                                <FilterContentGenerator
+                                    mode="SUB_TRUE_MULTIPLE_FALSE"
+                                    ItemType={item.category}
+                                ></FilterContentGenerator>
+                            )}
+                        </>
                     ) : (
-                        <>
-                            <span>{item.title}</span>
-                            {typeof item.sub !== "undefined" && isArray(item.sub) && item.sub.length ? (
-                                <>
-                                    <AiOutlineDown
-                                        className={`mr-1 ${mainFilterMenu.data.id === item.id ? "rotate-180" : ""}`}
-                                    ></AiOutlineDown>
-                                </>
-                            ) : null}
-                        </>
+                        <FilterContentGenerator mode="NORMAL" Item={item}></FilterContentGenerator>
                     )}
                 </div>
+            </>
+        );
+    };
+
+    return (
+        <div
+            className={`no-scrollbar overflow-x-auto whitespace-nowrap flex 
+            items-center md:whitespace-normal md:flex-wrap md:overflow-x-visible`}
+        >
+            {categoryArray.map((item) => (
+                <FilterGenerator key={item.id} item={{ ...item }}></FilterGenerator>
             ))}
             <AnimatePresence>
                 {Object.entries(mainFilterMenu).length &&
@@ -231,27 +251,28 @@ const JobsFilter: React.FC = () => {
                         initial="hidden"
                         animate="visible"
                         exit="exit"
-                        className="min-h-fit absolute z-20 transition-all duration-500"
+                        className="min-h-fit absolute z-10 transition-all duration-500"
                         style={{
                             width: mainFilterMenu.position.width,
+                            marginTop: mainFilterMenu.position.height ? mainFilterMenu.position.height + 10 : undefined,
                             top: mainFilterMenu.position.y,
                             left: mainFilterMenu.position.x,
                         }}
                     >
-                        <ul className="absolute min-w-[15rem] top-3 right-0 bg-jv-light py-3 px-4 shadow-xl border-[1px] border-solid border-jv-lightGray3x rounded-xl">
+                        <ul className="absolute min-w-[15rem] top-full right-0 bg-jv-light py-3 px-4 shadow-xl border-[1px] border-solid border-jv-lightGray3x rounded-xl">
                             {mainFilterMenu.data.sub.map((subItem) => (
                                 <li
                                     onClick={(e) => filterAction(mainFilterMenu.data, subItem, e)}
                                     key={subItem.id}
                                     className="py-2 flex items-center cursor-pointer"
                                 >
-                                    <div className={`${goCheck(subItem.type) ? "bg-jv-primary" : "bg-jv-lightGray3x"}`}>
-                                        {mainFilterMenu.data.isMultiple ? (
-                                            <div className="w-4 h-4 bg-inherit rounded-sm"></div>
-                                        ) : (
-                                            <div className="w-4 h-4 bg-inherit rounded-full"></div>
-                                        )}
-                                    </div>
+                                    <div
+                                        className={`w-4 h-4 ${
+                                            isDublicate({ mode: "FilterType", ItemType: subItem.type })
+                                                ? "bg-jv-primary"
+                                                : "bg-jv-lightGray3x"
+                                        } ${mainFilterMenu.data.isMultiple ? "rounded-sm" : "rounded-full"}`}
+                                    ></div>
 
                                     <span className="mr-2">{subItem.title}</span>
                                 </li>

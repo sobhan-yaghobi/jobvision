@@ -294,4 +294,28 @@ const categoryArray: FilterType[] = [
     { id: uuidGenerator(), type: "MILITARY_ORDER", title: "امریه سربازی", isMultiple: false },
 ];
 
+export interface selectedFiltersType {
+    title: string;
+    type: string;
+    category: string;
+}
+
+export type removeFilterActionTypes =
+    | { mode: "RemoveType"; mainType: string }
+    | { mode: "RemoveCategory"; mainType: string };
+
+export type isDublicateTypes =
+    | { mode: "FilterType"; ItemType: FiltreTypes | undefined }
+    | { mode: "CategoryType"; ItemType: CategoryTypes | undefined };
+
+export type FilterContentGeneratorProps =
+    | { mode: "SUB_FALSE_MULTIPLE_FALSE"; ItemType: FilterType }
+    | { mode: "SUB_TRUE_MULTIPLE_FALSE"; ItemType: CategoryTypes }
+    | { mode: "SUB_&_MULTIPLE_TRUE"; Item: FilterType; ItemType: CategoryTypes }
+    | { mode: "NORMAL"; Item: FilterType };
+
+export type FilterGeneratorProps = {
+    item: FilterType;
+};
+
 export { categoryArray };
