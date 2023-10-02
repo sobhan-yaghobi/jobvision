@@ -160,6 +160,19 @@ const ShowFromBottom: Variants = {
     },
 };
 
+const ShowFromBottom_EX: Variants = {
+    hidden: { opacity: 0, y: "100%" },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            ease: "linear",
+            bounce: 9,
+        },
+    },
+    exit: { opacity: 0, y: "100%" },
+};
+
 // TRANSITION
 
 const TweenEaseOutVeryShortly: Transition = {
@@ -188,6 +201,7 @@ export {
     ShowFromLeft,
     ShowFromTop,
     ShowFromBottom,
+    ShowFromBottom_EX,
     // Transition
     TweenEaseOutVeryShortly,
     DelayBeforeChilds,

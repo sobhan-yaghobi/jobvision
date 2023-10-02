@@ -12,7 +12,7 @@ import {
 } from "./Jobs.type";
 
 // Animations
-import { ShortShowFromBottom, ShowHideClipFromBottom_Ex } from "../../Animations/UtilsAnimation";
+import { ShortShowFromBottom, ShowFromBottom_EX } from "../../Animations/UtilsAnimation";
 
 // Functions
 import uuidGenerator from "../../Utils/UuidGenerator";
@@ -535,7 +535,7 @@ const Jobs: React.FC = () => {
                             className={`w-full h-screen fixed bg-jv-bgColor lg:hidden bottom-0 right-0 text-right ${
                                 mainJobInfo.isShow ? "z-20" : "z-10"
                             }`}
-                            variants={ShowHideClipFromBottom_Ex}
+                            variants={ShowFromBottom_EX}
                             initial="hidden"
                             animate="visible"
                             exit="exit"

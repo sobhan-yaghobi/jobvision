@@ -42,7 +42,7 @@ const Header: React.FC = () => {
     return (
         <>
             <div className="w-full h-20 relative">
-                <header className="fixed h-20 w-full px-0 border-b-[1px] border-solid border-jv-lightGray3x rounded-b-xl bg-jv-primary shadow-lg lg:bg-jv-white z-20">
+                <header className="fixed h-20 w-full px-0 rounded-b-xl bg-jv-primary shadow-lg lg:bg-jv-white z-30">
                     {/*//? -------------------- Start Mobile Header -------------------- */}
                     <div className="header-mobile  w-full h-full p-2 lg:hidden flex items-center justify-between">
                         <div className="w-4/12 sm:px-3 flex items-center justify-start">
@@ -166,96 +166,106 @@ const Header: React.FC = () => {
             {/*//? -------------------- Start Mobile Header DropDown -------------------- */}
             <AnimatePresence>
                 {MenuMobile.isOpen ? (
-                    <motion.div
-                        variants={ShowHideClipFromBottom_Ex}
-                        transition={DelayBeforeChilds}
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
-                        className={`header-dropwodn-mobile w-full h-4/6 rounded-t-3xl fixed lg:hidden bottom-0 right-0 bg-jv-primary  text-right ${
-                            MenuMobile.isOpen ? "z-20" : "z-10"
-                        }`}
-                    >
+                    <>
                         <motion.div
-                            variants={ShowHideMenuItemChildToLeftOrRight(
-                                Boolean(MenuMobile.goAnimationTo === "Forward")
-                            )}
+                            variants={ShowAndHideOpacity_Ex}
                             initial="hidden"
                             animate="visible"
                             exit="exit"
-                            className="py-6 px-5 h-full"
+                            className="bg-jv-bgColor fixed top-0 right-0 w-full h-full z-10"
+                        ></motion.div>
+                        <motion.div
+                            variants={ShowHideClipFromBottom_Ex}
+                            transition={DelayBeforeChilds}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            className={`header-dropwodn-mobile w-full h-4/6 rounded-t-3xl fixed lg:hidden bottom-0 right-0 bg-jv-primary  text-right ${
+                                MenuMobile.isOpen ? "z-20" : "z-10"
+                            }`}
                         >
-                            {MenuMobile.isShow.SubMenu ? null : (
-                                <div className="h-1/6 mb-2 flex route Navigation">
-                                    <Button
-                                        noBorder
-                                        isLoading={false}
-                                        textColor="light"
-                                        ClickHandler={backButtonAcion}
-                                        size="large"
-                                        ClassName="w-full flex justify-between items-center border-b-2 border-solid border-jv-light"
-                                    >
-                                        <span>{MenuMobile.goButtonTitle}</span>
-                                        <img className="rotate-180" src={ArrowLeftIconWhite} alt="" />
-                                    </Button>
+                            <motion.div
+                                variants={ShowHideMenuItemChildToLeftOrRight(
+                                    Boolean(MenuMobile.goAnimationTo === "Forward")
+                                )}
+                                transition={DelayBeforeChilds}
+                                initial="hidden"
+                                animate="visible"
+                                exit="exit"
+                                className="py-6 px-5 h-full"
+                            >
+                                {MenuMobile.isShow.SubMenu ? null : (
+                                    <div className="h-1/6 mb-2 flex route Navigation">
+                                        <Button
+                                            noBorder
+                                            isLoading={false}
+                                            textColor="light"
+                                            ClickHandler={backButtonAcion}
+                                            size="large"
+                                            ClassName="w-full flex justify-between items-center border-b-2 border-solid border-jv-light"
+                                        >
+                                            <span>{MenuMobile.goButtonTitle}</span>
+                                            <img className="rotate-180" src={ArrowLeftIconWhite} alt="" />
+                                        </Button>
+                                    </div>
+                                )}
+                                <div className="h-full overflow-y-auto px-4 no-scrollbar">
+                                    {MenuMobile.isShow.SubMenu ? (
+                                        <SubMenuGenerator
+                                            DesktopVarient={ShowOpacity}
+                                            MobileVarient={ShowHideMenuItemChildToLeftOrRight(
+                                                Boolean(MenuMobile.goAnimationTo === "Forward")
+                                            )}
+                                            Type="Mobile"
+                                            ParentClassName=""
+                                            ChildClassName="cursor-pointer text-xl text-jv-light my-5 flex items-center justify-between"
+                                            ClickHandler={menuMobileFire}
+                                            Data={menu}
+                                        >
+                                            <img src={ArrowLeftIconWhite} alt="" />
+                                        </SubMenuGenerator>
+                                    ) : MenuMobile.isShow.Item ? (
+                                        <ItemGenerator
+                                            DesktopVarient={ShowOpacity}
+                                            MobileVarient={ShowHideMenuItemChildToLeftOrRight(
+                                                Boolean(MenuMobile.goAnimationTo === "Forward")
+                                            )}
+                                            Type="Mobile"
+                                            ParentClassName="h-5/6 overflow-y-auto px-4"
+                                            ChildClassName="cursor-pointer text-xl text-jv-light my-5 flex items-center justify-between"
+                                            ClickHandler={menuMobileFire}
+                                            Data={MenuMobile.menuData.Item}
+                                        >
+                                            <img src={ArrowLeftIconWhite} alt="" />
+                                        </ItemGenerator>
+                                    ) : MenuMobile.isShow.Links ? (
+                                        <LinkGenerator
+                                            DesktopVarient={ShowOpacity}
+                                            MobileVarient={ShowHideMenuItemChildToLeftOrRight(
+                                                Boolean(MenuMobile.goAnimationTo === "Forward")
+                                            )}
+                                            Type="Mobile"
+                                            ParentClassName="w-full h-full"
+                                            ChildClassName="cursor-pointer text-xl text-jv-light my-4 flex flex-col"
+                                            LinksWrapperClassName="flex items-start flex-col"
+                                            SublinkParentClassName="my-3 flex items-start flex-col"
+                                            SublinkChildClassName="mr-5 flex text-base flex items-center"
+                                            SublinkLinkWrapperClassName="text-jv-light opacity-70"
+                                            ClickHandler={menuMobileFire}
+                                            Data={MenuMobile.menuData.Links}
+                                            isChildrenShow
+                                        >
+                                            <img src={LeftIcon} alt="" />
+                                        </LinkGenerator>
+                                    ) : null}
                                 </div>
-                            )}
-                            <div className="h-5/6 overflow-y-auto px-4 no-scrollbar">
-                                {MenuMobile.isShow.SubMenu ? (
-                                    <SubMenuGenerator
-                                        DesktopVarient={ShowOpacity}
-                                        MobileVarient={ShowHideMenuItemChildToLeftOrRight(
-                                            Boolean(MenuMobile.goAnimationTo === "Forward")
-                                        )}
-                                        Type="Mobile"
-                                        ParentClassName=""
-                                        ChildClassName="cursor-pointer text-xl text-jv-light my-5 flex items-center justify-between"
-                                        ClickHandler={menuMobileFire}
-                                        Data={menu}
-                                    >
-                                        <img src={ArrowLeftIconWhite} alt="" />
-                                    </SubMenuGenerator>
-                                ) : MenuMobile.isShow.Item ? (
-                                    <ItemGenerator
-                                        DesktopVarient={ShowOpacity}
-                                        MobileVarient={ShowHideMenuItemChildToLeftOrRight(
-                                            Boolean(MenuMobile.goAnimationTo === "Forward")
-                                        )}
-                                        Type="Mobile"
-                                        ParentClassName="h-5/6 overflow-y-auto px-4"
-                                        ChildClassName="cursor-pointer text-xl text-jv-light my-5 flex items-center justify-between"
-                                        ClickHandler={menuMobileFire}
-                                        Data={MenuMobile.menuData.Item}
-                                    >
-                                        <img src={ArrowLeftIconWhite} alt="" />
-                                    </ItemGenerator>
-                                ) : MenuMobile.isShow.Links ? (
-                                    <LinkGenerator
-                                        DesktopVarient={ShowOpacity}
-                                        MobileVarient={ShowHideMenuItemChildToLeftOrRight(
-                                            Boolean(MenuMobile.goAnimationTo === "Forward")
-                                        )}
-                                        Type="Mobile"
-                                        ParentClassName="w-full h-full"
-                                        ChildClassName="cursor-pointer text-xl text-jv-light my-4 flex flex-col"
-                                        LinksWrapperClassName="flex items-start flex-col"
-                                        SublinkParentClassName="my-3 flex items-start flex-col"
-                                        SublinkChildClassName="mr-5 flex text-base flex items-center"
-                                        SublinkLinkWrapperClassName="text-jv-light opacity-70"
-                                        ClickHandler={menuMobileFire}
-                                        Data={MenuMobile.menuData.Links}
-                                        isChildrenShow
-                                    >
-                                        <img src={LeftIcon} alt="" />
-                                    </LinkGenerator>
-                                ) : null}
-                            </div>
+                            </motion.div>
+                            <div
+                                onClick={menuMobileToggle}
+                                className="w-10 h-1 bg-jv-light rounded-3xl absolute -translate-x-1/2 -translate-y-1/2 top-3 left-1/2"
+                            ></div>
                         </motion.div>
-                        <div
-                            onClick={menuMobileToggle}
-                            className="w-10 h-1 bg-jv-light rounded-3xl absolute -translate-x-1/2 -translate-y-1/2 top-3 left-1/2"
-                        ></div>
-                    </motion.div>
+                    </>
                 ) : null}
             </AnimatePresence>
             {/*//? -------------------- Finish Mobile Header DropDown -------------------- */}

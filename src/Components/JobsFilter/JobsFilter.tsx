@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 //  Types
 import {
@@ -13,20 +13,22 @@ import {
 } from "./JobsFilter.type";
 
 // Animations
-import { DelayBeforeChilds, ShowAndHideOpacity_Ex, ShowHideClipFromBottom_Ex } from "../../Animations/UtilsAnimation";
+import { ShowAndHideOpacity_Ex, ShowFromBottom_EX } from "../../Animations/UtilsAnimation";
 
 // Functions
 import { includes } from "lodash";
 
+// Hooks
+import useWindowsSize from "../../Hooks/useWindowsSize";
+
 // Components
 import { motion, AnimatePresence } from "framer-motion";
+import Button from "../Button/Button";
 
 // Icons
 import { AiOutlineDown } from "react-icons/ai";
 import { isArray } from "lodash";
 import { AiOutlineClose } from "react-icons/ai";
-import useWindowsSize from "../../Hooks/useWindowsSize";
-import Button from "../Button/Button";
 
 const JobsFilter: React.FC = () => {
     const [WindowsSize] = useWindowsSize();
@@ -139,9 +141,6 @@ const JobsFilter: React.FC = () => {
         }
         return false;
     };
-    useEffect(() => {
-        console.log(selectedFilters);
-    }, [selectedFilters]);
 
     const FilterContentGenerator: React.FC<FilterContentGeneratorProps> = (props: FilterContentGeneratorProps) => {
         const mainFilterSelect = (): selectedFiltersType[] => {
@@ -150,19 +149,22 @@ const JobsFilter: React.FC = () => {
                 : [];
         };
 
+        const titleClassName = `text-jv-primary ml-1`;
+        const iconClassName = `mr-1 text-jv-white text-xl p-1 bg-jv-primary rounded-full`;
+
         if (props.mode === "SUB_FALSE_MULTIPLE_FALSE") {
             return (
                 <>
-                    <span className="text-jv-white ml-1">{props.ItemType.title}</span>
-                    <AiOutlineClose className="mr-1 text-jv-white text-xl" />
+                    <span className={titleClassName}>{props.ItemType.title}</span>
+                    <AiOutlineClose className={iconClassName} />
                 </>
             );
         } else if (props.mode === "SUB_TRUE_MULTIPLE_FALSE") {
             const mainFilter = mainFilterSelect();
             return (
                 <>
-                    <span className="text-jv-white ml-1">{mainFilter[0].title}</span>
-                    <AiOutlineClose className="mr-1 text-jv-white text-xl" />
+                    <span className={titleClassName}>{mainFilter[0].title}</span>
+                    <AiOutlineClose className={iconClassName} />
                 </>
             );
         } else if (props.mode === "SUB_&_MULTIPLE_TRUE") {
@@ -182,7 +184,7 @@ const JobsFilter: React.FC = () => {
                         }}
                         className="flex items-center"
                     >
-                        <AiOutlineClose className="mr-1 text-jv-white text-xl" />
+                        <AiOutlineClose className={iconClassName} />
                     </span>
                 </>
             );
@@ -223,7 +225,7 @@ const JobsFilter: React.FC = () => {
         const FilterItemClassName = `filtredItem select-none box-info-type text-sm flex items-center px-4 py-2 rounded-2xl cursor-pointer relative ${
             isDublicate({ mode: "FilterType", ItemType: item.type }) ||
             isDublicate({ mode: "CategoryType", ItemType: item.category })
-                ? "text-jv-white bg-jv-primary"
+                ? "text-jv-primary bg-jv-lightPrimary"
                 : ""
         }`;
         return (
@@ -316,7 +318,7 @@ const JobsFilter: React.FC = () => {
                         className={`w-full h-d-screen fixed bg-jv-bgColor lg:hidden bottom-0 right-0 text-right ${
                             menuMobile ? "z-20" : "z-10"
                         }`}
-                        variants={ShowHideClipFromBottom_Ex}
+                        variants={ShowFromBottom_EX}
                         initial="hidden"
                         animate="visible"
                         exit="exit"
