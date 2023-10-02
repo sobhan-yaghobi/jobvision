@@ -124,7 +124,7 @@ const Home: React.FC = () => {
                 >
                     <div className="w-full h-full flex flex-col items-start justify-center">
                         <h2 className="mb-5 pr-2 text-xl">دنبال چه شغلی می‌گردید؟</h2>
-                        <SearchFrom isFilterBarShow={false}></SearchFrom>
+                        <SearchFrom></SearchFrom>
                     </div>
                 </motion.div>
             </div>

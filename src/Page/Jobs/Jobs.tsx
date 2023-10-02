@@ -32,6 +32,7 @@ import { FaStar, FaRegStar } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
 import { GoReport } from "react-icons/go";
 import { VscPreview } from "react-icons/vsc";
+import JobsFilter from "../../Components/JobsFilter/JobsFilter";
 
 const BoxInfoCard: React.FC<BoxInfoCardProps> = ({ mainInfo, setMainInfo }) => {
     return (
@@ -434,7 +435,9 @@ const Jobs: React.FC = () => {
         <>
             {/*//? -------------------------------------- Seacrh -------------------------------------- */}
             <div className="py-8 px-2 md:px-10 lg:px-24 border-b-2 border-solid border-jv-lightGray3x">
-                <SearchFrom isFilterBarShow></SearchFrom>
+                <SearchFrom></SearchFrom>
+                <div className="mt-4"></div>
+                <JobsFilter></JobsFilter>
             </div>
             {/*//! -------------------------------------- Seacrh -------------------------------------- */}
 

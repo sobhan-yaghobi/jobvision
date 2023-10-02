@@ -294,8 +294,4 @@ const categoryArray: FilterType[] = [
     { id: uuidGenerator(), type: "MILITARY_ORDER", title: "امریه سربازی", isMultiple: false },
 ];
 
-export interface SearchFromProps {
-    isFilterBarShow: boolean;
-}
-
 export { categoryArray };
