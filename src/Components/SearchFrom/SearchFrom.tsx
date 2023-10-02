@@ -46,10 +46,8 @@ const SearchFrom: React.FC<SearchFromProps> = ({ isFilterBarShow }) => {
         setSelectedFilterss((prev) => {
             if (!Item.isMultiple && typeof Item.sub === "undefined" && typeof Item.type !== "undefined") {
                 if (goCheck(Item.type)) {
-                    console.log("Filter");
                     return [...prev.filter((filterItem) => filterItem.type !== Item.type)];
                 } else {
-                    console.log("NEw ITEN");
                     return [
                         ...prev,
                         { title: Item.title, type: Item.type, category: Item.category ? Item.category : "" },
@@ -155,7 +153,6 @@ const SearchFrom: React.FC<SearchFromProps> = ({ isFilterBarShow }) => {
     }
 
     const GoGetCategory: React.FC<GoGetCategoryProps> = ({ isMultiple, Item, ItemType }) => {
-        console.log(ItemType, isMultiple);
         const mainFilterSelect = selectedFilters.filter((selectedFilter) => selectedFilter.category === ItemType);
 
         if (isMultiple && typeof Item !== "undefined") {
@@ -285,8 +282,11 @@ const SearchFrom: React.FC<SearchFromProps> = ({ isFilterBarShow }) => {
                         <div
                             key={item.id}
                             onClick={(e) => {
-                                if (!goCheckCategory(item.category)) {
+                                if (!goCheckCategory(item.category) || item.isMultiple) {
                                     filterAction(item, undefined, e);
+                                }
+                                if (Object.values(mainFilterMenu.data).length) {
+                                    diActiveMenu();
                                 }
                             }}
                             className={`filtredItem select-none box-info-type text-sm flex items-center px-4 py-2 rounded-2xl cursor-pointer relative ${
