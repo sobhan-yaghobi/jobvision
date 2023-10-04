@@ -7,15 +7,13 @@ import {
     BoxInfoCardProps,
     BoxInfoProps,
     boxOrderArray,
-    aboutJobArray,
     mainItemsBoxInfos,
+    mainJobInfoType,
 } from "./Jobs.type";
+import { AdvertisingArray } from "../../Components/AdvertisingBox/AdvertisingBox.type";
 
 // Animations
 import { ShortShowFromBottom, ShowFromBottom_EX } from "../../Animations/UtilsAnimation";
-
-// Functions
-import uuidGenerator from "../../Utils/UuidGenerator";
 
 // Components
 import SearchFrom from "../../Components/SearchFrom/SearchFrom";
@@ -28,13 +26,14 @@ import { Link } from "react-router-dom";
 // Icons
 import { AiFillCaretDown, AiOutlineHeart, AiOutlineShareAlt } from "react-icons/ai";
 import { MdNotificationAdd, MdNotificationsActive } from "react-icons/md";
-import { FaStar, FaRegStar } from "react-icons/fa";
+import { FaRegStar, FaStar } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
 import { GoReport } from "react-icons/go";
 import { VscPreview } from "react-icons/vsc";
 import JobsFilter from "../../Components/JobsFilter/JobsFilter";
+import { ScoreIconGenerator } from "../../Utils/UtilsComponent";
 
-const BoxInfoCard: React.FC<BoxInfoCardProps> = ({ mainInfo, setMainInfo }) => {
+const BoxInfoCard: React.FC<BoxInfoCardProps> = ({ mainInfoJob, mainItemInfo, setMainItemInfo }) => {
     return (
         <>
             <div>
@@ -47,9 +46,9 @@ const BoxInfoCard: React.FC<BoxInfoCardProps> = ({ mainInfo, setMainInfo }) => {
             </div>
             <div className="h-28 p-3 bg-jv-white w-full flex justify-between sticky top-0 z-40">
                 <div className="w-9/12">
-                    <h3 className="mb-3 twoLine">برنامه نویس Front-End (React)</h3>
+                    <h3 className="mb-3 twoLine">{mainInfoJob.title}</h3>
                     <Link className="text-jv-primary truncate" to="/">
-                        وب گستران سورین
+                        {mainInfoJob.company.name}
                     </Link>
                 </div>
                 <div className="w-2/12 flex items-start justify-end">
@@ -98,13 +97,11 @@ const BoxInfoCard: React.FC<BoxInfoCardProps> = ({ mainInfo, setMainInfo }) => {
 
                         <path d="M19.2917 18.3169C19.0146 18.7792 19.3153 19.5 19.8543 19.5H20C22.0711 19.5 23.75 17.8211 23.75 15.75C23.75 13.6789 22.0711 12 20 12H19.8543C19.3153 12 19.0146 12.7208 19.2917 13.1831C19.4052 13.3725 19.6056 13.5 19.8264 13.5H20C21.2426 13.5 22.25 14.5074 22.25 15.75C22.25 16.9926 21.2426 18 20 18H19.8264C19.6056 18 19.4052 18.1275 19.2917 18.3169Z" />
                     </svg>
-                    <p className="mr-3 text-xs truncate">201 تا 500 نفر</p>
+                    <p className="mr-3 text-xs truncate">{mainInfoJob.company.OrganizationEmploy} نفر</p>
                 </div>
                 <div className="w-8/12 flex items-center text-jv-lightGray">
                     <VscPreview className="text-2xl text-jv-lightGray2x" />
-                    <p className="mr-3 text-xs truncate w-10/12">
-                        شرکت ایران فاوا گسترش، وابسته به گروه صنعتی ایران خودرو
-                    </p>
+                    <p className="mr-3 text-xs truncate w-10/12">{mainInfoJob.company.CompanySlogan}</p>
                 </div>
             </div>
             <div className="w-full sticky top-28 bg-jv-white z-40">
@@ -112,9 +109,9 @@ const BoxInfoCard: React.FC<BoxInfoCardProps> = ({ mainInfo, setMainInfo }) => {
                     {mainItemsBoxInfos.map((item) => (
                         <li
                             key={item.id}
-                            onClick={() => setMainInfo(item)}
+                            onClick={() => setMainItemInfo(item)}
                             className={`ml-3 text-xs py-3 cursor-pointer border-b-2 border-solid lg:text-base ${
-                                mainInfo.type === item.type
+                                mainItemInfo.type === item.type
                                     ? "border-jv-primary text-jv-primary"
                                     : "border-transparent hover:border-jv-lightGray2x"
                             }`}
@@ -130,6 +127,9 @@ const BoxInfoCard: React.FC<BoxInfoCardProps> = ({ mainInfo, setMainInfo }) => {
 };
 
 const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
+    const jobInfo = info.jobInfo;
+    const jobCompany = info.company;
+    const jobStatus = info.status;
     if (type === "INFO_JOB") {
         return (
             <>
@@ -138,65 +138,76 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
                     <div className="text-sm pr-3 flex flex-wrap">
                         <div className="w-1/2 pl-5 mt-5">
                             <h5>روز و ساعت کاری</h5>
-                            <p className="truncate text-jv-lightGray2x">شنبه تا چهار شنبه 10 الی 19</p>
+                            <p className="truncate text-jv-lightGray2x">{info.jobInfo.workTime}</p>
                         </div>
                         <div className="w-1/2 pl-5 mt-5">
                             <h5>نوع همکاری</h5>
-                            <p className="truncate text-jv-lightGray2x">تمام وقت یا پاره وقت</p>
+                            <p className="truncate text-jv-lightGray2x">
+                                {jobInfo.typeOfCooperation === "TYPE_OF_COOPERTION_CONTRACTUAL_TIME"
+                                    ? "قراردادی / پروژه ای"
+                                    : jobInfo.typeOfCooperation === "TYPE_OF_COOPERTION_FULL_TIME"
+                                    ? "تمام وقت"
+                                    : jobInfo.typeOfCooperation === "TYPE_OF_COOPERTION_PART_TIME"
+                                    ? "نیمه وقت"
+                                    : ""}
+                            </p>
                         </div>
                         <div className="w-1/2 pl-5 mt-5">
                             <h5>سفرهای کاری</h5>
-                            <p className="truncate text-jv-lightGray2x">-</p>
+                            <p className="truncate text-jv-lightGray2x">
+                                {typeof jobInfo.businessTrips !== "undefined" ? jobInfo.businessTrips : "-"}
+                            </p>
                         </div>
-                        <div className="w-1/2 pl-5 mt-5">
-                            <h5>مزایا و تسهیلات</h5>
-                            <p className="truncate text-jv-lightGray2x">کمک هزینه دوره آموزشی</p>
-                        </div>
+                        {typeof jobInfo.benefitsAndFacilities !== "undefined" ? (
+                            <div className="w-1/2 pl-5 mt-5">
+                                <h5>مزایا و تسهیلات</h5>
+                                <p className="truncate text-jv-lightGray2x">{jobInfo.benefitsAndFacilities}</p>
+                            </div>
+                        ) : null}
                     </div>
                 </section>
-                <section className="mb-6">
-                    <h2>شاخص های کلیدی از نظر کارفرما</h2>
-                    <div className="text-sm pr-3 pt-2 text-jv-lightGray2x">
-                        <div className="mt-3">
-                            کارشناسی مهندسی صنایع یا مدیریت / بازرگانی / کسب و کار یا علوم اجتماعی و جامعه شناسی /
-                            روانشناسی/ آموزش/ علوم تربیتی
+                {typeof jobInfo.keyIndicators !== "undefined" ? (
+                    <section className="mb-6">
+                        <h2>شاخص های کلیدی از نظر کارفرما</h2>
+                        <div className="pr-3 pt-2 text-jv-lightGray2x flex flex-col">
+                            {jobInfo.keyIndicators.map((item, index) => (
+                                <div
+                                    key={index + 1}
+                                    className={`mt-5 w-fit ${
+                                        item.includes("-") ? "box-info-type danaBold" : "text-sm"
+                                    }`}
+                                >
+                                    {item}
+                                </div>
+                            ))}
                         </div>
-                        <div className="mt-5 text-jv-black">
-                            <span className="box-info-type">Microsoft Word - متوسط</span>
-                            <span className="box-info-type">Microsoft Excel - متوسط</span>
-                        </div>
-                        <div className="mt-5">
-                            <span className="text-jv-lightGray">سن</span>: 18 تا 23 سال
-                        </div>
-                    </div>
-                </section>
+                    </section>
+                ) : null}
+
                 <section className="mb-6">
                     <h2>شرح شغل و وظایف</h2>
                     <div className="mt-5 pr-3">
-                        <p className="text-sm mb-6">
-                            آکادمی آیولرن با افتخار اقدام به جذب کارآموز برای اموزش مهارت و کسب در امد از بین دانشجویان
-                            و فارغ التحصیلان مشتاق به یادگیری و کسب در آمد میکند.
-                        </p>
-                        {aboutJobArray.map((mainItem) => (
-                            <Fragment key={mainItem.id}>
+                        <p className="text-sm mb-6">{jobInfo.jobDuties.desc}</p>
+                        {jobInfo.jobDuties.lists.map((mainItem, index) => (
+                            <Fragment key={index + 1}>
                                 <div className="flex items-center">
                                     <div className="w-2 h-2 ml-2 bg-jv-primary rounded-full"></div>
                                     <h5 className="text-base mb-1">{mainItem.title}</h5>
                                 </div>
-                                <ul key={mainItem.id} className="mb-6 text-jv-lightGray2x text-sm">
+                                <ul key={index + 1} className="mb-6 text-jv-lightGray2x text-sm">
                                     {!Array.isArray(mainItem.item) ? (
-                                        <li key={mainItem.item.id}>- {mainItem.item.itemDesc}</li>
+                                        <li>- {mainItem.item.itemDesc}</li>
                                     ) : (
-                                        mainItem.item.map((item) =>
+                                        mainItem.item.map((item, index) =>
                                             item.itemTitle ? (
-                                                <li key={item.id}>
+                                                <li key={index + 1}>
                                                     <span>
                                                         - <span className="text-jv-lightGray">{item.itemTitle}</span> :
                                                     </span>
                                                     <span> {item.itemDesc}</span>
                                                 </li>
                                             ) : (
-                                                <li key={item.id}>- {item.itemDesc}</li>
+                                                <li key={index + 1}>- {item.itemDesc}</li>
                                             )
                                         )
                                     )}
@@ -210,27 +221,47 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
                     <div className="text-sm pr-3 flex flex-wrap">
                         <div className="w-full pl-5 mt-5">
                             <h4>سن</h4>
-                            <p className="truncate text-jv-lightGray2x">18 - 23 سال</p>
+                            <p className="truncate text-jv-lightGray2x">
+                                {`${jobInfo.employmentConditions.yearsOld[0]} -
+                                    ${jobInfo.employmentConditions.yearsOld[1]} `}
+                                سال
+                            </p>
                         </div>
                         <div className="w-full pl-5 mt-5">
                             <h4>جنسیت</h4>
-                            <p className="truncate text-jv-lightGray2x">ترجیها خانوم</p>
+                            <p className="truncate text-jv-lightGray2x">
+                                {jobInfo.employmentConditions.gender === "Female"
+                                    ? "خانوم"
+                                    : jobInfo.employmentConditions.gender === "Male"
+                                    ? "آقا"
+                                    : "فرقی ندارد"}
+                            </p>
                         </div>
-                        <div className="w-full pl-5 mt-5">
-                            <h4>تحصیلات</h4>
-                            <div className="text-jv-lightGray2x flex flex-row flex-wrap">
-                                <span className="box-info-type">کارشناسی | مهندسی صنایع</span>
-                                <span className="box-info-type">کارشناسی | مدیریت / بازرگانی / کسب و کار</span>
-                                <span className="box-info-type">
-                                    کارشناسی | علوم اجتماعی و جامعه شناسی / روانشناسی/ آموزش/ علوم تربیتی
-                                </span>
+                        {typeof jobInfo.employmentConditions.education !== "undefined" ? (
+                            <div className="w-full pl-5 mt-5">
+                                <h4>تحصیلات</h4>
+                                <div className="text-jv-lightGray2x flex flex-row flex-wrap">
+                                    {Array.isArray(jobInfo.employmentConditions.education) ? (
+                                        jobInfo.employmentConditions.education.map((item, index) => (
+                                            <span key={index + 1} className="box-info-type">
+                                                {item}
+                                            </span>
+                                        ))
+                                    ) : (
+                                        <span className="box-info-type">{jobInfo.employmentConditions.education}</span>
+                                    )}
+                                </div>
                             </div>
-                        </div>
+                        ) : null}
+
                         <div className="w-full pl-5 mt-5">
                             <h4>نرم افزارها</h4>
                             <div className="text-jv-lightGray2x flex flex-row flex-wrap">
-                                <span className="box-info-type">Microsoft Word | متوسط</span>
-                                <span className="box-info-type">Microsoft Excel | متوسط</span>
+                                {jobInfo.employmentConditions.Softwares.map((item, index) => (
+                                    <span key={index + 1} className="box-info-type">
+                                        {item}
+                                    </span>
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -250,6 +281,15 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
             </>
         );
     } else if (type === "ABOUT_COMPANY") {
+        const ScoreTitle: React.FC = () => {
+            return (
+                <div className="flex items-center text-lg text-jv-golden">
+                    <p className="text-jv-lightGray ml-3">{jobCompany.score.companyScore.toFixed(1)}</p>
+
+                    <ScoreIconGenerator key={info.id} score={jobCompany.score.companyScore}></ScoreIconGenerator>
+                </div>
+            );
+        };
         return (
             <>
                 <section className="mb-6">
@@ -259,16 +299,7 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
                             <Accordion
                                 type="Children"
                                 iconType="Menu"
-                                title={
-                                    <div className="flex items-center text-lg text-jv-golden">
-                                        <p className="text-jv-lightGray ml-3">4.8</p>
-                                        <FaStar />
-                                        <FaStar />
-                                        <FaStar />
-                                        <FaRegStar />
-                                        <FaRegStar />
-                                    </div>
-                                }
+                                title={<ScoreTitle />}
                                 index={1}
                                 isResponsive
                                 listStyle="Ul"
@@ -279,21 +310,21 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
                                 <div className="flex flex-wrap text-sm py-3">
                                     <div className="w-full mb-2 lg:w-1/2 lg:mb-0">
                                         <span className="danaBold">
-                                            5.0
+                                            {jobCompany.score.popularityScore.toFixed(1)}
                                             <FaStar className="text-jv-golden mx-1 inline-block" />
                                         </span>
                                         <span>محبوبیت (براساس بازدید کارجویان)</span>
                                     </div>
                                     <div className="w-full mb-2 lg:w-1/2 lg:mb-0">
                                         <span className="danaBold">
-                                            4.8
+                                            {jobCompany.score.responsivenessScore.toFixed(1)}
                                             <FaStar className="text-jv-golden mx-1 inline-block" />
                                         </span>
                                         <span>پاسخگویی به رزومه‌های دریافتی</span>
                                     </div>
                                     <div className="w-full mb-2 lg:w-1/2 lg:mb-0">
                                         <span className="danaBold">
-                                            4.1
+                                            {jobCompany.score.experienceOfJobSeekersScore.toFixed(1)}
                                             <FaStar className="text-jv-golden mx-1 inline-block" />
                                         </span>
                                         <span>تجربه کارجویان از جلسه مصاحبه</span>
@@ -305,18 +336,13 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
                 </section>
                 <section className="mb-6">
                     <div className="flex items-center justify-between">
-                        <h2 className="w-6/12 truncate">درباره آیلورن</h2>
+                        <h2 className="w-6/12 truncate">درباره {jobCompany.name}</h2>
                         <Link to="/" className="w-4/12 truncate text-left">
-                            aiolearn.com
+                            {jobCompany.website}
                         </Link>
                     </div>
                     <div className="my-6 text-jv-lightGray2x text-sm">
-                        <p>آکادمی مهارت آیولرن</p>
-                        <p>
-                            آیولرن از سال 1392 فعالیت خود را آغاز کرد و در سال 1400 شروع به برگذاری کلاس های آموزشی برای
-                            افراد مختلف در سراسر ایران کرده است. هدف اصلی آیولرن این است افراد با شناسایی اهداف خود
-                            بتوانند مسیر درست زندگی را تشخیص داده و در مدت زمان کوتاه به نتیجه برسند.
-                        </p>
+                        <p>{jobCompany.desc}</p>
                     </div>
                     <div className="flex items-center justify-center">
                         <Button textColor="primary" size="middle" isLoading={false} ClickHandler={() => {}}>
@@ -327,13 +353,11 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
                 <section className="mb-6">
                     <h2>مزایا و امکانات رفاهی</h2>
                     <div className="flex flex-wrap py-3">
-                        <span className="box-info-type__success">وام</span>
-                        <span className="box-info-type__success">پاداش</span>
-                        <span className="box-info-type__success">بیمه درمان تکمیلی</span>
-                        <span className="box-info-type__success">پارکینگ</span>
-                        <span className="box-info-type__success">ناهار</span>
-                        <span className="box-info-type__success">پزشک سازمانی</span>
-                        <span className="box-info-type__success">بسته ها و هدایای مناسبتی</span>
+                        {jobCompany.Benefits.map((item, index) => (
+                            <span key={index + 1} className="box-info-type__success">
+                                {item}
+                            </span>
+                        ))}
                     </div>
                 </section>
                 <div className="min-h-fit">
@@ -341,27 +365,29 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
                     <div className="text-sm pr-3 flex flex-wrap">
                         <div className="min-w-[50%] pl-5 mt-5">
                             <h5>سال تاسیس</h5>
-                            <p className="truncate text-jv-lightGray2x">1383</p>
+                            <p className="truncate text-jv-lightGray2x">{jobCompany.establishedyear}</p>
                         </div>
                         <div className="min-w-[50%] pl-5 mt-5">
                             <h5>اندازه سازمان</h5>
-                            <p className="truncate text-jv-lightGray2x">501 تا 1000 نفر</p>
+                            <p className="truncate text-jv-lightGray2x">{jobCompany.OrganizationEmploy}</p>
                         </div>
                         <div className="min-w-[50%] pl-5 mt-5">
                             <h5>نوع فعالیت</h5>
-                            <p className="truncate text-jv-lightGray2x">شرکت ایرانی دارای مشتریان داخلی</p>
+                            <p className="truncate text-jv-lightGray2x">{jobCompany.typeOfActivity}</p>
                         </div>
                         <div className="min-w-[50%] pl-5 mt-5">
                             <h5>مالکیت</h5>
-                            <p className="truncate text-jv-lightGray2x">خصوصی</p>
+                            <p className="truncate text-jv-lightGray2x">
+                                {jobCompany.ownership === "Private"
+                                    ? "خصوصی"
+                                    : jobCompany.ownership === "Government"
+                                    ? "دولتی"
+                                    : "مشخص نشده"}
+                            </p>
                         </div>
                         <div className="min-w-[50%] pl-5 mt-5">
                             <h5>صنعت</h5>
-                            <p className="truncate text-jv-lightGray2x">خودرو و صنایع وابسته</p>
-                        </div>
-                        <div className="min-w-[50%] pl-5 mt-5">
-                            <h5>برند</h5>
-                            <p className="truncate text-jv-lightGray2x">BMW-MINI</p>
+                            <p className="truncate text-jv-lightGray2x">{jobCompany.industry}</p>
                         </div>
                     </div>
                 </div>
@@ -371,17 +397,15 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
         return (
             <>
                 <section className="mb-6">
-                    {Array(8)
-                        .fill("")
-                        .map((value, index) => (
-                            <div key={index + 1} className="mt-3">
-                                <AdvertisingBox
-                                    type="HideSendCv"
-                                    data={{ id: uuidGenerator() }}
-                                    clickHandler={() => {}}
-                                ></AdvertisingBox>
-                            </div>
-                        ))}
+                    {AdvertisingArray.map((item, index) => (
+                        <div key={index + 1} className="mt-3">
+                            <AdvertisingBox
+                                type="HideSendCv"
+                                data={{ ...item.data }}
+                                clickHandler={() => {}}
+                            ></AdvertisingBox>
+                        </div>
+                    ))}
                 </section>
             </>
         );
@@ -426,7 +450,7 @@ const Jobs: React.FC = () => {
 
     //* Mobile
 
-    const [mainJobInfo, setMainJobInfo] = useState({ isShow: false, mainInfo: "" });
+    const [mainJobInfo, setMainJobInfo] = useState<mainJobInfoType>({} as mainJobInfoType);
 
     //! ---------------------------------- Box Info
 
@@ -493,44 +517,49 @@ const Jobs: React.FC = () => {
                         ) : null}
                     </div>
                     <div className="wrapper flex flex-col">
-                        {Array(13)
-                            .fill("")
-                            .map((item, index) => (
-                                <div key={index + 1} className="mt-2">
-                                    <AdvertisingBox
-                                        type="HideSendCv"
-                                        clickHandler={(id: string) => {
-                                            setMainJobInfo({ isShow: true, mainInfo: id });
-                                        }}
-                                        IsImportant={index === 2 ? true : false}
-                                        data={{ id: uuidGenerator() }}
-                                    ></AdvertisingBox>
-                                </div>
-                            ))}
+                        {AdvertisingArray.map((item, index) => (
+                            <div key={index + 1} className="mt-2">
+                                <AdvertisingBox
+                                    type="HideSendCv"
+                                    clickHandler={() => setMainJobInfo({ isShow: true, mainInfo: { ...item.data } })}
+                                    IsImportant={index === 2 ? true : false}
+                                    data={{ ...item.data }}
+                                ></AdvertisingBox>
+                            </div>
+                        ))}
                     </div>
                 </div>
                 {/*//! -------------------------------------- List Boxs -------------------------------------- */}
 
                 {/*//?-------------------------------------- Box Info -------------------------------------- */}
-                <div className="hidden boxInfo mr-2 w-7/12 bg-jv-white sticky top-24 overflow-x-hidden overflow-y-auto h-[82vh] rounded-xl lg:table-column lg:w-7/12">
-                    <BoxInfoCard mainInfo={mainItemInfo} setMainInfo={setMainItemInfo}></BoxInfoCard>
-                    <motion.div
-                        variants={ShortShowFromBottom}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true }}
-                        key={mainItemInfo.id}
-                        transition={{ ease: "backOut" }}
-                        className="px-3 py-6 -z-10"
-                    >
-                        <BoxInfo type={mainItemInfo.type} info={[]}></BoxInfo>
-                    </motion.div>
-                </div>
+                {typeof mainJobInfo.mainInfo !== "undefined" && Object.values(mainJobInfo.mainInfo).length ? (
+                    <div className="hidden boxInfo mr-2 w-7/12 bg-jv-white sticky top-24 overflow-x-hidden overflow-y-auto h-[82vh] rounded-xl lg:table-column lg:w-7/12">
+                        <BoxInfoCard
+                            mainInfoJob={mainJobInfo.mainInfo}
+                            mainItemInfo={mainItemInfo}
+                            setMainItemInfo={setMainItemInfo}
+                        ></BoxInfoCard>
+                        <motion.div
+                            variants={ShortShowFromBottom}
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true }}
+                            key={mainItemInfo.id}
+                            transition={{ ease: "backOut" }}
+                            className="px-3 py-6 -z-10"
+                        >
+                            <BoxInfo type={mainItemInfo.type} info={{ ...mainJobInfo.mainInfo }}></BoxInfo>
+                        </motion.div>
+                    </div>
+                ) : (
+                    <div></div>
+                )}
+
                 {/*//! -------------------------------------- Box Info -------------------------------------- */}
 
                 {/*//? -------------------- Start Mobile Header DropDown -------------------- */}
                 <AnimatePresence>
-                    {mainJobInfo.isShow ? (
+                    {typeof mainJobInfo.mainInfo !== "undefined" && mainJobInfo.isShow ? (
                         <motion.div
                             className={`w-full h-screen fixed bg-jv-bgColor lg:hidden bottom-0 right-0 text-right ${
                                 mainJobInfo.isShow ? "z-20" : "z-10"
@@ -546,16 +575,20 @@ const Jobs: React.FC = () => {
                                 initial={{ opacity: 0 }}
                                 whileInView={{ opacity: 1 }}
                                 transition={{ delay: 0.4 }}
-                                key={mainJobInfo.mainInfo}
+                                key={mainJobInfo.mainInfo?.id}
                             >
                                 <div
                                     className="px-3 py-2 flex items-center"
-                                    onClick={() => setMainJobInfo({ isShow: false, mainInfo: "" })}
+                                    onClick={() => setMainJobInfo({ isShow: false, mainInfo: undefined })}
                                 >
                                     <AiOutlineClose className="text-jv-black text-2xl" />
                                 </div>
                                 <div className="max-h-full pb-10 overflow-y-auto no-scrollbar">
-                                    <BoxInfoCard mainInfo={mainItemInfo} setMainInfo={setMainItemInfo}></BoxInfoCard>
+                                    <BoxInfoCard
+                                        mainInfoJob={mainJobInfo.mainInfo}
+                                        mainItemInfo={mainItemInfo}
+                                        setMainItemInfo={setMainItemInfo}
+                                    ></BoxInfoCard>
 
                                     <motion.div
                                         variants={ShortShowFromBottom}
@@ -566,7 +599,7 @@ const Jobs: React.FC = () => {
                                         transition={{ ease: "backOut" }}
                                         className="px-3 py-6"
                                     >
-                                        <BoxInfo type={mainItemInfo.type} info={[]}></BoxInfo>
+                                        <BoxInfo type={mainItemInfo.type} info={{ ...mainJobInfo.mainInfo }}></BoxInfo>
                                     </motion.div>
                                 </div>
                             </motion.div>

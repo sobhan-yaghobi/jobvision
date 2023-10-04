@@ -10,7 +10,11 @@ import Button from "../Button/Button";
 import StarSvg from "/Svg/Star.svg";
 
 const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
-    const wrapperBoxClass = `cursor-default w-full h-full max-h-[12rem] border-2 border-solid border-jv-lightGray3x rounded-xl py-3 px-3 bg-transparent grid ${
+    const jobData = props.data;
+    const jobInfo = jobData.jobInfo;
+    const jobCompany = jobData.company;
+    const jobStatus = jobData.status;
+    const wrapperBoxClass = `cursor-default w-full h-full max-h-[13rem] border-2 border-solid border-jv-lightGray3x rounded-xl py-3 px-3 bg-transparent grid ${
         props.type === "ShowSendCv" ? "grid-rows-3" : "grid-rows-4"
     }`;
 
@@ -25,36 +29,40 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
                     id="LogoCompany"
                     className="col-span-3 sm:col-span-2 h-full flex flex-col items-center justify-start p-1"
                 >
-                    <img
-                        className="px-1 w-auto max-w-full h-auto max-h-20 rounded-lg"
-                        src="/images/CompanyLogo.webp"
-                        alt=""
-                    />
+                    <img className="px-1 w-auto max-w-full h-auto max-h-20 rounded-lg" src={jobCompany.logo} alt="" />
                     <span className="mt-2 text-xs flex justify-center gap-1 items-center">
                         <span id="ScoreSvg" className="w-5">
                             <img className="w-full " src={StarSvg} alt="" />
                         </span>
-                        <span id="Score">4.8</span>
+                        <span id="Score">{jobCompany.score.companyScore}</span>
                     </span>
                 </div>
                 <div id="Content" className="text-sm px-1 col-span-9 sm:col-span-10 overflow-hidden">
                     <p id="AdvertisingTitle" className="danaBold truncate">
-                        برنامه نویسی php
+                        {jobData.title}
                     </p>
                     <p id="AdvertisingDesc" className="my-1 truncate">
-                        کانون تبلیغاتی ایران نوین
+                        {jobCompany.name}
                     </p>
-                    <div className={`text-jv-lightGray2x mb-3 truncate flex`}>
+                    <div className={`text-jv-lightGray2x truncate flex`}>
                         <span id="CompanyLocation" className="text-sm">
-                            تهران ، پاک وی
+                            {jobCompany.location}
                         </span>
                         <span className="inline-block mx-2 w-[2px] h-4 bg-jv-lightGray3x"></span>
-                        <span id="SalaryOffer">20 - 15 میلیون تومان</span>
+                        <span id="SalaryOffer">
+                            {Array.isArray(jobInfo.rightsPrice)
+                                ? `${jobInfo.rightsPrice[0]} - ${jobInfo.rightsPrice[1]}`
+                                : jobInfo.rightsPrice}
+                            <span className="mr-1">میلیون تومان</span>
+                        </span>
                     </div>
-                    <div className="text-xs text-jv-lightGray2x mb-2 flex items-center">
-                        <div>امکان دور کاری</div>
-                        <div className="w-1 h-1 rounded-full bg-jv-li2xtext-lightGray2x mx-2"></div>
-                        <div>امکان جذب کارآموز</div>
+                    <div className="flex items-center mb-3 flex-nowrap">
+                        {jobStatus.acceptTelecommuting ? (
+                            <div className="box-info-type text-jv-lightGray2x truncate">امکان دورکاری</div>
+                        ) : null}
+                        {jobStatus.acceptTrainees ? (
+                            <div className="box-info-type text-jv-lightGray2x truncate">امکان جذب کارآموز</div>
+                        ) : null}
                     </div>
                     {props.type === "ShowSendCv" ? null : (
                         <div className="text-xs text-jv-lightGray2x ">26 روز پیش</div>
@@ -74,7 +82,7 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
 
                     <div className="row-span-1 border-t-[1px] border-solid border-jv-lightGray3x pt-2 text-xs flex items-center justify-between">
                         <div className="flex items-center">
-                            {props.IsImportant ? (
+                            {jobStatus.isImportant ? (
                                 <>
                                     <div className="text-jv-danger text-xs bg-jv-lightDanger py-1 px-2 rounded-xl">
                                         فوری

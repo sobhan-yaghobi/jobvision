@@ -30,6 +30,7 @@ import {
     ShowFromRight,
     ShowItemsDelay_Var,
 } from "../../Animations/UtilsAnimation";
+import { AdvertisingArray } from "../../Components/AdvertisingBox/AdvertisingBox.type";
 
 const Home: React.FC = () => {
     const isEven = (num: number): boolean => num === 0 || !!(num && !(num % 2));
@@ -177,43 +178,41 @@ const Home: React.FC = () => {
             <div className="min-h-screen px-1 pt-5 flex overflow-hidden justify-center flex-col md:px-10 lg:px-24">
                 <h1 className="px-2 mb-5 text-xl lg:h-20 lg:mb-0 lg:text-3xl">تازه‌ترین آگهی‌های شغلی برای شما</h1>
                 <div className="w-full grid grid-cols-12 grid-rows-3">
-                    {Array(8)
-                        .fill("")
-                        .map((value, index) => (
-                            <motion.div
-                                key={index + 1}
-                                variants={
-                                    includes([1, 6], index) && WindowsSize.innerWidth >= 1280
-                                        ? ShowAndHideScale_Ex
-                                        : includes([0, 3, 5], index) && WindowsSize.innerWidth >= 1280
-                                        ? ShowFromRight
-                                        : includes([2, 4, 7], index) && WindowsSize.innerWidth >= 1280
-                                        ? ShowFromLeft
-                                        : WindowsSize.innerWidth < 1280 && isEven(index)
-                                        ? ShowFromRight
-                                        : ShowFromLeft
-                                }
-                                initial="hidden"
-                                whileInView="visible"
-                                viewport={{ once: true }}
-                                custom={index}
-                                className={`${includes([3, 4], index) ? "xl:col-span-6 flex" : "xl:col-span-4"} ${
-                                    index === 3 ? "flex justify-end" : ""
-                                }  row-span-1 p-2 col-span-12 lg:col-span-6`}
-                            >
-                                {includes([3, 4], index) ? (
-                                    <div className={`w-full xl:w-2/3`}>
-                                        <AdvertisingBox
-                                            IsImportant
-                                            data={{ id: uuidGenerator() }}
-                                            type="ShowSendCv"
-                                        ></AdvertisingBox>
-                                    </div>
-                                ) : (
-                                    <AdvertisingBox data={{ id: uuidGenerator() }} type="ShowSendCv"></AdvertisingBox>
-                                )}
-                            </motion.div>
-                        ))}
+                    {AdvertisingArray.map((item, index) => (
+                        <motion.div
+                            key={index + 1}
+                            variants={
+                                includes([1, 6], index) && WindowsSize.innerWidth >= 1280
+                                    ? ShowAndHideScale_Ex
+                                    : includes([0, 3, 5], index) && WindowsSize.innerWidth >= 1280
+                                    ? ShowFromRight
+                                    : includes([2, 4, 7], index) && WindowsSize.innerWidth >= 1280
+                                    ? ShowFromLeft
+                                    : WindowsSize.innerWidth < 1280 && isEven(index)
+                                    ? ShowFromRight
+                                    : ShowFromLeft
+                            }
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true }}
+                            custom={index}
+                            className={`${includes([3, 4], index) ? "xl:col-span-6 flex" : "xl:col-span-4"} ${
+                                index === 3 ? "flex justify-end" : ""
+                            }  row-span-1 p-2 col-span-12 lg:col-span-6`}
+                        >
+                            {includes([3, 4], index) ? (
+                                <div className={`w-full xl:w-2/3`}>
+                                    <AdvertisingBox
+                                        IsImportant
+                                        data={{ ...item.data }}
+                                        type="ShowSendCv"
+                                    ></AdvertisingBox>
+                                </div>
+                            ) : (
+                                <AdvertisingBox data={{ ...item.data }} type="ShowSendCv"></AdvertisingBox>
+                            )}
+                        </motion.div>
+                    ))}
                 </div>
             </div>
             {/*//! -------------------------------------- Advertising -------------------------------------- */}

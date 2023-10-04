@@ -1,9 +1,15 @@
+import { AdvertisingType } from "../../Components/AdvertisingBox/AdvertisingBox.type";
 import uuidGenerator from "../../Utils/UuidGenerator";
 
 export interface MainItemBoxInfoType {
     id: string;
     title: string;
     type: InfoTypes;
+}
+
+export interface mainJobInfoType {
+    isShow: boolean;
+    mainInfo: AdvertisingType | undefined;
 }
 
 export interface BoxsOrderType {
@@ -19,14 +25,15 @@ export interface AboutJob {
 }
 
 export interface BoxInfoCardProps {
-    mainInfo: MainItemBoxInfoType;
-    setMainInfo: React.Dispatch<MainItemBoxInfoType>;
+    mainInfoJob: AdvertisingType;
+    mainItemInfo: MainItemBoxInfoType;
+    setMainItemInfo: React.Dispatch<MainItemBoxInfoType>;
 }
 
 type InfoTypes = "INFO_JOB" | "ABOUT_COMPANY" | "RELATED_ADS" | "RESUME_RECRRDS";
 export interface BoxInfoProps {
     type: InfoTypes;
-    info: [];
+    info: AdvertisingType;
 }
 
 const mainItemsBoxInfos: MainItemBoxInfoType[] = [
