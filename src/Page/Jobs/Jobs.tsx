@@ -13,7 +13,7 @@ import {
 import { AdvertisingArray } from "../../Components/AdvertisingBox/AdvertisingBox.type";
 
 // Animations
-import { ShortShowFromBottom, ShowFromBottom_EX } from "../../Animations/UtilsAnimation";
+import { ShortShowFromBottom, ShowAndHideOpacity_Ex, ShowFromBottom_EX } from "../../Animations/UtilsAnimation";
 
 // Components
 import SearchFrom from "../../Components/SearchFrom/SearchFrom";
@@ -23,6 +23,7 @@ import Accordion from "../../Components/Accordion/Accordion";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ScoreIconGenerator } from "../../Utils/UtilsComponent";
+import JobsFilter from "../../Components/JobsFilter/JobsFilter";
 
 // Icons
 import { AiFillCaretDown, AiOutlineHeart, AiOutlineShareAlt } from "react-icons/ai";
@@ -31,7 +32,7 @@ import { FaStar } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
 import { GoReport } from "react-icons/go";
 import { VscPreview } from "react-icons/vsc";
-import JobsFilter from "../../Components/JobsFilter/JobsFilter";
+import ErrorBox from "../../Components/ErrorBox/ErrorBox";
 
 const BoxInfoCard: React.FC<BoxInfoCardProps> = ({ mainInfoJob, mainItemInfo, setMainItemInfo }) => {
     return (
@@ -129,7 +130,6 @@ const BoxInfoCard: React.FC<BoxInfoCardProps> = ({ mainInfoJob, mainItemInfo, se
 const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
     const jobInfo = info.jobInfo;
     const jobCompany = info.company;
-    const jobStatus = info.status;
     if (type === "INFO_JOB") {
         return (
             <>
@@ -531,28 +531,44 @@ const Jobs: React.FC = () => {
                 {/*//! -------------------------------------- List Boxs -------------------------------------- */}
 
                 {/*//?-------------------------------------- Box Info -------------------------------------- */}
-                {typeof mainJobInfo.mainInfo !== "undefined" && Object.values(mainJobInfo.mainInfo).length ? (
-                    <div className="hidden boxInfo mr-2 w-7/12 bg-jv-white sticky top-24 overflow-x-hidden overflow-y-auto h-[82vh] rounded-xl lg:table-column lg:w-7/12">
-                        <BoxInfoCard
-                            mainInfoJob={mainJobInfo.mainInfo}
-                            mainItemInfo={mainItemInfo}
-                            setMainItemInfo={setMainItemInfo}
-                        ></BoxInfoCard>
-                        <motion.div
-                            variants={ShortShowFromBottom}
-                            initial="hidden"
-                            whileInView="visible"
-                            viewport={{ once: true }}
-                            key={mainItemInfo.id}
-                            transition={{ ease: "backOut" }}
-                            className="px-3 py-6 -z-10"
-                        >
-                            <BoxInfo type={mainItemInfo.type} info={{ ...mainJobInfo.mainInfo }}></BoxInfo>
-                        </motion.div>
-                    </div>
-                ) : (
-                    <div></div>
-                )}
+                <div
+                    className={`hidden boxInfo mr-2 w-7/12 bg-jv-white sticky top-24 overflow-x-hidden overflow-y-auto h-[82vh] rounded-xl lg:table-column lg:w-7/12 ${
+                        typeof mainJobInfo.mainInfo !== "undefined" && Object.values(mainJobInfo.mainInfo).length
+                            ? ""
+                            : "bg-jv-light"
+                    }`}
+                >
+                    {typeof mainJobInfo.mainInfo !== "undefined" && Object.values(mainJobInfo.mainInfo).length ? (
+                        <>
+                            <motion.div
+                                key={mainJobInfo.mainInfo.id}
+                                variants={ShowAndHideOpacity_Ex}
+                                initial="hidden"
+                                animate="visible"
+                                exit="exit"
+                            >
+                                <BoxInfoCard
+                                    mainInfoJob={mainJobInfo.mainInfo}
+                                    mainItemInfo={mainItemInfo}
+                                    setMainItemInfo={setMainItemInfo}
+                                ></BoxInfoCard>
+                            </motion.div>
+                            <motion.div
+                                variants={ShortShowFromBottom}
+                                initial="hidden"
+                                whileInView="visible"
+                                viewport={{ once: true }}
+                                key={mainItemInfo.id}
+                                transition={{ ease: "backOut" }}
+                                className="px-3 py-6 -z-10"
+                            >
+                                <BoxInfo type={mainItemInfo.type} info={{ ...mainJobInfo.mainInfo }}></BoxInfo>
+                            </motion.div>
+                        </>
+                    ) : (
+                        <ErrorBox errTitle="آگهی یافت نشد" />
+                    )}
+                </div>
 
                 {/*//! -------------------------------------- Box Info -------------------------------------- */}
 

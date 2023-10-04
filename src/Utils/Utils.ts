@@ -15,21 +15,19 @@ const getTime = (date: Date): TimeType => {
     const monthTime = Math.floor(mainTime / 1000 / 60 / 60 / 24 / 30);
     const yearTime = Math.floor(mainTime / 1000 / 60 / 60 / 24 / 30 / 12);
 
-    if (dateTime < nowTime && secondsTime > 0 && secondsTime <= 59) {
-        return { date: secondsTime, type: "Second" };
-    } else if (dateTime < nowTime && minutesTime > 0 && minutesTime <= 59) {
-        return { date: minutesTime, type: "Minute" };
-    } else if (dateTime < nowTime && hourTime > 0 && hourTime <= 23) {
-        return { date: hourTime, type: "Hour" };
-    } else if (dateTime < nowTime && dayTime > 0 && dateTime <= 31) {
-        return { date: dayTime, type: "Day" };
-    } else if (dateTime < nowTime && monthTime > 0 && monthTime <= 12) {
-        return { date: monthTime, type: "Month" };
-    } else if (dateTime < nowTime && yearTime > 0) {
-        return { date: yearTime, type: "Year" };
-    } else {
-        return { date: 0, type: "NotValid" };
-    }
+    return dateTime < nowTime && secondsTime > 0 && secondsTime <= 59
+        ? { date: secondsTime, type: "Second" }
+        : dateTime < nowTime && minutesTime > 0 && minutesTime <= 59
+        ? { date: minutesTime, type: "Minute" }
+        : dateTime < nowTime && hourTime > 0 && hourTime <= 23
+        ? { date: hourTime, type: "Hour" }
+        : dateTime < nowTime && dayTime > 0 && dateTime <= 31
+        ? { date: dayTime, type: "Day" }
+        : dateTime < nowTime && monthTime > 0 && monthTime <= 12
+        ? { date: monthTime, type: "Month" }
+        : dateTime < nowTime && yearTime > 0
+        ? { date: yearTime, type: "Year" }
+        : { date: 0, type: "NotValid" };
 };
 
 export { getTime };

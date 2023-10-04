@@ -2,13 +2,16 @@ import React from "react";
 // Types
 import { AdvertisingBoxProps } from "./AdvertisingBox.type";
 
+// Functions
+import { TimeType, getTime } from "../../Utils/Utils";
+
 // Components
 import { Link } from "react-router-dom";
 
 // Icons
 import Button from "../Button/Button";
 import StarSvg from "/Svg/Star.svg";
-import { TimeType, getTime } from "../../Utils/Utils";
+import { TimeGenerator } from "../../Utils/UtilsComponent";
 
 const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
     const jobData = props.data;
@@ -16,26 +19,6 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
     const jobCompany = jobData.company;
     const jobStatus = jobData.status;
     const AdvertisingPublisTime: TimeType = getTime(jobData.CreateAt);
-
-    const TimeGenerator: React.FC = () => {
-        return (
-            <>
-                {AdvertisingPublisTime.type === "Second"
-                    ? `هم اکنون`
-                    : AdvertisingPublisTime.type === "Minute"
-                    ? `${AdvertisingPublisTime.date} دقیقه پیش`
-                    : AdvertisingPublisTime.type === "Hour"
-                    ? `${AdvertisingPublisTime.date} ساعت پیش`
-                    : AdvertisingPublisTime.type === "Day"
-                    ? `${AdvertisingPublisTime.date} روز پیش`
-                    : AdvertisingPublisTime.type === "Month"
-                    ? `${AdvertisingPublisTime.date} ماه پیش`
-                    : AdvertisingPublisTime.type === "Year"
-                    ? `${AdvertisingPublisTime.date} سال پیش`
-                    : null}
-            </>
-        );
-    };
 
     const wrapperBoxClass = `cursor-default w-full h-full max-h-[13rem] border-2 border-solid border-jv-lightGray3x rounded-xl py-3 px-3 bg-transparent grid ${
         props.type === "ShowSendCv" ? "grid-rows-3" : "grid-rows-4"
@@ -89,7 +72,7 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
                     </div>
                     {props.type === "ShowSendCv" ? null : (
                         <div className="text-xs text-jv-lightGray2x ">
-                            <TimeGenerator></TimeGenerator>
+                            <TimeGenerator dateInfo={AdvertisingPublisTime}></TimeGenerator>
                         </div>
                     )}
                 </div>
@@ -116,7 +99,7 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
                                 </>
                             ) : null}
                             <div className="text-xs text-jv-lightGray2x" id="PublishTime">
-                                <TimeGenerator></TimeGenerator>
+                                <TimeGenerator dateInfo={AdvertisingPublisTime}></TimeGenerator>
                             </div>
                         </div>
                         <Button
