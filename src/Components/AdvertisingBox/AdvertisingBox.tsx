@@ -8,12 +8,35 @@ import { Link } from "react-router-dom";
 // Icons
 import Button from "../Button/Button";
 import StarSvg from "/Svg/Star.svg";
+import { TimeType, getTime } from "../../Utils/Utils";
 
 const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
     const jobData = props.data;
     const jobInfo = jobData.jobInfo;
     const jobCompany = jobData.company;
     const jobStatus = jobData.status;
+    const AdvertisingPublisTime: TimeType = getTime(jobData.CreateAt);
+
+    const TimeGenerator: React.FC = () => {
+        return (
+            <>
+                {AdvertisingPublisTime.type === "Second"
+                    ? `هم اکنون`
+                    : AdvertisingPublisTime.type === "Minute"
+                    ? `${AdvertisingPublisTime.date} دقیقه پیش`
+                    : AdvertisingPublisTime.type === "Hour"
+                    ? `${AdvertisingPublisTime.date} ساعت پیش`
+                    : AdvertisingPublisTime.type === "Day"
+                    ? `${AdvertisingPublisTime.date} روز پیش`
+                    : AdvertisingPublisTime.type === "Month"
+                    ? `${AdvertisingPublisTime.date} ماه پیش`
+                    : AdvertisingPublisTime.type === "Year"
+                    ? `${AdvertisingPublisTime.date} سال پیش`
+                    : null}
+            </>
+        );
+    };
+
     const wrapperBoxClass = `cursor-default w-full h-full max-h-[13rem] border-2 border-solid border-jv-lightGray3x rounded-xl py-3 px-3 bg-transparent grid ${
         props.type === "ShowSendCv" ? "grid-rows-3" : "grid-rows-4"
     }`;
@@ -65,7 +88,9 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
                         ) : null}
                     </div>
                     {props.type === "ShowSendCv" ? null : (
-                        <div className="text-xs text-jv-lightGray2x ">26 روز پیش</div>
+                        <div className="text-xs text-jv-lightGray2x ">
+                            <TimeGenerator></TimeGenerator>
+                        </div>
                     )}
                 </div>
             </>
@@ -90,7 +115,9 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
                                     <span className="w-5 h-[2px] bg-jv-primary -rotate-[75deg] rounded-xl"></span>
                                 </>
                             ) : null}
-                            <div id="PublishTime">دیروز</div>
+                            <div className="text-xs text-jv-lightGray2x" id="PublishTime">
+                                <TimeGenerator></TimeGenerator>
+                            </div>
                         </div>
                         <Button
                             textColor="primary"
@@ -110,15 +137,21 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
             <>
                 <div onClick={() => props.clickHandler(props.data.id)} id="Box" className={wrapperBoxClass}>
                     <div className="w-full flex items-center whitespace-nowrap overflow-x-auto no-scrollbar">
-                        <span className="ml-1 text-jv-danger text-xs px-2 py-1 rounded-xl bg-jv-lightDanger inline-block">
-                            فوری
-                        </span>
-                        <span className="ml-1 text-jv-primary text-xs px-2 py-1 rounded-xl bg-jv-lightPrimary inline-block">
-                            کارفرمای پاسخگو
-                        </span>
-                        <span className="ml-1 text-jv-primary text-xs px-2 py-1 rounded-xl bg-jv-lightPrimary inline-block">
-                            در حال بررسی روزمه
-                        </span>
+                        {jobStatus.isImportant ? (
+                            <span className="ml-1 text-jv-danger text-xs px-2 py-1 rounded-xl bg-jv-lightDanger inline-block">
+                                فوری
+                            </span>
+                        ) : null}
+                        {jobStatus.cvPending ? (
+                            <span className="ml-1 text-jv-primary text-xs px-2 py-1 rounded-xl bg-jv-lightPrimary inline-block">
+                                در حال بررسی روزمه
+                            </span>
+                        ) : null}
+                        {jobStatus.responsibleEmployer ? (
+                            <span className="ml-1 text-jv-primary text-xs px-2 py-1 rounded-xl bg-jv-lightPrimary inline-block">
+                                کارفرمای پاسخگو
+                            </span>
+                        ) : null}
                     </div>
                     <div className={wrapperContentClass}>
                         <BoxContentElm />

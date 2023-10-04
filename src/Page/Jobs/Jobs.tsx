@@ -22,16 +22,16 @@ import AdvertisingBox from "../../Components/AdvertisingBox/AdvertisingBox";
 import Accordion from "../../Components/Accordion/Accordion";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { ScoreIconGenerator } from "../../Utils/UtilsComponent";
 
 // Icons
 import { AiFillCaretDown, AiOutlineHeart, AiOutlineShareAlt } from "react-icons/ai";
 import { MdNotificationAdd, MdNotificationsActive } from "react-icons/md";
-import { FaRegStar, FaStar } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
 import { GoReport } from "react-icons/go";
 import { VscPreview } from "react-icons/vsc";
 import JobsFilter from "../../Components/JobsFilter/JobsFilter";
-import { ScoreIconGenerator } from "../../Utils/UtilsComponent";
 
 const BoxInfoCard: React.FC<BoxInfoCardProps> = ({ mainInfoJob, mainItemInfo, setMainItemInfo }) => {
     return (
@@ -453,7 +453,6 @@ const Jobs: React.FC = () => {
     const [mainJobInfo, setMainJobInfo] = useState<mainJobInfoType>({} as mainJobInfoType);
 
     //! ---------------------------------- Box Info
-
     return (
         <>
             {/*//? -------------------------------------- Seacrh -------------------------------------- */}
