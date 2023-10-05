@@ -13,7 +13,15 @@ import {
 import { AdvertisingArray, AdvertisingBoxMainProps } from "../../Components/AdvertisingBox/AdvertisingBox.type";
 
 // Animations
-import { ShortShowFromBottom, ShowAndHideOpacity_Ex, ShowFromBottom_EX } from "../../Animations/UtilsAnimation";
+import {
+    ShortShowFromBottom,
+    ShowAndHideOpacity_Ex,
+    ShowFromBottom_EX,
+    ShowItemsDelay_Var,
+} from "../../Animations/UtilsAnimation";
+
+// Functions
+import { includes } from "lodash";
 
 // Components
 import SearchFrom from "../../Components/SearchFrom/SearchFrom";
@@ -24,6 +32,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ScoreIconGenerator } from "../../Utils/UtilsComponent";
 import JobsFilter from "../../Components/JobsFilter/JobsFilter";
+import ErrorBox from "../../Components/ErrorBox/ErrorBox";
 
 // Icons
 import { AiFillCaretDown, AiOutlineHeart, AiOutlineShareAlt } from "react-icons/ai";
@@ -32,8 +41,13 @@ import { FaStar } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
 import { GoReport } from "react-icons/go";
 import { VscPreview } from "react-icons/vsc";
-import ErrorBox from "../../Components/ErrorBox/ErrorBox";
-import { includes } from "lodash";
+
+// Slider
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import CompanyBox from "../../Components/CompanyBox/CompanyBox";
 
 const Jobs: React.FC = () => {
     //? ---------------------------------- Notification
@@ -262,6 +276,49 @@ const Jobs: React.FC = () => {
                     ) : null}
                 </AnimatePresence>
                 {/*//? -------------------- Finish Mobile Header DropDown -------------------- */}
+            </div>
+
+            <div>
+                {/*//? -------------------------------------- Company Box Slider -------------------------------------- */}
+                <motion.div
+                    variants={ShowItemsDelay_Var}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    className="w-full px-2 md:px-10 lg:px-24 py-10 bg-jv-light"
+                >
+                    <Swiper
+                        className={`rounded-md`}
+                        slidesPerView={"auto"}
+                        spaceBetween={16}
+                        breakpoints={{
+                            540: {
+                                slidesPerView: 3,
+                            },
+                            768: {
+                                slidesPerView: 4,
+                            },
+                            1024: {
+                                slidesPerView: 5,
+                            },
+                        }}
+                        navigation={true}
+                        autoplay={{
+                            delay: 3000,
+                            disableOnInteraction: false,
+                        }}
+                        modules={[Autoplay, Navigation]}
+                    >
+                        {Array(7)
+                            .fill("")
+                            .map((item, index) => (
+                                <SwiperSlide key={index + 1} className="!w-52 !h-64 select-none">
+                                    <CompanyBox></CompanyBox>
+                                </SwiperSlide>
+                            ))}
+                    </Swiper>
+                </motion.div>
+                {/*//! -------------------------------------- Company Box Slider -------------------------------------- */}
             </div>
         </>
     );

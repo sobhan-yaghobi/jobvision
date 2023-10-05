@@ -1,9 +1,22 @@
 import React, { useState } from "react";
 // Types
 import { WhyUsDescType, WhyUsType, AboutUsItemArray, whyUsArray } from "./Home.type";
+import { AdvertisingArray } from "../../Components/AdvertisingBox/AdvertisingBox.type";
+
+// Animation
+import {
+    ShowAndHideOpacity_Ex,
+    ShowAndHideScale_Ex,
+    ShowFromBottom,
+    ShowFromLeft,
+    ShowFromRight,
+    ShowItemsDelay_Var,
+} from "../../Animations/UtilsAnimation";
+
+// Hooks
+import useAnimationStop from "../../Hooks/useAnimationStop";
 
 // Functions
-import uuidGenerator from "../../Utils/UuidGenerator";
 import useWindowsSize from "../../Hooks/useWindowsSize";
 import { includes, chunk } from "lodash";
 import { AnimatePresence, motion } from "framer-motion";
@@ -21,16 +34,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import useAnimationStop from "../../Hooks/useAnimationStop";
-import {
-    ShowAndHideOpacity_Ex,
-    ShowAndHideScale_Ex,
-    ShowFromBottom,
-    ShowFromLeft,
-    ShowFromRight,
-    ShowItemsDelay_Var,
-} from "../../Animations/UtilsAnimation";
-import { AdvertisingArray } from "../../Components/AdvertisingBox/AdvertisingBox.type";
 
 const Home: React.FC = () => {
     const isEven = (num: number): boolean => num === 0 || !!(num && !(num % 2));
