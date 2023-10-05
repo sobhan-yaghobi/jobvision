@@ -329,4 +329,7 @@ export type FilterGeneratorProps =
           mode: "ShowFilterIcon";
       };
 
+export type MenuSettingProps = {
+    mode: "Mobile" | "Desktop";
+};
 export { categoryArray };
