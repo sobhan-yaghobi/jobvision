@@ -34,6 +34,210 @@ import { GoReport } from "react-icons/go";
 import { VscPreview } from "react-icons/vsc";
 import ErrorBox from "../../Components/ErrorBox/ErrorBox";
 
+const Jobs: React.FC = () => {
+    //? ---------------------------------- WHY Us
+    const [isNotification, setIsNotification] = useState(false);
+    const [notifPending, setNotifPending] = useState(isNotification);
+    const notificationAction = () => {
+        setIsNotification((prev) => !prev);
+        setNotifPending((prev) => !prev);
+        setTimeout(() => {
+            setNotifPending((prev) => !prev);
+        }, 2000);
+    };
+    //! ---------------------------------- WHY Us
+
+    //? ---------------------------------- Box Order
+    const [orderMain, setOrderMain] = useState<BoxsOrderType>(boxOrderArray[0]);
+    const orderMenu = useRef<HTMLDivElement>(null);
+    const showOrderAction = () => orderMenu.current?.classList.add("active");
+    const hideOrderAction = () => orderMenu.current?.classList.remove("active");
+    //! ---------------------------------- Box Order
+
+    //? ---------------------------------- Box Info
+    const [mainItemInfo, setMainItemInfo] = useState<MainItemBoxInfoType>(mainItemsBoxInfos[0]);
+
+    //* Mobile
+
+    const [mainJobInfo, setMainJobInfo] = useState<mainJobInfoType>({} as mainJobInfoType);
+
+    //! ---------------------------------- Box Info
+    return (
+        <>
+            {/*//? -------------------------------------- Seacrh -------------------------------------- */}
+            <div className="py-8 px-2 md:px-10 lg:px-24 border-b-2 border-solid border-jv-lightGray3x">
+                <SearchFrom></SearchFrom>
+                <div className="mt-4"></div>
+                <JobsFilter></JobsFilter>
+            </div>
+            {/*//! -------------------------------------- Seacrh -------------------------------------- */}
+
+            <div className="w-full py-5 px-2 md:px-10 lg:px-24 bg-jv-light flex">
+                {/*//? -------------------------------------- List Boxs -------------------------------------- */}
+                <div className="listBox ml-2 w-full flex flex-col lg:w-5/12 text-xs lg:text-base">
+                    <Button
+                        textColor="light"
+                        size="middle"
+                        isLoading={notifPending}
+                        ClickHandler={() => {
+                            notificationAction();
+                        }}
+                        Icon={isNotification ? MdNotificationsActive : MdNotificationAdd}
+                    >
+                        فعال سازی اطلاع رسانی شغل ها
+                    </Button>
+                    <div className="p-3 mt-2 rounded-lg bg-jv-white flex items-center justify-between">
+                        <section>37524 فرصت شغلی فعال</section>
+                        {Object.values(orderMain).length ? (
+                            <section className="flex items-center">
+                                <span>مرتب سازی :</span>
+                                <div
+                                    onMouseEnter={showOrderAction}
+                                    onMouseLeave={hideOrderAction}
+                                    className="relative p-2 mx-1 border border-solid border-jv-lightGray3x rounded-lg select-none"
+                                >
+                                    <span className="cursor-pointer flex items-center">
+                                        {orderMain.title}
+                                        <AiFillCaretDown className="mr-2"></AiFillCaretDown>
+                                    </span>
+                                    <div
+                                        ref={orderMenu}
+                                        className="showFromTop w-full min-h-fit py-3 duration-300 absolute top-full right-0"
+                                    >
+                                        <ul className="bg-jv-white p-2 rounded-lg transition-none">
+                                            {boxOrderArray.map((item) => (
+                                                <li
+                                                    onClick={() => setOrderMain(item)}
+                                                    className={`cursor-pointer p-1 rounded-md my-2 ${
+                                                        item.order === orderMain.order
+                                                            ? "text-jv-white bg-jv-primary"
+                                                            : ""
+                                                    }`}
+                                                    key={item.id}
+                                                >
+                                                    {item.title}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </section>
+                        ) : null}
+                    </div>
+                    <div className="wrapper flex flex-col">
+                        {AdvertisingArray.map((item, index) => (
+                            <div key={index + 1} className="mt-2">
+                                <AdvertisingBox
+                                    type="HideSendCv"
+                                    clickHandler={() => setMainJobInfo({ isShow: true, mainInfo: { ...item.data } })}
+                                    IsImportant={index === 2 ? true : false}
+                                    data={{ ...item.data }}
+                                    isActive={item.data.id === mainJobInfo.mainInfo?.id ? true : false}
+                                ></AdvertisingBox>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                {/*//! -------------------------------------- List Boxs -------------------------------------- */}
+
+                {/*//?-------------------------------------- Box Info -------------------------------------- */}
+                <div
+                    className={`hidden boxInfo mr-2 w-7/12 bg-jv-white sticky top-24 overflow-x-hidden overflow-y-auto h-[82vh] rounded-xl lg:table-column lg:w-7/12 ${
+                        typeof mainJobInfo.mainInfo !== "undefined" && Object.values(mainJobInfo.mainInfo).length
+                            ? ""
+                            : "bg-jv-light"
+                    }`}
+                >
+                    {typeof mainJobInfo.mainInfo !== "undefined" && Object.values(mainJobInfo.mainInfo).length ? (
+                        <>
+                            <motion.div
+                                key={mainJobInfo.mainInfo.id}
+                                variants={ShowAndHideOpacity_Ex}
+                                transition={{ duration: 0.7 }}
+                                initial="hidden"
+                                animate="visible"
+                                exit="exit"
+                            >
+                                <BoxInfoCard
+                                    mainInfoJob={mainJobInfo.mainInfo}
+                                    mainItemInfo={mainItemInfo}
+                                    setMainItemInfo={setMainItemInfo}
+                                ></BoxInfoCard>
+                            </motion.div>
+                            <motion.div
+                                variants={ShortShowFromBottom}
+                                initial="hidden"
+                                whileInView="visible"
+                                viewport={{ once: true }}
+                                key={mainItemInfo.id}
+                                transition={{ ease: "backOut" }}
+                                className="px-3 py-6 -z-10"
+                            >
+                                <BoxInfo type={mainItemInfo.type} info={{ ...mainJobInfo.mainInfo }}></BoxInfo>
+                            </motion.div>
+                        </>
+                    ) : (
+                        <ErrorBox errTitle="آگهی یافت نشد" />
+                    )}
+                </div>
+
+                {/*//! -------------------------------------- Box Info -------------------------------------- */}
+
+                {/*//? -------------------- Start Mobile Header DropDown -------------------- */}
+                <AnimatePresence>
+                    {typeof mainJobInfo.mainInfo !== "undefined" && mainJobInfo.isShow ? (
+                        <motion.div
+                            className={`w-full h-screen fixed bg-jv-bgColor lg:hidden bottom-0 right-0 text-right ${
+                                mainJobInfo.isShow ? "z-20" : "z-10"
+                            }`}
+                            variants={ShowFromBottom_EX}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            transition={{ duration: 0.4 }}
+                        >
+                            <motion.div
+                                className="w-full current-mega-height-dvh fixed overflow-hidden -bottom-1 right-0 rounded-t-xl bg-jv-white"
+                                initial={{ opacity: 0 }}
+                                whileInView={{ opacity: 1 }}
+                                transition={{ delay: 0.4 }}
+                                key={mainJobInfo.mainInfo?.id}
+                            >
+                                <div
+                                    className="px-3 py-2 flex items-center"
+                                    onClick={() => setMainJobInfo({ isShow: false, mainInfo: undefined })}
+                                >
+                                    <AiOutlineClose className="text-jv-black text-2xl" />
+                                </div>
+                                <div className="max-h-full pb-10 overflow-y-auto no-scrollbar">
+                                    <BoxInfoCard
+                                        mainInfoJob={mainJobInfo.mainInfo}
+                                        mainItemInfo={mainItemInfo}
+                                        setMainItemInfo={setMainItemInfo}
+                                    ></BoxInfoCard>
+
+                                    <motion.div
+                                        variants={ShortShowFromBottom}
+                                        initial="hidden"
+                                        whileInView="visible"
+                                        viewport={{ once: true }}
+                                        key={mainItemInfo.id}
+                                        transition={{ ease: "backOut" }}
+                                        className="px-3 py-6"
+                                    >
+                                        <BoxInfo type={mainItemInfo.type} info={{ ...mainJobInfo.mainInfo }}></BoxInfo>
+                                    </motion.div>
+                                </div>
+                            </motion.div>
+                        </motion.div>
+                    ) : null}
+                </AnimatePresence>
+                {/*//? -------------------- Finish Mobile Header DropDown -------------------- */}
+            </div>
+        </>
+    );
+};
+
 const BoxInfoCard: React.FC<BoxInfoCardProps> = ({ mainInfoJob, mainItemInfo, setMainItemInfo }) => {
     return (
         <>
@@ -117,7 +321,6 @@ const BoxInfoCard: React.FC<BoxInfoCardProps> = ({ mainInfoJob, mainItemInfo, se
                                     : "border-transparent hover:border-jv-lightGray2x"
                             }`}
                         >
-                            {" "}
                             {item.title}
                         </li>
                     ))}
@@ -130,6 +333,7 @@ const BoxInfoCard: React.FC<BoxInfoCardProps> = ({ mainInfoJob, mainItemInfo, se
 const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
     const jobInfo = info.jobInfo;
     const jobCompany = info.company;
+
     if (type === "INFO_JOB") {
         return (
             <>
@@ -173,9 +377,7 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
                             {jobInfo.keyIndicators.map((item, index) => (
                                 <div
                                     key={index + 1}
-                                    className={`mt-5 w-fit ${
-                                        item.includes("-") ? "box-info-type danaBold" : "text-sm"
-                                    }`}
+                                    className={`mt-5 w-fit ${item.includes("-") ? "box-info-type" : "text-sm"}`}
                                 >
                                     {item}
                                 </div>
@@ -423,208 +625,6 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
             </>
         );
     }
-};
-
-const Jobs: React.FC = () => {
-    //? ---------------------------------- WHY Us
-    const [isNotification, setIsNotification] = useState(false);
-    const [notifPending, setNotifPending] = useState(isNotification);
-    const notificationAction = () => {
-        setIsNotification((prev) => !prev);
-        setNotifPending((prev) => !prev);
-        setTimeout(() => {
-            setNotifPending((prev) => !prev);
-        }, 2000);
-    };
-    //! ---------------------------------- WHY Us
-
-    //? ---------------------------------- Box Order
-    const [orderMain, setOrderMain] = useState<BoxsOrderType>(boxOrderArray[0]);
-    const orderMenu = useRef<HTMLDivElement>(null);
-    const showOrderAction = () => orderMenu.current?.classList.add("active");
-    const hideOrderAction = () => orderMenu.current?.classList.remove("active");
-    //! ---------------------------------- Box Order
-
-    //? ---------------------------------- Box Info
-    const [mainItemInfo, setMainItemInfo] = useState<MainItemBoxInfoType>(mainItemsBoxInfos[0]);
-
-    //* Mobile
-
-    const [mainJobInfo, setMainJobInfo] = useState<mainJobInfoType>({} as mainJobInfoType);
-
-    //! ---------------------------------- Box Info
-    return (
-        <>
-            {/*//? -------------------------------------- Seacrh -------------------------------------- */}
-            <div className="py-8 px-2 md:px-10 lg:px-24 border-b-2 border-solid border-jv-lightGray3x">
-                <SearchFrom></SearchFrom>
-                <div className="mt-4"></div>
-                <JobsFilter></JobsFilter>
-            </div>
-            {/*//! -------------------------------------- Seacrh -------------------------------------- */}
-
-            <div className="w-full py-5 px-2 md:px-10 lg:px-24 bg-jv-light flex">
-                {/*//? -------------------------------------- List Boxs -------------------------------------- */}
-                <div className="listBox ml-2 w-full flex flex-col lg:w-5/12 text-xs lg:text-base">
-                    <Button
-                        textColor="light"
-                        size="middle"
-                        isLoading={notifPending}
-                        ClickHandler={() => {
-                            notificationAction();
-                        }}
-                        Icon={isNotification ? MdNotificationsActive : MdNotificationAdd}
-                    >
-                        فعال سازی اطلاع رسانی شغل ها
-                    </Button>
-                    <div className="p-3 mt-2 rounded-lg bg-jv-white flex items-center justify-between">
-                        <section>37524 فرصت شغلی فعال</section>
-                        {Object.values(orderMain).length ? (
-                            <section className="flex items-center">
-                                <span>مرتب سازی :</span>
-                                <div
-                                    onMouseEnter={showOrderAction}
-                                    onMouseLeave={hideOrderAction}
-                                    className="relative p-2 mx-1 border border-solid border-jv-lightGray3x rounded-lg select-none"
-                                >
-                                    <span className="cursor-pointer flex items-center">
-                                        {orderMain.title}
-                                        <AiFillCaretDown className="mr-2"></AiFillCaretDown>
-                                    </span>
-                                    <div
-                                        ref={orderMenu}
-                                        className="showFromTop w-full min-h-fit py-3 duration-300 absolute top-full right-0"
-                                    >
-                                        <ul className="bg-jv-white p-2 rounded-lg transition-none">
-                                            {boxOrderArray.map((item) => (
-                                                <li
-                                                    onClick={() => setOrderMain(item)}
-                                                    className={`cursor-pointer p-1 rounded-md my-2 ${
-                                                        item.order === orderMain.order
-                                                            ? "text-jv-white bg-jv-primary"
-                                                            : ""
-                                                    }`}
-                                                    key={item.id}
-                                                >
-                                                    {item.title}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                </div>
-                            </section>
-                        ) : null}
-                    </div>
-                    <div className="wrapper flex flex-col">
-                        {AdvertisingArray.map((item, index) => (
-                            <div key={index + 1} className="mt-2">
-                                <AdvertisingBox
-                                    type="HideSendCv"
-                                    clickHandler={() => setMainJobInfo({ isShow: true, mainInfo: { ...item.data } })}
-                                    IsImportant={index === 2 ? true : false}
-                                    data={{ ...item.data }}
-                                ></AdvertisingBox>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                {/*//! -------------------------------------- List Boxs -------------------------------------- */}
-
-                {/*//?-------------------------------------- Box Info -------------------------------------- */}
-                <div
-                    className={`hidden boxInfo mr-2 w-7/12 bg-jv-white sticky top-24 overflow-x-hidden overflow-y-auto h-[82vh] rounded-xl lg:table-column lg:w-7/12 ${
-                        typeof mainJobInfo.mainInfo !== "undefined" && Object.values(mainJobInfo.mainInfo).length
-                            ? ""
-                            : "bg-jv-light"
-                    }`}
-                >
-                    {typeof mainJobInfo.mainInfo !== "undefined" && Object.values(mainJobInfo.mainInfo).length ? (
-                        <>
-                            <motion.div
-                                key={mainJobInfo.mainInfo.id}
-                                variants={ShowAndHideOpacity_Ex}
-                                initial="hidden"
-                                animate="visible"
-                                exit="exit"
-                            >
-                                <BoxInfoCard
-                                    mainInfoJob={mainJobInfo.mainInfo}
-                                    mainItemInfo={mainItemInfo}
-                                    setMainItemInfo={setMainItemInfo}
-                                ></BoxInfoCard>
-                            </motion.div>
-                            <motion.div
-                                variants={ShortShowFromBottom}
-                                initial="hidden"
-                                whileInView="visible"
-                                viewport={{ once: true }}
-                                key={mainItemInfo.id}
-                                transition={{ ease: "backOut" }}
-                                className="px-3 py-6 -z-10"
-                            >
-                                <BoxInfo type={mainItemInfo.type} info={{ ...mainJobInfo.mainInfo }}></BoxInfo>
-                            </motion.div>
-                        </>
-                    ) : (
-                        <ErrorBox errTitle="آگهی یافت نشد" />
-                    )}
-                </div>
-
-                {/*//! -------------------------------------- Box Info -------------------------------------- */}
-
-                {/*//? -------------------- Start Mobile Header DropDown -------------------- */}
-                <AnimatePresence>
-                    {typeof mainJobInfo.mainInfo !== "undefined" && mainJobInfo.isShow ? (
-                        <motion.div
-                            className={`w-full h-screen fixed bg-jv-bgColor lg:hidden bottom-0 right-0 text-right ${
-                                mainJobInfo.isShow ? "z-20" : "z-10"
-                            }`}
-                            variants={ShowFromBottom_EX}
-                            initial="hidden"
-                            animate="visible"
-                            exit="exit"
-                            transition={{ duration: 0.4 }}
-                        >
-                            <motion.div
-                                className="w-full current-mega-height-dvh fixed overflow-hidden -bottom-1 right-0 rounded-t-xl bg-jv-white"
-                                initial={{ opacity: 0 }}
-                                whileInView={{ opacity: 1 }}
-                                transition={{ delay: 0.4 }}
-                                key={mainJobInfo.mainInfo?.id}
-                            >
-                                <div
-                                    className="px-3 py-2 flex items-center"
-                                    onClick={() => setMainJobInfo({ isShow: false, mainInfo: undefined })}
-                                >
-                                    <AiOutlineClose className="text-jv-black text-2xl" />
-                                </div>
-                                <div className="max-h-full pb-10 overflow-y-auto no-scrollbar">
-                                    <BoxInfoCard
-                                        mainInfoJob={mainJobInfo.mainInfo}
-                                        mainItemInfo={mainItemInfo}
-                                        setMainItemInfo={setMainItemInfo}
-                                    ></BoxInfoCard>
-
-                                    <motion.div
-                                        variants={ShortShowFromBottom}
-                                        initial="hidden"
-                                        whileInView="visible"
-                                        viewport={{ once: true }}
-                                        key={mainItemInfo.id}
-                                        transition={{ ease: "backOut" }}
-                                        className="px-3 py-6"
-                                    >
-                                        <BoxInfo type={mainItemInfo.type} info={{ ...mainJobInfo.mainInfo }}></BoxInfo>
-                                    </motion.div>
-                                </div>
-                            </motion.div>
-                        </motion.div>
-                    ) : null}
-                </AnimatePresence>
-                {/*//? -------------------- Finish Mobile Header DropDown -------------------- */}
-            </div>
-        </>
-    );
 };
 
 export default Jobs;

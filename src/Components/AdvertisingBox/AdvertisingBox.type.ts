@@ -67,6 +67,7 @@ export interface AdvertisingType {
 }
 interface AdvertisingBoxMainProps {
     data: AdvertisingType;
+    isActive?: boolean;
     IsResponsive?: boolean;
     IsImportant?: boolean;
 }

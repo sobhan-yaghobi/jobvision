@@ -42,7 +42,7 @@ const Header: React.FC = () => {
     return (
         <>
             <div className="w-full h-20 relative">
-                <header className="fixed h-20 w-full px-0 rounded-b-xl bg-jv-primary shadow-lg lg:bg-jv-white z-30">
+                <header className="fixed h-20 w-full px-0 rounded-b-xl bg-jv-primary shadow-lg lg:bg-jv-white z-40">
                     {/*//? -------------------- Start Mobile Header -------------------- */}
                     <div className="header-mobile  w-full h-full p-2 lg:hidden flex items-center justify-between">
                         <div className="w-4/12 sm:px-3 flex items-center justify-start">
@@ -172,7 +172,7 @@ const Header: React.FC = () => {
                             initial="hidden"
                             animate="visible"
                             exit="exit"
-                            className="bg-jv-bgColor fixed top-0 right-0 w-full h-full z-10"
+                            className="bg-jv-bgColor fixed top-0 right-0 w-full h-full z-30"
                         ></motion.div>
                         <motion.div
                             variants={ShowHideClipFromBottom_Ex}
@@ -181,7 +181,7 @@ const Header: React.FC = () => {
                             animate="visible"
                             exit="exit"
                             className={`header-dropwodn-mobile w-full h-4/6 rounded-t-3xl fixed lg:hidden bottom-0 right-0 bg-jv-primary  text-right ${
-                                MenuMobile.isOpen ? "z-20" : "z-10"
+                                MenuMobile.isOpen ? "z-30" : "z-10"
                             }`}
                         >
                             <motion.div

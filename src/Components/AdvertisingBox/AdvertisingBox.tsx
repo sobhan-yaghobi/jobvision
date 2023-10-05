@@ -20,9 +20,9 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
     const jobStatus = jobData.status;
     const AdvertisingPublisTime: TimeType = getTime(jobData.CreateAt);
 
-    const wrapperBoxClass = `cursor-default w-full h-full max-h-[13rem] border-2 border-solid border-jv-lightGray3x rounded-xl py-3 px-3 bg-transparent grid ${
-        props.type === "ShowSendCv" ? "grid-rows-3" : "grid-rows-4"
-    }`;
+    const wrapperBoxClass = `cursor-default w-full h-full max-h-[13rem] border-2 border-solid rounded-xl py-3 px-3 bg-transparent grid ${
+        props.isActive ? "border-jv-primary" : "border-jv-lightGray3x"
+    } ${props.type === "ShowSendCv" ? "grid-rows-3" : "grid-rows-4"}`;
 
     const wrapperContentClass = `text-inherit grid grid-cols-12 ${
         props.type === "ShowSendCv" ? "row-span-2" : "row-span-4"
