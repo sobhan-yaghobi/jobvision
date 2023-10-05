@@ -294,6 +294,12 @@ const categoryArray: FilterType[] = [
     { id: uuidGenerator(), type: "MILITARY_ORDER", title: "امریه سربازی", isMultiple: false },
 ];
 
+export interface JobsFilterProps {
+    setSelectedFilter: React.Dispatch<React.SetStateAction<string[]>>;
+    isFilterOnProMode: boolean;
+    setIsFilterOnProMode: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 export interface selectedFiltersType {
     title: string;
     type: string;
@@ -314,8 +320,13 @@ export type FilterContentGeneratorProps =
     | { mode: "SUB_&_MULTIPLE_TRUE"; Item: FilterType; ItemType: CategoryTypes }
     | { mode: "NORMAL"; Item: FilterType };
 
-export type FilterGeneratorProps = {
-    item: FilterType;
-};
+export type FilterGeneratorProps =
+    | {
+          mode: "ShowFilter";
+          item: FilterType;
+      }
+    | {
+          mode: "ShowFilterIcon";
+      };
 
 export { categoryArray };

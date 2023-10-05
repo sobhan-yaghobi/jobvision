@@ -1,4 +1,4 @@
-import React, { useState, useRef, Fragment } from "react";
+import React, { useState, useRef, Fragment, useEffect } from "react";
 
 // Types
 import {
@@ -10,7 +10,7 @@ import {
     mainItemsBoxInfos,
     mainJobInfoType,
 } from "./Jobs.type";
-import { AdvertisingArray } from "../../Components/AdvertisingBox/AdvertisingBox.type";
+import { AdvertisingArray, AdvertisingBoxMainProps } from "../../Components/AdvertisingBox/AdvertisingBox.type";
 
 // Animations
 import { ShortShowFromBottom, ShowAndHideOpacity_Ex, ShowFromBottom_EX } from "../../Animations/UtilsAnimation";
@@ -33,9 +33,10 @@ import { AiOutlineClose } from "react-icons/ai";
 import { GoReport } from "react-icons/go";
 import { VscPreview } from "react-icons/vsc";
 import ErrorBox from "../../Components/ErrorBox/ErrorBox";
+import { includes } from "lodash";
 
 const Jobs: React.FC = () => {
-    //? ---------------------------------- WHY Us
+    //? ---------------------------------- Notification
     const [isNotification, setIsNotification] = useState(false);
     const [notifPending, setNotifPending] = useState(isNotification);
     const notificationAction = () => {
@@ -45,7 +46,7 @@ const Jobs: React.FC = () => {
             setNotifPending((prev) => !prev);
         }, 2000);
     };
-    //! ---------------------------------- WHY Us
+    //! ---------------------------------- Notification
 
     //? ---------------------------------- Box Order
     const [orderMain, setOrderMain] = useState<BoxsOrderType>(boxOrderArray[0]);
@@ -54,21 +55,44 @@ const Jobs: React.FC = () => {
     const hideOrderAction = () => orderMenu.current?.classList.remove("active");
     //! ---------------------------------- Box Order
 
+    //? ---------------------------------- Box Lists
+    const [proModeFilter, setProModeFilter] = useState(false);
+    const [boxList, setBoxList] = useState<AdvertisingBoxMainProps[]>(AdvertisingArray);
+    const [filterSelection, setFilterSelection] = useState<string[]>([]);
+    useEffect(() => {
+        if (filterSelection.length) {
+            const newAdvertisingArray: AdvertisingBoxMainProps[] = AdvertisingArray.filter((advertising) => {
+                const isGo: boolean[] = advertising.data.type.map((Type) =>
+                    includes(filterSelection, Type) ? true : false
+                );
+                if (includes(isGo, !proModeFilter)) {
+                    return advertising;
+                }
+            });
+            setBoxList(newAdvertisingArray);
+            console.log(newAdvertisingArray);
+        } else {
+            setBoxList(AdvertisingArray);
+        }
+    }, [filterSelection, proModeFilter]);
+    //! ---------------------------------- Box Lists
+
     //? ---------------------------------- Box Info
     const [mainItemInfo, setMainItemInfo] = useState<MainItemBoxInfoType>(mainItemsBoxInfos[0]);
-
-    //* Mobile
-
     const [mainJobInfo, setMainJobInfo] = useState<mainJobInfoType>({} as mainJobInfoType);
-
     //! ---------------------------------- Box Info
+
     return (
         <>
             {/*//? -------------------------------------- Seacrh -------------------------------------- */}
             <div className="py-8 px-2 md:px-10 lg:px-24 border-b-2 border-solid border-jv-lightGray3x">
                 <SearchFrom></SearchFrom>
                 <div className="mt-4"></div>
-                <JobsFilter></JobsFilter>
+                <JobsFilter
+                    setSelectedFilter={setFilterSelection}
+                    isFilterOnProMode={proModeFilter}
+                    setIsFilterOnProMode={setProModeFilter}
+                ></JobsFilter>
             </div>
             {/*//! -------------------------------------- Seacrh -------------------------------------- */}
 
@@ -125,17 +149,19 @@ const Jobs: React.FC = () => {
                         ) : null}
                     </div>
                     <div className="wrapper flex flex-col">
-                        {AdvertisingArray.map((item, index) => (
-                            <div key={index + 1} className="mt-2">
-                                <AdvertisingBox
-                                    type="HideSendCv"
-                                    clickHandler={() => setMainJobInfo({ isShow: true, mainInfo: { ...item.data } })}
-                                    IsImportant={index === 2 ? true : false}
-                                    data={{ ...item.data }}
-                                    isActive={item.data.id === mainJobInfo.mainInfo?.id ? true : false}
-                                ></AdvertisingBox>
-                            </div>
-                        ))}
+                        {typeof boxList !== "undefined" &&
+                            boxList.map((item, index) => (
+                                <div key={index + 1} className="mt-2">
+                                    <AdvertisingBox
+                                        type="HideSendCv"
+                                        clickHandler={() =>
+                                            setMainJobInfo({ isShow: true, mainInfo: { ...item.data } })
+                                        }
+                                        data={{ ...item.data }}
+                                        isActive={item.data.id === mainJobInfo.mainInfo?.id ? true : false}
+                                    ></AdvertisingBox>
+                                </div>
+                            ))}
                     </div>
                 </div>
                 {/*//! -------------------------------------- List Boxs -------------------------------------- */}
@@ -177,7 +203,10 @@ const Jobs: React.FC = () => {
                             </motion.div>
                         </>
                     ) : (
-                        <ErrorBox errTitle="آگهی یافت نشد" />
+                        <ErrorBox
+                            titleSize="sm"
+                            errTitle="جهت مشاهده اطلاعات آگهی شغلی یکی از موارد را از سمت راست انتخاب کنید."
+                        />
                     )}
                 </div>
 

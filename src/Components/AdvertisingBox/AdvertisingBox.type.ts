@@ -65,11 +65,10 @@ export interface AdvertisingType {
     type: FiltreTypes[];
     CreateAt: Date;
 }
-interface AdvertisingBoxMainProps {
+export interface AdvertisingBoxMainProps {
     data: AdvertisingType;
     isActive?: boolean;
     IsResponsive?: boolean;
-    IsImportant?: boolean;
 }
 type AdvertisingBoxTypesProps = { type: "HideSendCv"; clickHandler: Function } | { type: "ShowSendCv" };
 
@@ -281,7 +280,7 @@ const AdvertisingArray: AdvertisingBoxMainProps[] = [
                 acceptTrainees: true,
                 acceptTelecommuting: false,
             },
-            type: ["IS_EMPLOYMENT_OF_THE_DISABLED", "MILITARY_ORDER", "RIGHTS_OVER_60_MILLION"],
+            type: ["RIGHTS_OVER_60_MILLION", "MILITARY_ORDER"],
             CreateAt: new Date(2022, 7, 4, 22, 30, 0, 0),
         },
     },

@@ -4,9 +4,10 @@ import { ShowSvgPath } from "../../Animations/UtilsAnimation";
 
 interface ErrorBoxProps {
     errTitle: string;
+    titleSize?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
 }
 
-const ErrorBox: React.FC<ErrorBoxProps> = ({ errTitle }) => {
+const ErrorBox: React.FC<ErrorBoxProps> = ({ errTitle, titleSize }) => {
     return (
         <>
             <motion.div
@@ -46,8 +47,20 @@ const ErrorBox: React.FC<ErrorBoxProps> = ({ errTitle }) => {
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1, transition: { delay: 4 } }}
-                    className="
-                text-[#AFA5A5] danaBold text-2xl"
+                    className={`
+                text-[#AFA5A5] danaBold text-center ${
+                    titleSize === "xs"
+                        ? "text-xs"
+                        : titleSize === "sm"
+                        ? "text-sm"
+                        : titleSize === "md"
+                        ? "text-base"
+                        : titleSize === "lg"
+                        ? "text-lg"
+                        : titleSize === "xl"
+                        ? "text-xl"
+                        : "text-2xl"
+                }`}
                 >
                     {errTitle}
                 </motion.div>

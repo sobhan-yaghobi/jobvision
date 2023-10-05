@@ -202,11 +202,7 @@ const Home: React.FC = () => {
                         >
                             {includes([3, 4], index) ? (
                                 <div className={`w-full xl:w-2/3`}>
-                                    <AdvertisingBox
-                                        IsImportant
-                                        data={{ ...item.data }}
-                                        type="ShowSendCv"
-                                    ></AdvertisingBox>
+                                    <AdvertisingBox data={{ ...item.data }} type="ShowSendCv"></AdvertisingBox>
                                 </div>
                             ) : (
                                 <AdvertisingBox data={{ ...item.data }} type="ShowSendCv"></AdvertisingBox>

@@ -125,6 +125,19 @@ const ShowFromRight: Variants = {
     },
 };
 
+const ShowFromRight_Ex: Variants = {
+    hidden: { opacity: 0, x: "100%" },
+    visible: {
+        opacity: 1,
+        x: 0,
+        transition: {
+            ease: "linear",
+            bounce: 9,
+        },
+    },
+    exit: { opacity: 0, x: "100%" },
+};
+
 const ShowFromLeft: Variants = {
     hidden: { opacity: 0, x: "-100%" },
     visible: {
@@ -198,6 +211,7 @@ export {
     ShowHideClipFromBottom_Ex,
     ShowFromBottom_Var,
     ShowFromRight,
+    ShowFromRight_Ex,
     ShowFromLeft,
     ShowFromTop,
     ShowFromBottom,
