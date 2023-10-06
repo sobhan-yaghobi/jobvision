@@ -15,7 +15,7 @@ import {
 } from "./JobsFilter.type";
 
 // Animations
-import { ShowAndHideOpacity_Ex, ShowFromBottom_EX, ShowFromRight_Ex } from "../../Animations/UtilsAnimation";
+import { ShowAndHideOpacity_Ex, ShowFromBottom_EX } from "../../Animations/UtilsAnimation";
 
 // Functions
 import { includes } from "lodash";
@@ -305,9 +305,7 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
                     }`}
                 >
                     <li
-                        onClick={() => {
-                            setSelectedFilters([]);
-                        }}
+                        onClick={() => (selectedFilters.length ? setSelectedFilters([]) : null)}
                         className={`${itemClassName} text-jv-danger hover:bg-jv-lightDanger`}
                     >
                         <span>حذف همه</span>

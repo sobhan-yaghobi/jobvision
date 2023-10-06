@@ -112,7 +112,7 @@ const Jobs: React.FC = () => {
 
             <div className="w-full py-5 px-2 md:px-10 lg:px-24 bg-jv-light flex">
                 {/*//? -------------------------------------- List Boxs -------------------------------------- */}
-                <div className="listBox ml-2 w-full flex flex-col lg:w-5/12 text-xs lg:text-base">
+                <div className="listBox ml-2 w-full flex flex-col lg:w-5/12 text-xs xl:text-base">
                     <Button
                         textColor="light"
                         size="middle"
