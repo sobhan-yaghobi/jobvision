@@ -11,7 +11,7 @@ import { AnimatePresence, motion } from "framer-motion";
 // Icons
 import { AiOutlineLoading } from "react-icons/ai";
 
-type ButtonProps = {
+type ButtonMainProps = {
     isLoading: boolean;
     size?: "small" | "middle" | "large";
     textColor: "light" | "primary";
@@ -20,59 +20,66 @@ type ButtonProps = {
     DoubleClickHandler?: Function;
     isDefault?: boolean;
     noBorder?: boolean;
-    Icon?: IconType | undefined;
 };
 
-const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
-    children,
-    isLoading,
-    size,
-    textColor,
-    ClassName,
-    ClickHandler,
-    DoubleClickHandler,
-    isDefault,
-    noBorder,
-    Icon,
-}) => {
-    const loadingClass = isLoading ? "opacity-90 cursor-progress" : "cursor-pointer";
+type ButtonIconTypes =
+    | {
+          IconType?: "REACT_ICON";
+          Icon?: IconType;
+      }
+    | {
+          IconType?: "JSX_ICON";
+          Icon?: React.ReactNode;
+      };
+
+type ButtonProps = ButtonMainProps & ButtonIconTypes;
+
+const Button: React.FC<React.PropsWithChildren<ButtonProps>> = (props) => {
+    const loadingClass = props.isLoading ? "opacity-90 cursor-progress" : "cursor-pointer";
 
     const sizeClass =
-        size === "small" ? "text-xs" : size === "middle" ? "text-sm" : size === "large" ? "text-lg" : "text-lg";
+        props.size === "small"
+            ? "text-xs"
+            : props.size === "middle"
+            ? "text-sm"
+            : props.size === "large"
+            ? "text-lg"
+            : "text-lg";
 
     const borderColorStyle =
-        textColor === "light" ? `border-jv-light` : textColor === "primary" ? `border-jv-primary` : "";
+        props.textColor === "light" ? `border-jv-light` : props.textColor === "primary" ? `border-jv-primary` : "";
 
-    const textColorStyle = textColor === "light" ? `text-jv-light` : textColor === "primary" ? `text-jv-primary` : "";
+    const textColorStyle =
+        props.textColor === "light" ? `text-jv-light` : props.textColor === "primary" ? `text-jv-primary` : "";
 
     const defaultClass = `
       select-none whitespace-nowrap px-4 py-3
-       ${textColor === "primary" ? "bg-jv-light" : "bg-jv-primary"}
-       ${!noBorder ? `border-2 border-solid rounded-lg ${borderColorStyle} ` : ""}`;
+       ${props.textColor === "primary" ? "bg-jv-light" : "bg-jv-primary"}
+       ${!props.noBorder ? `border-2 border-solid rounded-lg ${borderColorStyle} ` : ""}`;
 
     const classList = `
   ${loadingClass}
   ${sizeClass}
   ${textColorStyle}
-  ${isDefault ? "" : defaultClass}
-  ${ClassName ? ClassName : ""} min-w-fit flex items-center justify-center overflow-hidden`;
+  ${props.isDefault ? "" : defaultClass}
+  ${props.ClassName ? props.ClassName : ""} min-w-fit flex items-center justify-center overflow-hidden`;
 
     return (
         <>
             <motion.button
                 whileTap={{ opacity: 0.7 }}
-                onClick={() => ClickHandler()}
-                onDoubleClick={() => typeof DoubleClickHandler !== "undefined" && DoubleClickHandler()}
-                disabled={isLoading}
+                onClick={() => props.ClickHandler()}
+                onDoubleClick={() => typeof props.DoubleClickHandler !== "undefined" && props.DoubleClickHandler()}
+                disabled={props.isLoading}
                 className={classList}
             >
                 <div
                     className={`items-center justify-center relative h-full min-w-[2rem] max-w-fit ${
-                        isLoading || Icon ? "flex" : "hidden"
+                        props.isLoading || props.Icon ? "flex" : "hidden"
                     }`}
                 >
                     <AnimatePresence>
-                        {isLoading ? (
+                        {props.isLoading ? (
                             <motion.div
                                 variants={ShortStripVerticalAnimation_Ex_Var}
                                 custom={-1}
@@ -94,11 +101,11 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
                                 >
                                     <AiOutlineLoading
                                         className={`origin-center ${
-                                            size === "large"
+                                            props.size === "large"
                                                 ? "text-xl"
-                                                : size === "middle"
+                                                : props.size === "middle"
                                                 ? "text-lg"
-                                                : size === "small"
+                                                : props.size === "small"
                                                 ? "text-sm"
                                                 : "text-xl"
                                         }`}
@@ -108,7 +115,9 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
                         ) : null}
                     </AnimatePresence>
                     <AnimatePresence mode="wait">
-                        {!isLoading && typeof Icon !== "undefined" ? (
+                        {!props.isLoading &&
+                        typeof props.Icon !== "undefined" &&
+                        typeof props.IconType !== "undefined" ? (
                             <motion.div
                                 variants={ShortStripVerticalAnimation_Ex_Var}
                                 custom={1}
@@ -118,22 +127,26 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
                                 transition={TweenEaseOutVeryShortly}
                                 className="flex items-center justify-center origin-center ml-3 absolute"
                             >
-                                <Icon
-                                    className={`origin-center ${
-                                        size === "large"
-                                            ? "text-2xl"
-                                            : size === "middle"
-                                            ? "text-xl"
-                                            : size === "small"
-                                            ? "text-lg"
-                                            : "text-md"
-                                    }`}
-                                ></Icon>
+                                {props.IconType === "REACT_ICON" ? (
+                                    <props.Icon
+                                        className={`origin-center ${
+                                            props.size === "large"
+                                                ? "text-2xl"
+                                                : props.size === "middle"
+                                                ? "text-xl"
+                                                : props.size === "small"
+                                                ? "text-lg"
+                                                : "text-md"
+                                        }`}
+                                    ></props.Icon>
+                                ) : props.IconType === "JSX_ICON" ? (
+                                    props.Icon
+                                ) : null}
                             </motion.div>
                         ) : null}
                     </AnimatePresence>
                 </div>
-                {children}
+                {props.children}
             </motion.button>
         </>
     );

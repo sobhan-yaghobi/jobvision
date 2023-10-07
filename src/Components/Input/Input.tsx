@@ -4,8 +4,8 @@ interface InputProps {
     Placeholder: string;
     ClassName?: string;
     IsDefault?: boolean;
-    IsIcon: boolean;
-    IconSide: "Right" | "Both" | "Left";
+    IsIcon?: boolean;
+    IconSide?: "Right" | "Both" | "Left";
     IconRight?: ReactNode;
     IconLeft?: ReactNode;
 }

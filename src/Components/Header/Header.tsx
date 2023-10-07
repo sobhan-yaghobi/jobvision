@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 // Types
 import { ItemGenerator, LinkGenerator, MenuDesktopItemGenerate, SubMenuGenerator } from "../MenuItem/MenuItem";
 import { menu } from "../MenuItem/menuItem.type";
@@ -38,7 +38,7 @@ const Header: React.FC = () => {
             menuDesktopFire("", false);
         }
     };
-
+    const [isShowLogin, setIsShowLogin] = useState(false);
     return (
         <>
             <div className="w-full h-20 relative">
@@ -58,7 +58,7 @@ const Header: React.FC = () => {
                         <div className="w-5/12 sm:w-4/12 text-center flex items-center justify-end">
                             <Button
                                 noBorder
-                                ClickHandler={() => {}}
+                                ClickHandler={() => setIsShowLogin(true)}
                                 textColor="light"
                                 size="small"
                                 ClassName="text-xs sm:text-base px-3"
@@ -102,9 +102,7 @@ const Header: React.FC = () => {
                         <div className="header-desktop-left w-6/12 flex items-center justify-end">
                             <div className="mx-5 flex border-l-[1px] border-jv-primary border-solid">
                                 <Button
-                                    ClickHandler={() => {
-                                        console.log("click");
-                                    }}
+                                    ClickHandler={() => setIsShowLogin(true)}
                                     textColor="light"
                                     size="middle"
                                     isLoading={false}
