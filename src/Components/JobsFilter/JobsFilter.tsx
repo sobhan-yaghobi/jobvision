@@ -335,8 +335,8 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
 
     return (
         <div
-            className={`overflow-y-hidden overflow-x-auto whitespace-nowrap flex 
-            items-center md:whitespace-normal md:flex-wrap md:overflow-y-visible md:overflow-x-visible`}
+            className={`overflow-y-hidden pb-3 overflow-x-auto whitespace-nowrap flex 
+            items-center md:pb-0 md:whitespace-normal md:flex-wrap md:overflow-y-visible md:overflow-x-visible`}
         >
             <div>
                 <FilterGenerator mode="ShowFilterIcon"></FilterGenerator>
