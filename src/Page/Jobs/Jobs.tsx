@@ -579,58 +579,62 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
         );
     } else if (type === "ABOUT_COMPANY") {
         const ScoreTitle: React.FC = () => {
-            return (
+            return typeof jobCompany.score !== "undefined" ? (
                 <div className="flex items-center text-lg text-jv-golden">
                     <p className="text-jv-lightGray ml-3">{jobCompany.score.companyScore.toFixed(1)}</p>
 
                     <ScoreIconGenerator key={info.id} score={jobCompany.score.companyScore}></ScoreIconGenerator>
                 </div>
+            ) : (
+                <p>-</p>
             );
         };
         return (
             <>
-                <section className="mb-6">
-                    <h2>امتیاز سازمان</h2>
-                    <div className="mt-2">
-                        <div>
-                            <Accordion
-                                type="Children"
-                                iconType="Menu"
-                                title={<ScoreTitle />}
-                                index={1}
-                                isResponsive
-                                listStyle="Ul"
-                                theme="Light"
-                                noSpace
-                                isOpen
-                            >
-                                <div className="flex flex-wrap text-sm py-3">
-                                    <div className="w-full mb-2 lg:w-1/2 lg:mb-0">
-                                        <span className="danaBold">
-                                            {jobCompany.score.popularityScore.toFixed(1)}
-                                            <FaStar className="text-jv-golden mx-1 inline-block" />
-                                        </span>
-                                        <span>محبوبیت (براساس بازدید کارجویان)</span>
+                {typeof jobCompany.score !== "undefined" ? (
+                    <section className="mb-6">
+                        <h2>امتیاز سازمان</h2>
+                        <div className="mt-2">
+                            <div>
+                                <Accordion
+                                    type="Children"
+                                    iconType="Menu"
+                                    title={<ScoreTitle />}
+                                    index={1}
+                                    isResponsive
+                                    listStyle="Ul"
+                                    theme="Light"
+                                    noSpace
+                                    isOpen
+                                >
+                                    <div className="flex flex-wrap text-sm py-3">
+                                        <div className="w-full mb-2 lg:w-1/2 lg:mb-0">
+                                            <span className="danaBold">
+                                                {jobCompany.score.popularityScore.toFixed(1)}
+                                                <FaStar className="text-jv-golden mx-1 inline-block" />
+                                            </span>
+                                            <span>محبوبیت (براساس بازدید کارجویان)</span>
+                                        </div>
+                                        <div className="w-full mb-2 lg:w-1/2 lg:mb-0">
+                                            <span className="danaBold">
+                                                {jobCompany.score.responsivenessScore.toFixed(1)}
+                                                <FaStar className="text-jv-golden mx-1 inline-block" />
+                                            </span>
+                                            <span>پاسخگویی به رزومه‌های دریافتی</span>
+                                        </div>
+                                        <div className="w-full mb-2 lg:w-1/2 lg:mb-0">
+                                            <span className="danaBold">
+                                                {jobCompany.score.experienceOfJobSeekersScore.toFixed(1)}
+                                                <FaStar className="text-jv-golden mx-1 inline-block" />
+                                            </span>
+                                            <span>تجربه کارجویان از جلسه مصاحبه</span>
+                                        </div>
                                     </div>
-                                    <div className="w-full mb-2 lg:w-1/2 lg:mb-0">
-                                        <span className="danaBold">
-                                            {jobCompany.score.responsivenessScore.toFixed(1)}
-                                            <FaStar className="text-jv-golden mx-1 inline-block" />
-                                        </span>
-                                        <span>پاسخگویی به رزومه‌های دریافتی</span>
-                                    </div>
-                                    <div className="w-full mb-2 lg:w-1/2 lg:mb-0">
-                                        <span className="danaBold">
-                                            {jobCompany.score.experienceOfJobSeekersScore.toFixed(1)}
-                                            <FaStar className="text-jv-golden mx-1 inline-block" />
-                                        </span>
-                                        <span>تجربه کارجویان از جلسه مصاحبه</span>
-                                    </div>
-                                </div>
-                            </Accordion>
+                                </Accordion>
+                            </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
+                ) : null}
                 <section className="mb-6">
                     <div className="flex items-center justify-between">
                         <h2 className="w-6/12 truncate">درباره {jobCompany.name}</h2>
@@ -647,16 +651,19 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
                         </Button>
                     </div>
                 </section>
-                <section className="mb-6">
-                    <h2>مزایا و امکانات رفاهی</h2>
-                    <div className="flex flex-wrap py-3">
-                        {jobCompany.Benefits.map((item, index) => (
-                            <span key={index + 1} className="box-info-type__success">
-                                {item}
-                            </span>
-                        ))}
-                    </div>
-                </section>
+                {typeof jobCompany.Benefits !== "undefined" ? (
+                    <section className="mb-6">
+                        <h2>مزایا و امکانات رفاهی</h2>
+                        <div className="flex flex-wrap py-3">
+                            {jobCompany.Benefits.map((item, index) => (
+                                <span key={index + 1} className="box-info-type__success">
+                                    {item}
+                                </span>
+                            ))}
+                        </div>
+                    </section>
+                ) : null}
+
                 <div className="min-h-fit">
                     <h3>در یک نگاه</h3>
                     <div className="text-sm pr-3 flex flex-wrap">

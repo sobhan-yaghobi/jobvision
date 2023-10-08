@@ -19,6 +19,7 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
     const jobCompany = jobData.company;
     const jobStatus = jobData.status;
     const AdvertisingPublisTime: TimeType = getTime(jobData.CreateAt);
+    console.log("AdvertisingPublisTime", AdvertisingPublisTime);
 
     const wrapperBoxClass = `cursor-default w-full h-full max-h-[13rem] border-2 border-solid rounded-xl py-3 px-3 bg-transparent grid ${
         props.isActive ? "border-jv-primary" : "border-jv-lightGray3x"
@@ -36,12 +37,14 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
                     className="col-span-3 sm:col-span-2 h-full flex flex-col items-center justify-start p-1"
                 >
                     <img className="px-1 w-auto max-w-full h-auto max-h-20 rounded-lg" src={jobCompany.logo} alt="" />
-                    <span className="mt-2 text-xs flex justify-center gap-1 items-center">
-                        <span id="ScoreSvg" className="w-5">
-                            <img className="w-full " src={StarSvg} alt="" />
+                    {typeof jobCompany.score !== "undefined" ? (
+                        <span className="mt-2 text-xs flex justify-center gap-1 items-center">
+                            <span id="ScoreSvg" className="w-5">
+                                <img className="w-full " src={StarSvg} alt="" />
+                            </span>
+                            <span id="Score">{jobCompany.score.companyScore}</span>
                         </span>
-                        <span id="Score">{jobCompany.score.companyScore}</span>
-                    </span>
+                    ) : null}
                 </div>
                 <div id="Content" className="text-sm px-1 col-span-9 sm:col-span-10 overflow-hidden">
                     <p id="AdvertisingTitle" className="danaBold truncate">
@@ -54,13 +57,17 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
                         <span id="CompanyLocation" className="text-sm">
                             {jobCompany.location}
                         </span>
-                        <span className="inline-block mx-2 w-[2px] h-4 bg-jv-lightGray3x"></span>
-                        <span id="SalaryOffer">
-                            {Array.isArray(jobInfo.rightsPrice)
-                                ? `${jobInfo.rightsPrice[0]} - ${jobInfo.rightsPrice[1]}`
-                                : jobInfo.rightsPrice}
-                            <span className="mr-1">میلیون تومان</span>
-                        </span>
+                        {jobInfo.rightsPrice !== "NOT_SET_PRICE" ? (
+                            <>
+                                <span className="inline-block mx-2 w-[2px] h-4 bg-jv-lightGray3x"></span>
+                                <span id="SalaryOffer">
+                                    {Array.isArray(jobInfo.rightsPrice)
+                                        ? `${jobInfo.rightsPrice[0]} - ${jobInfo.rightsPrice[1]}`
+                                        : jobInfo.rightsPrice}
+                                    <span className="mr-1">میلیون تومان</span>
+                                </span>
+                            </>
+                        ) : null}
                     </div>
                     <div className="flex items-center mb-3 flex-nowrap">
                         {jobStatus.acceptTelecommuting ? (
