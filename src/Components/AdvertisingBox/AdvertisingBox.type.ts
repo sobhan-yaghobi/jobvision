@@ -280,7 +280,7 @@ const AdvertisingArray: AdvertisingBoxMainProps[] = [
                 acceptTrainees: true,
                 acceptTelecommuting: false,
             },
-            type: ["RIGHTS_OVER_60_MILLION", "MILITARY_ORDER"],
+            type: ["TELECOMMUTING", "MILITARY_ORDER"],
             CreateAt: new Date(2022, 7, 4, 22, 30, 0, 0),
         },
     },

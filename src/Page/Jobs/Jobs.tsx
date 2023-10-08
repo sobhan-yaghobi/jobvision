@@ -76,11 +76,15 @@ const Jobs: React.FC = () => {
     useEffect(() => {
         if (filterSelection.length) {
             const newAdvertisingArray: AdvertisingBoxMainProps[] = AdvertisingArray.filter((advertising) => {
-                const isGo: boolean[] = advertising.data.type.map((Type) =>
+                const isTypesValid: boolean[] = advertising.data.type.map((Type) =>
                     includes(filterSelection, Type) ? true : false
                 );
-                if (includes(isGo, !proModeFilter)) {
+                if (proModeFilter && !includes(isTypesValid, false)) {
                     return advertising;
+                } else {
+                    if (!proModeFilter && includes(isTypesValid, !proModeFilter)) {
+                        return advertising;
+                    }
                 }
             });
             setBoxList(newAdvertisingArray);
@@ -163,7 +167,7 @@ const Jobs: React.FC = () => {
                         ) : null}
                     </div>
                     <div className="wrapper flex flex-col">
-                        {typeof boxList !== "undefined" &&
+                        {boxList.length ? (
                             boxList.map((item, index) => (
                                 <div key={index + 1} className="mt-2">
                                     <AdvertisingBox
@@ -175,7 +179,12 @@ const Jobs: React.FC = () => {
                                         isActive={item.data.id === mainJobInfo.mainInfo?.id ? true : false}
                                     ></AdvertisingBox>
                                 </div>
-                            ))}
+                            ))
+                        ) : (
+                            <div className="mt-3 rounded-lg bg-jv-lightDanger flex items-center justify-center py-10">
+                                <p className="text-jv-danger">آگهی مورد نظر یافت نشد</p>
+                            </div>
+                        )}
                     </div>
                 </div>
                 {/*//! -------------------------------------- List Boxs -------------------------------------- */}
