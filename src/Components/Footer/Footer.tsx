@@ -174,6 +174,7 @@ const Footer: React.FC = () => {
                                                             isResponsive
                                                             listStyle="Ul"
                                                             type="Item"
+                                                            textStyle="text-sm truncate"
                                                             index={index + 1}
                                                             theme="transparent"
                                                             title={link.title}

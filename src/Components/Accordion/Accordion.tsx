@@ -13,6 +13,7 @@ interface AccordionMainProps {
     listStyle: "Ol" | "Ul";
     isResponsive: boolean;
     iconType: "Menu" | "Arrow";
+    textStyle?: string;
 }
 
 type AccordionTypesProps =
@@ -43,7 +44,7 @@ const Accordion: React.FC<React.PropsWithChildren<AccordionProps>> = (props) => 
     const [isActive, setIsActive] = useState<boolean>(typeof props.isOpen === "undefined" ? false : props.isOpen);
 
     // !---------------------- Custom ClassLists
-    const size = "text-xs md:text-sm lg:text-lg";
+    const size = `${props.textStyle ? props.textStyle : "text-xs md:text-sm lg:text-lg"}`;
 
     // ITEM classNames Type Element
 
