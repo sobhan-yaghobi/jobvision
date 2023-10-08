@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 // Components
 import Input from "../Input/Input";
@@ -11,7 +11,7 @@ import { LuLinkedin } from "react-icons/lu";
 
 const Login: React.FC = () => {
     return (
-        <div className="h-full py-5 flex flex-col items-center">
+        <div className="w-full h-full py-5 flex flex-col items-center">
             <div className="h-6">
                 <img className="h-full" src={Logo} alt="" />
             </div>

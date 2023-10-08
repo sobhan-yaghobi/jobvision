@@ -19,6 +19,8 @@ import UseShowMenu from "../../Hooks/useShowMenu/useShowMenu";
 // Components
 import { AnimatePresence, motion } from "framer-motion";
 import Button from "../Button/Button";
+import Login from "../Login/Login";
+import Modal from "../Modal/Modal";
 
 // Icons
 import WhiteLogo from "/Svg/Logo/WhiteColorLogo.svg";
@@ -38,7 +40,8 @@ const Header: React.FC = () => {
             menuDesktopFire("", false);
         }
     };
-    const [isShowLogin, setIsShowLogin] = useState(false);
+    // Login
+    const [isLoginShow, setIsLoginShow] = useState(false);
     return (
         <>
             <div className="w-full h-20 relative">
@@ -58,7 +61,7 @@ const Header: React.FC = () => {
                         <div className="w-5/12 sm:w-4/12 text-center flex items-center justify-end">
                             <Button
                                 noBorder
-                                ClickHandler={() => setIsShowLogin(true)}
+                                ClickHandler={() => setIsLoginShow(true)}
                                 textColor="light"
                                 size="small"
                                 ClassName="text-xs sm:text-base px-3"
@@ -102,7 +105,7 @@ const Header: React.FC = () => {
                         <div className="header-desktop-left w-6/12 flex items-center justify-end">
                             <div className="mx-5 flex border-l-[1px] border-jv-primary border-solid">
                                 <Button
-                                    ClickHandler={() => setIsShowLogin(true)}
+                                    ClickHandler={() => setIsLoginShow(true)}
                                     textColor="light"
                                     size="middle"
                                     isLoading={false}
@@ -267,6 +270,9 @@ const Header: React.FC = () => {
                 ) : null}
             </AnimatePresence>
             {/*//? -------------------- Finish Mobile Header DropDown -------------------- */}
+            <Modal isOpen={isLoginShow} setIsOpen={setIsLoginShow} centerd footer={null} height={"auto"} width={400}>
+                <Login></Login>
+            </Modal>
         </>
     );
 };
