@@ -11,6 +11,7 @@ const SearchFrom: React.FC<SearchFromProps> = ({}) => {
         <>
             <div className="w-full flex flex-col items-center justify-between md:flex-row">
                 <Input
+                    Type="TEXT"
                     ClassName="mx-1 my-1 md:my-0"
                     Placeholder="عنوان شغلی یا شرکت"
                     IsIcon
@@ -25,6 +26,7 @@ const SearchFrom: React.FC<SearchFromProps> = ({}) => {
                     }
                 ></Input>
                 <Input
+                    Type="TEXT"
                     ClassName="mx-1 my-1 md:my-0"
                     Placeholder="گروه شغلی"
                     IsIcon
@@ -65,6 +67,7 @@ const SearchFrom: React.FC<SearchFromProps> = ({}) => {
                     }
                 ></Input>
                 <Input
+                    Type="TEXT"
                     ClassName="mx-1 my-1 md:my-0"
                     Placeholder="شهر"
                     IsIcon

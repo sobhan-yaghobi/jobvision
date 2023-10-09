@@ -331,7 +331,7 @@ const Home: React.FC = () => {
             {/*//? -------------------------------------- WHY US ? -------------------------------------- */}
             <div className="w-full min-h-fit px-4 flex items-center flex-col md:px-10 lg:current-mega-height lg:px-24 lg:flex-row">
                 <motion.div
-                    variants={ShowAndHideScale_Ex}
+                    variants={ShowAndHideOpacity_Ex}
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true }}
