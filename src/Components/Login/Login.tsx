@@ -1,19 +1,27 @@
 import React, { useEffect } from "react";
 
+// Types
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 // Components
 import Input from "../Input/Input";
 import Button from "../Button/Button";
+
+// Functions
+import { useForm } from "react-hook-form";
+
+// Hooks
+import useShowNotification from "../../Hooks/useShowNotification";
+import useShowMessage from "../../Hooks/useShowMessage";
 
 // Icons
 import Logo from "/Svg/Logo/PrimaryLogoNoShape.svg";
 import { FcGoogle } from "react-icons/fc";
 import { LuLinkedin } from "react-icons/lu";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import useWindowsSize from "../../Hooks/useWindowsSize";
 
-const className = "";
-
+export type TypeLoginFormSchema = z.infer<typeof loginFormSchema>;
 const loginFormSchema = z.object({
     username_OR_email: z.union([
         z.string().email("ایمیل یا تلفن همراه معتبر نمیباشد"),
@@ -22,27 +30,46 @@ const loginFormSchema = z.object({
     password: z.string().min(8, "حداقل 8 کارکتر برای رمز عبور نیاز داریم"),
 });
 
-export type TypeLoginFormSchema = z.infer<typeof loginFormSchema>;
-
 const Login: React.FC = () => {
+    const { contextNotificationHolder, showNotifcation } = useShowNotification({ placement: "bottomLeft" });
+    const { contextMessageHolder, showMessage } = useShowMessage();
+    const [windowSize] = useWindowsSize();
+
     const {
-        getValues,
         register,
-        formState: { errors, isSubmitting },
+        reset,
+        formState: { errors },
         handleSubmit,
     } = useForm<TypeLoginFormSchema>({ resolver: zodResolver(loginFormSchema) });
 
-    const submitAction = (data: TypeLoginFormSchema) => {
-        console.log(isSubmitting);
-        console.log(data);
+    const submitAction = () => {
+        if (windowSize.innerWidth < 768) {
+            showMessage("success", "ثبت نام با موفقیت به اتمام رسید");
+        } else {
+            showNotifcation("success", "ثبت نام با موفقیت به اتمام رسید");
+        }
+        reset();
     };
 
     useEffect(() => {
-        console.log(errors);
+        console.log("Error => ", errors);
+        if (windowSize.innerWidth < 768) {
+            errors.password && errors.password.message ? showMessage("error", errors.password.message) : null;
+            errors.username_OR_email && errors.username_OR_email.message
+                ? showMessage("error", errors.username_OR_email.message)
+                : null;
+        } else {
+            errors.password && errors.password.message ? showNotifcation("error", errors.password.message) : null;
+            errors.username_OR_email && errors.username_OR_email.message
+                ? showNotifcation("error", errors.username_OR_email.message)
+                : null;
+        }
     }, [errors]);
 
     return (
         <div className="w-full h-full py-5 flex flex-col items-center">
+            {contextNotificationHolder}
+            {contextMessageHolder}
             <div className="h-6">
                 <img className="h-full" src={Logo} alt="" />
             </div>

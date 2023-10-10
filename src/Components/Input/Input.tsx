@@ -76,7 +76,7 @@ const Input: React.FC<InputProps> = ({
                                 <span
                                     className={`${
                                         isPassShow ? "w-full" : "w-0"
-                                    } h-[1px] rotate-45 bg-jv-black absolute`}
+                                    } h-[1px] rotate-45 bg-jv-black absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2`}
                                 ></span>
                                 <AiOutlineEye />
                             </span>
