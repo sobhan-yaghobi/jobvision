@@ -9,7 +9,7 @@ import Input from "../Input/Input";
 import Button from "../Button/Button";
 
 // Functions
-import { useForm } from "react-hook-form";
+import { useForm, FieldErrors } from "react-hook-form";
 
 // Hooks
 import useShowNotification from "../../Hooks/useShowNotification";
@@ -43,27 +43,30 @@ const Login: React.FC = () => {
     } = useForm<TypeLoginFormSchema>({ resolver: zodResolver(loginFormSchema) });
 
     const submitAction = () => {
-        if (windowSize.innerWidth < 768) {
-            showMessage("success", "ثبت نام با موفقیت به اتمام رسید");
-        } else {
-            showNotifcation("success", "ثبت نام با موفقیت به اتمام رسید");
-        }
+        windowSize.innerWidth < 768
+            ? showMessage("success", "ثبت نام با موفقیت به اتمام رسید")
+            : showNotifcation("success", "ثبت نام با موفقیت به اتمام رسید");
         reset();
+    };
+
+    const showErrorHandler = (typeErr: "Pass" | "email_Number") => {
+        const mainErr =
+            typeErr === "Pass"
+                ? { ...errors.password }
+                : typeErr === "email_Number"
+                ? { ...errors.username_OR_email }
+                : undefined;
+        if (typeof mainErr !== "undefined" && typeof mainErr.message !== "undefined") {
+            windowSize.innerWidth < 768
+                ? showMessage("error", mainErr.message)
+                : showNotifcation("error", mainErr.message);
+        }
     };
 
     useEffect(() => {
         console.log("Error => ", errors);
-        if (windowSize.innerWidth < 768) {
-            errors.password && errors.password.message ? showMessage("error", errors.password.message) : null;
-            errors.username_OR_email && errors.username_OR_email.message
-                ? showMessage("error", errors.username_OR_email.message)
-                : null;
-        } else {
-            errors.password && errors.password.message ? showNotifcation("error", errors.password.message) : null;
-            errors.username_OR_email && errors.username_OR_email.message
-                ? showNotifcation("error", errors.username_OR_email.message)
-                : null;
-        }
+        showErrorHandler("Pass");
+        showErrorHandler("email_Number");
     }, [errors]);
 
     return (
