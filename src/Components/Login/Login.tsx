@@ -20,6 +20,8 @@ import Logo from "/Svg/Logo/PrimaryLogoNoShape.svg";
 import { FcGoogle } from "react-icons/fc";
 import { LuLinkedin } from "react-icons/lu";
 import useWindowsSize from "../../Hooks/useWindowsSize";
+import { useAppDispatch } from "../../Redux/Store";
+import { setLoginModalStatus } from "../../Redux/Store/LoginModal";
 
 export type TypeLoginFormSchema = z.infer<typeof loginFormSchema>;
 const loginFormSchema = z.object({
@@ -34,6 +36,7 @@ const Login: React.FC = () => {
     const { contextNotificationHolder, showNotifcation } = useShowNotification({ placement: "bottomLeft" });
     const { contextMessageHolder, showMessage } = useShowMessage();
     const [windowSize] = useWindowsSize();
+    const dispatch = useAppDispatch();
 
     const {
         register,
@@ -47,6 +50,7 @@ const Login: React.FC = () => {
             ? showMessage("success", "ثبت نام با موفقیت به اتمام رسید")
             : showNotifcation("success", "ثبت نام با موفقیت به اتمام رسید");
         reset();
+        dispatch(setLoginModalStatus(false));
     };
 
     const showErrorHandler = (typeErr: "Pass" | "email_Number") => {

@@ -3,7 +3,9 @@ import { Modal as AntModal } from "antd";
 
 type ModalProps = {
     isOpen: boolean;
-    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    OpenAction:
+        | { mode: "SetState"; setState: React.Dispatch<React.SetStateAction<boolean>> }
+        | { mode: "Functional"; function: Function };
     width?: number | string;
     height?: number | string;
     centerd: boolean;
@@ -12,7 +14,7 @@ type ModalProps = {
 
 const Modal: React.FC<React.PropsWithChildren<ModalProps>> = ({
     isOpen,
-    setIsOpen,
+    OpenAction,
     width,
     height,
     centerd,
@@ -23,7 +25,13 @@ const Modal: React.FC<React.PropsWithChildren<ModalProps>> = ({
         <>
             <AntModal
                 open={isOpen}
-                onCancel={() => setIsOpen(false)}
+                onCancel={() =>
+                    OpenAction.mode === "SetState"
+                        ? OpenAction.setState(false)
+                        : OpenAction.mode === "Functional"
+                        ? OpenAction.function()
+                        : null
+                }
                 centered={centerd}
                 footer={footer}
                 forceRender
