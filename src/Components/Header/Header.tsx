@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 // Types
 import { ItemGenerator, LinkGenerator, MenuDesktopItemGenerate, SubMenuGenerator } from "../MenuItem/MenuItem";
 import { menu } from "../MenuItem/menuItem.type";
@@ -29,11 +29,10 @@ import LeftIcon from "/Svg/Left.svg";
 import ArrowLeftIconWhite from "/Svg/ArrowLeftWhiteColor.svg";
 import { AiOutlineClose } from "react-icons/ai";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
-import { useAppDispatch, useAppSelector } from "../../Redux/Store";
-import { setLoginModalStatus } from "../../Redux/Store/LoginModal";
+import { AuthContext } from "../../Context/AuthContext";
 
 const Header: React.FC = () => {
-    const dispatch = useAppDispatch();
+    const authContext = useContext(AuthContext);
 
     const [elm, MenuMobile, backButtonAcion, MenuDesktop, menuMobileFire, menuMobileToggle, menuDesktopFire] =
         UseShowMenu(menu);
@@ -45,8 +44,7 @@ const Header: React.FC = () => {
         }
     };
     // Login
-    const isLoginShoww = useAppSelector((state) => state.LoginModal);
-    const closeLoginModalAction = () => dispatch(setLoginModalStatus(false));
+    const closeLoginModalAction = () => authContext.setLoginModal(false);
     return (
         <>
             <div className="w-full h-20 relative">
@@ -66,7 +64,7 @@ const Header: React.FC = () => {
                         <div className="w-5/12 sm:w-4/12 text-center flex items-center justify-end">
                             <Button
                                 noBorder
-                                ClickHandler={() => dispatch(setLoginModalStatus(true))}
+                                ClickHandler={() => authContext.setLoginModal(true)}
                                 textColor="light"
                                 size="small"
                                 ClassName="text-xs sm:text-base px-3"
@@ -110,7 +108,7 @@ const Header: React.FC = () => {
                         <div className="header-desktop-left w-6/12 flex items-center justify-end">
                             <div className="mx-5 flex border-l-[1px] border-jv-primary border-solid">
                                 <Button
-                                    ClickHandler={() => dispatch(setLoginModalStatus(true))}
+                                    ClickHandler={() => authContext.setLoginModal(true)}
                                     textColor="light"
                                     size="middle"
                                     isLoading={false}
@@ -276,7 +274,7 @@ const Header: React.FC = () => {
             </AnimatePresence>
             {/*//? -------------------- Finish Mobile Header DropDown -------------------- */}
             <Modal
-                isOpen={isLoginShoww}
+                isOpen={authContext.loginModalShow}
                 OpenAction={{ mode: "Functional", function: closeLoginModalAction }}
                 centerd
                 footer={null}

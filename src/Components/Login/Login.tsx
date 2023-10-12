@@ -1,10 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 
 // Types
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-// Redux
 
 // Components
 import Input from "../Input/Input";
@@ -22,8 +20,7 @@ import Logo from "/Svg/Logo/PrimaryLogoNoShape.svg";
 import { FcGoogle } from "react-icons/fc";
 import { LuLinkedin } from "react-icons/lu";
 import useWindowsSize from "../../Hooks/useWindowsSize";
-import { useAppDispatch } from "../../Redux/Store";
-import { setLoginModalStatus } from "../../Redux/Store/LoginModal";
+import { AuthContext } from "../../Context/AuthContext";
 
 export type TypeLoginFormSchema = z.infer<typeof loginFormSchema>;
 const loginFormSchema = z.object({
@@ -35,10 +32,10 @@ const loginFormSchema = z.object({
 });
 
 const Login: React.FC = () => {
+    const authContext = useContext(AuthContext);
     const { contextNotificationHolder, showNotifcation } = useShowNotification({ placement: "bottomLeft" });
     const { contextMessageHolder, showMessage } = useShowMessage();
     const [windowSize] = useWindowsSize();
-    const dispatch = useAppDispatch();
 
     const {
         register,
@@ -52,7 +49,7 @@ const Login: React.FC = () => {
             ? showMessage("success", "ثبت نام با موفقیت به اتمام رسید")
             : showNotifcation("success", "ثبت نام با موفقیت به اتمام رسید");
         reset();
-        dispatch(setLoginModalStatus(false));
+        authContext.setLoginModal(false);
     };
 
     const showErrorHandler = (typeErr: "Pass" | "email_Number") => {
