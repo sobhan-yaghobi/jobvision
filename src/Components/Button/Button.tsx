@@ -97,7 +97,7 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = (props) => {
                                         repeat: Infinity,
                                         repeatType: "mirror",
                                     }}
-                                    className="flex items-center justify-center origin-center ml-3"
+                                    className="flex items-center justify-center origin-center"
                                 >
                                     <AiOutlineLoading
                                         className={`origin-center ${
@@ -125,7 +125,7 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = (props) => {
                                 animate="visible"
                                 exit="exit"
                                 transition={TweenEaseOutVeryShortly}
-                                className="flex items-center justify-center origin-center ml-3 absolute"
+                                className="flex items-center justify-center origin-center absolute"
                             >
                                 {props.IconType === "REACT_ICON" ? (
                                     <props.Icon
@@ -146,7 +146,7 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = (props) => {
                         ) : null}
                     </AnimatePresence>
                 </div>
-                {props.children}
+                <span>{props.children}</span>
             </motion.button>
         </>
     );

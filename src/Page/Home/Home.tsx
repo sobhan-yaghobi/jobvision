@@ -17,6 +17,8 @@ import {
 import useAnimationStop from "../../Hooks/useAnimationStop";
 
 // Functions
+import Footer from "../../Components/Footer/Footer";
+import Header from "../../Components/Header/Header";
 import useWindowsSize from "../../Hooks/useWindowsSize";
 import { includes, chunk } from "lodash";
 import { AnimatePresence, motion } from "framer-motion";
@@ -82,6 +84,7 @@ const Home: React.FC = () => {
 
     return (
         <>
+            <Header></Header>
             {/*//? -------------------------------------- Landing -------------------------------------- */}
             <div className="current-mega-height-dvh md:h-auto overflow-hidden pt-5 px-2 grid grid-cols-2 grid-rows-2 justify-between md:py-2 md:px-10 md:grid-rows-2 md:items-center lg:grid-rows-3 lg:px-24">
                 <motion.div
@@ -434,6 +437,7 @@ const Home: React.FC = () => {
             </div>
             {/*//! -------------------------------------- WHY US ? -------------------------------------- */}
             <div className="py-10 lg:py-0"></div>
+            <Footer></Footer>
         </>
     );
 };

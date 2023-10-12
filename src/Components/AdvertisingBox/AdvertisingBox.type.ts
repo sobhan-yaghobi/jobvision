@@ -672,7 +672,8 @@ const AdvertisingArray: AdvertisingBoxMainProps[] = [
             // Date(year,month,day,hours,minutes,seconds)
         },
     },
-    {        data: {
+    {
+        data: {
             id: uuidGenerator(),
             title: "Front End Developer",
             company: {

@@ -24,6 +24,8 @@ import {
 import { includes } from "lodash";
 
 // Components
+import Header from "../../Components/Header/Header";
+import Footer from "../../Components/Footer/Footer";
 import SearchFrom from "../../Components/SearchFrom/SearchFrom";
 import Button from "../../Components/Button/Button";
 import AdvertisingBox from "../../Components/AdvertisingBox/AdvertisingBox";
@@ -102,6 +104,7 @@ const Jobs: React.FC = () => {
 
     return (
         <>
+            <Header></Header>
             {/*//? -------------------------------------- Seacrh -------------------------------------- */}
             <div className="py-8 px-2 md:px-10 lg:px-24 border-b-2 border-solid border-jv-lightGray3x">
                 <SearchFrom></SearchFrom>
@@ -329,6 +332,7 @@ const Jobs: React.FC = () => {
                 </motion.div>
                 {/*//! -------------------------------------- Company Box Slider -------------------------------------- */}
             </div>
+            <Footer></Footer>
         </>
     );
 };
@@ -726,6 +730,8 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
                 </section>
             </>
         );
+    } else {
+        return <></>;
     }
 };
 

@@ -40,6 +40,7 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
         isShow: false,
     });
     const [selectedFilters, setSelectedFilters] = useState<selectedFiltersType[]>([]);
+
     const [mainFilterMenu, setMainFilterMenu] = useState<{
         data: FilterType;
         position: {
@@ -213,6 +214,8 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
                     ) : null}
                 </>
             );
+        } else {
+            return <></>;
         }
     };
 
@@ -282,6 +285,8 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
                     <MenuSetting mode="Desktop" />
                 </div>
             );
+        } else {
+            return <></>;
         }
     };
 
