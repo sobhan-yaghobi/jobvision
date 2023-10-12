@@ -11,7 +11,7 @@ import Input from "../Input/Input";
 import Button from "../Button/Button";
 
 // Functions
-import { useForm, FieldErrors } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 // Hooks
 import useShowNotification from "../../Hooks/useShowNotification";
