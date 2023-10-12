@@ -4,6 +4,8 @@ import React, { useEffect } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+// Redux
+
 // Components
 import Input from "../Input/Input";
 import Button from "../Button/Button";
@@ -68,7 +70,6 @@ const Login: React.FC = () => {
     };
 
     useEffect(() => {
-        console.log("Error => ", errors);
         showErrorHandler("Pass");
         showErrorHandler("email_Number");
     }, [errors]);
