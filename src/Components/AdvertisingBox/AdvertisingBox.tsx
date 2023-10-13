@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import Button from "../Button/Button";
 import StarSvg from "/Svg/Star.svg";
 import { TimeGenerator } from "../../Utils/UtilsComponent";
+import { includes } from "lodash";
 
 const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
     const jobData = props.data;
@@ -19,14 +20,14 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
     const jobCompany = jobData.company;
     const jobStatus = jobData.status;
     const AdvertisingPublisTime: TimeType = getTime(jobData.CreateAt);
-
-    const wrapperBoxClass = `cursor-default w-full h-full max-h-[13rem] border-2 border-solid rounded-xl py-3 px-3 bg-transparent grid ${
-        props.isActive ? "border-jv-primary" : "border-jv-lightGray3x"
-    } ${props.type === "ShowSendCv" ? "grid-rows-3" : "grid-rows-4"}`;
-
-    const wrapperContentClass = `text-inherit grid grid-cols-12 ${
-        props.type === "ShowSendCv" ? "row-span-2" : "row-span-4"
-    }`;
+    const className = {
+        wrapperBoxClass: `cursor-pointer w-full h-full max-h-[13rem] border-2 border-solid rounded-xl py-3 px-3 bg-transparent grid ${
+            props.isActive ? "border-jv-primary" : "border-jv-lightGray3x"
+        } ${props.type === "ShowSendCv" ? "grid-rows-3" : "grid-rows-4"}`,
+        wrapperContentClass: `text-inherit grid grid-cols-12 ${
+            props.type === "ShowSendCv" ? "row-span-2" : "row-span-4"
+        }`,
+    };
 
     const BoxContentElm: React.FC = () => {
         return (
@@ -89,8 +90,8 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
     if (props.type === "ShowSendCv") {
         return (
             <>
-                <div id="Box" className={wrapperBoxClass}>
-                    <Link to="/jobs" className={wrapperContentClass}>
+                <div id="Box" className={className.wrapperBoxClass}>
+                    <Link to="/jobs" className={className.wrapperContentClass}>
                         <BoxContentElm />
                     </Link>
 
@@ -124,25 +125,28 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
     } else if (props.type === "HideSendCv") {
         return (
             <>
-                <div onClick={() => props.clickHandler(props.data.id)} id="Box" className={wrapperBoxClass}>
-                    <div className="w-full flex items-center whitespace-nowrap overflow-x-auto no-scrollbar">
-                        {jobStatus.isImportant ? (
-                            <span className="ml-1 text-jv-danger text-xs px-2 py-1 rounded-xl bg-jv-lightDanger inline-block">
-                                فوری
-                            </span>
-                        ) : null}
-                        {jobStatus.cvPending ? (
-                            <span className="ml-1 text-jv-primary text-xs px-2 py-1 rounded-xl bg-jv-lightPrimary inline-block">
-                                در حال بررسی روزمه
-                            </span>
-                        ) : null}
-                        {jobStatus.responsibleEmployer ? (
-                            <span className="ml-1 text-jv-primary text-xs px-2 py-1 rounded-xl bg-jv-lightPrimary inline-block">
-                                کارفرمای پاسخگو
-                            </span>
-                        ) : null}
-                    </div>
-                    <div className={wrapperContentClass}>
+                <div onClick={() => props.clickHandler(props.data.id)} id="Box" className={className.wrapperBoxClass}>
+                    {includes(jobStatus, true) ? (
+                        <div className="w-full flex items-center whitespace-nowrap overflow-x-auto no-scrollbar">
+                            {jobStatus.isImportant ? (
+                                <span className="ml-1 text-jv-danger text-xs px-2 py-1 rounded-xl bg-jv-lightDanger inline-block">
+                                    فوری
+                                </span>
+                            ) : null}
+                            {jobStatus.cvPending ? (
+                                <span className="ml-1 text-jv-primary text-xs px-2 py-1 rounded-xl bg-jv-lightPrimary inline-block">
+                                    در حال بررسی روزمه
+                                </span>
+                            ) : null}
+                            {jobStatus.responsibleEmployer ? (
+                                <span className="ml-1 text-jv-primary text-xs px-2 py-1 rounded-xl bg-jv-lightPrimary inline-block">
+                                    کارفرمای پاسخگو
+                                </span>
+                            ) : null}
+                        </div>
+                    ) : null}
+
+                    <div className={className.wrapperContentClass}>
                         <BoxContentElm />
                     </div>
                 </div>
