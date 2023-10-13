@@ -1,4 +1,5 @@
 import React, { ReactNode, useState } from "react";
+import { twMerge } from "tailwind-merge";
 import { AiOutlineEye } from "react-icons/ai";
 
 interface InputProps {
@@ -41,6 +42,7 @@ const Input: React.FC<InputProps> = ({
                             type="text"
                             placeholder={Placeholder}
                             {...Register}
+                            autoComplete="off"
                         />
                     ) : (
                         <input
@@ -87,5 +89,95 @@ const Input: React.FC<InputProps> = ({
         );
     }
 };
-
 export default Input;
+
+// !------------------------------------------------------------------------------
+
+type TypeIconSide = "Left" | "Right";
+
+interface TypeClassNameInput {
+    inputwrapperClassName?: string;
+    inputClassName?: string;
+    iconWrapperClassName?: string;
+}
+
+type TypeClassNameInputRequird = {
+    [P in keyof TypeClassNameInput]: string;
+};
+
+interface TypeMainInput {
+    placeholder: string;
+    className?: [TypeClassNameInput];
+    register: {};
+    iconSide?: TypeIconSide;
+    icon?: ReactNode;
+}
+
+const className: TypeClassNameInputRequird = {
+    inputwrapperClassName:
+        "parentInput m-0 py-2 px-3 text-xs relative w-full inline-flex bg-jv-transparent border-[1px] border-solid border-[#d9d9d9] rounded-lg !leading-[1.5714285714285714] hover:border-jv-primary hover:border-e-[1px] shadow-[rgba(5, 145, 255, 0.1)]",
+    inputClassName: "w-full group-focus:border-jv-primary bg-transparent",
+    iconWrapperClassName: "",
+};
+
+type TypeIconGenerator = {
+    iconSide: TypeIconSide;
+    icon: ReactNode;
+    className: string;
+};
+
+const IconGenerator: React.FC<TypeIconGenerator> = ({ icon, iconSide, className }) => (
+    <span
+        className={twMerge(
+            `${iconSide === "Right" ? "me-2" : iconSide === "Left" ? "ms-2" : ""} flex items-center`,
+            className
+        )}
+    >
+        {icon}
+    </span>
+);
+
+const isClassNameUndefined: Function = (className: string | undefined): string => {
+    return typeof className !== "undefined" ? className : "";
+};
+
+const TextInput: React.FC<TypeMainInput> = (props) => {
+    return (
+        <span
+            className={twMerge(
+                className.inputwrapperClassName,
+                isClassNameUndefined(
+                    typeof props.className !== "undefined" ? props.className[0].inputwrapperClassName : undefined
+                )
+            )}
+        >
+            {props.iconSide === "Right" || typeof props.iconSide === "undefined" ? (
+                <IconGenerator
+                    className={isClassNameUndefined(
+                        typeof props.className !== "undefined" ? props.className[0].iconWrapperClassName : undefined
+                    )}
+                    icon={props.icon}
+                    iconSide="Right"
+                ></IconGenerator>
+            ) : null}
+            <input
+                className={className.inputClassName}
+                type="text"
+                placeholder={props.placeholder}
+                autoComplete="off"
+                {...props.register}
+            />
+            {props.iconSide === "Left" ? (
+                <IconGenerator
+                    className={isClassNameUndefined(
+                        typeof props.className !== "undefined" ? props.className[0].iconWrapperClassName : undefined
+                    )}
+                    icon={props.icon}
+                    iconSide="Left"
+                ></IconGenerator>
+            ) : null}
+        </span>
+    );
+};
+
+export { TextInput };

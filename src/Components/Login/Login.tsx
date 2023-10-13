@@ -40,16 +40,21 @@ const Login: React.FC = () => {
     const {
         register,
         reset,
-        formState: { errors },
+        formState: { errors, isSubmitting },
         handleSubmit,
     } = useForm<TypeLoginFormSchema>({ resolver: zodResolver(loginFormSchema) });
 
     const submitAction = () => {
-        windowSize.innerWidth < 768
-            ? showMessage("success", "ثبت نام با موفقیت به اتمام رسید")
-            : showNotifcation("success", "ثبت نام با موفقیت به اتمام رسید");
-        reset();
-        authContext.setLoginModal(false);
+        return new Promise<void>((resolve) => {
+            setTimeout(() => {
+                windowSize.innerWidth < 768
+                    ? showMessage("success", "ثبت نام با موفقیت به اتمام رسید")
+                    : showNotifcation("success", "ثبت نام با موفقیت به اتمام رسید");
+                reset();
+                authContext.setLoginModal(false);
+                resolve();
+            }, 2000);
+        });
     };
 
     const showErrorHandler = (typeErr: "Pass" | "email_Number") => {
@@ -97,7 +102,13 @@ const Login: React.FC = () => {
                     Placeholder="رمر عبور"
                     ClassName="mb-3"
                 ></Input>
-                <Button size="middle" textColor="light" ClickHandler={() => {}} isLoading={false} ClassName="w-full">
+                <Button
+                    size="middle"
+                    textColor="light"
+                    ClickHandler={() => {}}
+                    isLoading={isSubmitting}
+                    ClassName="w-full"
+                >
                     ادامه
                 </Button>
             </form>
