@@ -103,7 +103,7 @@ const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ type }) => {
         Benefits: z.string().trim().optional(),
         establishedyear: z.date(),
         OrganizationEmploy: z.number(),
-        ownership: z.string({ required_error: "انتخاب نوع شرکت اجباری است" }).trim(),
+        ownership: z.string({ invalid_type_error: "انتخاب نوع شرکت اجباری است" }).trim(),
         // ownership: z.object({
         //     value: z.string(),
         //     label: z.string(),
@@ -127,11 +127,14 @@ const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ type }) => {
         const {
             formState: { isSubmitting },
             register,
+            getValues,
             handleSubmit,
         } = useForm<TypeCompanyFormSchema>({});
         const submitAction = (data: TypeCompanyFormSchema) => {
             console.log("Okkkkkkkkkk", data);
         };
+        const go = () => console.log(getValues());
+
         return (
             <div className="flex h-full">
                 <form action="" onSubmit={handleSubmit(submitAction)}>
@@ -141,6 +144,7 @@ const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ type }) => {
                         register={register("ownership")}
                         options={ownershipOptions}
                     />
+                    <button onClick={() => go()}>Click</button>
                 </form>
             </div>
         );
