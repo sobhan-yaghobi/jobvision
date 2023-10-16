@@ -142,7 +142,7 @@ const Header: React.FC = () => {
                         exit="exit"
                         id="MegaBg"
                         onClick={(event) => megaBgClickAction(event)}
-                        className={`current-mega-height bg-jv-bgColor fixed w-full z-10 hidden lg:flex ${
+                        className={`current-mega-height bg-jv-bgColor fixed w-full z-20 hidden lg:flex ${
                             MenuDesktop.isMega ? "flex justify-center" : ""
                         }`}
                     >

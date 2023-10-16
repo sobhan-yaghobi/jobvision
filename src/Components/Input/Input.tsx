@@ -95,13 +95,7 @@ export default Input;
 
 // !------------------------------------------------------------------------------
 
-import {
-    TypeIconSide,
-    TypeClassNameInputRequird,
-    TypeMainInput,
-    TypeIconGenerator,
-    TypeAutoCompleteGenerator,
-} from "./Input.type";
+import { TypeClassNameInputRequird, TypeMainInput, TypeIconGenerator, TypeAutoCompleteGenerator } from "./Input.type";
 
 const className: TypeClassNameInputRequird = {
     inputwrapperClassName:
@@ -113,18 +107,16 @@ const className: TypeClassNameInputRequird = {
 
 const IconGenerator: React.FC<TypeIconGenerator> = (props) => {
     const ClassName = {
-        iconSideClass: `${props.iconSide === "Right" ? "me-2" : props.iconSide === "Left" ? "ms-2" : "ms-2"}`,
+        iconSideClass: `${
+            props.iconSide === "Right"
+                ? `${props.mode === "Menu" ? "ms-2" : "me-2"}`
+                : props.iconSide === "Left"
+                ? `${props.mode === "Menu" ? "me-2" : "ms-2"}`
+                : `${props.mode === "Menu" ? "me-2" : "ms-2"}`
+        }`,
         propsClassName: typeof props.className !== "undefined" ? props.className : "",
     };
     return <span className={twMerge(ClassName.iconSideClass, ClassName.propsClassName)}>{props.icon}</span>;
-};
-
-const AutoCompleteAction = (
-    mode: "Blur" | "Focus",
-    state: boolean,
-    setState: React.Dispatch<React.SetStateAction<boolean>>
-): undefined => {
-    setState((prev) => (mode === "Blur" ? false : mode === "Focus" ? true : false));
 };
 
 const AutoCompleteGenerator: React.FC<React.PropsWithChildren<TypeAutoCompleteGenerator>> = ({ children, show }) => {
@@ -137,6 +129,14 @@ const AutoCompleteGenerator: React.FC<React.PropsWithChildren<TypeAutoCompleteGe
             <ul className="w-full max-h-48 overflow-y-auto rounded-lg bg-jv-light">{children}</ul>
         </div>
     );
+};
+
+const AutoCompleteAction = (
+    mode: "Blur" | "Focus",
+    state: boolean,
+    setState: React.Dispatch<React.SetStateAction<boolean>>
+): undefined => {
+    setState((prev) => (mode === "Blur" ? false : mode === "Focus" ? true : false));
 };
 
 const isClassNameUndefined: Function = (className: string | undefined): string =>

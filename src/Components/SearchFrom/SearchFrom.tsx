@@ -77,7 +77,19 @@ const SearchFrom: React.FC<SearchFromProps> = memo(() => {
                         </svg>
                     }
                     register={{}}
-                />
+                    iconSide="Right"
+                >
+                    {Array(20)
+                        .fill("")
+                        .map((item, index) => (
+                            <li
+                                key={index + 1}
+                                className="p-2 my-1 cursor-pointer hover:bg-jv-white last:mb-0 first:mt-0"
+                            >
+                                {index + 1}
+                            </li>
+                        ))}
+                </TextInput>
                 <Button
                     textColor="primary"
                     size="small"
