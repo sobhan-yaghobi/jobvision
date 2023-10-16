@@ -86,7 +86,7 @@ const Home: React.FC = () => {
         <>
             <Header></Header>
             {/*//? -------------------------------------- Landing -------------------------------------- */}
-            <div className="current-mega-height-dvh md:h-auto overflow-hidden pt-5 px-2 grid grid-cols-2 grid-rows-2 justify-between md:py-2 md:px-10 md:grid-rows-2 md:items-center lg:grid-rows-3 lg:px-24">
+            <div className="relative current-mega-height-dvh md:h-auto pt-5 px-2 grid grid-cols-2 grid-rows-2 justify-between md:py-2 md:px-10 md:grid-rows-2 md:items-center lg:grid-rows-3 lg:px-24 z-30">
                 <motion.div
                     variants={ShowFromRight}
                     initial="hidden"
@@ -147,7 +147,7 @@ const Home: React.FC = () => {
                 className="w-full px-2 md:px-10 lg:px-24"
             >
                 <Swiper
-                    className={`rounded-md`}
+                    className={`rounded-md relative z-0`}
                     slidesPerView={"auto"}
                     spaceBetween={16}
                     breakpoints={{

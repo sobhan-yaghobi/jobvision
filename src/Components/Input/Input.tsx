@@ -1,6 +1,8 @@
 import React, { ReactNode, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { AiOutlineEye } from "react-icons/ai";
+import { AiFillCaretDown } from "react-icons/ai";
+import { AiOutlineClose } from "react-icons/ai";
 
 interface InputProps {
     Type: "PASSWORD" | "TEXT";
@@ -93,91 +95,98 @@ export default Input;
 
 // !------------------------------------------------------------------------------
 
-type TypeIconSide = "Left" | "Right";
-
-interface TypeClassNameInput {
-    inputwrapperClassName?: string;
-    inputClassName?: string;
-    iconWrapperClassName?: string;
-}
-
-type TypeClassNameInputRequird = {
-    [P in keyof TypeClassNameInput]: string;
-};
-
-interface TypeMainInput {
-    placeholder: string;
-    className?: [TypeClassNameInput];
-    register: {};
-    iconSide?: TypeIconSide;
-    icon?: ReactNode;
-}
+import {
+    TypeIconSide,
+    TypeClassNameInputRequird,
+    TypeMainInput,
+    TypeIconGenerator,
+    TypeAutoCompleteGenerator,
+} from "./Input.type";
 
 const className: TypeClassNameInputRequird = {
     inputwrapperClassName:
         "parentInput m-0 py-2 px-3 text-xs relative w-full inline-flex bg-jv-transparent border-[1px] border-solid border-[#d9d9d9] rounded-lg !leading-[1.5714285714285714] hover:border-jv-primary hover:border-e-[1px] shadow-[rgba(5, 145, 255, 0.1)]",
     inputClassName: "w-full group-focus:border-jv-primary bg-transparent",
-    iconWrapperClassName: "",
+    iconWrapperClassName: "flex items-center",
+    autoCompleteWrapperClassName: "",
 };
 
-type TypeIconGenerator = {
-    iconSide: TypeIconSide;
-    icon: ReactNode;
-    className: string;
+const IconGenerator: React.FC<TypeIconGenerator> = (props) => {
+    const ClassName = {
+        iconSideClass: `${props.iconSide === "Right" ? "me-2" : props.iconSide === "Left" ? "ms-2" : "ms-2"}`,
+        propsClassName: typeof props.className !== "undefined" ? props.className : "",
+    };
+    return <span className={twMerge(ClassName.iconSideClass, ClassName.propsClassName)}>{props.icon}</span>;
 };
 
-const IconGenerator: React.FC<TypeIconGenerator> = ({ icon, iconSide, className }) => (
-    <span
-        className={twMerge(
-            `${iconSide === "Right" ? "me-2" : iconSide === "Left" ? "ms-2" : ""} flex items-center`,
-            className
-        )}
-    >
-        {icon}
-    </span>
-);
-
-const isClassNameUndefined: Function = (className: string | undefined): string => {
-    return typeof className !== "undefined" ? className : "";
+const AutoCompleteAction = (
+    mode: "Blur" | "Focus",
+    state: boolean,
+    setState: React.Dispatch<React.SetStateAction<boolean>>
+): undefined => {
+    setState((prev) => (mode === "Blur" ? false : mode === "Focus" ? true : false));
 };
 
-const TextInput: React.FC<TypeMainInput> = (props) => {
+const AutoCompleteGenerator: React.FC<React.PropsWithChildren<TypeAutoCompleteGenerator>> = ({ children, show }) => {
+    return (
+        <div
+            className={`w-full absolute  left-0 pt-4 transition-all duration-500 ${
+                show ? "opacity-100 visible top-full z-30" : "opacity-0 invisible top-0 -z-10"
+            }`}
+        >
+            <ul className="w-full max-h-48 overflow-y-auto rounded-lg bg-jv-light">{children}</ul>
+        </div>
+    );
+};
+
+const isClassNameUndefined: Function = (className: string | undefined): string =>
+    typeof className !== "undefined" ? className : "";
+
+const TextInput: React.FC<React.PropsWithChildren<TypeMainInput>> = (props) => {
+    const [showAutoComplete, setShowAutoComplete] = useState(false);
     return (
         <span
             className={twMerge(
                 className.inputwrapperClassName,
                 isClassNameUndefined(
                     typeof props.className !== "undefined" ? props.className[0].inputwrapperClassName : undefined
-                )
+                ),
+                `flex items-center ${props.iconSide === "Right" ? "flex-row-reverse" : ""}`
             )}
         >
-            {props.iconSide === "Right" || typeof props.iconSide === "undefined" ? (
-                <IconGenerator
-                    className={isClassNameUndefined(
-                        typeof props.className !== "undefined" ? props.className[0].iconWrapperClassName : undefined
-                    )}
-                    icon={props.icon}
-                    iconSide="Right"
-                ></IconGenerator>
+            {typeof props.children !== "undefined" ? (
+                <span onClick={() => setShowAutoComplete((prev) => (showAutoComplete ? false : true))}>
+                    <IconGenerator
+                        icon={showAutoComplete ? <AiOutlineClose /> : <AiFillCaretDown />}
+                        iconSide={props.iconSide}
+                        mode="Menu"
+                        className={className.iconWrapperClassName}
+                    ></IconGenerator>
+                </span>
             ) : null}
             <input
                 className={className.inputClassName}
                 type="text"
                 placeholder={props.placeholder}
                 autoComplete="off"
+                onBlur={() => AutoCompleteAction("Blur", showAutoComplete, setShowAutoComplete)}
+                onFocus={() => AutoCompleteAction("Focus", showAutoComplete, setShowAutoComplete)}
                 {...props.register}
             />
-            {props.iconSide === "Left" ? (
-                <IconGenerator
-                    className={isClassNameUndefined(
-                        typeof props.className !== "undefined" ? props.className[0].iconWrapperClassName : undefined
-                    )}
-                    icon={props.icon}
-                    iconSide="Left"
-                ></IconGenerator>
+            <IconGenerator
+                icon={props.icon}
+                iconSide={props.iconSide}
+                className={className.iconWrapperClassName}
+            ></IconGenerator>
+            {typeof props.children !== "undefined" ? (
+                <AutoCompleteGenerator show={showAutoComplete} setShow={setShowAutoComplete}>
+                    {props.children}
+                </AutoCompleteGenerator>
             ) : null}
         </span>
     );
 };
+
+// const;
 
 export { TextInput };

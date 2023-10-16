@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 // Components
 import Input, { TextInput } from "../Input/Input";
@@ -6,7 +6,7 @@ import Button from "../Button/Button";
 
 interface SearchFromProps {}
 
-const SearchFrom: React.FC<SearchFromProps> = ({}) => {
+const SearchFrom: React.FC<SearchFromProps> = memo(() => {
     return (
         <>
             <div className="w-full flex flex-col items-center justify-between md:flex-row">
@@ -22,6 +22,7 @@ const SearchFrom: React.FC<SearchFromProps> = ({}) => {
                         </svg>
                     }
                     register={{}}
+                    iconSide="Right"
                 />
                 <TextInput
                     placeholder="گروه شغلی"
@@ -51,7 +52,19 @@ const SearchFrom: React.FC<SearchFromProps> = ({}) => {
                         </svg>
                     }
                     register={{}}
-                />
+                    iconSide="Right"
+                >
+                    {Array(20)
+                        .fill("")
+                        .map((item, index) => (
+                            <li
+                                key={index + 1}
+                                className="p-2 my-1 cursor-pointer hover:bg-jv-white last:mb-0 first:mt-0"
+                            >
+                                {index + 1}
+                            </li>
+                        ))}
+                </TextInput>
                 <TextInput
                     placeholder="شهر"
                     className={[{ inputwrapperClassName: "mx-1 my-1 md:my-0" }]}
@@ -77,6 +90,6 @@ const SearchFrom: React.FC<SearchFromProps> = ({}) => {
             </div>
         </>
     );
-};
+});
 
 export default SearchFrom;
