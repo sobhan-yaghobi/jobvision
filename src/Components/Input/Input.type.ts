@@ -1,5 +1,4 @@
 import React, { ReactNode } from "react";
-import { IconType } from "react-icons";
 
 export type TypeIconSide = "Left" | "Right";
 
@@ -20,6 +19,17 @@ export interface TypeMainInput {
     register: {};
     iconSide?: TypeIconSide;
     icon?: ReactNode;
+}
+
+export type TypeOptionInput = {
+    value: string;
+    label: string;
+};
+
+export interface TypeSelectInput {
+    options: TypeOptionInput[];
+    register: {};
+    label: string;
 }
 
 export type TypeIconGenerator = {

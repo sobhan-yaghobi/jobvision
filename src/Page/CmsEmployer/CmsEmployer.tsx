@@ -19,6 +19,9 @@ import { RxLapTimer } from "react-icons/rx";
 import { TbGitPullRequestClosed } from "react-icons/tb";
 import { RiGitPullRequestFill } from "react-icons/ri";
 import { z } from "zod";
+import { SelectInput } from "../../Components/Input/Input";
+import { TypeOptionInput } from "../../Components/Input/Input.type";
+import { register } from "swiper/element";
 
 const getItem = (
     label: React.ReactNode,
@@ -100,17 +103,47 @@ const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ type }) => {
         Benefits: z.string().trim().optional(),
         establishedyear: z.date(),
         OrganizationEmploy: z.number(),
-        ownership: z.object({
-            value: z.string(),
-            label: z.string(),
-        }),
+        ownership: z.string({ required_error: "انتخاب نوع شرکت اجباری است" }).trim(),
+        // ownership: z.object({
+        //     value: z.string(),
+        //     label: z.string(),
+        // }),
     });
+
+    type TypeCompanyFormSchema = z.infer<typeof CompanyFormSchema>;
+
+    const ownershipOptions: TypeOptionInput[] = [
+        {
+            value: "Private",
+            label: "خصوصی",
+        },
+        {
+            value: "Government",
+            label: "دولتی",
+        },
+    ];
 
     if (type === "Home") {
         const {
             formState: { isSubmitting },
-        } = useForm({});
-        return <div className="flex h-full"></div>;
+            register,
+            handleSubmit,
+        } = useForm<TypeCompanyFormSchema>({});
+        const submitAction = (data: TypeCompanyFormSchema) => {
+            console.log("Okkkkkkkkkk", data);
+        };
+        return (
+            <div className="flex h-full">
+                <form action="" onSubmit={handleSubmit(submitAction)}>
+                    <SelectInput
+                        label="
+                    نوع شرکت"
+                        register={register("ownership")}
+                        options={ownershipOptions}
+                    />
+                </form>
+            </div>
+        );
     }
 };
 

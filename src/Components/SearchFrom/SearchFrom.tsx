@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 
 // Components
-import Input, { TextInput } from "../Input/Input";
+import { TextInput } from "../Input/Input";
 import Button from "../Button/Button";
 
 interface SearchFromProps {}

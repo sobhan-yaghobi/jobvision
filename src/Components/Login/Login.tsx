@@ -5,7 +5,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // Components
-import Input from "../Input/Input";
+import { TextInput, PasswordInput } from "../Input/Input";
 import Button from "../Button/Button";
 
 // Functions
@@ -90,18 +90,16 @@ const Login: React.FC = () => {
                 <div>کارجو</div>
             </div>
             <form onSubmit={handleSubmit(submitAction)} className="mt-6 w-full flex flex-col items-center">
-                <Input
-                    Type="TEXT"
-                    Register={{ ...register("username_OR_email") }}
-                    Placeholder="ایمیل یا  شماره تلفن"
-                    ClassName="mb-3"
-                ></Input>
-                <Input
-                    Type="PASSWORD"
-                    Register={{ ...register("password") }}
-                    Placeholder="رمر عبور"
-                    ClassName="mb-3"
-                ></Input>
+                <TextInput
+                    placeholder="ایمیل یا شماره تلفن"
+                    register={{ ...register("username_OR_email") }}
+                    className={[{ inputwrapperClassName: "mb-3" }]}
+                ></TextInput>
+                <PasswordInput
+                    placeholder="رمر عبور"
+                    register={{ ...register("password") }}
+                    className={[{ inputwrapperClassName: "mb-3" }]}
+                ></PasswordInput>
                 <Button
                     size="middle"
                     textColor="light"
