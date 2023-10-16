@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { z } from "zod";
 
 // Types
 import { CmsMenuItem, LiteralsMainPage } from "./CmsEmployer.type";
+import { SelectInput } from "../../Components/Input/Input";
+import { TypeOptionInput } from "../../Components/Input/Input.type";
 
 // Hook
 import { useForm } from "react-hook-form";
@@ -18,10 +21,9 @@ import { BsCheckAll } from "react-icons/bs";
 import { RxLapTimer } from "react-icons/rx";
 import { TbGitPullRequestClosed } from "react-icons/tb";
 import { RiGitPullRequestFill } from "react-icons/ri";
-import { z } from "zod";
-import { SelectInput } from "../../Components/Input/Input";
-import { TypeOptionInput } from "../../Components/Input/Input.type";
-import { register } from "swiper/element";
+import Logo from "/Svg/Logo/PrimaryColorLogo.svg";
+import reportIcon from "/images/report.webp";
+import Button from "../../Components/Button/Button";
 
 const getItem = (
     label: React.ReactNode,
@@ -55,24 +57,48 @@ const items: CmsMenuItem[] = [
 ];
 
 const CmsEmployer: React.FC = () => {
+    const [isShowCompanyProfile, setIsShowCompanyProfile] = useState(true);
     const [MainPage, setMainPage] = useState<{ mainKey: React.Key }>({ mainKey: LiteralsMainPage.Home });
 
     return (
         <>
             <div className="w-full h-screen flex justify-between p-4 relative">
-                <Menu
-                    className="w-2/12 p-1 ml-4 rounded-lg"
-                    defaultSelectedKeys={[LiteralsMainPage.Home]}
-                    defaultOpenKeys={["sub1"]}
-                    mode="inline"
-                    items={items}
-                    onSelect={(props) => setMainPage({ mainKey: props.key })}
-                />
+                <div className="w-2/12 p-1 flex flex-col justify-between">
+                    <div>
+                        <img className="px-2" src={Logo} alt="" />
+                        <Menu
+                            className="!border-none rounded-lg my-1"
+                            defaultSelectedKeys={[LiteralsMainPage.Home]}
+                            mode="inline"
+                            items={items}
+                            onSelect={(props) => setMainPage({ mainKey: props.key })}
+                        />
+                    </div>
+                    <div className="w-full h-[36%] text-center rounded-lg bg-slate-100 flex flex-col items-center ">
+                        <img className="h-[45%] mb-2" src={reportIcon} alt="" />
+                        <h4>گزارش سالانه</h4>
+                        <p className="text-xs my-2">همین الان از گزارش سالیانه مطلع شوید</p>
+                        <Button
+                            size="small"
+                            textColor="light"
+                            ClickHandler={() => {}}
+                            ClassName="!py-2 px-8 border-none shadow-jv-primary shadow-lg"
+                            isLoading={false}
+                        >
+                            دانلود
+                        </Button>
+                    </div>
+                </div>
                 <AnimatePresence>
-                    <motion.div className={`w-10/12 h-full rounded-lg bg-jv-light`}>
+                    <motion.div
+                        className={`${
+                            isShowCompanyProfile ? "w-7/12" : "w-10/12"
+                        } h-full rounded-lg mx-4 bg-jv-light p-4`}
+                    >
                         <CmsPageGenerator type={MainPage.mainKey as LiteralsMainPage.AllPage}></CmsPageGenerator>
                     </motion.div>
                 </AnimatePresence>
+                <div className="w-3/12"></div>
             </div>
         </>
     );

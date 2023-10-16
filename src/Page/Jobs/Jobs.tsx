@@ -127,6 +127,7 @@ const Jobs: React.FC = () => {
                         ClickHandler={() => {
                             notificationAction();
                         }}
+                        IconType="REACT_ICON"
                         Icon={isNotification ? MdNotificationsActive : MdNotificationAdd}
                     >
                         فعال سازی اطلاع رسانی شغل ها
