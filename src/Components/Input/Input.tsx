@@ -9,7 +9,9 @@ import {
     TypeIconGenerator,
     TypeAutoCompleteGenerator,
     TypeSelectInput,
+    TypeTextareaInput,
 } from "./Input.type";
+import { DatePicker } from "antd";
 
 namespace InputUtils {
     export const className: TypeClassNameInputRequird = {
@@ -29,7 +31,7 @@ namespace InputUtils {
                     ? `${props.mode === "Menu" ? "me-2" : "ms-2"}`
                     : `${props.mode === "Menu" ? "me-2" : "ms-2"}`
             }`,
-            propsClassName: typeof props.className !== "undefined" ? props.className : "",
+            propsClassName: `text-lg ${typeof props.className !== "undefined" ? props.className : ""}`,
         };
         return <span className={twMerge(ClassName.iconSideClass, ClassName.propsClassName)}>{props.icon}</span>;
     };
@@ -144,7 +146,12 @@ const PasswordInput: React.FC<TypeMainInput> = (props) => {
 const SelectInput: React.FC<TypeSelectInput> = (props) => {
     return (
         <>
-            <div className="select w-full max-w-[15rem] min-w-[10rem] border-2 border-solid border-jv-primary rounded-lg p-2 bg-transparent cursor-pointer text-lg">
+            <div
+                className={twMerge(
+                    `select w-full max-w-[15rem] min-w-[10rem] border-2 border-solid border-jv-primary rounded-lg p-2 bg-transparent cursor-pointer text-lg`,
+                    props.className
+                )}
+            >
                 <select {...props.register} className="w-full bg-transparent cursor-pointer" id="standard-select">
                     <option value="">{props.label}</option>
                     {props.options.map((item, index) => (
@@ -158,4 +165,29 @@ const SelectInput: React.FC<TypeSelectInput> = (props) => {
     );
 };
 
-export { TextInput, PasswordInput, SelectInput };
+const TextareaInput: React.FC<TypeTextareaInput> = (props) => {
+    return (
+        <>
+            <textarea
+                placeholder={props.placeholder}
+                className={twMerge(
+                    `w-full min-h-[4rem] max-h-72 resize-y p-2 bg-transparent border-[1px] border-solid rounded-lg border-jv-lightGray3x`,
+                    props.className
+                )}
+                {...props.register}
+            ></textarea>
+        </>
+    );
+};
+
+const DateInput: React.FC = () => {
+    const now = new Date().toLocaleDateString("fa-IR");
+    return (
+        <>
+            {/* <DatePicker></DatePicker> */}
+            <input type="date" value={now} name="" id="" />
+        </>
+    );
+};
+
+export { TextInput, PasswordInput, SelectInput, TextareaInput, DateInput };

@@ -30,6 +30,12 @@ export interface TypeSelectInput {
     options: TypeOptionInput[];
     register: {};
     label: string;
+    className?: string;
+}
+export interface TypeTextareaInput {
+    register: {};
+    placeholder: string;
+    className?: string;
 }
 
 export type TypeIconGenerator = {

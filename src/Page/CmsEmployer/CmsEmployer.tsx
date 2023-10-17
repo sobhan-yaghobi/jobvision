@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { z } from "zod";
 
+// Functions
+import { messageLengthGenerator, messageUrlNotValid } from "../../Utils/Utils";
+
 // Types
-import { CmsMenuItem, LiteralsMainPage } from "./CmsEmployer.type";
-import { SelectInput } from "../../Components/Input/Input";
+import { CmsMenuItem, HomePageProps, LiteralsMainPage } from "./CmsEmployer.type";
+import { DateInput, SelectInput, TextInput, TextareaInput } from "../../Components/Input/Input";
 import { TypeOptionInput } from "../../Components/Input/Input.type";
 
 // Hook
@@ -13,21 +16,24 @@ import { useForm } from "react-hook-form";
 import { Menu } from "antd";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "../../Components/Button/Button";
+import { Link } from "react-router-dom";
 
 // Icons
 import { GoHomeFill } from "react-icons/go";
 import { CgFileDocument } from "react-icons/cg";
-import { BiGitPullRequest } from "react-icons/bi";
-import { BsCheckAll } from "react-icons/bs";
+import { BiGitPullRequest, BiMap, BiLinkAlt } from "react-icons/bi";
+import { BsCheckAll, BsCalendarEvent } from "react-icons/bs";
 import { RxLapTimer } from "react-icons/rx";
 import { TbGitPullRequestClosed } from "react-icons/tb";
 import { RiGitPullRequestFill } from "react-icons/ri";
-import { AiOutlineClose } from "react-icons/ai";
 import Logo from "/Svg/Logo/PrimaryColorLogo.svg";
 import reportIcon from "/images/report.webp";
 import { HiOutlineLogout } from "react-icons/hi";
 import { CiEdit, CiUser } from "react-icons/ci";
 import { AiOutlineEye } from "react-icons/ai";
+import { PiSpeakerHigh } from "react-icons/pi";
+import { FiUsers } from "react-icons/fi";
+import { TiInfoLargeOutline } from "react-icons/ti";
 
 const getItem = (
     label: React.ReactNode,
@@ -61,8 +67,7 @@ const items: CmsMenuItem[] = [
 ];
 
 const CmsEmployer: React.FC = () => {
-    const [isShowCompanyProfile, setIsShowCompanyProfile] = useState(true);
-    const [MainPage, setMainPage] = useState<{ mainKey: React.Key }>({ mainKey: LiteralsMainPage.Home });
+    const [MainPage, setMainPage] = useState<LiteralsMainPage.TypeMainPage>({ mainKey: LiteralsMainPage.Home });
 
     return (
         <>
@@ -71,13 +76,13 @@ const CmsEmployer: React.FC = () => {
                     <div>
                         <img className="px-2" src={Logo} alt="" />
                         <Menu
+                            key={MainPage.mainKey}
                             className="!border-none rounded-lg my-1"
-                            defaultSelectedKeys={[LiteralsMainPage.Home]}
+                            defaultSelectedKeys={[MainPage.mainKey as string]}
                             mode="inline"
                             items={items}
                             onSelect={(props) => setMainPage({ mainKey: props.key })}
                         />
-                        
                     </div>
                     <div className="w-full h-[35%] text-center rounded-lg bg-slate-100 flex flex-col items-center ">
                         <img className="h-[45%] mb-2" src={reportIcon} alt="" />
@@ -96,39 +101,39 @@ const CmsEmployer: React.FC = () => {
                 </div>
                 <AnimatePresence>
                     <motion.div
-                        className={`${
-                            isShowCompanyProfile ? "w-7/12" : "w-10/12"
-                        } h-full rounded-lg mx-4 bg-jv-light p-4`}
+                        className={`w-7/12 h-full rounded-lg mx-4 bg-jv-light p-4 overflow-y-auto no-scrollbar`}
                     >
-                        <CmsPageGenerator type={MainPage.mainKey as LiteralsMainPage.AllPage}></CmsPageGenerator>
+                        <CmsPageGenerator mainKey={MainPage.mainKey} subPage={MainPage.subPage}></CmsPageGenerator>
                     </motion.div>
                 </AnimatePresence>
                 <div className="w-3/12 h-full">
                     <div className="h-3/6 flex flex-col items-center">
                         <div className="w-full flex items-center justify-end">
-                            <span
-                                title="خروج از پنل"
-                                className="button-Cms-type text-jv-danger ml-2 border-jv-lightDanger  hover:bg-jv-lightDanger"
-                            >
-                                <HiOutlineLogout className="text-inherit transition-none" />
-                            </span>
-                            <span
-                                title="بستن پروفایل"
-                                className="button-Cms-type text-jv-lightGray2x p-2 border-jv-lightGray3x hover:bg-jv-lightGray3x"
-                            >
-                                <AiOutlineClose className="text-inherit transition-none" />
-                            </span>
+                            <Link to="/">
+                                <span
+                                    title="خروج از پنل"
+                                    className="button-Cms-type text-jv-danger ml-2 border-jv-lightDanger  hover:bg-jv-lightDanger"
+                                >
+                                    <HiOutlineLogout className="text-inherit transition-none" />
+                                </span>
+                            </Link>
                         </div>
                         <img className="rounded-full h-16 shadow-xl" src="/images/company-Sheypoor.webp" alt="" />
                         <h3 className="mt-3 text-jv-lightGray2x">شیپور</h3>
                         <ul className="w-full my-5 flex items-center justify-around">
-                            <li className="select-none cursor-pointer text-jv-primary flex flex-col items-center justify-center group">
+                            <li
+                                onClick={() => setMainPage({ mainKey: LiteralsMainPage.Home, subPage: "Home_Edit" })}
+                                className="select-none cursor-pointer text-jv-primary flex flex-col items-center justify-center group"
+                            >
                                 <span className="button-Cms-type border-jv-lightPrimary bg-jv-lightPrimary shadow-jv-primary group-hover:shadow-xl group-active:scale-90">
                                     <CiEdit className="text-inherit transform-none" />
                                 </span>
                                 <span className="mt-3 text-xs font-semibold">ویرایش اطلاعات</span>
                             </li>
-                            <li className="select-none cursor-pointer text-jv-primary flex flex-col items-center justify-center group relative">
+                            <li
+                                onClick={() => setMainPage({ mainKey: LiteralsMainPage.RqAll })}
+                                className="select-none cursor-pointer text-jv-primary flex flex-col items-center justify-center group relative"
+                            >
                                 <span className="button-Cms-type border-jv-lightPrimary bg-jv-lightPrimary shadow-jv-primary group-hover:shadow-xl group-active:scale-90">
                                     <BiGitPullRequest className="text-inherit transform-none" />
                                 </span>
@@ -142,7 +147,7 @@ const CmsEmployer: React.FC = () => {
                             <div className="my-1">
                                 <span className="text-jv-lightGray2x text-xs pr-1">امروز</span>
                                 <ul>
-                                    {Array(3)
+                                    {Array(2)
                                         .fill("")
                                         .map((item, index) => (
                                             <li
@@ -198,50 +203,38 @@ const CmsEmployer: React.FC = () => {
 
 export default CmsEmployer;
 
-type CmsPageGeneratorProps = {
-    type: LiteralsMainPage.AllPage;
-};
+const CmsPageGenerator: React.FC<LiteralsMainPage.TypeMainPage> = ({ mainKey, subPage }) => {
+    const HomePage: React.FC<HomePageProps> = ({ isEditShow }) => {
+        const CompanyFormSchema = z.object({
+            name: z.string().trim().min(3, messageLengthGenerator("Min", "نام شرکت", 3)),
+            location: z.string().trim().min(10, messageLengthGenerator("Min", "موقعیت مکانی", 10)),
+            logo: z.string().trim().url(messageUrlNotValid("لوگو شرکت")),
+            website: z.string().trim().url(messageUrlNotValid("وب سایت شرکت")),
+            desc: z.string().trim().max(500, messageLengthGenerator("Max", "درباره شرکت", 500)),
+            CompanySlogan: z.string().trim().max(50, messageLengthGenerator("Max", "شعار شرکت شما", 50)),
+            Benefits: z.string().trim().optional(),
+            establishedyear: z.date(),
+            OrganizationEmploy: z.number(),
+            ownership: z.string({ invalid_type_error: "انتخاب نوع شرکت اجباری است" }).trim(),
+            // ownership: z.object({
+            //     value: z.string(),
+            //     label: z.string(),
+            // }),
+        });
 
-const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ type }) => {
-    console.log("CmsPageGenerator", type);
+        type TypeCompanyFormSchema = z.infer<typeof CompanyFormSchema>;
 
-    const messageLengthGenerator = (type: "Min" | "Max", name: string, length: number): string =>
-        `${type === "Min" ? "حداقل" : type === "Max" ? "حداکثر" : null} ${length} کاکرتر برای ${name} ${
-            type === "Min" ? "مورد نیاز است" : type === "Max" ? "مجاز میباشد" : null
-        }`;
-    const messageUrlNotValid = (name: string): string => `لینک ${name} معتبر نمیباشد`;
+        const ownershipOptions: TypeOptionInput[] = [
+            {
+                value: "Private",
+                label: "خصوصی",
+            },
+            {
+                value: "Government",
+                label: "دولتی",
+            },
+        ];
 
-    const CompanyFormSchema = z.object({
-        name: z.string().trim().min(3, messageLengthGenerator("Min", "نام شرکت", 3)),
-        location: z.string().trim().min(10, messageLengthGenerator("Min", "موقعیت مکانی", 10)),
-        logo: z.string().trim().url(messageUrlNotValid("لوگو شرکت")),
-        website: z.string().trim().url(messageUrlNotValid("وب سایت شرکت")),
-        desc: z.string().trim().max(500, messageLengthGenerator("Max", "درباره شرکت", 500)),
-        CompanySlogan: z.string().trim().max(50, messageLengthGenerator("Max", "شعار شرکت شما", 50)),
-        Benefits: z.string().trim().optional(),
-        establishedyear: z.date(),
-        OrganizationEmploy: z.number(),
-        ownership: z.string({ invalid_type_error: "انتخاب نوع شرکت اجباری است" }).trim(),
-        // ownership: z.object({
-        //     value: z.string(),
-        //     label: z.string(),
-        // }),
-    });
-
-    type TypeCompanyFormSchema = z.infer<typeof CompanyFormSchema>;
-
-    const ownershipOptions: TypeOptionInput[] = [
-        {
-            value: "Private",
-            label: "خصوصی",
-        },
-        {
-            value: "Government",
-            label: "دولتی",
-        },
-    ];
-
-    if (type === "Home") {
         const {
             formState: { isSubmitting },
             register,
@@ -251,43 +244,112 @@ const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ type }) => {
         const submitAction = (data: TypeCompanyFormSchema) => {
             console.log("Okkkkkkkkkk", data);
         };
-        const go = () => console.log(getValues());
-
         return (
-            <div className="flex h-full">
-                <form action="" onSubmit={handleSubmit(submitAction)}>
-                    <SelectInput
-                        label="
-                    نوع شرکت"
-                        register={register("ownership")}
-                        options={ownershipOptions}
-                    />
-                    <button onClick={() => go()}>Click</button>
-                </form>
-            </div>
+            <>
+                <div>
+                    <h3>ویرایش اطلاعات شرکت</h3>
+                    <form className="my-10">
+                        <section>
+                            <h5 className="mr-2">لوگو</h5>
+                            <div className="flex mt-2">
+                                <img
+                                    className="rounded-full h-20 shadow-xl ml-5"
+                                    src="/images/company-Sheypoor.webp"
+                                    alt=""
+                                />
+                                <div>
+                                    {/* <input type="file" name="" id="" /> */}
+                                    <Button ClickHandler={() => {}} isLoading={false} textColor="primary" size="small">
+                                        لوگو جدید آپلود کنید
+                                    </Button>
+                                    <p className="mt-2 text-xs text-jv-lightGray2x w-1/2">
+                                        پیشنهاد میشود مقدار پیکسل لوگو شرکت 800 * 800 و فرمت عکس JPG یا PNG باشد و
+                                        همچنین فرمت GIF نامعتبر میباشد
+                                    </p>
+                                </div>
+                            </div>
+                        </section>
+                        <section className="my-5">
+                            <h5 className="mr-2">نام شرکت</h5>
+                            <TextInput placeholder="نام شرکت..." register={register("name")}></TextInput>
+                        </section>
+                        <section>
+                            <h5 className="mr-2">موقعیت شرکت</h5>
+                            <TextInput
+                                placeholder="تهران ، بهارستان"
+                                register={register("location")}
+                                icon={<BiMap></BiMap>}
+                                iconSide="Right"
+                            ></TextInput>
+                        </section>
+                        <section className="my-5">
+                            <h5 className="mr-2">وب سایت شرکت</h5>
+                            <TextInput
+                                placeholder="www.jobvision.ir"
+                                register={register("website")}
+                                icon={<BiLinkAlt></BiLinkAlt>}
+                                iconSide="Right"
+                            ></TextInput>
+                        </section>
+                        <section>
+                            <h5 className="mr-2"> درباره شرکت</h5>
+                            <TextareaInput placeholder="درباره شرکت..." register={register("desc")}></TextareaInput>
+                        </section>
+                        <section className="my-5">
+                            <h5 className="mr-2">شعار شرکت</h5>
+                            <TextInput
+                                placeholder="شعار شرکت..."
+                                register={register("CompanySlogan")}
+                                icon={<PiSpeakerHigh></PiSpeakerHigh>}
+                                iconSide="Right"
+                            ></TextInput>
+                        </section>
+                        <section>
+                            <h5 className="mr-2">تعداد کارکنان شرکت</h5>
+                            <TextInput
+                                placeholder="تعداد کارکنان..."
+                                register={register("OrganizationEmploy")}
+                                icon={<FiUsers></FiUsers>}
+                                iconSide="Right"
+                            ></TextInput>
+                        </section>
+                        <section className="my-5">
+                            <h5 className="mr-2">سال تاسیس</h5>
+                            {/* <TextInput
+                                placeholder="سال تاسیس..."
+                                register={register("establishedyear")}
+                                icon={<BsCalendarEvent></BsCalendarEvent>}
+                                iconSide="Right"
+                            ></TextInput> */}
+                            <DateInput></DateInput>
+                        </section>
+                        <section>
+                            <h5 className="mr-2">نوع شرکت</h5>
+                            <SelectInput
+                                label="نوع شرکت"
+                                options={ownershipOptions}
+                                register={register("ownership")}
+                                className="border-jv-lightGray3x"
+                            ></SelectInput>
+                        </section>
+                        <Button
+                            ClassName="mt-5 w-full"
+                            textColor="primary"
+                            size="middle"
+                            ClickHandler={() => {}}
+                            isLoading={false}
+                        >
+                            آپدیت
+                        </Button>
+                    </form>
+                </div>
+            </>
         );
-    }
-};
-
-type dd = {
-    company: {
-        name: string;
-        location: string;
-        logo: string;
-        score?: {
-            companyScore: number;
-            popularityScore: number;
-            experienceOfJobSeekersScore: number;
-            responsivenessScore: number;
-        };
-        website: string;
-        desc: string;
-        CompanySlogan: string;
-        Benefits?: string[];
-        establishedyear: number;
-        OrganizationEmploy: number;
-        ownership?: "Government" | "Private";
-        typeOfActivity?: string;
-        industry?: string;
     };
+
+    if (mainKey === "Home" || subPage === "Home_Edit") {
+        return <HomePage isEditShow={subPage === "Home_Edit" ? true : false}></HomePage>;
+    } else if (mainKey === "Request_All") {
+        return <div>Request_All</div>;
+    }
 };

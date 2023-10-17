@@ -3,6 +3,10 @@ import { MenuProps } from "antd";
 export type CmsMenuItem = Required<MenuProps>["items"][number];
 
 export namespace LiteralsMainPage {
+    export type TypeMainPage = {
+        mainKey: React.Key;
+        subPage?: LiteralsMainPage.TypeSubMainPage;
+    };
     export type Home = "Home";
     export type Advertsisings = "Advertsisings";
     export type Request_Accept = "Request_Accept";
@@ -16,4 +20,10 @@ export namespace LiteralsMainPage {
     export const RqRejection: Request_Rejection = "Request_Rejection";
     export const RqWaiting: Request_Waiting = "Request_Waiting";
     export const RqAll: Request_All = "Request_All";
+    //
+    export type TypeSubMainPage = "Home_Edit";
 }
+
+export type HomePageProps = {
+    isEditShow: boolean;
+};

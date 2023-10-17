@@ -30,4 +30,10 @@ const getTime = (date: Date): TimeType => {
         : { date: 0, type: "NotValid" };
 };
 
-export { getTime };
+const messageLengthGenerator = (type: "Min" | "Max", name: string, length: number): string =>
+    `${type === "Min" ? "حداقل" : type === "Max" ? "حداکثر" : null} ${length} کاکرتر برای ${name} ${
+        type === "Min" ? "مورد نیاز است" : type === "Max" ? "مجاز میباشد" : null
+    }`;
+const messageUrlNotValid = (name: string): string => `لینک ${name} معتبر نمیباشد`;
+
+export { getTime, messageLengthGenerator, messageUrlNotValid };
