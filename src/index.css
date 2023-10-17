@@ -99,6 +99,10 @@
         @apply box-info-type border-jv-success bg-jv-lightSuccess text-jv-success;
     }
 
+    .button-Cms-type {
+        @apply select-none cursor-pointer p-2 border-[1px] border-solid rounded-lg flex items-center justify-center active:scale-90;
+    }
+
     /* width */
     ::-webkit-scrollbar {
         width: 10px;

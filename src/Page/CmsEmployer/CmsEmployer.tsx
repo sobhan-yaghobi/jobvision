@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 // Components
 import { Menu } from "antd";
 import { motion, AnimatePresence } from "framer-motion";
+import Button from "../../Components/Button/Button";
 
 // Icons
 import { GoHomeFill } from "react-icons/go";
@@ -21,9 +22,12 @@ import { BsCheckAll } from "react-icons/bs";
 import { RxLapTimer } from "react-icons/rx";
 import { TbGitPullRequestClosed } from "react-icons/tb";
 import { RiGitPullRequestFill } from "react-icons/ri";
+import { AiOutlineClose } from "react-icons/ai";
 import Logo from "/Svg/Logo/PrimaryColorLogo.svg";
 import reportIcon from "/images/report.webp";
-import Button from "../../Components/Button/Button";
+import { HiOutlineLogout } from "react-icons/hi";
+import { CiEdit, CiUser } from "react-icons/ci";
+import { AiOutlineEye } from "react-icons/ai";
 
 const getItem = (
     label: React.ReactNode,
@@ -73,8 +77,9 @@ const CmsEmployer: React.FC = () => {
                             items={items}
                             onSelect={(props) => setMainPage({ mainKey: props.key })}
                         />
+                        
                     </div>
-                    <div className="w-full h-[36%] text-center rounded-lg bg-slate-100 flex flex-col items-center ">
+                    <div className="w-full h-[35%] text-center rounded-lg bg-slate-100 flex flex-col items-center ">
                         <img className="h-[45%] mb-2" src={reportIcon} alt="" />
                         <h4>گزارش سالانه</h4>
                         <p className="text-xs my-2">همین الان از گزارش سالیانه مطلع شوید</p>
@@ -98,7 +103,94 @@ const CmsEmployer: React.FC = () => {
                         <CmsPageGenerator type={MainPage.mainKey as LiteralsMainPage.AllPage}></CmsPageGenerator>
                     </motion.div>
                 </AnimatePresence>
-                <div className="w-3/12"></div>
+                <div className="w-3/12 h-full">
+                    <div className="h-3/6 flex flex-col items-center">
+                        <div className="w-full flex items-center justify-end">
+                            <span
+                                title="خروج از پنل"
+                                className="button-Cms-type text-jv-danger ml-2 border-jv-lightDanger  hover:bg-jv-lightDanger"
+                            >
+                                <HiOutlineLogout className="text-inherit transition-none" />
+                            </span>
+                            <span
+                                title="بستن پروفایل"
+                                className="button-Cms-type text-jv-lightGray2x p-2 border-jv-lightGray3x hover:bg-jv-lightGray3x"
+                            >
+                                <AiOutlineClose className="text-inherit transition-none" />
+                            </span>
+                        </div>
+                        <img className="rounded-full h-16 shadow-xl" src="/images/company-Sheypoor.webp" alt="" />
+                        <h3 className="mt-3 text-jv-lightGray2x">شیپور</h3>
+                        <ul className="w-full my-5 flex items-center justify-around">
+                            <li className="select-none cursor-pointer text-jv-primary flex flex-col items-center justify-center group">
+                                <span className="button-Cms-type border-jv-lightPrimary bg-jv-lightPrimary shadow-jv-primary group-hover:shadow-xl group-active:scale-90">
+                                    <CiEdit className="text-inherit transform-none" />
+                                </span>
+                                <span className="mt-3 text-xs font-semibold">ویرایش اطلاعات</span>
+                            </li>
+                            <li className="select-none cursor-pointer text-jv-primary flex flex-col items-center justify-center group relative">
+                                <span className="button-Cms-type border-jv-lightPrimary bg-jv-lightPrimary shadow-jv-primary group-hover:shadow-xl group-active:scale-90">
+                                    <BiGitPullRequest className="text-inherit transform-none" />
+                                </span>
+                                <span className="mt-3 text-xs font-semibold">درخواست ها</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div className="h-3/6 w-full">
+                        <div className="px-1 h-full flex flex-col overflow-y-auto">
+                            <h3 className="text-jv-lightGray2x">درخواست های اخیر</h3>
+                            <div className="my-1">
+                                <span className="text-jv-lightGray2x text-xs pr-1">امروز</span>
+                                <ul>
+                                    {Array(3)
+                                        .fill("")
+                                        .map((item, index) => (
+                                            <li
+                                                key={index}
+                                                className="p-2 mb-2 rounded-lg bg-jv-lightPrimary flex items-center justify-around"
+                                            >
+                                                <span className="w-2/12 flex items-center justify-start">
+                                                    <span className="button-Cms-type cursor-default text-jv-primary border-jv-lightPrimary bg-jv-lightPrimary text-xl rounded-xl shadow-lg">
+                                                        <CiUser />
+                                                    </span>
+                                                </span>
+                                                <span className="w-8/12 text-jv-lightGray2x">
+                                                    <p className="text-sm truncate">سبحان یعقوبی</p>
+                                                    <p className="text-xs truncate">توسعه دهنده فرانت اند</p>
+                                                </span>
+                                                <span className="w-2/12 flex items-center justify-end">
+                                                    <span className="button-Cms-type border-jv-lightGray3x bg-jv-lightGray3x text-jv-lightGray2x shadow-lg hover:shadow-none">
+                                                        <AiOutlineEye />
+                                                    </span>
+                                                </span>
+                                            </li>
+                                        ))}
+                                </ul>
+                            </div>
+                            <div className="my-1">
+                                <span className="text-jv-lightGray2x text-xs pr-1">دیروز</span>
+                                <ul>
+                                    <li className="p-2 mb-2 rounded-lg bg-jv-lightPrimary flex items-center justify-around">
+                                        <span className="w-2/12 flex items-center justify-start">
+                                            <span className="button-Cms-type cursor-default text-jv-primary border-jv-lightPrimary bg-jv-lightPrimary text-xl rounded-xl shadow-lg">
+                                                <CiUser />
+                                            </span>
+                                        </span>
+                                        <span className="w-8/12 text-jv-lightGray2x">
+                                            <p className="text-sm truncate">سبحان یعقوبی</p>
+                                            <p className="text-xs truncate">توسعه دهنده فرانت اند</p>
+                                        </span>
+                                        <span className="w-2/12 flex items-center justify-end">
+                                            <span className="button-Cms-type border-jv-lightGray3x bg-jv-lightGray3x text-jv-lightGray2x shadow-lg hover:shadow-none">
+                                                <AiOutlineEye />
+                                            </span>
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </>
     );
