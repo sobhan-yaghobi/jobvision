@@ -2,7 +2,12 @@ import React, { useState, useEffect } from "react";
 import { z } from "zod";
 
 // Functions
-import { messageLengthGenerator, messageRequiredGenerator, messageUrlNotValid } from "../../Utils/Utils";
+import {
+    messageLengthGenerator,
+    messageRequiredGenerator,
+    messageSuccess,
+    messageUrlNotValid,
+} from "../../Utils/Utils";
 
 // Types
 import { CmsMenuItem, CmsPageGeneratorProps, HomePageProps, LiteralsMainPage } from "./CmsEmployer.type";
@@ -11,12 +16,18 @@ import { TypeOptionInput } from "../../Components/Input/Input.type";
 
 // Hook
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import useShowMssAndNotif from "../../Hooks/useShowMssAndNotif";
 
 // Components
 import { Menu } from "antd";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "../../Components/Button/Button";
 import { Link } from "react-router-dom";
+
+// Date Picker
+import { DateObject } from "react-multi-date-picker";
+import Persian_cl from "react-date-object/calendars/persian";
 
 // Icons
 import { GoHomeFill } from "react-icons/go";
@@ -32,11 +43,7 @@ import { HiOutlineLogout } from "react-icons/hi";
 import { CiEdit, CiUser } from "react-icons/ci";
 import { AiOutlineEye } from "react-icons/ai";
 import { PiSpeakerHigh } from "react-icons/pi";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { DateObject } from "react-multi-date-picker";
-import Persian_cl from "react-date-object/calendars/persian";
-import useShowMssAndNotif, { TypeMessShow } from "../../Hooks/useShowMssAndNotif";
+import { FaFileCirclePlus } from "react-icons/fa6";
 
 const getItem = (
     label: React.ReactNode,
@@ -130,7 +137,7 @@ const CmsEmployer: React.FC = () => {
                         </div>
                         <img className="rounded-full h-16 shadow-xl" src="/images/company-Sheypoor.webp" alt="" />
                         <h3 className="mt-3 text-jv-lightGray2x">شیپور</h3>
-                        <ul className="w-full my-5 flex items-center justify-around">
+                        <ul className="w-full my-5 flex items-center justify-evenly">
                             <li
                                 onClick={() => setMainPage({ mainKey: LiteralsMainPage.Home, subPage: "Home_Edit" })}
                                 className="select-none cursor-pointer text-jv-primary flex flex-col items-center justify-center group"
@@ -138,7 +145,7 @@ const CmsEmployer: React.FC = () => {
                                 <span className="button-Cms-type border-jv-lightPrimary bg-jv-lightPrimary shadow-jv-primary group-hover:shadow-xl group-active:scale-90">
                                     <CiEdit className="text-inherit transform-none" />
                                 </span>
-                                <span className="mt-3 text-xs font-semibold">ویرایش اطلاعات</span>
+                                <span className="mt-3 text-xs font-semibold">ویرایش</span>
                             </li>
                             <li
                                 onClick={() => setMainPage({ mainKey: LiteralsMainPage.RqAll })}
@@ -241,7 +248,7 @@ const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, subPage, 
                 .trim()
                 .max(50, messageLengthGenerator("Max", "شعار شرکت شما", 50)),
             establishedyear: z.date({ required_error: messageRequiredGenerator("سال تاسیس شرکت") }),
-            OrganizationEmploy: z.number({ required_error: messageRequiredGenerator("تعداد کارکنان") }),
+            OrganizationEmploy: z.string({ required_error: messageRequiredGenerator("تعداد کارکنان") }),
             ownership: z.string({ required_error: "انتخاب نوع شرکت اجباری است" }).trim(),
         });
 
@@ -260,9 +267,9 @@ const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, subPage, 
 
         const {
             register,
-            getValues,
             setValue,
             handleSubmit,
+            reset,
             formState: { errors, isSubmitting },
         } = useForm<TypeCompanyFormSchema>({ resolver: zodResolver(CompanyFormSchema) });
 
@@ -281,7 +288,13 @@ const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, subPage, 
         const setEstablishDate = (date: number) => setValue("establishedyear", new Date(date));
 
         const submitAction = (data: TypeCompanyFormSchema) => {
-            console.log("Okkkkkkkkkk", data);
+            return new Promise<void>((resolve) => {
+                setTimeout(() => {
+                    showMess({ type: "success", message: messageSuccess("آپدیت اطلاعات شرکت") });
+                    reset();
+                    resolve();
+                }, 2000);
+            });
         };
         return (
             <>
@@ -296,12 +309,12 @@ const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, subPage, 
                                     src="/images/company-Sheypoor.webp"
                                     alt=""
                                 />
-                                <div>
+                                <div className="w-full">
                                     <TextInput
                                         icon={<BsImages></BsImages>}
-                                        iconSide="Right"
-                                        placeholder="لینک لوگو شرکت..."
+                                        placeholder="...لینک لوگو شرکت"
                                         register={register("logo")}
+                                        className={[{ inputClassName: "text-left" }]}
                                     ></TextInput>
                                     <p className="mt-2 text-xs text-jv-lightGray2x w-1/2">
                                         پیشنهاد میشود مقدار پیکسل لوگو شرکت 800 * 800 و فرمت عکس JPG یا PNG باشد و
@@ -329,7 +342,7 @@ const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, subPage, 
                                 placeholder="برای مثال www.jobvision.ir"
                                 register={register("website")}
                                 icon={<BiLinkAlt></BiLinkAlt>}
-                                iconSide="Right"
+                                className={[{ inputClassName: "text-left" }]}
                             ></TextInput>
                         </section>
                         <section>
@@ -347,7 +360,11 @@ const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, subPage, 
                         </section>
                         <section>
                             <h5 className="mr-2">تعداد کارکنان شرکت</h5>
-                            <NumberInput placeholder="برای مثال 13" min={1}></NumberInput>
+                            <NumberInput
+                                register={register("OrganizationEmploy")}
+                                placeholder="برای مثال 13"
+                                min={1}
+                            ></NumberInput>
                         </section>
                         <section className="my-5">
                             <h5 className="mr-2">سال تاسیس</h5>
@@ -370,7 +387,7 @@ const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, subPage, 
                             textColor="primary"
                             size="middle"
                             ClickHandler={() => {}}
-                            isLoading={false}
+                            isLoading={isSubmitting}
                         >
                             آپدیت
                         </Button>

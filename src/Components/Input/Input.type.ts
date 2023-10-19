@@ -47,6 +47,7 @@ export interface TypeDateInput {
 }
 
 export interface TypeNumberInput {
+    register: {};
     defValue?: number;
     placeholder: string;
     max?: number;

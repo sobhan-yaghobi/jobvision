@@ -98,7 +98,7 @@ const TextInput: React.FC<React.PropsWithChildren<TypeMainInput>> = (props) => {
                 </span>
             ) : null}
             <input
-                className={InputUtils.className.inputClassName}
+                className={twMerge(InputUtils.className.inputClassName, props.className?.[0].inputClassName)}
                 type="text"
                 placeholder={props.placeholder}
                 autoComplete="off"
@@ -201,7 +201,12 @@ const DateInput: React.FC<TypeDateInput> = ({ placeholder, date, setDate }) => {
                 locale={persian_fa}
                 maxDate={new Date()}
                 onChange={(date: DateObject) => setDate(date.valueOf())}
-                style={{ padding: ".5rem", fontFamily: "dana", background: "transparent" }}
+                style={{
+                    padding: ".5rem",
+                    fontFamily: "dana",
+                    background: "transparent",
+                    borderColor: "var(--lightGray3xColor)",
+                }}
                 calendarPosition="top-right"
                 fixMainPosition
                 fixRelativePosition
@@ -211,7 +216,7 @@ const DateInput: React.FC<TypeDateInput> = ({ placeholder, date, setDate }) => {
     );
 };
 
-const NumberInput: React.FC<TypeNumberInput> = ({ placeholder, defValue, max, min }) => {
+const NumberInput: React.FC<TypeNumberInput> = ({ placeholder, defValue, max, min, register }) => {
     return (
         <>
             <input
@@ -219,6 +224,7 @@ const NumberInput: React.FC<TypeNumberInput> = ({ placeholder, defValue, max, mi
                 placeholder={placeholder}
                 max={max}
                 min={min}
+                {...register}
                 className="bg-transparent p-2 rounded-lg outline-none border border-solid border-jv-lightGray3x"
                 type="number"
             />

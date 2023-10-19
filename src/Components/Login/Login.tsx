@@ -13,6 +13,7 @@ import { AuthContext } from "../../Context/AuthContext";
 
 // Functions
 import { useForm } from "react-hook-form";
+import { messageSuccess } from "../../Utils/Utils";
 
 // Hooks
 import useShowMssAndNotif from "../../Hooks/useShowMssAndNotif";
@@ -45,7 +46,7 @@ const Login: React.FC = () => {
     const submitAction = () => {
         return new Promise<void>((resolve) => {
             setTimeout(() => {
-                showMess({ type: "success", message: "ثبت نام با موفقیت به اتمام رسید" });
+                showMess({ type: "success", message: messageSuccess("ثبت نام") });
                 reset();
                 authContext.setLoginModal(false);
                 resolve();

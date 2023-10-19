@@ -35,6 +35,7 @@ const messageLengthGenerator = (type: "Min" | "Max", name: string, length: numbe
         type === "Min" ? "مورد نیاز است" : type === "Max" ? "مجاز میباشد" : null
     }`;
 const messageUrlNotValid = (name: string): string => `لینک ${name} معتبر نمیباشد`;
-
 const messageRequiredGenerator = (name: string) => `${name} اجباری میباشد`;
-export { getTime, messageLengthGenerator, messageUrlNotValid, messageRequiredGenerator };
+const messageSuccess = (name: string) => `${name} با موفقیت به اتمام رسید`;
+
+export { getTime, messageLengthGenerator, messageUrlNotValid, messageRequiredGenerator, messageSuccess };
