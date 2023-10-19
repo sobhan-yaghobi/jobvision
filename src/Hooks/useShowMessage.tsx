@@ -1,8 +1,9 @@
 import { message } from "antd";
+import { ShowMessType } from "./useShowMssAndNotif";
 
 const useShowMessage = () => {
     const [messageApi, contextMessageHolder] = message.useMessage();
-    const showMessage = (type: "error" | "success" | "warning", content: string) =>
+    const showMessage = (type: ShowMessType, content: string) =>
         messageApi.open({
             type,
             content,

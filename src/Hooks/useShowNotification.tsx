@@ -1,12 +1,13 @@
 import { notification } from "antd";
+import { ShowMessType, placementNotifType } from "./useShowMssAndNotif";
 
-type useShowNotificationProps = {
-    placement: "bottomLeft" | "bottom" | "bottomRight" | "top" | "topLeft" | "topRight";
+export type useShowNotificationProps = {
+    placement: placementNotifType;
 };
 
 const useShowNotification = ({ placement }: useShowNotificationProps) => {
     const [messageApi, contextNotificationHolder] = notification.useNotification();
-    const showNotifcation = (type: "error" | "success" | "warning", message: string) =>
+    const showNotifcation = (type: ShowMessType, message: string) =>
         messageApi.open({
             type,
             message,
