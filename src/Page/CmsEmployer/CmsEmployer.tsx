@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { z } from "zod";
 
 // Functions
@@ -6,7 +6,7 @@ import { messageLengthGenerator, messageUrlNotValid } from "../../Utils/Utils";
 
 // Types
 import { CmsMenuItem, HomePageProps, LiteralsMainPage } from "./CmsEmployer.type";
-import { DateInput, SelectInput, TextInput, TextareaInput } from "../../Components/Input/Input";
+import { DateInput, NumberInput, SelectInput, TextInput, TextareaInput } from "../../Components/Input/Input";
 import { TypeOptionInput } from "../../Components/Input/Input.type";
 
 // Hook
@@ -32,8 +32,9 @@ import { HiOutlineLogout } from "react-icons/hi";
 import { CiEdit, CiUser } from "react-icons/ci";
 import { AiOutlineEye } from "react-icons/ai";
 import { PiSpeakerHigh } from "react-icons/pi";
-import { FiUsers } from "react-icons/fi";
-import { TiInfoLargeOutline } from "react-icons/ti";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { DateObject } from "react-multi-date-picker";
+import Persian_cl from "react-date-object/calendars/persian";
 
 const getItem = (
     label: React.ReactNode,
@@ -236,11 +237,22 @@ const CmsPageGenerator: React.FC<LiteralsMainPage.TypeMainPage> = ({ mainKey, su
         ];
 
         const {
-            formState: { isSubmitting },
             register,
             getValues,
+            setValue,
             handleSubmit,
-        } = useForm<TypeCompanyFormSchema>({});
+            formState: { errors, isSubmitting },
+        } = useForm<TypeCompanyFormSchema>({ resolver: zodResolver(CompanyFormSchema) });
+
+        useEffect(() => {
+            console.log("errors", errors);
+            console.log("getValues", getValues());
+        }, [errors]);
+
+        console.log(errors);
+
+        const setEstablishDate = (date: number) => setValue("establishedyear", new Date(date));
+
         const submitAction = (data: TypeCompanyFormSchema) => {
             console.log("Okkkkkkkkkk", data);
         };
@@ -248,7 +260,7 @@ const CmsPageGenerator: React.FC<LiteralsMainPage.TypeMainPage> = ({ mainKey, su
             <>
                 <div>
                     <h3>ویرایش اطلاعات شرکت</h3>
-                    <form className="my-10">
+                    <form onSubmit={handleSubmit(submitAction)} className="my-10">
                         <section>
                             <h5 className="mr-2">لوگو</h5>
                             <div className="flex mt-2">
@@ -271,12 +283,12 @@ const CmsPageGenerator: React.FC<LiteralsMainPage.TypeMainPage> = ({ mainKey, su
                         </section>
                         <section className="my-5">
                             <h5 className="mr-2">نام شرکت</h5>
-                            <TextInput placeholder="نام شرکت..." register={register("name")}></TextInput>
+                            <TextInput placeholder="برای مثال جاب ویژن" register={register("name")}></TextInput>
                         </section>
                         <section>
                             <h5 className="mr-2">موقعیت شرکت</h5>
                             <TextInput
-                                placeholder="تهران ، بهارستان"
+                                placeholder="برای مثال تهران ، بهارستان"
                                 register={register("location")}
                                 icon={<BiMap></BiMap>}
                                 iconSide="Right"
@@ -285,7 +297,7 @@ const CmsPageGenerator: React.FC<LiteralsMainPage.TypeMainPage> = ({ mainKey, su
                         <section className="my-5">
                             <h5 className="mr-2">وب سایت شرکت</h5>
                             <TextInput
-                                placeholder="www.jobvision.ir"
+                                placeholder="برای مثال www.jobvision.ir"
                                 register={register("website")}
                                 icon={<BiLinkAlt></BiLinkAlt>}
                                 iconSide="Right"
@@ -298,7 +310,7 @@ const CmsPageGenerator: React.FC<LiteralsMainPage.TypeMainPage> = ({ mainKey, su
                         <section className="my-5">
                             <h5 className="mr-2">شعار شرکت</h5>
                             <TextInput
-                                placeholder="شعار شرکت..."
+                                placeholder="برای مثال : متفاوت بیندیشید"
                                 register={register("CompanySlogan")}
                                 icon={<PiSpeakerHigh></PiSpeakerHigh>}
                                 iconSide="Right"
@@ -306,22 +318,14 @@ const CmsPageGenerator: React.FC<LiteralsMainPage.TypeMainPage> = ({ mainKey, su
                         </section>
                         <section>
                             <h5 className="mr-2">تعداد کارکنان شرکت</h5>
-                            <TextInput
-                                placeholder="تعداد کارکنان..."
-                                register={register("OrganizationEmploy")}
-                                icon={<FiUsers></FiUsers>}
-                                iconSide="Right"
-                            ></TextInput>
+                            <NumberInput placeholder="برای مثال 13" min={1}></NumberInput>
                         </section>
                         <section className="my-5">
                             <h5 className="mr-2">سال تاسیس</h5>
-                            {/* <TextInput
-                                placeholder="سال تاسیس..."
-                                register={register("establishedyear")}
-                                icon={<BsCalendarEvent></BsCalendarEvent>}
-                                iconSide="Right"
-                            ></TextInput> */}
-                            <DateInput></DateInput>
+                            <DateInput
+                                placeholder={`برای مثال ${new DateObject().convert(Persian_cl)}`}
+                                setDate={setEstablishDate}
+                            ></DateInput>
                         </section>
                         <section>
                             <h5 className="mr-2">نوع شرکت</h5>

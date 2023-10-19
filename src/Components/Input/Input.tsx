@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import { twMerge } from "tailwind-merge";
-import { AiOutlineEye } from "react-icons/ai";
-import { AiFillCaretDown } from "react-icons/ai";
-import { AiOutlineClose } from "react-icons/ai";
+
+// Types
 import {
     TypeClassNameInputRequird,
     TypeMainInput,
@@ -10,9 +8,23 @@ import {
     TypeAutoCompleteGenerator,
     TypeSelectInput,
     TypeTextareaInput,
+    TypeDateInput,
+    TypeNumberInput,
 } from "./Input.type";
-import { DatePicker } from "antd";
 
+// Functions
+import { twMerge } from "tailwind-merge";
+
+// Icons
+import { AiOutlineEye } from "react-icons/ai";
+import { AiFillCaretDown } from "react-icons/ai";
+import { AiOutlineClose } from "react-icons/ai";
+
+// Date Picker
+import DatePicker from "react-multi-date-picker";
+import Jalali from "react-date-object/calendars/jalali";
+import persian_fa from "react-date-object/locales/persian_fa";
+import { DateObject } from "react-multi-date-picker";
 namespace InputUtils {
     export const className: TypeClassNameInputRequird = {
         inputwrapperClassName:
@@ -148,7 +160,7 @@ const SelectInput: React.FC<TypeSelectInput> = (props) => {
         <>
             <div
                 className={twMerge(
-                    `select w-full max-w-[15rem] min-w-[10rem] border-2 border-solid border-jv-primary rounded-lg p-2 bg-transparent cursor-pointer text-lg`,
+                    `select w-fit border-[1px] border-solid border-jv-primary rounded-lg p-2 bg-transparent cursor-pointer text-lg`,
                     props.className
                 )}
             >
@@ -180,14 +192,39 @@ const TextareaInput: React.FC<TypeTextareaInput> = (props) => {
     );
 };
 
-const DateInput: React.FC = () => {
-    const now = new Date().toLocaleDateString("fa-IR");
+const DateInput: React.FC<TypeDateInput> = ({ placeholder, date, setDate }) => {
     return (
         <>
-            {/* <DatePicker></DatePicker> */}
-            <input type="date" value={now} name="" id="" />
+            <DatePicker
+                calendar={Jalali}
+                value={date}
+                placeholder={placeholder}
+                locale={persian_fa}
+                maxDate={new Date()}
+                onChange={(date: DateObject) => setDate(date.valueOf())}
+                style={{ padding: ".5rem", fontFamily: "dana", background: "transparent" }}
+                calendarPosition="top-right"
+                fixMainPosition
+                fixRelativePosition
+                hideOnScroll
+            />
         </>
     );
 };
 
-export { TextInput, PasswordInput, SelectInput, TextareaInput, DateInput };
+const NumberInput: React.FC<TypeNumberInput> = ({ placeholder, defValue, max, min }) => {
+    return (
+        <>
+            <input
+                value={defValue}
+                placeholder={placeholder}
+                max={max}
+                min={min}
+                className="bg-transparent p-2 rounded-lg outline-none border border-solid border-jv-lightGray3x"
+                type="number"
+            />
+        </>
+    );
+};
+
+export { TextInput, PasswordInput, SelectInput, TextareaInput, DateInput, NumberInput };

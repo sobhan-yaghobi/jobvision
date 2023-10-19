@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+import { DateObject } from "react-multi-date-picker";
 
 export type TypeIconSide = "Left" | "Right";
 
@@ -19,6 +20,7 @@ export interface TypeMainInput {
     register: {};
     iconSide?: TypeIconSide;
     icon?: ReactNode;
+    isError?: boolean;
 }
 
 export type TypeOptionInput = {
@@ -36,6 +38,19 @@ export interface TypeTextareaInput {
     register: {};
     placeholder: string;
     className?: string;
+}
+
+export interface TypeDateInput {
+    placeholder?: string;
+    date?: Date;
+    setDate: (date: number) => void;
+}
+
+export interface TypeNumberInput {
+    defValue?: number;
+    placeholder: string;
+    max?: number;
+    min?: number;
 }
 
 export type TypeIconGenerator = {
