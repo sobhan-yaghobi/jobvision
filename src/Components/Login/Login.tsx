@@ -8,20 +8,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TextInput, PasswordInput } from "../Input/Input";
 import Button from "../Button/Button";
 
+// Context
+import { AuthContext } from "../../Context/AuthContext";
+
 // Functions
 import { useForm } from "react-hook-form";
 
 // Hooks
-import useShowNotification from "../../Hooks/useShowNotification";
-import useShowMessage from "../../Hooks/useShowMessage";
+import useShowMssAndNotif from "../../Hooks/useShowMssAndNotif";
 
 // Icons
 import Logo from "/Svg/Logo/PrimaryLogoNoShape.svg";
 import { FcGoogle } from "react-icons/fc";
 import { LuLinkedin } from "react-icons/lu";
-import useWindowsSize from "../../Hooks/useWindowsSize";
-import { AuthContext } from "../../Context/AuthContext";
-import useShowMssAndNotif from "../../Hooks/useShowMssAndNotif";
 
 export type TypeLoginFormSchema = z.infer<typeof loginFormSchema>;
 const loginFormSchema = z.object({
@@ -46,7 +45,7 @@ const Login: React.FC = () => {
     const submitAction = () => {
         return new Promise<void>((resolve) => {
             setTimeout(() => {
-                showMess("success", "ثبت نام با موفقیت به اتمام رسید");
+                showMess({ type: "success", message: "ثبت نام با موفقیت به اتمام رسید" });
                 reset();
                 authContext.setLoginModal(false);
                 resolve();
@@ -55,8 +54,8 @@ const Login: React.FC = () => {
     };
 
     useEffect(() => {
-        showMess("error", errors.password?.message);
-        showMess("error", errors.username_OR_email?.message);
+        showMess({ type: "error", message: errors.password?.message });
+        showMess({ type: "error", message: errors.username_OR_email?.message });
     }, [errors]);
 
     return (

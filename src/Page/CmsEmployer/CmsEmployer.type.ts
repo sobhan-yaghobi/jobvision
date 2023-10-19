@@ -1,4 +1,5 @@
 import { MenuProps } from "antd";
+import { TypeMessShow } from "../../Hooks/useShowMssAndNotif";
 
 export type CmsMenuItem = Required<MenuProps>["items"][number];
 
@@ -23,6 +24,12 @@ export namespace LiteralsMainPage {
     //
     export type TypeSubMainPage = "Home_Edit";
 }
+
+export type CmsPageGeneratorProps = {
+    mainPage: LiteralsMainPage.TypeMainPage["mainKey"];
+    subPage?: LiteralsMainPage.TypeMainPage["subPage"];
+    showMess: ({}: TypeMessShow) => void;
+};
 
 export type HomePageProps = {
     isEditShow: boolean;

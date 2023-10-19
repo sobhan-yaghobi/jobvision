@@ -10,11 +10,13 @@ type useShowMssAndNotifProps = {
     placementOfNotif: placementNotifType;
 };
 
+export type TypeMessShow = { type: ShowMessType; message: string | undefined };
+
 const useShowMssAndNotif = ({ placementOfNotif }: useShowMssAndNotifProps) => {
     const [windowSize] = useWindowsSize();
     const { contextNotificationHolder, showNotifcation } = useShowNotification({ placement: placementOfNotif });
     const { contextMessageHolder, showMessage } = useShowMessage();
-    const showMess = (type: ShowMessType, message: string | undefined) => {
+    const showMess = ({ type, message }: TypeMessShow) => {
         if (typeof message !== "undefined") {
             windowSize.innerWidth < 768 ? showMessage(type, message) : showNotifcation(type, message);
         }

@@ -165,7 +165,6 @@ const SelectInput: React.FC<TypeSelectInput> = (props) => {
                 )}
             >
                 <select {...props.register} className="w-full bg-transparent cursor-pointer" id="standard-select">
-                    <option value="">{props.label}</option>
                     {props.options.map((item, index) => (
                         <option value={item.value} key={index}>
                             {item.label}

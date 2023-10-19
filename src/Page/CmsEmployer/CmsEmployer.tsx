@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { z } from "zod";
 
 // Functions
-import { messageLengthGenerator, messageUrlNotValid } from "../../Utils/Utils";
+import { messageLengthGenerator, messageRequiredGenerator, messageUrlNotValid } from "../../Utils/Utils";
 
 // Types
-import { CmsMenuItem, HomePageProps, LiteralsMainPage } from "./CmsEmployer.type";
+import { CmsMenuItem, CmsPageGeneratorProps, HomePageProps, LiteralsMainPage } from "./CmsEmployer.type";
 import { DateInput, NumberInput, SelectInput, TextInput, TextareaInput } from "../../Components/Input/Input";
 import { TypeOptionInput } from "../../Components/Input/Input.type";
 
@@ -22,7 +22,7 @@ import { Link } from "react-router-dom";
 import { GoHomeFill } from "react-icons/go";
 import { CgFileDocument } from "react-icons/cg";
 import { BiGitPullRequest, BiMap, BiLinkAlt } from "react-icons/bi";
-import { BsCheckAll, BsCalendarEvent } from "react-icons/bs";
+import { BsCheckAll, BsImages } from "react-icons/bs";
 import { RxLapTimer } from "react-icons/rx";
 import { TbGitPullRequestClosed } from "react-icons/tb";
 import { RiGitPullRequestFill } from "react-icons/ri";
@@ -32,9 +32,11 @@ import { HiOutlineLogout } from "react-icons/hi";
 import { CiEdit, CiUser } from "react-icons/ci";
 import { AiOutlineEye } from "react-icons/ai";
 import { PiSpeakerHigh } from "react-icons/pi";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DateObject } from "react-multi-date-picker";
 import Persian_cl from "react-date-object/calendars/persian";
+import useShowMssAndNotif, { TypeMessShow } from "../../Hooks/useShowMssAndNotif";
 
 const getItem = (
     label: React.ReactNode,
@@ -68,10 +70,13 @@ const items: CmsMenuItem[] = [
 ];
 
 const CmsEmployer: React.FC = () => {
+    const { ShowContext, showMess } = useShowMssAndNotif({ placementOfNotif: "bottomLeft" });
+
     const [MainPage, setMainPage] = useState<LiteralsMainPage.TypeMainPage>({ mainKey: LiteralsMainPage.Home });
 
     return (
         <>
+            {ShowContext}
             <div className="w-full h-screen flex justify-between p-4 relative">
                 <div className="w-2/12 p-1 flex flex-col justify-between">
                     <div>
@@ -104,7 +109,11 @@ const CmsEmployer: React.FC = () => {
                     <motion.div
                         className={`w-7/12 h-full rounded-lg mx-4 bg-jv-light p-4 overflow-y-auto no-scrollbar`}
                     >
-                        <CmsPageGenerator mainKey={MainPage.mainKey} subPage={MainPage.subPage}></CmsPageGenerator>
+                        <CmsPageGenerator
+                            showMess={showMess}
+                            mainPage={MainPage.mainKey}
+                            subPage={MainPage.subPage}
+                        ></CmsPageGenerator>
                     </motion.div>
                 </AnimatePresence>
                 <div className="w-3/12 h-full">
@@ -204,23 +213,36 @@ const CmsEmployer: React.FC = () => {
 
 export default CmsEmployer;
 
-const CmsPageGenerator: React.FC<LiteralsMainPage.TypeMainPage> = ({ mainKey, subPage }) => {
+const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, subPage, showMess }) => {
     const HomePage: React.FC<HomePageProps> = ({ isEditShow }) => {
         const CompanyFormSchema = z.object({
-            name: z.string().trim().min(3, messageLengthGenerator("Min", "نام شرکت", 3)),
-            location: z.string().trim().min(10, messageLengthGenerator("Min", "موقعیت مکانی", 10)),
-            logo: z.string().trim().url(messageUrlNotValid("لوگو شرکت")),
-            website: z.string().trim().url(messageUrlNotValid("وب سایت شرکت")),
-            desc: z.string().trim().max(500, messageLengthGenerator("Max", "درباره شرکت", 500)),
-            CompanySlogan: z.string().trim().max(50, messageLengthGenerator("Max", "شعار شرکت شما", 50)),
-            Benefits: z.string().trim().optional(),
-            establishedyear: z.date(),
-            OrganizationEmploy: z.number(),
-            ownership: z.string({ invalid_type_error: "انتخاب نوع شرکت اجباری است" }).trim(),
-            // ownership: z.object({
-            //     value: z.string(),
-            //     label: z.string(),
-            // }),
+            name: z
+                .string({ required_error: messageRequiredGenerator("نام شرکت") })
+                .trim()
+                .min(3, messageLengthGenerator("Min", "نام شرکت", 3)),
+            location: z
+                .string({ required_error: messageRequiredGenerator("مکان شرکت") })
+                .trim()
+                .min(10, messageLengthGenerator("Min", "موقعیت مکانی", 10)),
+            logo: z
+                .string({ required_error: messageRequiredGenerator("لینک لوگو شرکت") })
+                .trim()
+                .url(messageUrlNotValid("لوگو شرکت")),
+            website: z
+                .string({ required_error: messageRequiredGenerator("لینک وب سایت") })
+                .trim()
+                .url(messageUrlNotValid("وب سایت شرکت")),
+            desc: z
+                .string({ required_error: messageRequiredGenerator("درباره شرکت") })
+                .trim()
+                .max(500, messageLengthGenerator("Max", "درباره شرکت", 500)),
+            CompanySlogan: z
+                .string({ required_error: messageRequiredGenerator("شعار شرکت") })
+                .trim()
+                .max(50, messageLengthGenerator("Max", "شعار شرکت شما", 50)),
+            establishedyear: z.date({ required_error: messageRequiredGenerator("سال تاسیس شرکت") }),
+            OrganizationEmploy: z.number({ required_error: messageRequiredGenerator("تعداد کارکنان") }),
+            ownership: z.string({ required_error: "انتخاب نوع شرکت اجباری است" }).trim(),
         });
 
         type TypeCompanyFormSchema = z.infer<typeof CompanyFormSchema>;
@@ -245,11 +267,16 @@ const CmsPageGenerator: React.FC<LiteralsMainPage.TypeMainPage> = ({ mainKey, su
         } = useForm<TypeCompanyFormSchema>({ resolver: zodResolver(CompanyFormSchema) });
 
         useEffect(() => {
-            console.log("errors", errors);
-            console.log("getValues", getValues());
+            showMess({ type: "error", message: errors.name?.message });
+            showMess({ type: "error", message: errors.location?.message });
+            showMess({ type: "error", message: errors.logo?.message });
+            showMess({ type: "error", message: errors.website?.message });
+            showMess({ type: "error", message: errors.desc?.message });
+            showMess({ type: "error", message: errors.CompanySlogan?.message });
+            showMess({ type: "error", message: errors.establishedyear?.message });
+            showMess({ type: "error", message: errors.OrganizationEmploy?.message });
+            showMess({ type: "error", message: errors.ownership?.message });
         }, [errors]);
-
-        console.log(errors);
 
         const setEstablishDate = (date: number) => setValue("establishedyear", new Date(date));
 
@@ -270,10 +297,12 @@ const CmsPageGenerator: React.FC<LiteralsMainPage.TypeMainPage> = ({ mainKey, su
                                     alt=""
                                 />
                                 <div>
-                                    {/* <input type="file" name="" id="" /> */}
-                                    <Button ClickHandler={() => {}} isLoading={false} textColor="primary" size="small">
-                                        لوگو جدید آپلود کنید
-                                    </Button>
+                                    <TextInput
+                                        icon={<BsImages></BsImages>}
+                                        iconSide="Right"
+                                        placeholder="لینک لوگو شرکت..."
+                                        register={register("logo")}
+                                    ></TextInput>
                                     <p className="mt-2 text-xs text-jv-lightGray2x w-1/2">
                                         پیشنهاد میشود مقدار پیکسل لوگو شرکت 800 * 800 و فرمت عکس JPG یا PNG باشد و
                                         همچنین فرمت GIF نامعتبر میباشد
@@ -351,9 +380,9 @@ const CmsPageGenerator: React.FC<LiteralsMainPage.TypeMainPage> = ({ mainKey, su
         );
     };
 
-    if (mainKey === "Home" || subPage === "Home_Edit") {
+    if (mainPage === "Home" || subPage === "Home_Edit") {
         return <HomePage isEditShow={subPage === "Home_Edit" ? true : false}></HomePage>;
-    } else if (mainKey === "Request_All") {
+    } else if (mainPage === "Request_All") {
         return <div>Request_All</div>;
     }
 };
