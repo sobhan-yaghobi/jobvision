@@ -4,6 +4,14 @@ import { TypeMessShow } from "../../Hooks/useShowMssAndNotif";
 export type CmsMenuItem = Required<MenuProps>["items"][number];
 
 export namespace LiteralsMainPage {
+    export type TypeMainPageItem = {
+        label: React.ReactNode;
+        key: React.Key;
+        icon?: React.ReactNode;
+        mainsubpage?: LiteralsMainPage.TypeSubMainPage;
+        children?: CmsMenuItem[];
+        type?: "group";
+    };
     export type TypeMainPage = {
         mainKey: React.Key;
         subPage?: LiteralsMainPage.TypeSubMainPage;
@@ -22,15 +30,26 @@ export namespace LiteralsMainPage {
     export const RqWaiting: Request_Waiting = "Request_Waiting";
     export const RqAll: Request_All = "Request_All";
     //
-    export type TypeSubMainPage = "Home_Edit";
+    export type TypeSubMainPage = "Home_Edit" | "Home_Main";
 }
 
 export type CmsPageGeneratorProps = {
-    mainPage: LiteralsMainPage.TypeMainPage["mainKey"];
+    mainPage: LiteralsMainPage.AllPage;
     subPage?: LiteralsMainPage.TypeMainPage["subPage"];
     showMess: ({}: TypeMessShow) => void;
+    setMainPage: React.Dispatch<React.SetStateAction<LiteralsMainPage.TypeMainPage>>;
+};
+
+export type TypeSubPageItem = {
+    parnetPage: LiteralsMainPage.AllPage;
+    subPage: LiteralsMainPage.TypeSubMainPage;
+    title: string;
 };
 
 export type HomePageProps = {
     isEditShow: boolean;
+};
+
+export type EditHomePageProps = {
+    showMess: CmsPageGeneratorProps["showMess"];
 };

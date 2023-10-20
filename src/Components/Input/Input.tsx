@@ -7,9 +7,9 @@ import {
     TypeIconGenerator,
     TypeAutoCompleteGenerator,
     TypeSelectInput,
-    TypeTextareaInput,
     TypeDateInput,
     TypeNumberInput,
+    TypeTextInput,
 } from "./Input.type";
 
 // Functions
@@ -75,7 +75,7 @@ namespace InputUtils {
         typeof className !== "undefined" ? className : "";
 }
 
-const TextInput: React.FC<React.PropsWithChildren<TypeMainInput>> = (props) => {
+const TextInput: React.FC<React.PropsWithChildren<TypeTextInput>> = (props) => {
     const [showAutoComplete, setShowAutoComplete] = useState(false);
     return (
         <span
@@ -120,7 +120,7 @@ const TextInput: React.FC<React.PropsWithChildren<TypeMainInput>> = (props) => {
     );
 };
 
-const PasswordInput: React.FC<TypeMainInput> = (props) => {
+const PasswordInput: React.FC<TypeTextInput> = (props) => {
     const [isPassShow, setIsPassShow] = useState(false);
     return (
         <>
@@ -176,7 +176,7 @@ const SelectInput: React.FC<TypeSelectInput> = (props) => {
     );
 };
 
-const TextareaInput: React.FC<TypeTextareaInput> = (props) => {
+const TextareaInput: React.FC<TypeMainInput> = (props) => {
     return (
         <>
             <textarea

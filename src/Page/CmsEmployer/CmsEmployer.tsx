@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Children } from "react";
 import { z } from "zod";
 
 // Functions
@@ -10,7 +10,14 @@ import {
 } from "../../Utils/Utils";
 
 // Types
-import { CmsMenuItem, CmsPageGeneratorProps, HomePageProps, LiteralsMainPage } from "./CmsEmployer.type";
+import {
+    CmsMenuItem,
+    CmsPageGeneratorProps,
+    EditHomePageProps,
+    HomePageProps,
+    LiteralsMainPage,
+    TypeSubPageItem,
+} from "./CmsEmployer.type";
 import { DateInput, NumberInput, SelectInput, TextInput, TextareaInput } from "../../Components/Input/Input";
 import { TypeOptionInput } from "../../Components/Input/Input.type";
 
@@ -20,7 +27,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import useShowMssAndNotif from "../../Hooks/useShowMssAndNotif";
 
 // Components
-import { Menu } from "antd";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "../../Components/Button/Button";
 import { Link } from "react-router-dom";
@@ -45,59 +51,78 @@ import { AiOutlineEye } from "react-icons/ai";
 import { PiSpeakerHigh } from "react-icons/pi";
 import { FaFileCirclePlus } from "react-icons/fa6";
 
-const getItem = (
-    label: React.ReactNode,
-    key: React.Key,
-    icon?: React.ReactNode,
-    children?: CmsMenuItem[],
-    type?: "group"
-): CmsMenuItem => {
-    return {
-        key,
-        icon,
-        children,
-        label,
-        type,
-    } as CmsMenuItem;
-};
+import { Menu as MENU } from "antd";
+import Menu, { MenuItemType } from "../../Components/Menu/Menu";
 
-const items: CmsMenuItem[] = [
-    getItem("خانه", LiteralsMainPage.Home, <GoHomeFill />),
-    getItem("آگهی ها", LiteralsMainPage.Advertsisings, <CgFileDocument />),
-    getItem("درخواست ها", "sub1", <BiGitPullRequest />, [
-        getItem("قبول شده", LiteralsMainPage.RqAccept, <BsCheckAll style={{ color: "var(--successColor)" }} />),
-        getItem(
-            "رد شده",
-            LiteralsMainPage.RqRejection,
-            <TbGitPullRequestClosed style={{ color: "var(--dangerColor)" }} />
-        ),
-        getItem("در حال انتظار", LiteralsMainPage.RqWaiting, <RxLapTimer style={{ color: "var(--warningColor)" }} />),
-        getItem("تمامی درخواست ها", LiteralsMainPage.RqAll, <RiGitPullRequestFill />),
-    ]),
+const pageItems: MenuItemType[] = [
+    {
+        label: "خانه",
+        key: LiteralsMainPage.Home,
+        icon: <GoHomeFill />,
+        mainSubPage: "Home_Main",
+    },
+    { label: "آگهی ها", key: LiteralsMainPage.Advertsisings, icon: <CgFileDocument /> },
+    {
+        label: "درخواست ها",
+        key: "sub1",
+        icon: <BiGitPullRequest />,
+        children: [
+            {
+                parentKey: "sub1",
+                label: "قبول شده",
+                key: LiteralsMainPage.RqAccept,
+                icon: <BsCheckAll style={{ color: "var(--successColor)" }} />,
+            },
+            {
+                parentKey: "sub1",
+                label: "رد شده",
+                key: LiteralsMainPage.RqRejection,
+                icon: <TbGitPullRequestClosed style={{ color: "var(--dangerColor)" }} />,
+            },
+            {
+                parentKey: "sub1",
+                label: "در حال انتظار",
+                key: LiteralsMainPage.RqWaiting,
+                icon: <RxLapTimer style={{ color: "var(--warningColor)" }} />,
+            },
+            {
+                parentKey: "sub1",
+                label: "تمامی درخواست ها",
+                key: LiteralsMainPage.RqAll,
+                icon: <RiGitPullRequestFill />,
+            },
+        ],
+    },
 ];
+
+console.log("pageItems", pageItems);
 
 const CmsEmployer: React.FC = () => {
     const { ShowContext, showMess } = useShowMssAndNotif({ placementOfNotif: "bottomLeft" });
 
-    const [MainPage, setMainPage] = useState<LiteralsMainPage.TypeMainPage>({ mainKey: LiteralsMainPage.Home });
+    const [MainPage, setMainPage] = useState<LiteralsMainPage.TypeMainPage>({
+        mainKey: LiteralsMainPage.Home,
+        subPage: "Home_Main",
+    });
+
+    useEffect(() => {
+        console.log("MainPage", MainPage);
+    }, [MainPage]);
+
+    const setMainPageAction = (MainItem: MenuItemType) => {
+        setMainPage({ mainKey: MainItem.key, subPage: MainItem.mainSubPage });
+    };
 
     return (
         <>
             {ShowContext}
             <div className="w-full h-screen flex justify-between p-4 relative">
-                <div className="w-2/12 p-1 flex flex-col justify-between">
-                    <div>
-                        <img className="px-2" src={Logo} alt="" />
-                        <Menu
-                            key={MainPage.mainKey}
-                            className="!border-none rounded-lg my-1"
-                            defaultSelectedKeys={[MainPage.mainKey as string]}
-                            mode="inline"
-                            items={items}
-                            onSelect={(props) => setMainPage({ mainKey: props.key })}
-                        />
+                <div className="w-2/12 p-1 flex flex-col justify-between text-jv-lightGray2x">
+                    <img className="w-full h-10 self-start" src={Logo} alt="" />
+                    <div className="h-full overflow-y-auto no-scrollbar">
+                        <Menu onSelect={setMainPageAction} isOpen items={pageItems}></Menu>
                     </div>
-                    <div className="w-full h-[35%] text-center rounded-lg bg-slate-100 flex flex-col items-center ">
+                    <div className="w-full h-[35%] text-center rounded-lg bg-slate-100 flex flex-col items-center">
                         <img className="h-[45%] mb-2" src={reportIcon} alt="" />
                         <h4>گزارش سالانه</h4>
                         <p className="text-xs my-2">همین الان از گزارش سالیانه مطلع شوید</p>
@@ -113,12 +138,11 @@ const CmsEmployer: React.FC = () => {
                     </div>
                 </div>
                 <AnimatePresence>
-                    <motion.div
-                        className={`w-7/12 h-full rounded-lg mx-4 bg-jv-light p-4 overflow-y-auto no-scrollbar`}
-                    >
+                    <motion.div className={`w-7/12 h-full mx-4`}>
                         <CmsPageGenerator
                             showMess={showMess}
-                            mainPage={MainPage.mainKey}
+                            mainPage={MainPage.mainKey as LiteralsMainPage.AllPage}
+                            setMainPage={setMainPage}
                             subPage={MainPage.subPage}
                         ></CmsPageGenerator>
                     </motion.div>
@@ -145,7 +169,7 @@ const CmsEmployer: React.FC = () => {
                                 <span className="button-Cms-type border-jv-lightPrimary bg-jv-lightPrimary shadow-jv-primary group-hover:shadow-xl group-active:scale-90">
                                     <CiEdit className="text-inherit transform-none" />
                                 </span>
-                                <span className="mt-3 text-xs font-semibold">ویرایش</span>
+                                <span className="mt-3 text-xs">ویرایش</span>
                             </li>
                             <li
                                 onClick={() => setMainPage({ mainKey: LiteralsMainPage.RqAll })}
@@ -154,7 +178,7 @@ const CmsEmployer: React.FC = () => {
                                 <span className="button-Cms-type border-jv-lightPrimary bg-jv-lightPrimary shadow-jv-primary group-hover:shadow-xl group-active:scale-90">
                                     <BiGitPullRequest className="text-inherit transform-none" />
                                 </span>
-                                <span className="mt-3 text-xs font-semibold">درخواست ها</span>
+                                <span className="mt-3 text-xs">درخواست ها</span>
                             </li>
                         </ul>
                     </div>
@@ -220,40 +244,41 @@ const CmsEmployer: React.FC = () => {
 
 export default CmsEmployer;
 
-const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, subPage, showMess }) => {
-    const HomePage: React.FC<HomePageProps> = ({ isEditShow }) => {
+namespace SubPageCms {
+    export const subPageItem: TypeSubPageItem[] = [
+        {
+            parnetPage: "Home",
+            subPage: "Home_Main",
+            title: "صفحه اصلی",
+        },
+        {
+            parnetPage: "Home",
+            subPage: "Home_Edit",
+            title: "درباره شرکت",
+        },
+    ];
+
+    export const EditHomePage: React.FC<EditHomePageProps> = ({ showMess }) => {
         const CompanyFormSchema = z.object({
-            name: z
-                .string({ required_error: messageRequiredGenerator("نام شرکت") })
-                .trim()
-                .min(3, messageLengthGenerator("Min", "نام شرکت", 3)),
-            location: z
-                .string({ required_error: messageRequiredGenerator("مکان شرکت") })
-                .trim()
-                .min(10, messageLengthGenerator("Min", "موقعیت مکانی", 10)),
+            name: z.string().min(3, messageLengthGenerator("Min", "نام شرکت", 3)).trim(),
+            location: z.string().min(10, messageLengthGenerator("Min", "موقعیت مکانی", 10)).trim(),
             logo: z
-                .string({ required_error: messageRequiredGenerator("لینک لوگو شرکت") })
-                .trim()
-                .url(messageUrlNotValid("لوگو شرکت")),
-            website: z
-                .string({ required_error: messageRequiredGenerator("لینک وب سایت") })
-                .trim()
-                .url(messageUrlNotValid("وب سایت شرکت")),
-            desc: z
-                .string({ required_error: messageRequiredGenerator("درباره شرکت") })
-                .trim()
-                .max(500, messageLengthGenerator("Max", "درباره شرکت", 500)),
+                .string()
+                .min(1, messageRequiredGenerator("لینک لوگو شرکت"))
+                .url(messageUrlNotValid("لوگو شرکت"))
+                .trim(),
+            website: z.string().url(messageUrlNotValid("وب سایت شرکت")).trim(),
+            desc: z.string().min(1, messageRequiredGenerator("درباره ی شرکت")).trim(),
             CompanySlogan: z
-                .string({ required_error: messageRequiredGenerator("شعار شرکت") })
-                .trim()
-                .max(50, messageLengthGenerator("Max", "شعار شرکت شما", 50)),
+                .string()
+                .min(1, messageRequiredGenerator("شعار شرکت"))
+                .max(50, messageLengthGenerator("Max", "شعار شرکت شما", 50))
+                .trim(),
             establishedyear: z.date({ required_error: messageRequiredGenerator("سال تاسیس شرکت") }),
-            OrganizationEmploy: z.string({ required_error: messageRequiredGenerator("تعداد کارکنان") }),
+            OrganizationEmploy: z.string().min(1, messageRequiredGenerator("تعداد کارکنان")),
             ownership: z.string({ required_error: "انتخاب نوع شرکت اجباری است" }).trim(),
         });
-
         type TypeCompanyFormSchema = z.infer<typeof CompanyFormSchema>;
-
         const ownershipOptions: TypeOptionInput[] = [
             {
                 value: "Private",
@@ -264,16 +289,17 @@ const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, subPage, 
                 label: "دولتی",
             },
         ];
-
         const {
             register,
             setValue,
+            getValues,
             handleSubmit,
             reset,
             formState: { errors, isSubmitting },
         } = useForm<TypeCompanyFormSchema>({ resolver: zodResolver(CompanyFormSchema) });
-
         useEffect(() => {
+            console.log(errors.desc);
+
             showMess({ type: "error", message: errors.name?.message });
             showMess({ type: "error", message: errors.location?.message });
             showMess({ type: "error", message: errors.logo?.message });
@@ -284,9 +310,7 @@ const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, subPage, 
             showMess({ type: "error", message: errors.OrganizationEmploy?.message });
             showMess({ type: "error", message: errors.ownership?.message });
         }, [errors]);
-
         const setEstablishDate = (date: number) => setValue("establishedyear", new Date(date));
-
         const submitAction = (data: TypeCompanyFormSchema) => {
             return new Promise<void>((resolve) => {
                 setTimeout(() => {
@@ -347,7 +371,12 @@ const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, subPage, 
                         </section>
                         <section>
                             <h5 className="mr-2"> درباره شرکت</h5>
-                            <TextareaInput placeholder="درباره شرکت..." register={register("desc")}></TextareaInput>
+                            <TextInput
+                                placeholder="برای مثال : متفاوت بیندیشید"
+                                register={register("desc")}
+                                icon={<PiSpeakerHigh></PiSpeakerHigh>}
+                                iconSide="Right"
+                            ></TextInput>
                         </section>
                         <section className="my-5">
                             <h5 className="mr-2">شعار شرکت</h5>
@@ -397,9 +426,48 @@ const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, subPage, 
         );
     };
 
-    if (mainPage === "Home" || subPage === "Home_Edit") {
-        return <HomePage isEditShow={subPage === "Home_Edit" ? true : false}></HomePage>;
-    } else if (mainPage === "Request_All") {
-        return <div>Request_All</div>;
-    }
+    export const MainHomePage: React.FC = () => {
+        return <>Main Home Page</>;
+    };
+}
+
+const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, setMainPage, subPage, showMess }) => {
+    const HomePage: React.FC<HomePageProps> = ({ isEditShow }) => {
+        return isEditShow ? (
+            <SubPageCms.EditHomePage showMess={showMess}></SubPageCms.EditHomePage>
+        ) : (
+            <SubPageCms.MainHomePage></SubPageCms.MainHomePage>
+        );
+    };
+    return (
+        <div className="h-full flex flex-col">
+            {mainPage === "Home" ? (
+                <ul className="w-full flex bg-jv-white">
+                    {SubPageCms.subPageItem.map(
+                        (item) =>
+                            item.parnetPage === mainPage && (
+                                <li
+                                    key={item.subPage}
+                                    onClick={() => setMainPage({ mainKey: item.parnetPage, subPage: item.subPage })}
+                                    className={`py-2 px-4 cursor-pointer ${
+                                        item.subPage === subPage
+                                            ? "bg-jv-light rounded-t-lg text-jv-primary"
+                                            : "text-jv-lightGray2x"
+                                    }`}
+                                >
+                                    {item.title}
+                                </li>
+                            )
+                    )}
+                </ul>
+            ) : null}
+            <div className="w-full h-full rounded-lg bg-jv-light p-4 overflow-y-auto no-scrollbar">
+                {mainPage === "Home" || subPage === "Home_Edit" ? (
+                    <HomePage isEditShow={subPage === "Home_Edit" ? true : false}></HomePage>
+                ) : mainPage === "Request_All" ? (
+                    <div>Request_All</div>
+                ) : null}
+            </div>
+        </div>
+    );
 };

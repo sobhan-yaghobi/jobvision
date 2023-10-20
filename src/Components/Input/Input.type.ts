@@ -15,12 +15,20 @@ export type TypeClassNameInputRequird = {
 };
 
 export interface TypeMainInput {
-    placeholder: string;
+    placeholder?: string;
+    className?: string;
+    register: {}; //
+    isError?: boolean | undefined;
+}
+
+export interface TypeTextInput extends Omit<TypeMainInput, "className"> {
     className?: [TypeClassNameInput];
-    register: {};
     iconSide?: TypeIconSide;
     icon?: ReactNode;
-    isError?: boolean;
+}
+export interface TypeSelectInput extends TypeMainInput {
+    options: TypeOptionInput[];
+    label: string;
 }
 
 export type TypeOptionInput = {
@@ -28,28 +36,13 @@ export type TypeOptionInput = {
     label: string;
 };
 
-export interface TypeSelectInput {
-    options: TypeOptionInput[];
-    register: {};
-    label: string;
-    className?: string;
-}
-export interface TypeTextareaInput {
-    register: {};
-    placeholder: string;
-    className?: string;
-}
-
-export interface TypeDateInput {
-    placeholder?: string;
+export interface TypeDateInput extends Omit<TypeMainInput, "register"> {
     date?: Date;
     setDate: (date: number) => void;
 }
 
-export interface TypeNumberInput {
-    register: {};
+export interface TypeNumberInput extends TypeMainInput {
     defValue?: number;
-    placeholder: string;
     max?: number;
     min?: number;
 }
