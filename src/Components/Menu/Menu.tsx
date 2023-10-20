@@ -22,7 +22,6 @@ const Menu: React.FC<MenuProps> = ({ defaultItem, className, items, isOpen, onSe
         setMainItems({ mainItem, mainItemSelected });
 
     useEffect(() => {
-        console.log("mainItems", mainItems);
         if (typeof mainItems.mainItem !== "undefined" && Object.entries(mainItems.mainItem).length) {
             onSelect({ mainItem: mainItems.mainItem, mainItemSelected: mainItems.mainItemSelected });
         }

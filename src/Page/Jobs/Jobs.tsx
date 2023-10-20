@@ -90,7 +90,6 @@ const Jobs: React.FC = () => {
                 }
             });
             setBoxList(newAdvertisingArray);
-            console.log(newAdvertisingArray);
         } else {
             setBoxList(AdvertisingArray);
         }

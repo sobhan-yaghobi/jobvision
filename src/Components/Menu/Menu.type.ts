@@ -8,7 +8,7 @@ export type MenuItemType = {
     key: React.Key;
     label: string;
     icon?: React.ReactNode;
-    mainSubPage?: LiteralsMainPage.TypeMainPageItem["mainsubpage"];
+    mainSubPage?: LiteralsMainPage.TypeSubMainPage;
     children?: MenuItemType[];
     parentKey?: MenuItemType["key"];
 };

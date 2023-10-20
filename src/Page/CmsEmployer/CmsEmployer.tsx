@@ -296,8 +296,6 @@ namespace SubPageCms {
             formState: { errors, isSubmitting },
         } = useForm<TypeCompanyFormSchema>({ resolver: zodResolver(CompanyFormSchema) });
         useEffect(() => {
-            console.log(errors.desc);
-
             showMess({ type: "error", message: errors.name?.message });
             showMess({ type: "error", message: errors.location?.message });
             showMess({ type: "error", message: errors.logo?.message });
