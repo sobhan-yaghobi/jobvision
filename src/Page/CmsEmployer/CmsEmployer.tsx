@@ -1,5 +1,4 @@
-import React, { useState, useEffect, Children } from "react";
-import { z } from "zod";
+import React, { useState, useEffect } from "react";
 
 // Functions
 import {
@@ -8,10 +7,10 @@ import {
     messageSuccess,
     messageUrlNotValid,
 } from "../../Utils/Utils";
+import { z } from "zod";
 
 // Types
 import {
-    CmsMenuItem,
     CmsPageGeneratorProps,
     EditHomePageProps,
     HomePageProps,
@@ -20,6 +19,7 @@ import {
 } from "./CmsEmployer.type";
 import { DateInput, NumberInput, SelectInput, TextInput, TextareaInput } from "../../Components/Input/Input";
 import { TypeOptionInput } from "../../Components/Input/Input.type";
+import { MenuItemType, MenuProps } from "../../Components/Menu/Menu.type";
 
 // Hook
 import { useForm } from "react-hook-form";
@@ -27,9 +27,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import useShowMssAndNotif from "../../Hooks/useShowMssAndNotif";
 
 // Components
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Button from "../../Components/Button/Button";
 import { Link } from "react-router-dom";
+import Menu from "../../Components/Menu/Menu";
+
+// Animations
+import { ShortShowFromBottom, ShortShowFromTop, SpringBackOutVeryShortly } from "../../Animations/UtilsAnimation";
 
 // Date Picker
 import { DateObject } from "react-multi-date-picker";
@@ -50,9 +54,6 @@ import { CiEdit, CiUser } from "react-icons/ci";
 import { AiOutlineEye } from "react-icons/ai";
 import { PiSpeakerHigh } from "react-icons/pi";
 import { FaFileCirclePlus } from "react-icons/fa6";
-
-import { Menu as MENU } from "antd";
-import Menu, { MenuItemType } from "../../Components/Menu/Menu";
 
 const pageItems: MenuItemType[] = [
     {
@@ -95,22 +96,16 @@ const pageItems: MenuItemType[] = [
     },
 ];
 
-console.log("pageItems", pageItems);
-
 const CmsEmployer: React.FC = () => {
     const { ShowContext, showMess } = useShowMssAndNotif({ placementOfNotif: "bottomLeft" });
 
     const [MainPage, setMainPage] = useState<LiteralsMainPage.TypeMainPage>({
         mainKey: LiteralsMainPage.Home,
         subPage: "Home_Main",
-    });
+    } as LiteralsMainPage.TypeMainPage);
 
-    useEffect(() => {
-        console.log("MainPage", MainPage);
-    }, [MainPage]);
-
-    const setMainPageAction = (MainItem: MenuItemType) => {
-        setMainPage({ mainKey: MainItem.key, subPage: MainItem.mainSubPage });
+    const setMainPageAction: MenuProps["onSelect"] = ({ mainItem, mainItemSelected }) => {
+        typeof mainItem !== "undefined" ? setMainPage({ mainKey: mainItem.key, subPage: mainItem.mainSubPage }) : null;
     };
 
     return (
@@ -118,9 +113,14 @@ const CmsEmployer: React.FC = () => {
             {ShowContext}
             <div className="w-full h-screen flex justify-between p-4 relative">
                 <div className="w-2/12 p-1 flex flex-col justify-between text-jv-lightGray2x">
-                    <img className="w-full h-10 self-start" src={Logo} alt="" />
-                    <div className="h-full overflow-y-auto no-scrollbar">
-                        <Menu onSelect={setMainPageAction} isOpen items={pageItems}></Menu>
+                    <img className="h-10 self-start" src={Logo} alt="" />
+                    <div className="mt-1 h-full overflow-y-auto no-scrollbar">
+                        <Menu
+                            defaultItem={MainPage.mainKey}
+                            onSelect={setMainPageAction}
+                            isOpen
+                            items={pageItems}
+                        ></Menu>
                     </div>
                     <div className="w-full h-[35%] text-center rounded-lg bg-slate-100 flex flex-col items-center">
                         <img className="h-[45%] mb-2" src={reportIcon} alt="" />
@@ -137,16 +137,14 @@ const CmsEmployer: React.FC = () => {
                         </Button>
                     </div>
                 </div>
-                <AnimatePresence>
-                    <motion.div className={`w-7/12 h-full mx-4`}>
-                        <CmsPageGenerator
-                            showMess={showMess}
-                            mainPage={MainPage.mainKey as LiteralsMainPage.AllPage}
-                            setMainPage={setMainPage}
-                            subPage={MainPage.subPage}
-                        ></CmsPageGenerator>
-                    </motion.div>
-                </AnimatePresence>
+                <div className={`w-7/12 h-full mx-4`}>
+                    <CmsPageGenerator
+                        showMess={showMess}
+                        mainPage={MainPage.mainKey as LiteralsMainPage.AllPage}
+                        setMainPage={setMainPage}
+                        subPage={MainPage.subPage}
+                    ></CmsPageGenerator>
+                </div>
                 <div className="w-3/12 h-full">
                     <div className="h-3/6 flex flex-col items-center">
                         <div className="w-full flex items-center justify-end">
@@ -371,12 +369,10 @@ namespace SubPageCms {
                         </section>
                         <section>
                             <h5 className="mr-2"> درباره شرکت</h5>
-                            <TextInput
-                                placeholder="برای مثال : متفاوت بیندیشید"
+                            <TextareaInput
+                                placeholder="سخنی از سمت شرکت شما برای جویندگان شغل..."
                                 register={register("desc")}
-                                icon={<PiSpeakerHigh></PiSpeakerHigh>}
-                                iconSide="Right"
-                            ></TextInput>
+                            ></TextareaInput>
                         </section>
                         <section className="my-5">
                             <h5 className="mr-2">شعار شرکت</h5>
@@ -440,9 +436,15 @@ const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, setMainPa
         );
     };
     return (
-        <div className="h-full flex flex-col">
+        <div className="h-full flex flex-col overflow-hidden">
             {mainPage === "Home" ? (
-                <ul className="w-full flex bg-jv-white">
+                <motion.ul
+                    variants={ShortShowFromTop}
+                    initial="hidden"
+                    animate="visible"
+                    transition={SpringBackOutVeryShortly}
+                    className="w-full flex bg-jv-white"
+                >
                     {SubPageCms.subPageItem.map(
                         (item) =>
                             item.parnetPage === mainPage && (
@@ -459,15 +461,31 @@ const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, setMainPa
                                 </li>
                             )
                     )}
-                </ul>
+                </motion.ul>
             ) : null}
-            <div className="w-full h-full rounded-lg bg-jv-light p-4 overflow-y-auto no-scrollbar">
+            <motion.div
+                key={mainPage}
+                variants={ShortShowFromBottom}
+                initial="hidden"
+                animate="visible"
+                className="w-full h-full rounded-lg bg-jv-light p-4 overflow-y-auto no-scrollbar"
+            >
                 {mainPage === "Home" || subPage === "Home_Edit" ? (
                     <HomePage isEditShow={subPage === "Home_Edit" ? true : false}></HomePage>
                 ) : mainPage === "Request_All" ? (
                     <div>Request_All</div>
-                ) : null}
-            </div>
+                ) : mainPage === "Advertsisings" ? (
+                    <div>Advertsisings</div>
+                ) : mainPage === "Request_Accept" ? (
+                    <div>Request_Accept</div>
+                ) : mainPage === "Request_Rejection" ? (
+                    <div>Request_Rejection</div>
+                ) : mainPage === "Request_Waiting" ? (
+                    <div>Request_Waiting</div>
+                ) : (
+                    <></>
+                )}
+            </motion.div>
         </div>
     );
 };

@@ -1,17 +1,6 @@
-import { MenuProps } from "antd";
 import { TypeMessShow } from "../../Hooks/useShowMssAndNotif";
 
-export type CmsMenuItem = Required<MenuProps>["items"][number];
-
 export namespace LiteralsMainPage {
-    export type TypeMainPageItem = {
-        label: React.ReactNode;
-        key: React.Key;
-        icon?: React.ReactNode;
-        mainsubpage?: LiteralsMainPage.TypeSubMainPage;
-        children?: CmsMenuItem[];
-        type?: "group";
-    };
     export type TypeMainPage = {
         mainKey: React.Key;
         subPage?: LiteralsMainPage.TypeSubMainPage;

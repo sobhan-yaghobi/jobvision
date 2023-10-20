@@ -3,6 +3,30 @@ import { Transition, Variants } from "framer-motion";
 // Ex = isExit
 // Var = isVariable
 
+// TRANSITION
+
+const TweenEaseOutVeryShortly: Transition = {
+    duration: 0.01,
+    ease: "easeOut",
+    type: "tween",
+};
+
+const SpringBackOutVeryShortly: Transition = {
+    type: "spring",
+    duration: 0.1,
+    ease: "backOut",
+    opacity: {
+        delay: 0.1,
+    },
+};
+
+const DelayBeforeChilds: Transition = {
+    staggerChildren: 1.4,
+    when: "beforeChildren",
+};
+
+// Animations
+
 const ShortStripVerticalAnimation_Ex_Var: Variants = {
     hidden: (i: number) => ({ y: 100 * i }),
     visible: { y: 0 },
@@ -83,14 +107,16 @@ const ShortShowFromBottom: Variants = {
     visible: {
         y: 0,
         opacity: 1,
-        transition: {
-            type: "spring",
-            duration: 0.1,
-            ease: "backOut",
-            opacity: {
-                delay: 0.1,
-            },
-        },
+        transition: SpringBackOutVeryShortly,
+    },
+};
+
+const ShortShowFromTop: Variants = {
+    hidden: { y: -30, opacity: 0.1, zIndex: 0 },
+    visible: {
+        y: 0,
+        opacity: 1,
+        transition: SpringBackOutVeryShortly,
     },
 };
 
@@ -186,19 +212,6 @@ const ShowFromBottom_EX: Variants = {
     exit: { opacity: 0, y: "100%" },
 };
 
-// TRANSITION
-
-const TweenEaseOutVeryShortly: Transition = {
-    duration: 0.01,
-    ease: "easeOut",
-    type: "tween",
-};
-
-const DelayBeforeChilds: Transition = {
-    staggerChildren: 1.4,
-    when: "beforeChildren",
-};
-
 export {
     ShortStripVerticalAnimation_Ex_Var,
     LongStripVertical_Ex,
@@ -208,6 +221,7 @@ export {
     ShowItemsDelay_Var,
     ShowSvgPath,
     ShortShowFromBottom,
+    ShortShowFromTop,
     ShowHideClipFromBottom_Ex,
     ShowFromBottom_Var,
     ShowFromRight,
@@ -219,4 +233,5 @@ export {
     // Transition
     TweenEaseOutVeryShortly,
     DelayBeforeChilds,
+    SpringBackOutVeryShortly,
 };

@@ -1,5 +1,11 @@
-import { FaStar, FaRegStar } from "react-icons/fa";
+// Functions
 import { TimeType } from "./Utils";
+
+// Components
+import React from "react";
+
+// Icons
+import { FaStar, FaRegStar } from "react-icons/fa";
 interface ScoreIconGeneratorProps {
     score: number;
 }

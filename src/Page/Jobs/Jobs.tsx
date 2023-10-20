@@ -223,7 +223,6 @@ const Jobs: React.FC = () => {
                                 whileInView="visible"
                                 viewport={{ once: true }}
                                 key={mainItemInfo.id}
-                                transition={{ ease: "backOut" }}
                                 className="px-3 py-6 -z-10"
                             >
                                 <BoxInfo type={mainItemInfo.type} info={{ ...mainJobInfo.mainInfo }}></BoxInfo>
