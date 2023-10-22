@@ -16,6 +16,7 @@ import {
     HomePageProps,
     LiteralsMainPage,
     TypeSubPageItem,
+    ProgressCardArray,
 } from "./CmsEmployer.type";
 import { DateInput, NumberInput, SelectInput, TextInput, TextareaInput } from "../../Components/Input/Input";
 import { TypeOptionInput } from "../../Components/Input/Input.type";
@@ -42,7 +43,7 @@ import Persian_cl from "react-date-object/calendars/persian";
 // Icons
 import { GoHomeFill } from "react-icons/go";
 import { CgFileDocument } from "react-icons/cg";
-import { BiGitPullRequest, BiMap, BiLinkAlt } from "react-icons/bi";
+import { BiGitPullRequest, BiMap, BiLinkAlt, BiComment } from "react-icons/bi";
 import { BsCheckAll, BsImages } from "react-icons/bs";
 import { RxLapTimer } from "react-icons/rx";
 import { TbGitPullRequestClosed } from "react-icons/tb";
@@ -54,6 +55,7 @@ import { CiEdit, CiUser } from "react-icons/ci";
 import { AiOutlineEye } from "react-icons/ai";
 import { PiSpeakerHigh } from "react-icons/pi";
 import { FaFileCirclePlus } from "react-icons/fa6";
+import { ConfigProvider, Progress } from "antd";
 
 const pageItems: MenuItemType[] = [
     {
@@ -318,119 +320,267 @@ namespace SubPageCms {
         };
         return (
             <>
-                <div>
-                    <h3>ویرایش اطلاعات شرکت</h3>
-                    <form onSubmit={handleSubmit(submitAction)} className="my-10">
-                        <section>
-                            <h5 className="mr-2">لوگو</h5>
-                            <div className="flex mt-2">
-                                <img
-                                    className="rounded-full h-20 shadow-xl ml-5"
-                                    src="/images/company-Sheypoor.webp"
-                                    alt=""
-                                />
-                                <div className="w-full">
-                                    <TextInput
-                                        icon={<BsImages></BsImages>}
-                                        placeholder="...لینک لوگو شرکت"
-                                        register={register("logo")}
-                                        className={[{ inputClassName: "text-left" }]}
-                                    ></TextInput>
-                                    <p className="mt-2 text-xs text-jv-lightGray2x w-1/2">
-                                        پیشنهاد میشود مقدار پیکسل لوگو شرکت 800 * 800 و فرمت عکس JPG یا PNG باشد و
-                                        همچنین فرمت GIF نامعتبر میباشد
-                                    </p>
-                                </div>
+                <h3>ویرایش اطلاعات شرکت</h3>
+                <form onSubmit={handleSubmit(submitAction)} className="my-10">
+                    <section>
+                        <h5 className="mr-2">لوگو</h5>
+                        <div className="flex mt-2">
+                            <img
+                                className="rounded-full h-20 shadow-xl ml-5"
+                                src="/images/company-Sheypoor.webp"
+                                alt=""
+                            />
+                            <div className="w-full">
+                                <TextInput
+                                    icon={<BsImages></BsImages>}
+                                    placeholder="...لینک لوگو شرکت"
+                                    register={register("logo")}
+                                    className={[{ inputClassName: "text-left" }]}
+                                ></TextInput>
+                                <p className="mt-2 text-xs text-jv-lightGray2x w-1/2">
+                                    پیشنهاد میشود مقدار پیکسل لوگو شرکت 800 * 800 و فرمت عکس JPG یا PNG باشد و همچنین
+                                    فرمت GIF نامعتبر میباشد
+                                </p>
                             </div>
-                        </section>
-                        <section className="my-5">
-                            <h5 className="mr-2">نام شرکت</h5>
-                            <TextInput placeholder="برای مثال جاب ویژن" register={register("name")}></TextInput>
-                        </section>
-                        <section>
-                            <h5 className="mr-2">موقعیت شرکت</h5>
-                            <TextInput
-                                placeholder="برای مثال تهران ، بهارستان"
-                                register={register("location")}
-                                icon={<BiMap></BiMap>}
-                                iconSide="Right"
-                            ></TextInput>
-                        </section>
-                        <section className="my-5">
-                            <h5 className="mr-2">وب سایت شرکت</h5>
-                            <TextInput
-                                placeholder="برای مثال www.jobvision.ir"
-                                register={register("website")}
-                                icon={<BiLinkAlt></BiLinkAlt>}
-                                className={[{ inputClassName: "text-left" }]}
-                            ></TextInput>
-                        </section>
-                        <section>
-                            <h5 className="mr-2"> درباره شرکت</h5>
-                            <TextareaInput
-                                placeholder="سخنی از سمت شرکت شما برای جویندگان شغل..."
-                                register={register("desc")}
-                            ></TextareaInput>
-                        </section>
-                        <section className="my-5">
-                            <h5 className="mr-2">شعار شرکت</h5>
-                            <TextInput
-                                placeholder="برای مثال : متفاوت بیندیشید"
-                                register={register("CompanySlogan")}
-                                icon={<PiSpeakerHigh></PiSpeakerHigh>}
-                                iconSide="Right"
-                            ></TextInput>
-                        </section>
-                        <section>
-                            <h5 className="mr-2">تعداد کارکنان شرکت</h5>
-                            <NumberInput
-                                register={register("OrganizationEmploy")}
-                                placeholder="برای مثال 13"
-                                min={1}
-                            ></NumberInput>
-                        </section>
-                        <section className="my-5">
-                            <h5 className="mr-2">سال تاسیس</h5>
-                            <DateInput
-                                placeholder={`برای مثال ${new DateObject().convert(Persian_cl)}`}
-                                setDate={setEstablishDate}
-                            ></DateInput>
-                        </section>
-                        <section>
-                            <h5 className="mr-2">نوع شرکت</h5>
-                            <SelectInput
-                                label="نوع شرکت"
-                                options={ownershipOptions}
-                                register={register("ownership")}
-                                className="border-jv-lightGray3x"
-                            ></SelectInput>
-                        </section>
-                        <Button
-                            ClassName="mt-5 w-full"
-                            textColor="primary"
-                            size="middle"
-                            ClickHandler={() => {}}
-                            isLoading={isSubmitting}
-                        >
-                            آپدیت
-                        </Button>
-                    </form>
-                </div>
+                        </div>
+                    </section>
+                    <section className="my-5">
+                        <h5 className="mr-2">نام شرکت</h5>
+                        <TextInput placeholder="برای مثال جاب ویژن" register={register("name")}></TextInput>
+                    </section>
+                    <section>
+                        <h5 className="mr-2">موقعیت شرکت</h5>
+                        <TextInput
+                            placeholder="برای مثال تهران ، بهارستان"
+                            register={register("location")}
+                            icon={<BiMap></BiMap>}
+                            iconSide="Right"
+                        ></TextInput>
+                    </section>
+                    <section className="my-5">
+                        <h5 className="mr-2">وب سایت شرکت</h5>
+                        <TextInput
+                            placeholder="برای مثال www.jobvision.ir"
+                            register={register("website")}
+                            icon={<BiLinkAlt></BiLinkAlt>}
+                            className={[{ inputClassName: "text-left" }]}
+                        ></TextInput>
+                    </section>
+                    <section>
+                        <h5 className="mr-2"> درباره شرکت</h5>
+                        <TextareaInput
+                            placeholder="سخنی از سمت شرکت شما برای جویندگان شغل..."
+                            register={register("desc")}
+                        ></TextareaInput>
+                    </section>
+                    <section className="my-5">
+                        <h5 className="mr-2">شعار شرکت</h5>
+                        <TextInput
+                            placeholder="برای مثال : متفاوت بیندیشید"
+                            register={register("CompanySlogan")}
+                            icon={<PiSpeakerHigh></PiSpeakerHigh>}
+                            iconSide="Right"
+                        ></TextInput>
+                    </section>
+                    <section>
+                        <h5 className="mr-2">تعداد کارکنان شرکت</h5>
+                        <NumberInput
+                            register={register("OrganizationEmploy")}
+                            placeholder="برای مثال 13"
+                            min={1}
+                        ></NumberInput>
+                    </section>
+                    <section className="my-5">
+                        <h5 className="mr-2">سال تاسیس</h5>
+                        <DateInput
+                            placeholder={`برای مثال ${new DateObject().convert(Persian_cl)}`}
+                            setDate={setEstablishDate}
+                        ></DateInput>
+                    </section>
+                    <section>
+                        <h5 className="mr-2">نوع شرکت</h5>
+                        <SelectInput
+                            label="نوع شرکت"
+                            options={ownershipOptions}
+                            register={register("ownership")}
+                            className="border-jv-lightGray3x"
+                        ></SelectInput>
+                    </section>
+                    <Button
+                        ClassName="mt-5 w-full"
+                        textColor="primary"
+                        size="middle"
+                        ClickHandler={() => {}}
+                        isLoading={isSubmitting}
+                    >
+                        آپدیت
+                    </Button>
+                </form>
             </>
         );
     };
 
     export const MainHomePage: React.FC = () => {
-        return <>Main Home Page</>;
+        const progressColorGenerator = (precent: number): string => {
+            return `${
+                precent >= 60 && precent <= 100
+                    ? "#5660f2"
+                    : precent >= 40 && precent < 60
+                    ? "#e1bc29"
+                    : precent >= 1 && precent < 40
+                    ? "#fa5555"
+                    : "#8e9cb2"
+            }`;
+        };
+        return (
+            <>
+                <section className="w-full group mt-8 py-2 px-4 h-36 rounded-lg bg-jv-primary relative">
+                    <img
+                        className="w-6/12 scale-90 absolute -bottom-[2.4rem] left-0 group-hover:scale-100 group-hover:-bottom-[1.83rem] duration-700 ease-in-out"
+                        src="/images/cmsHome.webp"
+                        alt=""
+                    />
+                    <div className="w-6/12 h-full text-jv-light flex flex-col justify-evenly">
+                        <h4>سلامم کارفرمای عزیز</h4>
+                        <p className="text-xs">
+                            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک
+                            است، چاپگرها و متون بلکه روزنامه استفاده قرار گیرد.
+                        </p>
+                        <Link
+                            to="#"
+                            className="decoration-jv-light underline-offset-2 w-fit text-jv-light hover:opacity-50 text-sm"
+                        >
+                            اطلاعات بیشتر...
+                        </Link>
+                    </div>
+                </section>
+                <section className="my-6">
+                    <div className="flex items-center justify-between">
+                        <h3 className="cursor-default">شما باید استخدام کنید</h3>
+                        <Link
+                            to="#"
+                            className=" decoration-jv-lightGray2x text-jv-lightGray2x underline-offset-2 w-fit hover:opacity-80 text-sm"
+                        >
+                            مشاهده همه
+                        </Link>
+                    </div>
+                    <div className="grid grid-cols-2 grid-rows-2">
+                        {ProgressCardArray.map((item, index) => (
+                            <div
+                                key={`jobs-hire-box-${index}`}
+                                className="bg-jv-lightPrimary py-2 px-5 m-2 rounded-lg flex items justify-between"
+                            >
+                                <div className="flex items-center">
+                                    <h1 className="ml-5 text-3xl text-jv-lightGray">{item.userCount}</h1>
+                                    <section className="leading-tight">
+                                        <p className="text-jv-lightGray font-semibold">{item.title}</p>
+                                        <span className="text-xs">
+                                            ({item.userCountRecommend} نفر دیگر توصیه میشود)
+                                        </span>
+                                    </section>
+                                </div>
+                                <ConfigProvider
+                                    theme={{
+                                        components: {
+                                            Progress: {
+                                                colorText: progressColorGenerator(item.percent),
+                                            },
+                                        },
+                                    }}
+                                >
+                                    <Progress
+                                        type="dashboard"
+                                        status="normal"
+                                        percent={item.percent}
+                                        strokeLinecap="round"
+                                        strokeColor={progressColorGenerator(item.percent)}
+                                        size="small"
+                                    />
+                                </ConfigProvider>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+                <section>
+                    <h3>آخرین رزومه های فرستاده شده</h3>
+                    <div className="my-2 px-2">
+                        {Array(3)
+                            .fill("")
+                            .map((value, index) => (
+                                <div key={index} className="mb-2 h-36 bg-jv-white py-4 px-3 rounded-lg">
+                                    <div className="h-1/3 flex justify-between">
+                                        <section className="h-full flex">
+                                            <span className="ml-2 text-2xl text-jv-lightGray w-10 h-10 border-2 border-solid border-jv-lightGray rounded-full flex items-center justify-center">
+                                                <CiUser />
+                                            </span>
+                                            <span>
+                                                <p className="text-base text-jv-lightGray">سبحان یعقوبی</p>
+                                                <p className="text-xs">توسعه دهنده فرانت اند</p>
+                                            </span>
+                                        </section>
+                                        <section className="h-full">
+                                            <p className="box-info-type m-0">4 روز پیش</p>
+                                        </section>
+                                    </div>
+                                    <div className="h-2/3 mt-2 text-xs flex flex-col">
+                                        <p
+                                            className="text-base pb-2 text-jv-lightGray w-full truncate"
+                                            title="متن کامللللللل"
+                                        >
+                                            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و ویشیشیشیشیشی
+                                        </p>
+                                        <div className="h-full flex items-end justify-between">
+                                            <span>6 اسفند 1400 - 7 اسفند 1400</span>
+                                            <div className="flex items-center">
+                                                <Button
+                                                    isLoading={false}
+                                                    ClickHandler={() => {}}
+                                                    textColor="primary"
+                                                    size="small"
+                                                    ClassName="!py-2 mx-1 bg-jv-lightPrimary !border-transparent"
+                                                >
+                                                    <BiComment className="text-base" />
+                                                </Button>
+                                                <Button
+                                                    isLoading={false}
+                                                    ClickHandler={() => {}}
+                                                    textColor="primary"
+                                                    size="small"
+                                                    ClassName="!py-2 mx-1 bg-jv-lightPrimary !border-transparent"
+                                                >
+                                                    قبول
+                                                </Button>
+                                                <Button
+                                                    isLoading={false}
+                                                    ClickHandler={() => {}}
+                                                    textColor="primary"
+                                                    size="small"
+                                                    ClassName="!py-2 mx-1 !bg-jv-lightDanger !text-jv-danger !border-jv-lightDanger"
+                                                >
+                                                    رد
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                    </div>
+                </section>
+            </>
+        );
     };
 }
 
 const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, setMainPage, subPage, showMess }) => {
     const HomePage: React.FC<HomePageProps> = ({ isEditShow }) => {
-        return isEditShow ? (
-            <SubPageCms.EditHomePage showMess={showMess}></SubPageCms.EditHomePage>
-        ) : (
-            <SubPageCms.MainHomePage></SubPageCms.MainHomePage>
+        return (
+            <motion.div key={mainPage} variants={ShortShowFromTop} initial="hidden" whileInView="visible">
+                {isEditShow ? (
+                    <SubPageCms.EditHomePage showMess={showMess}></SubPageCms.EditHomePage>
+                ) : (
+                    <SubPageCms.MainHomePage></SubPageCms.MainHomePage>
+                )}
+            </motion.div>
         );
     };
     return (
@@ -466,7 +616,7 @@ const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, setMainPa
                 variants={ShortShowFromBottom}
                 initial="hidden"
                 animate="visible"
-                className="w-full h-full rounded-lg bg-jv-light p-4 overflow-y-auto no-scrollbar"
+                className="w-full h-full text-jv-lightGray2x rounded-lg bg-jv-light p-4 overflow-y-auto no-scrollbar"
             >
                 {mainPage === "Home" || subPage === "Home_Edit" ? (
                     <HomePage isEditShow={subPage === "Home_Edit" ? true : false}></HomePage>

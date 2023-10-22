@@ -42,3 +42,17 @@ export type HomePageProps = {
 export type EditHomePageProps = {
     showMess: CmsPageGeneratorProps["showMess"];
 };
+
+export type ProgressBarCardType = {
+    percent: number;
+    userCount: number;
+    title: string;
+    userCountRecommend: number;
+};
+
+export const ProgressCardArray: ProgressBarCardType[] = [
+    { percent: 75, userCount: 3, title: "سازنده محتوا", userCountRecommend: 1 },
+    { percent: 0, userCount: 1, title: "طراح ارشد رابط کاربری", userCountRecommend: 4 },
+    { percent: 25, userCount: 9, title: "برنامه نویس node js", userCountRecommend: 20 },
+    { percent: 45, userCount: 2, title: "مدیر بازاریابی", userCountRecommend: 2 },
+];

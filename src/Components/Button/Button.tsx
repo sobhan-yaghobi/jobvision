@@ -146,7 +146,7 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = (props) => {
                         ) : null}
                     </AnimatePresence>
                 </div>
-                <span>{props.children}</span>
+                <span className="flex items-center justify-center">{props.children}</span>
             </motion.button>
         </>
     );
