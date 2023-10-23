@@ -19,7 +19,7 @@ export namespace LiteralsMainPage {
     export const RqWaiting: Request_Waiting = "Request_Waiting";
     export const RqAll: Request_All = "Request_All";
     //
-    export type TypeSubMainPage = "Home_Edit" | "Home_Main";
+    export type TypeSubMainPage = "Home_Edit" | "Home_Main" | "Advertsisings_Main" | "Advertsisings_Add";
 }
 
 export type CmsPageGeneratorProps = {

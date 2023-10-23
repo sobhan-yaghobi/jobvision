@@ -256,6 +256,8 @@ namespace SubPageCms {
             subPage: "Home_Edit",
             title: "درباره شرکت",
         },
+        { parnetPage: "Advertsisings", subPage: "Advertsisings_Add", title: "آگهی جدید" },
+        { parnetPage: "Advertsisings", subPage: "Advertsisings_Main", title: "آگهی ها" },
     ];
 
     export const EditHomePage: React.FC<EditHomePageProps> = ({ showMess }) => {
@@ -292,7 +294,6 @@ namespace SubPageCms {
         const {
             register,
             setValue,
-            getValues,
             handleSubmit,
             reset,
             formState: { errors, isSubmitting },
@@ -419,7 +420,6 @@ namespace SubPageCms {
             </>
         );
     };
-
     export const MainHomePage: React.FC = () => {
         const progressColorGenerator = (precent: number): string => {
             return `${
@@ -569,12 +569,19 @@ namespace SubPageCms {
             </>
         );
     };
+
+    export const Advertising_Main: React.FC = () => {
+        return <>Advertising_Main</>;
+    };
+    export const AddAdvertising: React.FC = () => {
+        return <>AddAdvertising</>;
+    };
 }
 
 const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, setMainPage, subPage, showMess }) => {
     const HomePage: React.FC<HomePageProps> = ({ isEditShow }) => {
         return (
-            <motion.div key={mainPage} variants={ShortShowFromTop} initial="hidden" whileInView="visible">
+            <motion.div variants={ShortShowFromTop} initial="hidden" whileInView="visible">
                 {isEditShow ? (
                     <SubPageCms.EditHomePage showMess={showMess}></SubPageCms.EditHomePage>
                 ) : (
@@ -585,34 +592,32 @@ const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, setMainPa
     };
     return (
         <div className="h-full flex flex-col overflow-hidden">
-            {mainPage === "Home" ? (
-                <motion.ul
-                    variants={ShortShowFromTop}
-                    initial="hidden"
-                    animate="visible"
-                    transition={SpringBackOutVeryShortly}
-                    className="w-full flex bg-jv-white"
-                >
-                    {SubPageCms.subPageItem.map(
-                        (item) =>
-                            item.parnetPage === mainPage && (
-                                <li
-                                    key={item.subPage}
-                                    onClick={() => setMainPage({ mainKey: item.parnetPage, subPage: item.subPage })}
-                                    className={`py-2 px-4 cursor-pointer ${
-                                        item.subPage === subPage
-                                            ? "bg-jv-light rounded-t-lg text-jv-primary"
-                                            : "text-jv-lightGray2x"
-                                    }`}
-                                >
-                                    {item.title}
-                                </li>
-                            )
-                    )}
-                </motion.ul>
-            ) : null}
+            <motion.ul
+                key={`${mainPage}-multiPageList`}
+                variants={ShortShowFromTop}
+                initial="hidden"
+                animate="visible"
+                transition={SpringBackOutVeryShortly}
+                className="w-full flex bg-jv-white"
+            >
+                {SubPageCms.subPageItem.map((item) =>
+                    item.parnetPage === mainPage ? (
+                        <li
+                            key={`${item.subPage}-multiPageItem`}
+                            onClick={() => setMainPage({ mainKey: item.parnetPage, subPage: item.subPage })}
+                            className={`py-2 px-4 cursor-pointer ${
+                                item.subPage === subPage
+                                    ? "bg-jv-light rounded-t-lg text-jv-primary"
+                                    : "text-jv-lightGray2x"
+                            }`}
+                        >
+                            {item.title}
+                        </li>
+                    ) : null
+                )}
+            </motion.ul>
             <motion.div
-                key={mainPage}
+                key={`${mainPage}-Page`}
                 variants={ShortShowFromBottom}
                 initial="hidden"
                 animate="visible"
