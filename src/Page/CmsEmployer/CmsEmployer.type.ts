@@ -38,6 +38,9 @@ export type TypeSubPageItem = {
 export type HomePageProps = {
     isEditShow: boolean;
 };
+export type AdvertsisingsPageProps = {
+    isAddShow: boolean;
+};
 
 export type EditHomePageProps = {
     showMess: CmsPageGeneratorProps["showMess"];

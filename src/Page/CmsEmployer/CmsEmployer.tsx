@@ -17,6 +17,7 @@ import {
     LiteralsMainPage,
     TypeSubPageItem,
     ProgressCardArray,
+    AdvertsisingsPageProps,
 } from "./CmsEmployer.type";
 import { DateInput, NumberInput, SelectInput, TextInput, TextareaInput } from "../../Components/Input/Input";
 import { TypeOptionInput } from "../../Components/Input/Input.type";
@@ -108,7 +109,7 @@ const CmsEmployer: React.FC = () => {
 
     const [MainPage, setMainPage] = useState<LiteralsMainPage.TypeMainPage>({
         mainKey: LiteralsMainPage.Home,
-        subPage: "Advertsisings_Main",
+        subPage: "Home_Main",
     } as LiteralsMainPage.TypeMainPage);
 
     const setMainPageAction: MenuProps["onSelect"] = (mainItem) => {
@@ -580,8 +581,135 @@ namespace SubPageCms {
     export const Advertising_Main: React.FC = () => {
         return <>Advertising_Main</>;
     };
-    export const AddAdvertising: React.FC = () => {
-        return <>AddAdvertising</>;
+    export const Advertising_Add: React.FC = () => {
+        const [addFormCondition, setAddFormCondition] = useState<{ isRightPriceArray: boolean }>({
+            isRightPriceArray: false,
+        });
+
+        // const BaseTeacher = z.object({ students: z.array(z.string()) });
+        // const HasID = z.object({ id: z.string() });
+
+        // const Teacher = BaseTeacher.merge(HasID);
+        // type Teacher = z.infer<typeof Teacher>;
+
+        const mainAddFormSchema = z.object({
+            workTime: z.string().min(1, messageRequiredGenerator("زمان کار")),
+            typeOfCooperation: z.string(),
+            businessTrips: z.string().optional(),
+            benefitsAndFacilities: z.string().optional(),
+            keyIndicators: z.array(z.string()),
+            jobDuties: z.string().min(1, messageRequiredGenerator("وظایف شغلی")),
+            Softwares: z.array(z.string()),
+        });
+
+        const rightPriceArray = z.object({
+            isRightPriceArray: z.literal(true),
+            rightsPriceFrom: z.string().min(1, messageRequiredGenerator("حداقل حقوق")),
+            rightsPriceTo: z.string().min(1, messageRequiredGenerator("حداکثر حقوق")),
+        });
+        const rightPriceOnly = z.object({
+            isRightPriceArray: z.literal(false),
+            rightsPriceFrom: z.string().min(1, messageRequiredGenerator("حقوق")),
+        });
+
+        const yearsOldArray = z.object({
+            isYearArray: z.literal(true),
+            yearFrom: z.string().min(1, messageRequiredGenerator("حداقل سن")),
+            yearTo: z.string().min(1, messageRequiredGenerator("حداکثر سن")),
+        });
+        const yearOldOnly = z.object({
+            isYearArray: z.literal(false),
+            yearFrom: z.string().min(1, messageRequiredGenerator("سن")),
+        });
+
+        const adSchemaForm_rightPrice = z.discriminatedUnion("isRightPriceArray", [rightPriceArray, rightPriceOnly]);
+        const adSchemaForm_yearOld = z.discriminatedUnion("isYearArray", [yearsOldArray, yearOldOnly]);
+        const allSchema = adSchemaForm_rightPrice.and(adSchemaForm_yearOld);
+
+        type adSchemaForm_rightPriceType = z.infer<typeof adSchemaForm_rightPrice>;
+        type adSchemaForm_yearOlType = z.infer<typeof adSchemaForm_yearOld>;
+
+        const { register, watch } = useForm<adSchemaForm_rightPriceType | adSchemaForm_yearOlType>({
+            resolver: zodResolver(allSchema),
+        });
+
+        return (
+            <>
+                <h3>آگهی جدید</h3>
+                <form className="my-10">
+                    <section>
+                        <h5 className="mr-2">حقوق ماهانه</h5>
+                    </section>
+                    <section className="my-5">
+                        <h5 className="mr-2">نام شرکت</h5>
+                        <TextInput placeholder="برای مثال جاب ویژن" register={{}}></TextInput>
+                    </section>
+                    <section>
+                        <h5 className="mr-2">موقعیت شرکت</h5>
+                        <TextInput
+                            placeholder="برای مثال تهران ، بهارستان"
+                            register={{}}
+                            icon={<BiMap></BiMap>}
+                            iconSide="Right"
+                        ></TextInput>
+                    </section>
+                    <section className="my-5">
+                        <h5 className="mr-2">وب سایت شرکت</h5>
+                        <TextInput
+                            placeholder="برای مثال www.jobvision.ir"
+                            register={{}}
+                            icon={<BiLinkAlt></BiLinkAlt>}
+                            className={[{ inputClassName: "text-left" }]}
+                        ></TextInput>
+                    </section>
+                    <section>
+                        <h5 className="mr-2"> درباره شرکت</h5>
+                        <TextareaInput
+                            placeholder="سخنی از سمت شرکت شما برای جویندگان شغل..."
+                            register={{}}
+                        ></TextareaInput>
+                    </section>
+                    <section className="my-5">
+                        <h5 className="mr-2">شعار شرکت</h5>
+                        <TextInput
+                            placeholder="برای مثال : متفاوت بیندیشید"
+                            register={{}}
+                            icon={<PiSpeakerHigh></PiSpeakerHigh>}
+                            iconSide="Right"
+                        ></TextInput>
+                    </section>
+                    <section>
+                        <h5 className="mr-2">تعداد کارکنان شرکت</h5>
+                        <NumberInput register={{}} placeholder="برای مثال 13" min={1}></NumberInput>
+                    </section>
+                    <section className="my-5">
+                        <h5 className="mr-2">سال تاسیس</h5>
+                        {/* <DateInput
+                            placeholder={`برای مثال ${new DateObject().convert(Persian_cl)}`}
+                            setDate={}
+                        ></DateInput> */}
+                    </section>
+                    <section>
+                        <h5 className="mr-2">نوع شرکت</h5>
+                        {/* <SelectInput
+                            label="نوع شرکت"
+                            options={ownershipOptions}
+                            register={{}}
+                            className="border-jv-lightGray3x"
+                        ></SelectInput> */}
+                    </section>
+                    <Button
+                        ClassName="mt-5 w-full"
+                        textColor="primary"
+                        size="middle"
+                        ClickHandler={() => {}}
+                        isLoading={false}
+                    >
+                        آپدیت
+                    </Button>
+                </form>
+            </>
+        );
     };
 }
 
@@ -589,13 +717,13 @@ const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, setMainPa
     const HomePage: React.FC<HomePageProps> = ({ isEditShow }) => {
         return (
             <motion.div variants={ShortShowFromTop} initial="hidden" whileInView="visible">
-                {isEditShow ? (
-                    <SubPageCms.EditHomePage showMess={showMess}></SubPageCms.EditHomePage>
-                ) : (
-                    <SubPageCms.MainHomePage></SubPageCms.MainHomePage>
-                )}
+                {isEditShow ? <SubPageCms.EditHomePage showMess={showMess} /> : <SubPageCms.MainHomePage />}
             </motion.div>
         );
+    };
+
+    const AdvertsisingsPage: React.FC<AdvertsisingsPageProps> = ({ isAddShow }) => {
+        return isAddShow ? <SubPageCms.Advertising_Add /> : <SubPageCms.Advertising_Main />;
     };
     return (
         <div className="h-full flex flex-col overflow-hidden">
@@ -631,11 +759,11 @@ const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, setMainPa
                 className="w-full h-full text-jv-lightGray2x rounded-lg bg-jv-light p-4 overflow-y-auto no-scrollbar"
             >
                 {mainPage === "Home" || subPage === "Home_Edit" ? (
-                    <HomePage isEditShow={subPage === "Home_Edit" ? true : false}></HomePage>
+                    <HomePage isEditShow={subPage === "Home_Edit" ? true : false} />
                 ) : mainPage === "Request_All" ? (
                     <div>Request_All</div>
                 ) : mainPage === "Advertsisings" ? (
-                    <div>Advertsisings</div>
+                    <AdvertsisingsPage isAddShow={subPage === "Advertsisings_Add" ? true : false} />
                 ) : mainPage === "Request_Accept" ? (
                     <div>Request_Accept</div>
                 ) : mainPage === "Request_Rejection" ? (
