@@ -18,12 +18,12 @@ const Menu: React.FC<MenuProps> = ({ defaultItem, className, items, onSelect }) 
                 mainItem = item.children.find((subItem) => subItem.key === defaultItem);
             } else {
                 if (item.key === defaultItem) {
-                    console.log("else Bruhhhhhhhhh", "defaultItem", defaultItem, "item", item, item.children);
+                    // console.log("else Bruhhhhhhhhh", "defaultItem", defaultItem, "item", item, item.children);
                     mainItem = { ...item };
                 }
             }
         });
-        console.log("mainItem", mainItem);
+        // console.log("mainItem", mainItem);
 
         return mainItem;
     };
@@ -33,7 +33,7 @@ const Menu: React.FC<MenuProps> = ({ defaultItem, className, items, onSelect }) 
     );
     const [mainSelectMenuKey, setMainSelectMenuKey] = useState<React.Key>();
 
-    console.log("getItemAction", getItemAction());
+    // console.log("getItemAction", getItemAction());
 
     useEffect(() => {
         // console.log("mainItem ", mainItem);
@@ -91,6 +91,7 @@ const Menu: React.FC<MenuProps> = ({ defaultItem, className, items, onSelect }) 
                                     <ul className={MenuClassNames.className.listMenu}>
                                         {item.children.map((subItem) => (
                                             <li
+                                                key={subItem.key}
                                                 onClick={() => {
                                                     setMainItem(subItem);
                                                     setMainSelectMenuKey(subItem.parentKey);

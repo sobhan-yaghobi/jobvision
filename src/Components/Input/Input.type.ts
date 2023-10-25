@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { DateObject } from "react-multi-date-picker";
+import { Control } from "react-hook-form";
 
 export type TypeIconSide = "Left" | "Right";
 
@@ -17,7 +17,7 @@ export type TypeClassNameInputRequird = {
 export interface TypeMainInput {
     placeholder?: string;
     className?: string;
-    register: {}; //
+    register: {};
     isError?: boolean | undefined;
 }
 
@@ -26,10 +26,21 @@ export interface TypeTextInput extends Omit<TypeMainInput, "className"> {
     iconSide?: TypeIconSide;
     icon?: ReactNode;
 }
-export interface TypeSelectInput extends TypeMainInput {
-    options: TypeOptionInput[];
-    label: string;
-}
+
+export type TypeSelectInput = TypeMainInput &
+    (
+        | {
+              mode: "Multiple";
+              name: string;
+              id: string;
+              callBackFn: Function;
+          }
+        | {
+              mode: "Single";
+              options: TypeOptionInput[];
+              label: string;
+          }
+    );
 
 export type TypeOptionInput = {
     value: string;
@@ -46,6 +57,12 @@ export interface TypeNumberInput extends TypeMainInput {
     max?: number;
     min?: number;
 }
+
+export type CheckBoxProps = {
+    control: Control<any>;
+    name: string;
+    label: string;
+};
 
 export type TypeIconGenerator = {
     mode?: "Menu";

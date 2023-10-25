@@ -19,7 +19,7 @@ import {
     ProgressCardArray,
     AdvertsisingsPageProps,
 } from "./CmsEmployer.type";
-import { DateInput, NumberInput, SelectInput, TextInput, TextareaInput } from "../../Components/Input/Input";
+import { CheckBox, DateInput, NumberInput, SelectInput, TextInput, TextareaInput } from "../../Components/Input/Input";
 import { TypeOptionInput } from "../../Components/Input/Input.type";
 import { MenuItemType, MenuProps } from "../../Components/Menu/Menu.type";
 
@@ -33,9 +33,15 @@ import { motion } from "framer-motion";
 import Button from "../../Components/Button/Button";
 import { Link } from "react-router-dom";
 import Menu from "../../Components/Menu/Menu";
+import { ConfigProvider, Progress } from "antd";
 
 // Animations
-import { ShortShowFromBottom, ShortShowFromTop, SpringBackOutVeryShortly } from "../../Animations/UtilsAnimation";
+import {
+    ShortShowFromBottom,
+    ShortShowFromTop,
+    ShowAndHideOpacity_Ex,
+    SpringBackOutVeryShortly,
+} from "../../Animations/UtilsAnimation";
 
 // Date Picker
 import { DateObject } from "react-multi-date-picker";
@@ -44,7 +50,7 @@ import Persian_cl from "react-date-object/calendars/persian";
 // Icons
 import { GoHomeFill } from "react-icons/go";
 import { CgFileDocument } from "react-icons/cg";
-import { BiGitPullRequest, BiMap, BiLinkAlt, BiComment } from "react-icons/bi";
+import { BiGitPullRequest, BiMap, BiLinkAlt, BiComment, BiTimer, BiTrip } from "react-icons/bi";
 import { BsCheckAll, BsImages } from "react-icons/bs";
 import { RxLapTimer } from "react-icons/rx";
 import { TbGitPullRequestClosed } from "react-icons/tb";
@@ -54,9 +60,8 @@ import reportIcon from "/images/report.webp";
 import { HiOutlineLogout } from "react-icons/hi";
 import { CiEdit, CiUser } from "react-icons/ci";
 import { AiOutlineEye } from "react-icons/ai";
-import { PiSpeakerHigh } from "react-icons/pi";
+import { PiSpeakerHigh, PiStudentDuotone } from "react-icons/pi";
 import { FaFileCirclePlus } from "react-icons/fa6";
-import { ConfigProvider, Progress } from "antd";
 
 const pageItems: MenuItemType[] = [
     {
@@ -108,8 +113,8 @@ const CmsEmployer: React.FC = () => {
     const { ShowContext, showMess } = useShowMssAndNotif({ placementOfNotif: "bottomLeft" });
 
     const [MainPage, setMainPage] = useState<LiteralsMainPage.TypeMainPage>({
-        mainKey: LiteralsMainPage.Home,
-        subPage: "Home_Main",
+        mainKey: LiteralsMainPage.Advertsisings,
+        subPage: "Advertsisings_Add",
     } as LiteralsMainPage.TypeMainPage);
 
     const setMainPageAction: MenuProps["onSelect"] = (mainItem) => {
@@ -409,6 +414,7 @@ namespace SubPageCms {
                     <section>
                         <h5 className="mr-2">نوع شرکت</h5>
                         <SelectInput
+                            mode="Single"
                             label="نوع شرکت"
                             options={ownershipOptions}
                             register={register("ownership")}
@@ -582,16 +588,11 @@ namespace SubPageCms {
         return <>Advertising_Main</>;
     };
     export const Advertising_Add: React.FC = () => {
-        const [addFormCondition, setAddFormCondition] = useState<{ isRightPriceArray: boolean }>({
-            isRightPriceArray: false,
-        });
-
-        // const BaseTeacher = z.object({ students: z.array(z.string()) });
-        // const HasID = z.object({ id: z.string() });
-
-        // const Teacher = BaseTeacher.merge(HasID);
-        // type Teacher = z.infer<typeof Teacher>;
-
+        // isImportant: boolean;
+        // cvPending: boolean;
+        // responsibleEmployer: boolean;
+        // acceptTrainees: boolean;
+        // acceptTelecommuting: boolean;
         const mainAddFormSchema = z.object({
             workTime: z.string().min(1, messageRequiredGenerator("زمان کار")),
             typeOfCooperation: z.string(),
@@ -600,6 +601,13 @@ namespace SubPageCms {
             keyIndicators: z.array(z.string()),
             jobDuties: z.string().min(1, messageRequiredGenerator("وظایف شغلی")),
             Softwares: z.array(z.string()),
+            gender: z.string(),
+            education: z.array(z.string()),
+            adTags: z.array(z.string()),
+            isImportant: z.boolean(),
+            responsibleEmployer: z.boolean(),
+            acceptTrainees: z.boolean(),
+            acceptTelecommuting: z.boolean(),
         });
 
         const rightPriceArray = z.object({
@@ -622,87 +630,215 @@ namespace SubPageCms {
             yearFrom: z.string().min(1, messageRequiredGenerator("سن")),
         });
 
-        const adSchemaForm_rightPrice = z.discriminatedUnion("isRightPriceArray", [rightPriceArray, rightPriceOnly]);
-        const adSchemaForm_yearOld = z.discriminatedUnion("isYearArray", [yearsOldArray, yearOldOnly]);
+        const rightPriceArraySchema = rightPriceArray.merge(mainAddFormSchema);
+        const rightPriceOnlySchema = rightPriceOnly.merge(mainAddFormSchema);
+
+        const yearsOldArraySchema = yearsOldArray.merge(mainAddFormSchema);
+        const yearsOldOnlySchema = yearOldOnly.merge(mainAddFormSchema);
+
+        const adSchemaForm_rightPrice = z.discriminatedUnion("isRightPriceArray", [
+            rightPriceArraySchema,
+            rightPriceOnlySchema,
+        ]);
+        const adSchemaForm_yearOld = z.discriminatedUnion("isYearArray", [yearsOldArraySchema, yearsOldOnlySchema]);
         const allSchema = adSchemaForm_rightPrice.and(adSchemaForm_yearOld);
 
         type adSchemaForm_rightPriceType = z.infer<typeof adSchemaForm_rightPrice>;
         type adSchemaForm_yearOlType = z.infer<typeof adSchemaForm_yearOld>;
 
-        const { register, watch } = useForm<adSchemaForm_rightPriceType | adSchemaForm_yearOlType>({
+        const { register, watch, control, getValues, handleSubmit, setValue } = useForm<
+            adSchemaForm_rightPriceType | adSchemaForm_yearOlType
+        >({
             resolver: zodResolver(allSchema),
         });
 
+        const typeOfCooperationOption: TypeOptionInput[] = [
+            { label: "تمام وقت", value: "TYPE_OF_COOPERTION_FULL_TIME" },
+            { label: "پاره وقت", value: "TYPE_OF_COOPERTION_PART_TIME" },
+            { label: "قراردادی", value: "TYPE_OF_COOPERTION_CONTRACTUAL_TIME" },
+        ];
+        const genderOption: TypeOptionInput[] = [
+            { label: "تفاوتی ندارد", value: "NotImportant" },
+            { label: "مرد", value: "Male" },
+            { label: "زن", value: "Female" },
+        ];
+
+        const submitAction = () => {};
+
+        const isRightPriceArray = watch("isRightPriceArray");
+        const isYearArray = watch("isYearArray");
+
         return (
             <>
-                <h3>آگهی جدید</h3>
-                <form className="my-10">
+                <h3>فرم ثبت آگهی تازه</h3>
+                <form onSubmit={handleSubmit(submitAction)} className="my-10">
                     <section>
                         <h5 className="mr-2">حقوق ماهانه</h5>
+                        <NumberInput
+                            min={0}
+                            className="block w-full"
+                            placeholder="برای مثال : 7 میلیون تومان"
+                            register={register("rightsPriceFrom")}
+                        />
+                        <div
+                            className={`overflow-hidden grid transition-all duration-700 delay-100 mb-2 ${
+                                isRightPriceArray ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                            }`}
+                        >
+                            <div className="min-h-0">
+                                <p className="my-2 pr-2 text-xs">تا</p>
+                                <NumberInput
+                                    min={0}
+                                    className="block w-full"
+                                    placeholder="20 میلیون تومان"
+                                    register={register("rightsPriceTo", { shouldUnregister: true })}
+                                />
+                            </div>
+                        </div>
+                        <CheckBox
+                            label="نوشتن حداقل و حداکثر حقوق"
+                            name={register("isRightPriceArray").name}
+                            control={control}
+                        />
                     </section>
                     <section className="my-5">
-                        <h5 className="mr-2">نام شرکت</h5>
-                        <TextInput placeholder="برای مثال جاب ویژن" register={{}}></TextInput>
+                        <h5 className="mr-2">زمان کار</h5>
+                        <TextInput
+                            placeholder="برای مثال : از شنبه تا چهارشنبه ساعت 7 صبح تا 5 عصر"
+                            register={register("workTime")}
+                            icon={<BiTimer></BiTimer>}
+                            iconSide="Right"
+                        ></TextInput>
                     </section>
                     <section>
-                        <h5 className="mr-2">موقعیت شرکت</h5>
+                        <h5 className="mr-2">مزایای مسافرتی</h5>
                         <TextInput
-                            placeholder="برای مثال تهران ، بهارستان"
-                            register={{}}
-                            icon={<BiMap></BiMap>}
+                            placeholder="برای مثال : سفر به جزیره کیش"
+                            register={register("businessTrips")}
+                            icon={<BiTrip></BiTrip>}
                             iconSide="Right"
                         ></TextInput>
                     </section>
                     <section className="my-5">
-                        <h5 className="mr-2">وب سایت شرکت</h5>
+                        <h5 className="mr-2">مزایا و تحصیلات</h5>
                         <TextInput
-                            placeholder="برای مثال www.jobvision.ir"
-                            register={{}}
-                            icon={<BiLinkAlt></BiLinkAlt>}
-                            className={[{ inputClassName: "text-left" }]}
-                        ></TextInput>
-                    </section>
-                    <section>
-                        <h5 className="mr-2"> درباره شرکت</h5>
-                        <TextareaInput
-                            placeholder="سخنی از سمت شرکت شما برای جویندگان شغل..."
-                            register={{}}
-                        ></TextareaInput>
-                    </section>
-                    <section className="my-5">
-                        <h5 className="mr-2">شعار شرکت</h5>
-                        <TextInput
-                            placeholder="برای مثال : متفاوت بیندیشید"
-                            register={{}}
-                            icon={<PiSpeakerHigh></PiSpeakerHigh>}
+                            icon={<PiStudentDuotone />}
                             iconSide="Right"
+                            placeholder="برای مثال : پورسانت ، جوایز سال تحویل و ..."
+                            register={register("benefitsAndFacilities")}
                         ></TextInput>
                     </section>
                     <section>
-                        <h5 className="mr-2">تعداد کارکنان شرکت</h5>
-                        <NumberInput register={{}} placeholder="برای مثال 13" min={1}></NumberInput>
+                        <h5 className="mr-2">شرایط سنی</h5>
+                        <NumberInput
+                            min={10}
+                            className="block w-full"
+                            placeholder="برای مثال : 18 سال"
+                            register={register("yearFrom")}
+                        ></NumberInput>
+                        <div
+                            className={`overflow-hidden grid transition-all duration-700 delay-100 mb-2 ${
+                                isYearArray ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                            }`}
+                        >
+                            <div className="min-h-0">
+                                <p className="my-2 pr-2 text-xs">تا</p>
+                                <NumberInput
+                                    min={10}
+                                    className="block w-full"
+                                    placeholder="25 سال"
+                                    register={register("rightsPriceTo", { shouldUnregister: true })}
+                                />
+                            </div>
+                        </div>
+                        <CheckBox
+                            label="نوشتن حداقل و حداکثر سن"
+                            name={register("isYearArray").name}
+                            control={control}
+                        />
                     </section>
                     <section className="my-5">
-                        <h5 className="mr-2">سال تاسیس</h5>
-                        {/* <DateInput
-                            placeholder={`برای مثال ${new DateObject().convert(Persian_cl)}`}
-                            setDate={}
-                        ></DateInput> */}
-                    </section>
-                    <section>
-                        <h5 className="mr-2">نوع شرکت</h5>
-                        {/* <SelectInput
-                            label="نوع شرکت"
-                            options={ownershipOptions}
-                            register={{}}
+                        <h5 className="mr-2">تحصیلات</h5>
+                        <SelectInput
+                            placeholder="برای مثال : لیسانس دکترا ، مدرک زبان معتبر و..."
+                            id="Edicu"
+                            mode="Multiple"
+                            callBackFn={(param: string[]) => {
+                                setValue("education", param);
+                            }}
+                            name={register("education").name}
+                            register={register("education")}
                             className="border-jv-lightGray3x"
-                        ></SelectInput> */}
+                        ></SelectInput>
+                    </section>
+
+                    <section>
+                        <h5 className="mr-2">تگ های آگهی</h5>
+                        <SelectInput
+                            placeholder="برای مثال : برنامه نویسی فرانت اند ، برنامه نویسی ری اکت و ..."
+                            id="adTags"
+                            mode="Multiple"
+                            callBackFn={(param: string[]) => {
+                                setValue("adTags", param);
+                            }}
+                            name={register("adTags").name}
+                            register={register("adTags")}
+                            className="border-jv-lightGray3x"
+                        ></SelectInput>
+                    </section>
+
+                    <section className="my-5">
+                        <h5 className="mr-2">جنسیت</h5>
+                        <SelectInput
+                            mode="Single"
+                            label="نوع همکاری"
+                            options={genderOption}
+                            register={register("gender")}
+                            className="border-jv-lightGray3x"
+                        ></SelectInput>
+                    </section>
+                    <section>
+                        <h5 className="mr-2">نوع همکاری</h5>
+                        <SelectInput
+                            mode="Single"
+                            label="نوع همکاری"
+                            options={typeOfCooperationOption}
+                            register={register("typeOfCooperation")}
+                            className="border-jv-lightGray3x"
+                        ></SelectInput>
+                    </section>
+                    <section className="my-5">
+                        <h5>وضعیت آگهی</h5>
+                        <div className="my-2 flex flex-col">
+                            <CheckBox
+                                control={control}
+                                label="این آگهی فوری میباشد"
+                                name={register("isImportant").name}
+                            />
+                            <CheckBox
+                                control={control}
+                                label="پاسخگویی در اصرع وقت"
+                                name={register("responsibleEmployer").name}
+                            />
+                            <CheckBox
+                                control={control}
+                                label="امکان دریافت کارآموز"
+                                name={register("acceptTrainees").name}
+                            />
+                            <CheckBox
+                                control={control}
+                                label="امکان دورکاری "
+                                name={register("acceptTelecommuting").name}
+                            />
+                        </div>
                     </section>
                     <Button
                         ClassName="mt-5 w-full"
                         textColor="primary"
                         size="middle"
-                        ClickHandler={() => {}}
+                        ClickHandler={() => {
+                            console.log(getValues());
+                        }}
                         isLoading={false}
                     >
                         آپدیت
