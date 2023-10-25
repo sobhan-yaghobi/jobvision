@@ -12,12 +12,17 @@ export type MenuItemType = {
     children?: MenuItemType[];
     parentKey?: MenuItemType["key"];
 };
+
+type setType = {
+    key: LiteralsMainPage.TypeMainPage;
+};
+
 export type MenuProps = {
     defaultItem?: MenuItemType["key"];
+    // setDefaultAction: ({}: setType) => void;
     items: MenuItemType[];
     className?: string;
-    isOpen?: boolean;
-    onSelect: ({ mainItem, mainItemSelected }: mainItemType) => void;
+    onSelect: (mainItem: MenuItemType) => void;
 };
 export namespace MenuClassNames {
     export const className = {

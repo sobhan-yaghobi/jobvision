@@ -64,7 +64,12 @@ const pageItems: MenuItemType[] = [
         icon: <GoHomeFill />,
         mainSubPage: "Home_Main",
     },
-    { label: "آگهی ها", key: LiteralsMainPage.Advertsisings, icon: <CgFileDocument /> },
+    {
+        label: "آگهی ها",
+        mainSubPage: "Advertsisings_Main",
+        key: LiteralsMainPage.Advertsisings,
+        icon: <CgFileDocument />,
+    },
     {
         label: "درخواست ها",
         key: "sub1",
@@ -103,10 +108,11 @@ const CmsEmployer: React.FC = () => {
 
     const [MainPage, setMainPage] = useState<LiteralsMainPage.TypeMainPage>({
         mainKey: LiteralsMainPage.Home,
-        subPage: "Home_Main",
+        subPage: "Advertsisings_Main",
     } as LiteralsMainPage.TypeMainPage);
 
-    const setMainPageAction: MenuProps["onSelect"] = ({ mainItem, mainItemSelected }) => {
+    const setMainPageAction: MenuProps["onSelect"] = (mainItem) => {
+        console.log("setMainPageAction");
         typeof mainItem !== "undefined" ? setMainPage({ mainKey: mainItem.key, subPage: mainItem.mainSubPage }) : null;
     };
 
@@ -118,9 +124,10 @@ const CmsEmployer: React.FC = () => {
                     <img className="h-10 self-start" src={Logo} alt="" />
                     <div className="mt-1 h-full overflow-y-auto no-scrollbar">
                         <Menu
+                            // key={`${MainPage.mainKey}-Menu`}
+                            // setDefaultAction={setPageAction}
                             defaultItem={MainPage.mainKey}
                             onSelect={setMainPageAction}
-                            isOpen
                             items={pageItems}
                         ></Menu>
                     </div>
@@ -172,7 +179,7 @@ const CmsEmployer: React.FC = () => {
                                 <span className="mt-3 text-xs">ویرایش</span>
                             </li>
                             <li
-                                onClick={() => setMainPage({ mainKey: LiteralsMainPage.RqAll })}
+                                onClick={() => setMainPage({ mainKey: LiteralsMainPage.RqAll, subPage: undefined })}
                                 className="select-none cursor-pointer text-jv-primary flex flex-col items-center justify-center group relative"
                             >
                                 <span className="button-Cms-type border-jv-lightPrimary bg-jv-lightPrimary shadow-jv-primary group-hover:shadow-xl group-active:scale-90">

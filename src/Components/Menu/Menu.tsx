@@ -9,44 +9,54 @@ import { twMerge } from "tailwind-merge";
 // Icons
 import { AiFillCaretDown } from "react-icons/ai";
 
-const Menu: React.FC<MenuProps> = ({ defaultItem, className, items, isOpen, onSelect }) => {
-    const defaultMainItem: mainItemType["mainItem"] = items.find((item) => item.key === defaultItem);
+const Menu: React.FC<MenuProps> = ({ defaultItem, className, items, onSelect }) => {
+    const getItemAction = (): MenuItemType => {
+        let mainItem: MenuItemType | undefined = {} as MenuItemType;
 
-    const [mainItems, setMainItems] = useState<mainItemType>(
-        typeof defaultItem !== "undefined"
-            ? { mainItem: defaultMainItem, mainItemSelected: undefined }
-            : ({} as mainItemType)
+        items.filter((item) => {
+            if (Array.isArray(item.children)) {
+                mainItem = item.children.find((subItem) => subItem.key === defaultItem);
+            } else {
+                if (item.key === defaultItem) {
+                    console.log("else Bruhhhhhhhhh", "defaultItem", defaultItem, "item", item, item.children);
+                    mainItem = { ...item };
+                }
+            }
+        });
+        console.log("mainItem", mainItem);
+
+        return mainItem;
+    };
+
+    const [mainItem, setMainItem] = useState<MenuItemType>(
+        typeof getItemAction() !== "undefined" ? getItemAction() : ({} as MenuItemType)
     );
+    const [mainSelectMenuKey, setMainSelectMenuKey] = useState<React.Key>();
 
-    const fireOnSelect: MenuProps["onSelect"] = ({ mainItem, mainItemSelected }) =>
-        setMainItems({ mainItem, mainItemSelected });
+    console.log("getItemAction", getItemAction());
 
     useEffect(() => {
-        if (typeof mainItems.mainItem !== "undefined" && Object.entries(mainItems.mainItem).length) {
-            onSelect({ mainItem: mainItems.mainItem, mainItemSelected: mainItems.mainItemSelected });
+        // console.log("mainItem ", mainItem);
+        // console.log("mainSelectMenuKey ", mainSelectMenuKey);
+
+        if (typeof mainItem !== "undefined" && Object.entries(mainItem).length) {
+            onSelect(mainItem);
         }
-    }, [mainItems]);
+    }, [mainItem]);
 
     return (
-        <div
-            className={`${MenuClassNames.className.wrapperMenu} ${
-                isOpen ? MenuClassNames.className.wrapperMenuActive : MenuClassNames.className.wrapperMenuDisable
-            }`}
-        >
+        <div className={MenuClassNames.className.wrapperMenu}>
             <ul className={twMerge(MenuClassNames.className.listMenu, className)}>
                 {items.map((item) => (
                     <React.Fragment key={item.key}>
                         {typeof item.children === "undefined" ? (
                             <li
-                                onClick={() =>
-                                    setMainItems({
-                                        mainItem: item,
-                                        mainItemSelected:
-                                            typeof item.parentKey !== "undefined" ? item.parentKey : undefined,
-                                    })
-                                }
+                                onClick={() => {
+                                    setMainItem(item);
+                                    setMainSelectMenuKey(item.parentKey);
+                                }}
                                 className={`${MenuClassNames.className.itemMenu} ${
-                                    mainItems.mainItem?.key === item.key
+                                    mainItem.key === item.key
                                         ? MenuClassNames.className.itemMenuActive
                                         : MenuClassNames.className.itemMenuDisable
                                 }`}
@@ -58,29 +68,78 @@ const Menu: React.FC<MenuProps> = ({ defaultItem, className, items, isOpen, onSe
                             <>
                                 <div
                                     onClick={() =>
-                                        setMainItems((prev) => ({
-                                            ...prev,
-                                            mainItemSelected: prev.mainItemSelected === item.key ? undefined : item.key,
-                                        }))
+                                        setMainSelectMenuKey((prev) => (prev === item.key ? undefined : item.key))
                                     }
                                     className={`${MenuClassNames.className.itemMenu} ${
-                                        mainItems.mainItemSelected === item.key ? "!text-jv-primary" : ""
+                                        mainSelectMenuKey === item.key ? "!text-jv-primary" : ""
                                     }`}
                                 >
-                                    <p className={MenuClassNames.className.titleItem}>{item.label}</p>
+                                    <div className="flex">
+                                        {item.icon}
+                                        <p className={MenuClassNames.className.titleItem}>{item.label}</p>
+                                    </div>
                                     <AiFillCaretDown className={MenuClassNames.className.fillCaretDown} />
                                 </div>
-                                <Menu
-                                    onSelect={fireOnSelect}
-                                    isOpen={mainItems.mainItemSelected === item.key ? true : false}
-                                    items={item.children}
-                                ></Menu>
+                                <div
+                                    className={twMerge(
+                                        MenuClassNames.className.wrapperMenu,
+                                        item.key === mainSelectMenuKey
+                                            ? MenuClassNames.className.wrapperMenuActive
+                                            : MenuClassNames.className.wrapperMenuDisable
+                                    )}
+                                >
+                                    <ul className={MenuClassNames.className.listMenu}>
+                                        {item.children.map((subItem) => (
+                                            <li
+                                                onClick={() => {
+                                                    setMainItem(subItem);
+                                                    setMainSelectMenuKey(subItem.parentKey);
+                                                }}
+                                                className={`${MenuClassNames.className.itemMenu} ${
+                                                    mainItem.key === subItem.key
+                                                        ? MenuClassNames.className.itemMenuActive
+                                                        : MenuClassNames.className.itemMenuDisable
+                                                }`}
+                                            >
+                                                {subItem.icon}
+                                                <p className={MenuClassNames.className.titleItem}>{subItem.label}</p>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
                             </>
                         )}
                     </React.Fragment>
                 ))}
             </ul>
         </div>
+    );
+};
+
+type ItemGeneratorPorps = {
+    mainItem: mainItemType;
+    itemData: MenuItemType;
+    setMainItem: React.Dispatch<React.SetStateAction<mainItemType>>;
+};
+
+const ItemGenerator: React.FC<ItemGeneratorPorps> = ({ mainItem, itemData, setMainItem }) => {
+    return (
+        <li
+            onClick={() =>
+                setMainItem({
+                    mainItem: itemData,
+                    mainItemSelected: typeof itemData.parentKey !== "undefined" ? itemData.parentKey : undefined,
+                })
+            }
+            className={`${MenuClassNames.className.itemMenu} ${
+                mainItem.mainItem?.key === itemData.key
+                    ? MenuClassNames.className.itemMenuActive
+                    : MenuClassNames.className.itemMenuDisable
+            }`}
+        >
+            {itemData.icon}
+            <p className={MenuClassNames.className.titleItem}>{itemData.label}</p>
+        </li>
     );
 };
 
