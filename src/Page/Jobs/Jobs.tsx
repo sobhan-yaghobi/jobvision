@@ -601,7 +601,6 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
                             <div>
                                 <Accordion
                                     type="Children"
-                                    iconType="Menu"
                                     title={<ScoreTitle />}
                                     index={1}
                                     isResponsive

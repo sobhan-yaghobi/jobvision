@@ -62,6 +62,7 @@ import { CiEdit, CiUser } from "react-icons/ci";
 import { AiOutlineEye } from "react-icons/ai";
 import { PiSpeakerHigh, PiStudentDuotone } from "react-icons/pi";
 import { FaFileCirclePlus } from "react-icons/fa6";
+import { FiltreTypes } from "../../Components/JobsFilter/JobsFilter.type";
 
 const pageItems: MenuItemType[] = [
     {
@@ -588,11 +589,6 @@ namespace SubPageCms {
         return <>Advertising_Main</>;
     };
     export const Advertising_Add: React.FC = () => {
-        // isImportant: boolean;
-        // cvPending: boolean;
-        // responsibleEmployer: boolean;
-        // acceptTrainees: boolean;
-        // acceptTelecommuting: boolean;
         const mainAddFormSchema = z.object({
             workTime: z.string().min(1, messageRequiredGenerator("زمان کار")),
             typeOfCooperation: z.string(),
@@ -608,6 +604,10 @@ namespace SubPageCms {
             responsibleEmployer: z.boolean(),
             acceptTrainees: z.boolean(),
             acceptTelecommuting: z.boolean(),
+            type: z.object({
+                BENEFITS_AND_FACILITIES: z.array(z.string()),
+                MILITARY_ORDER: z.boolean(),
+            }),
         });
 
         const rightPriceArray = z.object({
@@ -641,6 +641,7 @@ namespace SubPageCms {
             rightPriceOnlySchema,
         ]);
         const adSchemaForm_yearOld = z.discriminatedUnion("isYearArray", [yearsOldArraySchema, yearsOldOnlySchema]);
+
         const allSchema = adSchemaForm_rightPrice.and(adSchemaForm_yearOld);
 
         type adSchemaForm_rightPriceType = z.infer<typeof adSchemaForm_rightPrice>;
@@ -662,8 +663,35 @@ namespace SubPageCms {
             { label: "مرد", value: "Male" },
             { label: "زن", value: "Female" },
         ];
+        type TypeAdSelectForm = {
+            label: string;
+            value: FiltreTypes;
+        };
+        const BenefitsTypeArray: TypeAdSelectForm[] = [
+            { label: "وام", value: "BENEFITS_AND_FACILITIES_LOAN" },
+            { label: "پارکینگ", value: "BENEFITS_AND_FACILITIES_PARKING" },
+            { label: "پاداش", value: "BENEFITS_AND_FACILITIES_REWARD" },
+        ];
+        const seniorityLevelArray: TypeAdSelectForm[] = [
+            { label: "کارگر", value: "SENIORITY_LEVEL_MANUAL_WORKER" },
+            { label: "کارمند", value: "SENIORITY_LEVEL_EMPLOYEE" },
+            { label: "کارشناس", value: "SENIORITY_LEVEL_EXPERT" },
+            { label: "کارشناس ارشد", value: "SENIORITY_LEVEL_MA" },
+            { label: "مدیر میانی", value: "SENIORITY_LEVEL_MID_LEVEL_MANAGER" },
+            { label: "معاونت", value: "SENIORITY_LEVEL_ASSISTANCE" },
+            { label: "مدیرارشد", value: "SENIORITY_LEVEL_CHIEF" },
+        ];
+        const workExperienceArray: TypeAdSelectForm[] = [
+            { label: "کمتر از دو سال", value: "WORK_EXPERIENCE_UNDER_2_YR" },
+            { label: "بین دو تا پنج سال", value: "WORK_EXPERIENCE_AMONG_2_5_YR" },
+            { label: "بین پنج تا هشت سال", value: "WORK_EXPERIENCE_AMONG_5_8_YR" },
+            { label: "بین هشت تا دوازده سال", value: "WORK_EXPERIENCE_AMONG_8_12_YR" },
+            { label: "بالای دوازده سال", value: "WORK_EXPERIENCE_OVER_12_YR" },
+        ];
 
-        const submitAction = () => {};
+        const submitAction = () => {
+            console.log("Login Success");
+        };
 
         const isRightPriceArray = watch("isRightPriceArray");
         const isYearArray = watch("isYearArray");
@@ -766,12 +794,10 @@ namespace SubPageCms {
                             callBackFn={(param: string[]) => {
                                 setValue("education", param);
                             }}
-                            name={register("education").name}
                             register={register("education")}
                             className="border-jv-lightGray3x"
                         ></SelectInput>
                     </section>
-
                     <section>
                         <h5 className="mr-2">تگ های آگهی</h5>
                         <SelectInput
@@ -781,13 +807,56 @@ namespace SubPageCms {
                             callBackFn={(param: string[]) => {
                                 setValue("adTags", param);
                             }}
-                            name={register("adTags").name}
                             register={register("adTags")}
                             className="border-jv-lightGray3x"
                         ></SelectInput>
                     </section>
-
                     <section className="my-5">
+                        <h5 className="mb-2">دسته بندی آگهی</h5>
+                        <div className="my-1">
+                            <h6>مزایا</h6>
+                            <SelectInput
+                                id="BENEFITS_AND_FACILITIES"
+                                placeholder="مزایا و امکانات اراعه دهنده"
+                                mode="Multiple_Option"
+                                register={register("type.BENEFITS_AND_FACILITIES")}
+                                options={BenefitsTypeArray}
+                                callBackFn={(param: string[]) => {
+                                    setValue("type.BENEFITS_AND_FACILITIES", param);
+                                }}
+                                className="mb-2"
+                            ></SelectInput>
+                        </div>
+                        <div className="my-1">
+                            <h6>سطح ارشدیت</h6>
+                            <SelectInput
+                                id=""
+                                placeholder="مزایا و امکانات اراعه دهنده"
+                                mode="Multiple_Option"
+                                register={register("type.BENEFITS_AND_FACILITIES")}
+                                options={seniorityLevelArray}
+                                callBackFn={(param: string[]) => {
+                                    setValue("type.BENEFITS_AND_FACILITIES", param);
+                                }}
+                                className="mb-2"
+                            ></SelectInput>
+                        </div>
+                        <div className="my-1">
+                            <h6>سابقه کار</h6>
+                            <SelectInput
+                                id="BENEFITS_AND_FACILITIES"
+                                placeholder="مزایا و امکانات اراعه دهنده"
+                                mode="Multiple_Option"
+                                register={register("type.BENEFITS_AND_FACILITIES")}
+                                options={workExperienceArray}
+                                callBackFn={(param: string[]) => {
+                                    setValue("type.BENEFITS_AND_FACILITIES", param);
+                                }}
+                                className="mb-2"
+                            ></SelectInput>
+                        </div>
+                    </section>
+                    <section>
                         <h5 className="mr-2">جنسیت</h5>
                         <SelectInput
                             mode="Single"
@@ -797,7 +866,7 @@ namespace SubPageCms {
                             className="border-jv-lightGray3x"
                         ></SelectInput>
                     </section>
-                    <section>
+                    <section className="my-5">
                         <h5 className="mr-2">نوع همکاری</h5>
                         <SelectInput
                             mode="Single"
@@ -807,7 +876,7 @@ namespace SubPageCms {
                             className="border-jv-lightGray3x"
                         ></SelectInput>
                     </section>
-                    <section className="my-5">
+                    <section>
                         <h5>وضعیت آگهی</h5>
                         <div className="my-2 flex flex-col">
                             <CheckBox
@@ -827,11 +896,17 @@ namespace SubPageCms {
                             />
                             <CheckBox
                                 control={control}
-                                label="امکان دورکاری "
+                                label="امکان دورکاری"
                                 name={register("acceptTelecommuting").name}
+                            />
+                            <CheckBox
+                                control={control}
+                                label="امریه سربازی"
+                                name={register("type.MILITARY_ORDER").name}
                             />
                         </div>
                     </section>
+
                     <Button
                         ClassName="mt-5 w-full"
                         textColor="primary"

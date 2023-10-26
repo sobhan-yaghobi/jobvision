@@ -425,7 +425,6 @@ const Home: React.FC = () => {
                                 index={index + 1}
                                 isResponsive
                                 theme="Light"
-                                iconType="Arrow"
                                 title={item.title}
                                 content={item.desc}
                                 isOpen={index === 0 ? true : false}

@@ -28,7 +28,6 @@ const Footer: React.FC = () => {
                                 index={index + 1}
                                 isResponsive
                                 theme="Dark"
-                                iconType="Arrow"
                                 title={item.title}
                                 content={item.answer}
                                 isOpen={index === 0 ? true : false}
@@ -181,7 +180,6 @@ const Footer: React.FC = () => {
                                                             childArray={link.sublink}
                                                             propertyChildName="title"
                                                             noSpace
-                                                            iconType="Menu"
                                                         ></Accordion>
                                                     ) : (
                                                         <li key={link.id}>
@@ -205,7 +203,6 @@ const Footer: React.FC = () => {
                                             index={index + 1}
                                             title={item.title}
                                             type="Menu"
-                                            iconType="Menu"
                                             theme="Dark"
                                             childArray={item.links}
                                             propertyChildName="title"

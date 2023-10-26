@@ -12,7 +12,6 @@ interface AccordionMainProps {
     noSpace?: boolean;
     listStyle: "Ol" | "Ul";
     isResponsive: boolean;
-    iconType: "Menu" | "Arrow";
     textStyle?: string;
 }
 
@@ -147,7 +146,6 @@ const Accordion: React.FC<React.PropsWithChildren<AccordionProps>> = (props) => 
                                         childArray={item[props.propertySubName]}
                                         iSubItem={false}
                                         propertyChildName="title"
-                                        iconType="Menu"
                                         title={item[props.propertyChildName]}
                                         theme="Dark"
                                         propertySubName=""
@@ -194,11 +192,12 @@ const Accordion: React.FC<React.PropsWithChildren<AccordionProps>> = (props) => 
                     ) : null}
                     <span className="w-full text-inherit">{props.title}</span>
                 </span>
-                {props.iconType === "Arrow" ? (
+                <AiFillCaretDown className={`${isActive ? "rotate-180" : ""}`}></AiFillCaretDown>
+                {/* {props.iconType === "Arrow" ? (
                     <BsBoxArrowDown className={`${isActive ? "rotate-180" : ""}`}></BsBoxArrowDown>
                 ) : (
-                    <AiFillCaretDown className={`${isActive ? "rotate-180" : ""}`}></AiFillCaretDown>
-                )}
+                    
+                )} */}
             </div>
             <div
                 className={`wrapper overflow-hidden grid transition-all duration-700 ${

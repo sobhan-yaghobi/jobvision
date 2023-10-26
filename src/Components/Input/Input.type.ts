@@ -31,14 +31,19 @@ export type TypeSelectInput = TypeMainInput &
     (
         | {
               mode: "Multiple";
-              name: string;
               id: string;
-              callBackFn: Function;
+              callBackFn: (param: string[]) => void;
           }
         | {
               mode: "Single";
               options: TypeOptionInput[];
               label: string;
+          }
+        | {
+              id: string;
+              mode: "Multiple_Option";
+              options: TypeOptionInput[];
+              callBackFn: (param: string[]) => void;
           }
     );
 
@@ -62,6 +67,7 @@ export type CheckBoxProps = {
     control: Control<any>;
     name: string;
     label: string;
+    value?: string;
 };
 
 export type TypeIconGenerator = {
@@ -74,4 +80,10 @@ export type TypeIconGenerator = {
 export type TypeAutoCompleteGenerator = {
     show: boolean;
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
+    className?: [
+        {
+            wrapper?: string;
+            ulElement?: string;
+        }
+    ];
 };

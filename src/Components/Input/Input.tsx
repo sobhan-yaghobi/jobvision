@@ -11,11 +11,12 @@ import {
     TypeNumberInput,
     TypeTextInput,
     CheckBoxProps,
+    TypeOptionInput,
 } from "./Input.type";
 
 // Components
 import { Controller } from "react-hook-form";
-import { Checkbox, Select } from "antd";
+import { Checkbox } from "antd";
 
 // Functions
 import { twMerge } from "tailwind-merge";
@@ -57,14 +58,25 @@ namespace InputUtils {
     export const AutoCompleteGenerator: React.FC<React.PropsWithChildren<TypeAutoCompleteGenerator>> = ({
         children,
         show,
+        className,
     }) => {
         return (
             <div
-                className={`w-full absolute  left-0 pt-4 transition-all duration-500 ${
-                    show ? "opacity-100 visible top-full z-30" : "opacity-0 invisible top-0 -z-10"
-                }`}
+                className={twMerge(
+                    `w-full absolute  left-0 pt-4 transition-all duration-500 ${
+                        show ? "opacity-100 visible top-full z-30" : "opacity-0 invisible top-0 -z-10"
+                    }`,
+                    className?.[0].wrapper
+                )}
             >
-                <ul className="w-full max-h-48 overflow-y-auto rounded-lg bg-jv-light">{children}</ul>
+                <ul
+                    className={twMerge(
+                        "w-full max-h-48 overflow-y-auto rounded-lg bg-jv-light",
+                        className?.[0].ulElement
+                    )}
+                >
+                    {children}
+                </ul>
             </div>
         );
     };
@@ -73,8 +85,8 @@ namespace InputUtils {
         mode: "Blur" | "Focus",
         state: boolean,
         setState: React.Dispatch<React.SetStateAction<boolean>>
-    ): undefined => {
-        setState((prev) => (mode === "Blur" ? false : mode === "Focus" ? true : false));
+    ): void => {
+        setState(() => (mode === "Blur" ? false : mode === "Focus" ? true : false));
     };
 
     export const isClassNameUndefined: Function = (className: string | undefined): string =>
@@ -94,7 +106,7 @@ const TextInput: React.FC<React.PropsWithChildren<TypeTextInput>> = (props) => {
             )}
         >
             {typeof props.children !== "undefined" ? (
-                <span onClick={() => setShowAutoComplete((prev) => (showAutoComplete ? false : true))}>
+                <span onClick={() => setShowAutoComplete(() => (showAutoComplete ? false : true))}>
                     <InputUtils.IconGenerator
                         icon={showAutoComplete ? <AiOutlineClose /> : <AiFillCaretDown />}
                         iconSide={props.iconSide}
@@ -203,20 +215,19 @@ const SelectInput: React.FC<TypeSelectInput> = (props) => {
                 className={twMerge(InputUtils.className.inputwrapperClassName, "min-h-[2.5rem] flex-wrap")}
             >
                 {list.map((item, index) => (
-                    <p className="box-info-type truncate my-1 flex items-center" key={index}>
+                    <p
+                        onClick={() => setList((prev) => prev.filter((prevItem) => prevItem !== item))}
+                        className="cursor-pointer box-info-type truncate my-1 flex items-center"
+                        key={index}
+                    >
                         {item}
-                        <span
-                            className="flex items-center cursor-pointer"
-                            onClick={() => setList((prev) => prev.filter((prevItem) => prevItem !== item))}
-                        >
-                            <AiOutlineClose className="mr-2" />
-                        </span>
+                        <AiOutlineClose className="mr-2" />
                     </p>
                 ))}
                 <input
                     id={props.id}
                     ref={inputRef}
-                    onBlur={() => inputRef.current?.classList.add("hidden")}
+                    onBlur={() => (list.length ? inputRef.current?.classList.add("hidden") : null)}
                     value={value}
                     onKeyDownCapture={(e) => (e.key === "Enter" ? keyPressAction(e) : null)}
                     onChange={(e) => setValue(e.target.value)}
@@ -230,6 +241,75 @@ const SelectInput: React.FC<TypeSelectInput> = (props) => {
                     }
                     className={twMerge(InputUtils.className.inputClassName, "")}
                 />
+            </div>
+        );
+    } else if (props.mode === "Multiple_Option") {
+        const [showAutoComplete, setShowAutoComplete] = useState(false);
+        const [list, setList] = useState<TypeOptionInput[]>([] as TypeOptionInput[]);
+        const listUpdateAction = () => {
+            const mainList = list.map((item) => item.value);
+            props.callBackFn(mainList);
+        };
+        const autoCompleteAction = (
+            isClose: boolean,
+            event: React.MouseEvent<HTMLSpanElement, MouseEvent> | undefined
+        ) => {
+            event?.stopPropagation();
+            InputUtils.AutoCompleteAction(isClose ? "Blur" : "Focus", showAutoComplete, setShowAutoComplete);
+        };
+        useEffect(() => listUpdateAction(), [list]);
+        return (
+            <div
+                onClick={() => {
+                    autoCompleteAction(false, undefined);
+                }}
+                className={twMerge(
+                    InputUtils.className.inputwrapperClassName,
+                    "min-h-[2.5rem] flex-wrap",
+                    props.className
+                )}
+            >
+                <span
+                    onClick={(e) => autoCompleteAction(showAutoComplete, e)}
+                    className="flex items-center justify-center absolute left-5 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                >
+                    {showAutoComplete ? <AiOutlineClose /> : <AiFillCaretDown />}
+                </span>
+                {!list.length ? (
+                    <p>{props.placeholder}</p>
+                ) : (
+                    list.map((item, index) => (
+                        <p
+                            onClick={() => setList((prev) => prev.filter((prevItem) => prevItem !== item))}
+                            className="cursor-pointer box-info-type truncate my-1 flex items-center"
+                            key={`${index}-listItem-${props.id}`}
+                        >
+                            {item.label}
+                            <AiOutlineClose className="mr-2" />
+                        </p>
+                    ))
+                )}
+                <InputUtils.AutoCompleteGenerator
+                    className={[{ wrapper: "drop-shadow-xl rounded-lg" }]}
+                    show={showAutoComplete}
+                    setShow={setShowAutoComplete}
+                >
+                    {props.options.map((item, index) =>
+                        !list.find((listItem) => listItem.value === item.value) ? (
+                            <li
+                                key={index}
+                                className="p-2 cursor-pointer hover:bg-jv-lightGray3x"
+                                onClick={() =>
+                                    setList((prev) =>
+                                        list.find((listItem) => listItem.value === item.value) ? prev : [...prev, item]
+                                    )
+                                }
+                            >
+                                {item.label}
+                            </li>
+                        ) : null
+                    )}
+                </InputUtils.AutoCompleteGenerator>
             </div>
         );
     }
@@ -295,14 +375,19 @@ const NumberInput: React.FC<TypeNumberInput> = ({ placeholder, defValue, max, mi
     );
 };
 
-const CheckBox: React.FC<CheckBoxProps> = ({ control, name, label }) => {
+const CheckBox: React.FC<CheckBoxProps> = ({ control, name, label, value }) => {
     return (
         <>
             <Controller
                 name={name}
                 control={control}
                 render={({ field }) => (
-                    <Checkbox className="text-inherit" checked={field.value} {...field}>
+                    <Checkbox
+                        {...field}
+                        className="text-inherit"
+                        checked={field.value}
+                        value={typeof value !== "undefined" ? value : field.value}
+                    >
                         {label}
                     </Checkbox>
                 )}
