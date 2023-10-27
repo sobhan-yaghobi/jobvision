@@ -313,16 +313,14 @@ namespace SubPageCms {
             reset,
             formState: { errors, isSubmitting },
         } = useForm<TypeCompanyFormSchema>({ resolver: zodResolver(CompanyFormSchema) });
-        useEffect(
-            () =>
-                Object.keys(errors).map((item) => {
-                    showMess({
-                        type: "error",
-                        message: getFieldState(item as keyof TypeCompanyFormSchema).error?.message,
-                    });
-                }),
-            [errors]
-        );
+        useEffect(() => {
+            Object.keys(errors).map((item) => {
+                showMess({
+                    type: "error",
+                    message: getFieldState(item as keyof TypeCompanyFormSchema).error?.message,
+                });
+            });
+        }, [errors]);
         const setEstablishDate = (date: number) => setValue("establishedyear", new Date(date));
         const submitAction = (data: TypeCompanyFormSchema) => {
             return new Promise<void>((resolve) => {
@@ -687,16 +685,14 @@ namespace SubPageCms {
             });
         };
 
-        useEffect(
-            () =>
-                Object.keys(errors).map((item) => {
-                    showMess({
-                        type: "error",
-                        message: getFieldState(item as keyof TypeMainAddFormSchema).error?.message,
-                    });
-                }),
-            [errors]
-        );
+        useEffect(() => {
+            Object.keys(errors).map((item) => {
+                showMess({
+                    type: "error",
+                    message: getFieldState(item as keyof TypeMainAddFormSchema).error?.message,
+                });
+            });
+        }, [errors]);
 
         const isRightPriceArray = watch("price.isRightPriceArray");
         const isYearArray = watch("oldYears.isYearArray");
