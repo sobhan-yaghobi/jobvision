@@ -22,6 +22,7 @@ import {
 import { CheckBox, DateInput, NumberInput, SelectInput, TextInput, TextareaInput } from "../../Components/Input/Input";
 import { TypeOptionInput } from "../../Components/Input/Input.type";
 import { MenuItemType, MenuProps } from "../../Components/Menu/Menu.type";
+import { FiltreTypes } from "../../Components/JobsFilter/JobsFilter.type";
 
 // Hook
 import { useForm } from "react-hook-form";
@@ -62,7 +63,6 @@ import { CiEdit, CiUser } from "react-icons/ci";
 import { AiOutlineEye } from "react-icons/ai";
 import { PiSpeakerHigh, PiStudentDuotone } from "react-icons/pi";
 import { FaFileCirclePlus } from "react-icons/fa6";
-import { FiltreTypes } from "../../Components/JobsFilter/JobsFilter.type";
 
 const pageItems: MenuItemType[] = [
     {
@@ -309,20 +309,20 @@ namespace SubPageCms {
             register,
             setValue,
             handleSubmit,
+            getFieldState,
             reset,
             formState: { errors, isSubmitting },
         } = useForm<TypeCompanyFormSchema>({ resolver: zodResolver(CompanyFormSchema) });
-        useEffect(() => {
-            showMess({ type: "error", message: errors.name?.message });
-            showMess({ type: "error", message: errors.location?.message });
-            showMess({ type: "error", message: errors.logo?.message });
-            showMess({ type: "error", message: errors.website?.message });
-            showMess({ type: "error", message: errors.desc?.message });
-            showMess({ type: "error", message: errors.CompanySlogan?.message });
-            showMess({ type: "error", message: errors.establishedyear?.message });
-            showMess({ type: "error", message: errors.OrganizationEmploy?.message });
-            showMess({ type: "error", message: errors.ownership?.message });
-        }, [errors]);
+        useEffect(
+            () =>
+                Object.keys(errors).map((item) => {
+                    showMess({
+                        type: "error",
+                        message: getFieldState(item as keyof TypeCompanyFormSchema).error?.message,
+                    });
+                }),
+            [errors]
+        );
         const setEstablishDate = (date: number) => setValue("establishedyear", new Date(date));
         const submitAction = (data: TypeCompanyFormSchema) => {
             return new Promise<void>((resolve) => {
@@ -588,69 +588,57 @@ namespace SubPageCms {
     export const Advertising_Main: React.FC = () => {
         return <>Advertising_Main</>;
     };
-    export const Advertising_Add: React.FC = () => {
+
+    type AdvertisingAddProps = { showMess: CmsPageGeneratorProps["showMess"] };
+
+    export const Advertising_Add: React.FC<AdvertisingAddProps> = ({ showMess }) => {
         const mainAddFormSchema = z.object({
             workTime: z.string().min(1, messageRequiredGenerator("زمان کار")),
             typeOfCooperation: z.string(),
             businessTrips: z.string().optional(),
             benefitsAndFacilities: z.string().optional(),
             keyIndicators: z.array(z.string()),
-            jobDuties: z.string().min(1, messageRequiredGenerator("وظایف شغلی")),
+            // jobDuties: z.string().min(1, messageRequiredGenerator("وظایف شغلی")),
             Softwares: z.array(z.string()),
             gender: z.string(),
             education: z.array(z.string()),
             adTags: z.array(z.string()),
-            isImportant: z.boolean(),
-            responsibleEmployer: z.boolean(),
-            acceptTrainees: z.boolean(),
-            acceptTelecommuting: z.boolean(),
+            isImportant: z.boolean().optional(),
+            responsibleEmployer: z.boolean().optional(),
+            acceptTrainees: z.boolean().optional(),
+            acceptTelecommuting: z.boolean().optional(),
             type: z.object({
                 BENEFITS_AND_FACILITIES: z.array(z.string()),
-                MILITARY_ORDER: z.boolean(),
+                MILITARY_ORDER: z.boolean().optional(),
+            }),
+            //
+            price: z.object({
+                isRightPriceArray: z.boolean().optional(),
+                from: z.string().min(1, messageRequiredGenerator("حداقل حقوق")),
+                to: z.string(),
+            }),
+            oldYears: z.object({
+                isYearArray: z.boolean().optional(),
+                yearFrom: z.string().min(1, messageRequiredGenerator("حداقل سن")),
+                yearTo: z.string(),
             }),
         });
 
-        const rightPriceArray = z.object({
-            isRightPriceArray: z.literal(true),
-            rightsPriceFrom: z.string().min(1, messageRequiredGenerator("حداقل حقوق")),
-            rightsPriceTo: z.string().min(1, messageRequiredGenerator("حداکثر حقوق")),
-        });
-        const rightPriceOnly = z.object({
-            isRightPriceArray: z.literal(false),
-            rightsPriceFrom: z.string().min(1, messageRequiredGenerator("حقوق")),
-        });
+        type TypeMainAddFormSchema = z.infer<typeof mainAddFormSchema>;
 
-        const yearsOldArray = z.object({
-            isYearArray: z.literal(true),
-            yearFrom: z.string().min(1, messageRequiredGenerator("حداقل سن")),
-            yearTo: z.string().min(1, messageRequiredGenerator("حداکثر سن")),
-        });
-        const yearOldOnly = z.object({
-            isYearArray: z.literal(false),
-            yearFrom: z.string().min(1, messageRequiredGenerator("سن")),
-        });
-
-        const rightPriceArraySchema = rightPriceArray.merge(mainAddFormSchema);
-        const rightPriceOnlySchema = rightPriceOnly.merge(mainAddFormSchema);
-
-        const yearsOldArraySchema = yearsOldArray.merge(mainAddFormSchema);
-        const yearsOldOnlySchema = yearOldOnly.merge(mainAddFormSchema);
-
-        const adSchemaForm_rightPrice = z.discriminatedUnion("isRightPriceArray", [
-            rightPriceArraySchema,
-            rightPriceOnlySchema,
-        ]);
-        const adSchemaForm_yearOld = z.discriminatedUnion("isYearArray", [yearsOldArraySchema, yearsOldOnlySchema]);
-
-        const allSchema = adSchemaForm_rightPrice.and(adSchemaForm_yearOld);
-
-        type adSchemaForm_rightPriceType = z.infer<typeof adSchemaForm_rightPrice>;
-        type adSchemaForm_yearOlType = z.infer<typeof adSchemaForm_yearOld>;
-
-        const { register, watch, control, getValues, handleSubmit, setValue } = useForm<
-            adSchemaForm_rightPriceType | adSchemaForm_yearOlType
-        >({
-            resolver: zodResolver(allSchema),
+        const {
+            register,
+            watch,
+            control,
+            getValues,
+            handleSubmit,
+            setValue,
+            reset,
+            getFieldState,
+            setError,
+            formState: { errors },
+        } = useForm<TypeMainAddFormSchema>({
+            resolver: zodResolver(mainAddFormSchema),
         });
 
         const typeOfCooperationOption: TypeOptionInput[] = [
@@ -690,11 +678,28 @@ namespace SubPageCms {
         ];
 
         const submitAction = () => {
-            console.log("Login Success");
+            return new Promise<void>((resolve) => {
+                setTimeout(() => {
+                    showMess({ type: "success", message: messageSuccess("ثبت آگهی") });
+                    reset();
+                    resolve();
+                }, 2000);
+            });
         };
 
-        const isRightPriceArray = watch("isRightPriceArray");
-        const isYearArray = watch("isYearArray");
+        useEffect(
+            () =>
+                Object.keys(errors).map((item) => {
+                    showMess({
+                        type: "error",
+                        message: getFieldState(item as keyof TypeMainAddFormSchema).error?.message,
+                    });
+                }),
+            [errors]
+        );
+
+        const isRightPriceArray = watch("price.isRightPriceArray");
+        const isYearArray = watch("oldYears.isYearArray");
 
         return (
             <>
@@ -706,7 +711,7 @@ namespace SubPageCms {
                             min={0}
                             className="block w-full"
                             placeholder="برای مثال : 7 میلیون تومان"
-                            register={register("rightsPriceFrom")}
+                            register={register("price.from")}
                         />
                         <div
                             className={`overflow-hidden grid transition-all duration-700 delay-100 mb-2 ${
@@ -719,13 +724,13 @@ namespace SubPageCms {
                                     min={0}
                                     className="block w-full"
                                     placeholder="20 میلیون تومان"
-                                    register={register("rightsPriceTo", { shouldUnregister: true })}
+                                    register={register("price.to")}
                                 />
                             </div>
                         </div>
                         <CheckBox
                             label="نوشتن حداقل و حداکثر حقوق"
-                            name={register("isRightPriceArray").name}
+                            name={register("price.isRightPriceArray").name}
                             control={control}
                         />
                     </section>
@@ -762,7 +767,7 @@ namespace SubPageCms {
                             min={10}
                             className="block w-full"
                             placeholder="برای مثال : 18 سال"
-                            register={register("yearFrom")}
+                            register={register("oldYears.yearFrom")}
                         ></NumberInput>
                         <div
                             className={`overflow-hidden grid transition-all duration-700 delay-100 mb-2 ${
@@ -775,13 +780,13 @@ namespace SubPageCms {
                                     min={10}
                                     className="block w-full"
                                     placeholder="25 سال"
-                                    register={register("rightsPriceTo", { shouldUnregister: true })}
+                                    register={register("oldYears.yearTo")}
                                 />
                             </div>
                         </div>
                         <CheckBox
                             label="نوشتن حداقل و حداکثر سن"
-                            name={register("isYearArray").name}
+                            name={register("oldYears.isYearArray").name}
                             control={control}
                         />
                     </section>
@@ -795,6 +800,32 @@ namespace SubPageCms {
                                 setValue("education", param);
                             }}
                             register={register("education")}
+                            className="border-jv-lightGray3x"
+                        ></SelectInput>
+                    </section>
+                    <section>
+                        <h5 className="mr-2">شاخص های کلیدی</h5>
+                        <SelectInput
+                            placeholder="برای مثال : 3 سال سابقه کار و react - پیشرفته و..."
+                            id="keyIndicatorsMenu"
+                            mode="Multiple"
+                            callBackFn={(param: string[]) => {
+                                setValue("keyIndicators", param);
+                            }}
+                            register={register("keyIndicators")}
+                            className="border-jv-lightGray3x"
+                        ></SelectInput>
+                    </section>
+                    <section className="my-5">
+                        <h5 className="mr-2">مهارت های نرم افزاری</h5>
+                        <SelectInput
+                            placeholder="برای مثال : react - متوسط و..."
+                            id="SoftwaresMenu"
+                            mode="Multiple"
+                            callBackFn={(param: string[]) => {
+                                setValue("Softwares", param);
+                            }}
+                            register={register("Softwares")}
                             className="border-jv-lightGray3x"
                         ></SelectInput>
                     </section>
@@ -911,9 +942,7 @@ namespace SubPageCms {
                         ClassName="mt-5 w-full"
                         textColor="primary"
                         size="middle"
-                        ClickHandler={() => {
-                            console.log(getValues());
-                        }}
+                        ClickHandler={() => {}}
                         isLoading={false}
                     >
                         آپدیت
@@ -934,7 +963,7 @@ const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, setMainPa
     };
 
     const AdvertsisingsPage: React.FC<AdvertsisingsPageProps> = ({ isAddShow }) => {
-        return isAddShow ? <SubPageCms.Advertising_Add /> : <SubPageCms.Advertising_Main />;
+        return isAddShow ? <SubPageCms.Advertising_Add showMess={showMess} /> : <SubPageCms.Advertising_Main />;
     };
     return (
         <div className="h-full flex flex-col overflow-hidden">
