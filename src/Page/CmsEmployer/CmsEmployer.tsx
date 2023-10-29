@@ -345,6 +345,7 @@ namespace SubPageCms {
                                     placeholder="...لینک لوگو شرکت"
                                     register={register("logo")}
                                     className={[{ inputClassName: "text-left" }]}
+                                    isError={errors.logo?.message}
                                 ></TextInput>
                                 <p className="mt-2 text-xs text-jv-lightGray2x w-1/2">
                                     پیشنهاد میشود مقدار پیکسل لوگو شرکت 800 * 800 و فرمت عکس JPG یا PNG باشد و همچنین
@@ -355,7 +356,11 @@ namespace SubPageCms {
                     </section>
                     <section className="my-5">
                         <h5 className="mr-2">نام شرکت</h5>
-                        <TextInput placeholder="برای مثال جاب ویژن" register={register("name")}></TextInput>
+                        <TextInput
+                            placeholder="برای مثال جاب ویژن"
+                            register={register("name")}
+                            isError={errors.name?.message}
+                        ></TextInput>
                     </section>
                     <section>
                         <h5 className="mr-2">موقعیت شرکت</h5>
@@ -364,6 +369,7 @@ namespace SubPageCms {
                             register={register("location")}
                             icon={<BiMap></BiMap>}
                             iconSide="Right"
+                            isError={errors.location?.message}
                         ></TextInput>
                     </section>
                     <section className="my-5">
@@ -373,6 +379,7 @@ namespace SubPageCms {
                             register={register("website")}
                             icon={<BiLinkAlt></BiLinkAlt>}
                             className={[{ inputClassName: "text-left" }]}
+                            isError={errors.website?.message}
                         ></TextInput>
                     </section>
                     <section>
@@ -380,6 +387,7 @@ namespace SubPageCms {
                         <TextareaInput
                             placeholder="سخنی از سمت شرکت شما برای جویندگان شغل..."
                             register={register("desc")}
+                            isError={errors.desc?.message}
                         ></TextareaInput>
                     </section>
                     <section className="my-5">
@@ -389,6 +397,7 @@ namespace SubPageCms {
                             register={register("CompanySlogan")}
                             icon={<PiSpeakerHigh></PiSpeakerHigh>}
                             iconSide="Right"
+                            isError={errors.CompanySlogan?.message}
                         ></TextInput>
                     </section>
                     <section>
@@ -397,6 +406,7 @@ namespace SubPageCms {
                             register={register("OrganizationEmploy")}
                             placeholder="برای مثال 13"
                             min={1}
+                            isError={errors.OrganizationEmploy?.message}
                         ></NumberInput>
                     </section>
                     <section className="my-5">
@@ -414,6 +424,7 @@ namespace SubPageCms {
                             options={ownershipOptions}
                             register={register("ownership")}
                             className="border-jv-lightGray3x"
+                            isError={errors.ownership?.message}
                         ></SelectInput>
                     </section>
                     <Button
@@ -707,6 +718,7 @@ namespace SubPageCms {
                             className="block w-full"
                             placeholder="برای مثال : 7 میلیون تومان"
                             register={register("price.from")}
+                            isError={errors.price?.from?.message}
                         />
                         <div
                             className={`overflow-hidden grid transition-all duration-700 delay-100 mb-2 ${
@@ -736,6 +748,7 @@ namespace SubPageCms {
                             register={register("workTime")}
                             icon={<BiTimer></BiTimer>}
                             iconSide="Right"
+                            isError={errors.workTime?.message}
                         ></TextInput>
                     </section>
                     <section>
@@ -763,6 +776,7 @@ namespace SubPageCms {
                             className="block w-full"
                             placeholder="برای مثال : 18 سال"
                             register={register("oldYears.yearFrom")}
+                            isError={errors.oldYears?.yearFrom?.message}
                         ></NumberInput>
                         <div
                             className={`overflow-hidden grid transition-all duration-700 delay-100 mb-2 ${
@@ -822,6 +836,7 @@ namespace SubPageCms {
                             }}
                             register={register("Softwares")}
                             className="border-jv-lightGray3x"
+                            isError={errors.Softwares?.message}
                         ></SelectInput>
                     </section>
                     <section>
@@ -835,6 +850,7 @@ namespace SubPageCms {
                             }}
                             register={register("adTags")}
                             className="border-jv-lightGray3x"
+                            isError={errors.adTags?.message}
                         ></SelectInput>
                     </section>
                     <section className="my-5">
@@ -843,7 +859,7 @@ namespace SubPageCms {
                             <h6>مزایا</h6>
                             <SelectInput
                                 id="BENEFITS_AND_FACILITIES"
-                                placeholder="مزایا و امکانات اراعه دهنده"
+                                placeholder="مزایا و امکانات اراعه دهنده خود را انتخاب کنید"
                                 mode="Multiple_Option"
                                 register={register("type.BENEFITS_AND_FACILITIES")}
                                 options={BenefitsTypeArray}
@@ -857,7 +873,7 @@ namespace SubPageCms {
                             <h6>سطح ارشدیت</h6>
                             <SelectInput
                                 id=""
-                                placeholder="مزایا و امکانات اراعه دهنده"
+                                placeholder="سطح ارشدیت مورد  نیاز خود را انتخاب کنید"
                                 mode="Multiple_Option"
                                 register={register("type.BENEFITS_AND_FACILITIES")}
                                 options={seniorityLevelArray}
@@ -871,7 +887,7 @@ namespace SubPageCms {
                             <h6>سابقه کار</h6>
                             <SelectInput
                                 id="BENEFITS_AND_FACILITIES"
-                                placeholder="مزایا و امکانات اراعه دهنده"
+                                placeholder="سابقه کار مورد نیاز خود را انتخاب کنید"
                                 mode="Multiple_Option"
                                 register={register("type.BENEFITS_AND_FACILITIES")}
                                 options={workExperienceArray}

@@ -36,6 +36,7 @@ namespace InputUtils {
     export const className: TypeClassNameInputRequird = {
         inputwrapperClassName:
             "parentInput m-0 py-2 px-3 text-xs relative w-full inline-flex bg-jv-transparent border-[1px] border-solid border-[#d9d9d9] rounded-lg !leading-[1.5714285714285714] hover:border-jv-primary hover:border-e-[1px] shadow-[rgba(5, 145, 255, 0.1)]",
+        dangerInputClassName: "border-jv-danger hover:border-jv-danger",
         inputClassName: "w-full group-focus:border-jv-primary bg-transparent",
         iconWrapperClassName: "flex items-center",
         autoCompleteWrapperClassName: "",
@@ -102,7 +103,8 @@ const TextInput: React.FC<React.PropsWithChildren<TypeTextInput>> = (props) => {
                 InputUtils.isClassNameUndefined(
                     typeof props.className !== "undefined" ? props.className[0].inputwrapperClassName : undefined
                 ),
-                `flex items-center ${props.iconSide === "Right" ? "flex-row-reverse" : ""}`
+                `flex items-center ${props.iconSide === "Right" ? "flex-row-reverse" : ""}`,
+                Boolean(props.isError) ? InputUtils.className.dangerInputClassName : ""
             )}
         >
             {typeof props.children !== "undefined" ? (
@@ -148,7 +150,8 @@ const PasswordInput: React.FC<TypeTextInput> = (props) => {
                     InputUtils.isClassNameUndefined(
                         typeof props.className !== "undefined" ? props.className[0].inputwrapperClassName : undefined
                     ),
-                    `flex items-center ${props.iconSide === "Right" ? "flex-row-reverse" : ""}`
+                    `flex items-center ${props.iconSide === "Right" ? "flex-row-reverse" : ""}`,
+                    Boolean(props.isError) ? InputUtils.className.dangerInputClassName : ""
                 )}
             >
                 <input
@@ -180,7 +183,8 @@ const SelectInput: React.FC<TypeSelectInput> = (props) => {
                 <div
                     className={twMerge(
                         `select w-fit border-[1px] border-solid border-jv-primary rounded-lg p-2 bg-transparent cursor-pointer text-lg`,
-                        props.className
+                        props.className,
+                        Boolean(props.isError) ? InputUtils.className.dangerInputClassName : ""
                     )}
                 >
                     <select {...props.register} className="w-full bg-transparent cursor-pointer" id="standard-select">
@@ -212,7 +216,11 @@ const SelectInput: React.FC<TypeSelectInput> = (props) => {
         return (
             <div
                 onClick={activeInput}
-                className={twMerge(InputUtils.className.inputwrapperClassName, "min-h-[2.5rem] flex-wrap")}
+                className={twMerge(
+                    InputUtils.className.inputwrapperClassName,
+                    "min-h-[2.5rem] flex-wrap",
+                    Boolean(props.isError) ? InputUtils.className.dangerInputClassName : ""
+                )}
             >
                 {list.map((item, index) => (
                     <p
@@ -266,7 +274,8 @@ const SelectInput: React.FC<TypeSelectInput> = (props) => {
                 className={twMerge(
                     InputUtils.className.inputwrapperClassName,
                     "min-h-[2.5rem] flex-wrap",
-                    props.className
+                    props.className,
+                    Boolean(props.isError) ? InputUtils.className.dangerInputClassName : ""
                 )}
             >
                 <span
@@ -323,7 +332,8 @@ const TextareaInput: React.FC<TypeMainInput> = (props) => {
                 placeholder={props.placeholder}
                 className={twMerge(
                     `w-full min-h-[4rem] max-h-72 resize-y p-2 bg-transparent border-[1px] border-solid rounded-lg border-jv-lightGray3x`,
-                    props.className
+                    props.className,
+                    Boolean(props.isError) ? InputUtils.className.dangerInputClassName : ""
                 )}
                 {...props.register}
             ></textarea>
@@ -356,7 +366,7 @@ const DateInput: React.FC<TypeDateInput> = ({ placeholder, date, setDate }) => {
     );
 };
 
-const NumberInput: React.FC<TypeNumberInput> = ({ placeholder, defValue, max, min, register, className }) => {
+const NumberInput: React.FC<TypeNumberInput> = ({ placeholder, defValue, max, min, register, className, isError }) => {
     return (
         <>
             <input
@@ -367,7 +377,8 @@ const NumberInput: React.FC<TypeNumberInput> = ({ placeholder, defValue, max, mi
                 {...register}
                 className={twMerge(
                     "bg-transparent p-2 rounded-lg outline-none border border-solid border-jv-lightGray3x",
-                    className
+                    className,
+                    Boolean(isError) ? InputUtils.className.dangerInputClassName : ""
                 )}
                 type="number"
             />

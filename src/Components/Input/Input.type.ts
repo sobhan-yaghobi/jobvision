@@ -8,6 +8,7 @@ interface TypeClassNameInput {
     inputClassName?: string;
     iconWrapperClassName?: string;
     autoCompleteWrapperClassName?: string;
+    dangerInputClassName?: string;
 }
 
 export type TypeClassNameInputRequird = {
@@ -18,7 +19,7 @@ export interface TypeMainInput {
     placeholder?: string;
     className?: string;
     register: {};
-    isError?: boolean | undefined;
+    isError?: string | undefined;
 }
 
 export interface TypeTextInput extends Omit<TypeMainInput, "className"> {
