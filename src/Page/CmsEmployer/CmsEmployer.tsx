@@ -10,20 +10,9 @@ import {
 import { z } from "zod";
 
 // Types
-import {
-    CmsPageGeneratorProps,
-    EditHomePageProps,
-    HomePageProps,
-    LiteralsMainPage,
-    TypeSubPageItem,
-    ProgressCardArray,
-    AdvertsisingsPageProps,
-    AdvertisingAddProps,
-} from "./CmsEmployer.type";
+import { CmsPageGeneratorProps, LiteralsMainPage, SubPageCmsTypes } from "./CmsEmployer.type";
 import { CheckBox, DateInput, NumberInput, SelectInput, TextInput, TextareaInput } from "../../Components/Input/Input";
-import { TypeOptionInput } from "../../Components/Input/Input.type";
 import { MenuItemType, MenuProps } from "../../Components/Menu/Menu.type";
-import { FiltreTypes } from "../../Components/JobsFilter/JobsFilter.type";
 
 // Hook
 import { useForm } from "react-hook-form";
@@ -106,156 +95,8 @@ const pageItems: MenuItemType[] = [
     },
 ];
 
-const CmsEmployer: React.FC = () => {
-    const { ShowContext, showMess } = useShowMssAndNotif({ placementOfNotif: "bottomLeft" });
-
-    const [MainPage, setMainPage] = useState<LiteralsMainPage.TypeMainPage>({
-        mainKey: LiteralsMainPage.Advertsisings,
-        subPage: "Advertsisings_Add",
-    } as LiteralsMainPage.TypeMainPage);
-
-    const setMainPageAction: MenuProps["onSelect"] = (mainItem) => {
-        console.log("setMainPageAction");
-        typeof mainItem !== "undefined" ? setMainPage({ mainKey: mainItem.key, subPage: mainItem.mainSubPage }) : null;
-    };
-
-    return (
-        <>
-            {ShowContext}
-            <div className="w-full h-screen flex justify-between p-4 relative">
-                <div className="w-2/12 p-1 flex flex-col justify-between text-jv-lightGray2x">
-                    <img className="h-10 self-start" src={Logo} alt="" />
-                    <div className="mt-1 h-full overflow-y-auto no-scrollbar">
-                        <Menu
-                            // key={`${MainPage.mainKey}-Menu`}
-                            // setDefaultAction={setPageAction}
-                            defaultItem={MainPage.mainKey}
-                            onSelect={setMainPageAction}
-                            items={pageItems}
-                        ></Menu>
-                    </div>
-                    <div className="w-full h-[35%] text-center rounded-lg bg-slate-100 flex flex-col items-center">
-                        <img className="h-[45%] mb-2" src={reportIcon} alt="" />
-                        <h4>گزارش سالانه</h4>
-                        <p className="text-xs my-2">همین الان از گزارش سالیانه مطلع شوید</p>
-                        <Button
-                            size="small"
-                            textColor="light"
-                            ClickHandler={() => {}}
-                            ClassName="!py-2 px-8 border-none shadow-jv-primary shadow-lg"
-                            isLoading={false}
-                        >
-                            دانلود
-                        </Button>
-                    </div>
-                </div>
-                <div className={`w-7/12 h-full mx-4`}>
-                    <CmsPageGenerator
-                        showMess={showMess}
-                        mainPage={MainPage.mainKey as LiteralsMainPage.AllPage}
-                        setMainPage={setMainPage}
-                        subPage={MainPage.subPage}
-                    ></CmsPageGenerator>
-                </div>
-                <div className="w-3/12 h-full">
-                    <div className="h-3/6 flex flex-col items-center">
-                        <div className="w-full flex items-center justify-end">
-                            <Link to="/">
-                                <span
-                                    title="خروج از پنل"
-                                    className="button-Cms-type text-jv-danger ml-2 border-jv-lightDanger  hover:bg-jv-lightDanger"
-                                >
-                                    <HiOutlineLogout className="text-inherit transition-none" />
-                                </span>
-                            </Link>
-                        </div>
-                        <img className="rounded-full h-16 shadow-xl" src="/images/company-Sheypoor.webp" alt="" />
-                        <h3 className="mt-3 text-jv-lightGray2x">شیپور</h3>
-                        <ul className="w-full my-5 flex items-center justify-evenly">
-                            <li
-                                onClick={() => setMainPage({ mainKey: LiteralsMainPage.Home, subPage: "Home_Edit" })}
-                                className="select-none cursor-pointer text-jv-primary flex flex-col items-center justify-center group"
-                            >
-                                <span className="button-Cms-type border-jv-lightPrimary bg-jv-lightPrimary shadow-jv-primary group-hover:shadow-xl group-active:scale-90">
-                                    <CiEdit className="text-inherit transform-none" />
-                                </span>
-                                <span className="mt-3 text-xs">ویرایش</span>
-                            </li>
-                            <li
-                                onClick={() => setMainPage({ mainKey: LiteralsMainPage.RqAll, subPage: undefined })}
-                                className="select-none cursor-pointer text-jv-primary flex flex-col items-center justify-center group relative"
-                            >
-                                <span className="button-Cms-type border-jv-lightPrimary bg-jv-lightPrimary shadow-jv-primary group-hover:shadow-xl group-active:scale-90">
-                                    <BiGitPullRequest className="text-inherit transform-none" />
-                                </span>
-                                <span className="mt-3 text-xs">درخواست ها</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div className="h-3/6 w-full">
-                        <div className="px-1 h-full flex flex-col overflow-y-auto">
-                            <h3 className="text-jv-lightGray2x">درخواست های اخیر</h3>
-                            <div className="my-1">
-                                <span className="text-jv-lightGray2x text-xs pr-1">امروز</span>
-                                <ul>
-                                    {Array(2)
-                                        .fill("")
-                                        .map((item, index) => (
-                                            <li
-                                                key={index}
-                                                className="p-2 mb-2 rounded-lg bg-jv-lightPrimary flex items-center justify-around"
-                                            >
-                                                <span className="w-2/12 flex items-center justify-start">
-                                                    <span className="button-Cms-type cursor-default text-jv-primary border-jv-lightPrimary bg-jv-lightPrimary text-xl rounded-xl shadow-lg">
-                                                        <CiUser />
-                                                    </span>
-                                                </span>
-                                                <span className="w-8/12 text-jv-lightGray2x">
-                                                    <p className="text-sm truncate">سبحان یعقوبی</p>
-                                                    <p className="text-xs truncate">توسعه دهنده فرانت اند</p>
-                                                </span>
-                                                <span className="w-2/12 flex items-center justify-end">
-                                                    <span className="button-Cms-type border-jv-lightGray3x bg-jv-lightGray3x text-jv-lightGray2x shadow-lg hover:shadow-none">
-                                                        <AiOutlineEye />
-                                                    </span>
-                                                </span>
-                                            </li>
-                                        ))}
-                                </ul>
-                            </div>
-                            <div className="my-1">
-                                <span className="text-jv-lightGray2x text-xs pr-1">دیروز</span>
-                                <ul>
-                                    <li className="p-2 mb-2 rounded-lg bg-jv-lightPrimary flex items-center justify-around">
-                                        <span className="w-2/12 flex items-center justify-start">
-                                            <span className="button-Cms-type cursor-default text-jv-primary border-jv-lightPrimary bg-jv-lightPrimary text-xl rounded-xl shadow-lg">
-                                                <CiUser />
-                                            </span>
-                                        </span>
-                                        <span className="w-8/12 text-jv-lightGray2x">
-                                            <p className="text-sm truncate">سبحان یعقوبی</p>
-                                            <p className="text-xs truncate">توسعه دهنده فرانت اند</p>
-                                        </span>
-                                        <span className="w-2/12 flex items-center justify-end">
-                                            <span className="button-Cms-type border-jv-lightGray3x bg-jv-lightGray3x text-jv-lightGray2x shadow-lg hover:shadow-none">
-                                                <AiOutlineEye />
-                                            </span>
-                                        </span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </>
-    );
-};
-
-export default CmsEmployer;
-
 namespace SubPageCms {
-    export const subPageItem: TypeSubPageItem[] = [
+    export const subPageItem: SubPageCmsTypes.TypeSubPageItem[] = [
         {
             parnetPage: "Home",
             subPage: "Home_Main",
@@ -270,7 +111,99 @@ namespace SubPageCms {
         { parnetPage: "Advertsisings", subPage: "Advertsisings_Main", title: "آگهی ها" },
     ];
 
-    export const EditHomePage: React.FC<EditHomePageProps> = ({ showMess }) => {
+    // Components
+
+    export const ReqeustBox: React.FC<SubPageCmsTypes.ReqeustBoxProps> = ({ status }) => {
+        return (
+            <div
+                className={`mb-2 h-36 bg-jv-white py-4 px-3 rounded-lg border-solid border-[1px] ${
+                    status === "waiting"
+                        ? "border-jv-warning"
+                        : status === "reject"
+                        ? "border-jv-danger"
+                        : status === "accept"
+                        ? "border-jv-success"
+                        : "border-transparent"
+                }`}
+            >
+                <div className="h-1/3 flex justify-between">
+                    <section className="h-full flex">
+                        <span className="ml-2 text-2xl text-jv-lightGray w-10 h-10 border-2 border-solid border-jv-lightGray rounded-full flex items-center justify-center">
+                            <CiUser />
+                        </span>
+                        <span>
+                            <p className="text-base text-jv-lightGray">سبحان یعقوبی</p>
+                            <p className="text-xs">توسعه دهنده فرانت اند</p>
+                        </span>
+                    </section>
+                    <section className="h-full">
+                        <p className="box-info-type m-0">4 روز پیش</p>
+                    </section>
+                </div>
+                <div className="h-2/3 mt-2 text-xs flex flex-col">
+                    <p className="text-base pb-2 text-jv-lightGray w-full truncate" title="متن کامل">
+                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و
+                    </p>
+                    <div className="h-full flex items-end justify-between">
+                        <span>6 اسفند 1400 - 7 اسفند 1400</span>
+                        <div className="flex items-center">
+                            <Button
+                                isLoading={false}
+                                ClickHandler={() => {}}
+                                textColor="primary"
+                                size="small"
+                                ClassName="!py-2 mx-1 bg-jv-lightPrimary !border-transparent"
+                            >
+                                <BiComment className="text-base" />
+                            </Button>
+                            <Button
+                                isLoading={false}
+                                ClickHandler={() => {}}
+                                textColor="primary"
+                                size="small"
+                                ClassName="!py-2 mx-1 bg-jv-lightPrimary !border-transparent"
+                            >
+                                قبول
+                            </Button>
+                            <Button
+                                isLoading={false}
+                                ClickHandler={() => {}}
+                                textColor="primary"
+                                size="small"
+                                ClassName="!py-2 mx-1 !bg-jv-lightDanger !text-jv-danger !border-jv-lightDanger"
+                            >
+                                رد
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+    export const RequsetNotifBox: React.FC = () => {
+        return (
+            <div className="p-2 mb-2 rounded-lg bg-jv-lightPrimary flex items-center justify-around">
+                <span className="w-2/12 flex items-center justify-start">
+                    <span className="button-Cms-type cursor-default text-jv-primary border-jv-lightPrimary bg-jv-lightPrimary text-xl rounded-xl shadow-lg">
+                        <CiUser />
+                    </span>
+                </span>
+                <span className="w-8/12 text-jv-lightGray2x">
+                    <p className="text-sm truncate">سبحان یعقوبی</p>
+                    <p className="text-xs truncate">توسعه دهنده فرانت اند</p>
+                </span>
+                <span className="w-2/12 flex items-center justify-end">
+                    <span className="button-Cms-type border-jv-lightGray3x bg-jv-lightGray3x text-jv-lightGray2x shadow-lg hover:shadow-none">
+                        <AiOutlineEye />
+                    </span>
+                </span>
+            </div>
+        );
+    };
+
+    // Pages
+
+    export const EditHomePage: React.FC<SubPageCmsTypes.EditHomePageProps> = ({ showMess }) => {
         const CompanyFormSchema = z.object({
             name: z.string().min(3, messageLengthGenerator("Min", "نام شرکت", 3)).trim(),
             location: z.string().min(10, messageLengthGenerator("Min", "موقعیت مکانی", 10)).trim(),
@@ -291,16 +224,6 @@ namespace SubPageCms {
             ownership: z.string({ required_error: "انتخاب نوع شرکت اجباری است" }).trim(),
         });
         type TypeCompanyFormSchema = z.infer<typeof CompanyFormSchema>;
-        const ownershipOptions: TypeOptionInput[] = [
-            {
-                value: "Private",
-                label: "خصوصی",
-            },
-            {
-                value: "Government",
-                label: "دولتی",
-            },
-        ];
         const {
             register,
             setValue,
@@ -309,6 +232,7 @@ namespace SubPageCms {
             reset,
             formState: { errors, isSubmitting },
         } = useForm<TypeCompanyFormSchema>({ resolver: zodResolver(CompanyFormSchema) });
+
         useEffect(() => {
             Object.keys(errors).map((item) => {
                 showMess({
@@ -317,8 +241,10 @@ namespace SubPageCms {
                 });
             });
         }, [errors]);
+
         const setEstablishDate = (date: number) => setValue("establishedyear", new Date(date));
         const submitAction = (data: TypeCompanyFormSchema) => {
+            console.log(data);
             return new Promise<void>((resolve) => {
                 setTimeout(() => {
                     showMess({ type: "success", message: messageSuccess("آپدیت اطلاعات شرکت") });
@@ -421,7 +347,7 @@ namespace SubPageCms {
                         <SelectInput
                             mode="Single"
                             label="نوع شرکت"
-                            options={ownershipOptions}
+                            options={SubPageCmsTypes.ownershipOptions}
                             register={register("ownership")}
                             className="border-jv-lightGray3x"
                             isError={errors.ownership?.message}
@@ -485,7 +411,7 @@ namespace SubPageCms {
                         </Link>
                     </div>
                     <div className="grid grid-cols-2 grid-rows-2">
-                        {ProgressCardArray.map((item, index) => (
+                        {SubPageCmsTypes.ProgressCardArray.map((item, index) => (
                             <div
                                 key={`jobs-hire-box-${index}`}
                                 className="bg-jv-lightPrimary py-2 px-5 m-2 rounded-lg flex items justify-between"
@@ -527,62 +453,7 @@ namespace SubPageCms {
                         {Array(3)
                             .fill("")
                             .map((value, index) => (
-                                <div key={index} className="mb-2 h-36 bg-jv-white py-4 px-3 rounded-lg">
-                                    <div className="h-1/3 flex justify-between">
-                                        <section className="h-full flex">
-                                            <span className="ml-2 text-2xl text-jv-lightGray w-10 h-10 border-2 border-solid border-jv-lightGray rounded-full flex items-center justify-center">
-                                                <CiUser />
-                                            </span>
-                                            <span>
-                                                <p className="text-base text-jv-lightGray">سبحان یعقوبی</p>
-                                                <p className="text-xs">توسعه دهنده فرانت اند</p>
-                                            </span>
-                                        </section>
-                                        <section className="h-full">
-                                            <p className="box-info-type m-0">4 روز پیش</p>
-                                        </section>
-                                    </div>
-                                    <div className="h-2/3 mt-2 text-xs flex flex-col">
-                                        <p
-                                            className="text-base pb-2 text-jv-lightGray w-full truncate"
-                                            title="متن کامل"
-                                        >
-                                            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و
-                                        </p>
-                                        <div className="h-full flex items-end justify-between">
-                                            <span>6 اسفند 1400 - 7 اسفند 1400</span>
-                                            <div className="flex items-center">
-                                                <Button
-                                                    isLoading={false}
-                                                    ClickHandler={() => {}}
-                                                    textColor="primary"
-                                                    size="small"
-                                                    ClassName="!py-2 mx-1 bg-jv-lightPrimary !border-transparent"
-                                                >
-                                                    <BiComment className="text-base" />
-                                                </Button>
-                                                <Button
-                                                    isLoading={false}
-                                                    ClickHandler={() => {}}
-                                                    textColor="primary"
-                                                    size="small"
-                                                    ClassName="!py-2 mx-1 bg-jv-lightPrimary !border-transparent"
-                                                >
-                                                    قبول
-                                                </Button>
-                                                <Button
-                                                    isLoading={false}
-                                                    ClickHandler={() => {}}
-                                                    textColor="primary"
-                                                    size="small"
-                                                    ClassName="!py-2 mx-1 !bg-jv-lightDanger !text-jv-danger !border-jv-lightDanger"
-                                                >
-                                                    رد
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <SubPageCms.ReqeustBox key={`ReqeustBox-${index + 1}`}></SubPageCms.ReqeustBox>
                             ))}
                     </div>
                 </section>
@@ -594,7 +465,7 @@ namespace SubPageCms {
         return <>Advertising_Main</>;
     };
 
-    export const Advertising_Add: React.FC<AdvertisingAddProps> = ({ showMess }) => {
+    export const Advertising_Add: React.FC<SubPageCmsTypes.AdvertisingAddProps> = ({ showMess }) => {
         const mainAddFormSchema = z.object({
             workTime: z.string().min(1, messageRequiredGenerator("زمان کار")),
             typeOfCooperation: z.string(),
@@ -641,42 +512,6 @@ namespace SubPageCms {
             resolver: zodResolver(mainAddFormSchema),
         });
 
-        const typeOfCooperationOption: TypeOptionInput[] = [
-            { label: "تمام وقت", value: "TYPE_OF_COOPERTION_FULL_TIME" },
-            { label: "پاره وقت", value: "TYPE_OF_COOPERTION_PART_TIME" },
-            { label: "قراردادی", value: "TYPE_OF_COOPERTION_CONTRACTUAL_TIME" },
-        ];
-        const genderOption: TypeOptionInput[] = [
-            { label: "تفاوتی ندارد", value: "NotImportant" },
-            { label: "مرد", value: "Male" },
-            { label: "زن", value: "Female" },
-        ];
-        type TypeAdSelectForm = {
-            label: string;
-            value: FiltreTypes;
-        };
-        const BenefitsTypeArray: TypeAdSelectForm[] = [
-            { label: "وام", value: "BENEFITS_AND_FACILITIES_LOAN" },
-            { label: "پارکینگ", value: "BENEFITS_AND_FACILITIES_PARKING" },
-            { label: "پاداش", value: "BENEFITS_AND_FACILITIES_REWARD" },
-        ];
-        const seniorityLevelArray: TypeAdSelectForm[] = [
-            { label: "کارگر", value: "SENIORITY_LEVEL_MANUAL_WORKER" },
-            { label: "کارمند", value: "SENIORITY_LEVEL_EMPLOYEE" },
-            { label: "کارشناس", value: "SENIORITY_LEVEL_EXPERT" },
-            { label: "کارشناس ارشد", value: "SENIORITY_LEVEL_MA" },
-            { label: "مدیر میانی", value: "SENIORITY_LEVEL_MID_LEVEL_MANAGER" },
-            { label: "معاونت", value: "SENIORITY_LEVEL_ASSISTANCE" },
-            { label: "مدیرارشد", value: "SENIORITY_LEVEL_CHIEF" },
-        ];
-        const workExperienceArray: TypeAdSelectForm[] = [
-            { label: "کمتر از دو سال", value: "WORK_EXPERIENCE_UNDER_2_YR" },
-            { label: "بین دو تا پنج سال", value: "WORK_EXPERIENCE_AMONG_2_5_YR" },
-            { label: "بین پنج تا هشت سال", value: "WORK_EXPERIENCE_AMONG_5_8_YR" },
-            { label: "بین هشت تا دوازده سال", value: "WORK_EXPERIENCE_AMONG_8_12_YR" },
-            { label: "بالای دوازده سال", value: "WORK_EXPERIENCE_OVER_12_YR" },
-        ];
-
         const submitAction = () => {
             return new Promise<void>((resolve) => {
                 setTimeout(() => {
@@ -686,7 +521,6 @@ namespace SubPageCms {
                 }, 2000);
             });
         };
-
         useEffect(() => {
             Object.keys(errors).map((item) => {
                 showMess({
@@ -862,7 +696,7 @@ namespace SubPageCms {
                                 placeholder="مزایا و امکانات اراعه دهنده خود را انتخاب کنید"
                                 mode="Multiple_Option"
                                 register={register("type.BENEFITS_AND_FACILITIES")}
-                                options={BenefitsTypeArray}
+                                options={SubPageCmsTypes.BenefitsTypeArray}
                                 callBackFn={(param: string[]) => {
                                     setValue("type.BENEFITS_AND_FACILITIES", param);
                                 }}
@@ -876,7 +710,7 @@ namespace SubPageCms {
                                 placeholder="سطح ارشدیت مورد  نیاز خود را انتخاب کنید"
                                 mode="Multiple_Option"
                                 register={register("type.BENEFITS_AND_FACILITIES")}
-                                options={seniorityLevelArray}
+                                options={SubPageCmsTypes.seniorityLevelArray}
                                 callBackFn={(param: string[]) => {
                                     setValue("type.BENEFITS_AND_FACILITIES", param);
                                 }}
@@ -890,7 +724,7 @@ namespace SubPageCms {
                                 placeholder="سابقه کار مورد نیاز خود را انتخاب کنید"
                                 mode="Multiple_Option"
                                 register={register("type.BENEFITS_AND_FACILITIES")}
-                                options={workExperienceArray}
+                                options={SubPageCmsTypes.workExperienceArray}
                                 callBackFn={(param: string[]) => {
                                     setValue("type.BENEFITS_AND_FACILITIES", param);
                                 }}
@@ -903,7 +737,7 @@ namespace SubPageCms {
                         <SelectInput
                             mode="Single"
                             label="نوع همکاری"
-                            options={genderOption}
+                            options={SubPageCmsTypes.genderOption}
                             register={register("gender")}
                             className="border-jv-lightGray3x"
                         ></SelectInput>
@@ -913,7 +747,7 @@ namespace SubPageCms {
                         <SelectInput
                             mode="Single"
                             label="نوع همکاری"
-                            options={typeOfCooperationOption}
+                            options={SubPageCmsTypes.typeOfCooperationOption}
                             register={register("typeOfCooperation")}
                             className="border-jv-lightGray3x"
                         ></SelectInput>
@@ -964,6 +798,136 @@ namespace SubPageCms {
     };
 }
 
+const CmsEmployer: React.FC = () => {
+    const { ShowContext, showMess } = useShowMssAndNotif({ placementOfNotif: "bottomLeft" });
+
+    const [MainPage, setMainPage] = useState<LiteralsMainPage.TypeMainPage>({
+        mainKey: LiteralsMainPage.Advertsisings,
+        subPage: "Advertsisings_Add",
+    } as LiteralsMainPage.TypeMainPage);
+
+    const setMainPageAction: MenuProps["onSelect"] = (mainItem) => {
+        console.log("setMainPageAction");
+        typeof mainItem !== "undefined" ? setMainPage({ mainKey: mainItem.key, subPage: mainItem.mainSubPage }) : null;
+    };
+
+    return (
+        <>
+            {ShowContext}
+            <div className="w-full h-screen flex justify-between p-4 relative">
+                <div className="w-2/12 p-1 flex flex-col justify-between text-jv-lightGray2x">
+                    <img className="h-10 self-start" src={Logo} alt="" />
+                    <div className="mt-1 h-full overflow-y-auto no-scrollbar">
+                        <Menu
+                            // key={`${MainPage.mainKey}-Menu`}
+                            // setDefaultAction={setPageAction}
+                            defaultItem={MainPage.mainKey}
+                            onSelect={setMainPageAction}
+                            items={pageItems}
+                        ></Menu>
+                    </div>
+                    <div className="w-full h-[35%] text-center rounded-lg bg-slate-100 flex flex-col items-center">
+                        <img className="h-[45%] mb-2" src={reportIcon} alt="" />
+                        <h4>گزارش سالانه</h4>
+                        <p className="text-xs my-2">همین الان از گزارش سالیانه مطلع شوید</p>
+                        <Button
+                            size="small"
+                            textColor="light"
+                            ClickHandler={() => {}}
+                            ClassName="!py-2 px-8 border-none shadow-jv-primary shadow-lg"
+                            isLoading={false}
+                        >
+                            دانلود
+                        </Button>
+                    </div>
+                </div>
+                <div className={`w-7/12 h-full mx-4`}>
+                    <CmsPageGenerator
+                        showMess={showMess}
+                        mainPage={MainPage.mainKey as LiteralsMainPage.AllPage}
+                        setMainPage={setMainPage}
+                        subPage={MainPage.subPage}
+                    ></CmsPageGenerator>
+                </div>
+                <div className="w-3/12 h-full">
+                    <div className="h-3/6 flex flex-col items-center">
+                        <div className="w-full flex items-center justify-end">
+                            <Link to="/">
+                                <span
+                                    title="خروج از پنل"
+                                    className="button-Cms-type text-jv-danger ml-2 border-jv-lightDanger  hover:bg-jv-lightDanger"
+                                >
+                                    <HiOutlineLogout className="text-inherit transition-none" />
+                                </span>
+                            </Link>
+                        </div>
+                        <img className="rounded-full h-16 shadow-xl" src="/images/company-Sheypoor.webp" alt="" />
+                        <h3 className="mt-3 text-jv-lightGray2x">شیپور</h3>
+                        <ul className="w-full my-5 flex items-center justify-evenly">
+                            <li
+                                onClick={() => setMainPage({ mainKey: LiteralsMainPage.Home, subPage: "Home_Edit" })}
+                                className="select-none cursor-pointer text-jv-primary flex flex-col items-center justify-center group"
+                            >
+                                <span className="button-Cms-type border-jv-lightPrimary bg-jv-lightPrimary shadow-jv-primary group-hover:shadow-xl group-active:scale-90">
+                                    <CiEdit className="text-inherit transform-none" />
+                                </span>
+                                <span className="mt-3 text-xs">ویرایش</span>
+                            </li>
+                            <li
+                                onClick={() => setMainPage({ mainKey: LiteralsMainPage.RqAll, subPage: undefined })}
+                                className="select-none cursor-pointer text-jv-primary flex flex-col items-center justify-center group relative"
+                            >
+                                <span className="button-Cms-type border-jv-lightPrimary bg-jv-lightPrimary shadow-jv-primary group-hover:shadow-xl group-active:scale-90">
+                                    <BiGitPullRequest className="text-inherit transform-none" />
+                                </span>
+                                <span className="mt-3 text-xs">درخواست ها</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div className="h-3/6 w-full">
+                        <div className="px-1 h-full flex flex-col overflow-y-auto">
+                            <h3 className="text-jv-lightGray2x">درخواست های اخیر</h3>
+                            <div className="my-1">
+                                <span className="text-jv-lightGray2x text-xs pr-1">امروز</span>
+                                <ul>
+                                    {Array(2)
+                                        .fill("")
+                                        .map((item, index) => (
+                                            <li key={index}>
+                                                <SubPageCms.RequsetNotifBox></SubPageCms.RequsetNotifBox>
+                                            </li>
+                                        ))}
+                                </ul>
+                            </div>
+                            <div className="my-1">
+                                <span className="text-jv-lightGray2x text-xs pr-1">دیروز</span>
+                                <ul>
+                                    <li className="p-2 mb-2 rounded-lg bg-jv-lightPrimary flex items-center justify-around">
+                                        <span className="w-2/12 flex items-center justify-start">
+                                            <span className="button-Cms-type cursor-default text-jv-primary border-jv-lightPrimary bg-jv-lightPrimary text-xl rounded-xl shadow-lg">
+                                                <CiUser />
+                                            </span>
+                                        </span>
+                                        <span className="w-8/12 text-jv-lightGray2x">
+                                            <p className="text-sm truncate">سبحان یعقوبی</p>
+                                            <p className="text-xs truncate">توسعه دهنده فرانت اند</p>
+                                        </span>
+                                        <span className="w-2/12 flex items-center justify-end">
+                                            <span className="button-Cms-type border-jv-lightGray3x bg-jv-lightGray3x text-jv-lightGray2x shadow-lg hover:shadow-none">
+                                                <AiOutlineEye />
+                                            </span>
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+};
+
 const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, setMainPage, subPage, showMess }) => {
     const ShowFromTopComponent: React.FC<React.PropsWithChildren> = ({ children }) => {
         return (
@@ -972,21 +936,84 @@ const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, setMainPa
             </motion.div>
         );
     };
-    const HomePage: React.FC<HomePageProps> = ({ isEditShow }) => {
+
+    //? MainPages
+    const RequestAll: React.FC = () => {
         return (
-            <ShowFromTopComponent>
-                {isEditShow ? <SubPageCms.EditHomePage showMess={showMess} /> : <SubPageCms.MainHomePage />}
-            </ShowFromTopComponent>
+            <>
+                <div className="flex items-start justify-between">
+                    <h3>تمامی درخواست ها</h3>
+                    <ul>
+                        <li className="flex items-center justify-between">
+                            <span className="text-xs">قبول شده</span>
+                            <div className="mr-3 w-3 h-3 rounded-full bg-jv-success"></div>
+                        </li>
+                        <li className="flex items-center justify-between">
+                            <span className="text-xs">در حال انتظار</span>
+                            <div className="mr-3 w-3 h-3 rounded-full bg-jv-warning"></div>
+                        </li>
+                        <li className="flex items-center justify-between">
+                            <span className="text-xs">رد شده</span>
+                            <div className="mr-3 w-3 h-3 rounded-full bg-jv-danger"></div>
+                        </li>
+                    </ul>
+                </div>
+                <div className="mt-3">
+                    {Array(10)
+                        .fill("")
+                        .map((value, index) => (
+                            <SubPageCms.ReqeustBox
+                                key={`ReqeustBox-${index}`}
+                                status={index === 2 || index === 5 ? "reject" : index === 7 ? "waiting" : "accept"}
+                            ></SubPageCms.ReqeustBox>
+                        ))}
+                </div>
+            </>
+        );
+    };
+    const RequsetAccept: React.FC = () => {
+        return (
+            <>
+                <h3>درخواست های تایید شده</h3>
+                <div className="mt-3">
+                    {Array(7)
+                        .fill("")
+                        .map((value, index) => (
+                            <SubPageCms.ReqeustBox key={`ReqeustBox-${index}`}></SubPageCms.ReqeustBox>
+                        ))}
+                </div>
+            </>
+        );
+    };
+    const RequsetReject: React.FC = () => {
+        return (
+            <>
+                <h3>درخواست های رد شده</h3>
+                <div className="mt-3">
+                    {Array(2)
+                        .fill("")
+                        .map((value, index) => (
+                            <SubPageCms.ReqeustBox key={`ReqeustBox-${index}`}></SubPageCms.ReqeustBox>
+                        ))}
+                </div>
+            </>
+        );
+    };
+    const RequsetWait: React.FC = () => {
+        return (
+            <>
+                <h3>درخواست های در حال انتظار</h3>
+                <div className="mt-3">
+                    {Array(1)
+                        .fill("")
+                        .map((value, index) => (
+                            <SubPageCms.ReqeustBox key={`ReqeustBox-${index}`}></SubPageCms.ReqeustBox>
+                        ))}
+                </div>
+            </>
         );
     };
 
-    const AdvertsisingsPage: React.FC<AdvertsisingsPageProps> = ({ isAddShow }) => {
-        return (
-            <ShowFromTopComponent>
-                {isAddShow ? <SubPageCms.Advertising_Add showMess={showMess} /> : <SubPageCms.Advertising_Main />}
-            </ShowFromTopComponent>
-        );
-    };
     return (
         <div className="h-full flex flex-col overflow-hidden">
             <motion.ul
@@ -1020,22 +1047,34 @@ const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, setMainPa
                 animate="visible"
                 className="w-full h-full text-jv-lightGray2x rounded-lg bg-jv-light p-4 overflow-y-auto no-scrollbar"
             >
-                {mainPage === "Home" || subPage === "Home_Edit" ? (
-                    <HomePage isEditShow={subPage === "Home_Edit" ? true : false} />
-                ) : mainPage === "Request_All" ? (
-                    <div>Request_All</div>
-                ) : mainPage === "Advertsisings" ? (
-                    <AdvertsisingsPage isAddShow={subPage === "Advertsisings_Add" ? true : false} />
-                ) : mainPage === "Request_Accept" ? (
-                    <div>Request_Accept</div>
-                ) : mainPage === "Request_Rejection" ? (
-                    <div>Request_Rejection</div>
-                ) : mainPage === "Request_Waiting" ? (
-                    <div>Request_Waiting</div>
-                ) : (
-                    <></>
-                )}
+                <ShowFromTopComponent key={`show${mainPage}-${subPage}`}>
+                    {mainPage === "Home" || subPage === "Home_Edit" ? (
+                        subPage === "Home_Edit" ? (
+                            <SubPageCms.EditHomePage showMess={showMess}></SubPageCms.EditHomePage>
+                        ) : (
+                            <SubPageCms.MainHomePage />
+                        )
+                    ) : mainPage === "Advertsisings" ? (
+                        subPage === "Advertsisings_Add" ? (
+                            <SubPageCms.Advertising_Add showMess={showMess} />
+                        ) : (
+                            <SubPageCms.Advertising_Main />
+                        )
+                    ) : mainPage === "Request_All" ? (
+                        <RequestAll></RequestAll>
+                    ) : mainPage === "Request_Accept" ? (
+                        <RequsetAccept></RequsetAccept>
+                    ) : mainPage === "Request_Rejection" ? (
+                        <RequsetReject></RequsetReject>
+                    ) : mainPage === "Request_Waiting" ? (
+                        <RequsetWait></RequsetWait>
+                    ) : (
+                        <></>
+                    )}
+                </ShowFromTopComponent>
             </motion.div>
         </div>
     );
 };
+
+export default CmsEmployer;
