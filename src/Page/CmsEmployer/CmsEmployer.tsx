@@ -18,6 +18,7 @@ import {
     TypeSubPageItem,
     ProgressCardArray,
     AdvertsisingsPageProps,
+    AdvertisingAddProps,
 } from "./CmsEmployer.type";
 import { CheckBox, DateInput, NumberInput, SelectInput, TextInput, TextareaInput } from "../../Components/Input/Input";
 import { TypeOptionInput } from "../../Components/Input/Input.type";
@@ -37,12 +38,7 @@ import Menu from "../../Components/Menu/Menu";
 import { ConfigProvider, Progress } from "antd";
 
 // Animations
-import {
-    ShortShowFromBottom,
-    ShortShowFromTop,
-    ShowAndHideOpacity_Ex,
-    SpringBackOutVeryShortly,
-} from "../../Animations/UtilsAnimation";
+import { ShortShowFromBottom, ShortShowFromTop, SpringBackOutVeryShortly } from "../../Animations/UtilsAnimation";
 
 // Date Picker
 import { DateObject } from "react-multi-date-picker";
@@ -538,9 +534,9 @@ namespace SubPageCms {
                                     <div className="h-2/3 mt-2 text-xs flex flex-col">
                                         <p
                                             className="text-base pb-2 text-jv-lightGray w-full truncate"
-                                            title="متن کامللللللل"
+                                            title="متن کامل"
                                         >
-                                            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و ویشیشیشیشیشی
+                                            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و
                                         </p>
                                         <div className="h-full flex items-end justify-between">
                                             <span>6 اسفند 1400 - 7 اسفند 1400</span>
@@ -587,8 +583,6 @@ namespace SubPageCms {
         return <>Advertising_Main</>;
     };
 
-    type AdvertisingAddProps = { showMess: CmsPageGeneratorProps["showMess"] };
-
     export const Advertising_Add: React.FC<AdvertisingAddProps> = ({ showMess }) => {
         const mainAddFormSchema = z.object({
             workTime: z.string().min(1, messageRequiredGenerator("زمان کار")),
@@ -597,10 +591,10 @@ namespace SubPageCms {
             benefitsAndFacilities: z.string().optional(),
             keyIndicators: z.array(z.string()),
             // jobDuties: z.string().min(1, messageRequiredGenerator("وظایف شغلی")),
-            Softwares: z.array(z.string()),
+            Softwares: z.array(z.string()).min(1, messageRequiredGenerator("مهارت های نرم افزاری")),
             gender: z.string(),
             education: z.array(z.string()),
-            adTags: z.array(z.string()),
+            adTags: z.array(z.string()).min(1, messageRequiredGenerator("تگ های آگهی")),
             isImportant: z.boolean().optional(),
             responsibleEmployer: z.boolean().optional(),
             acceptTrainees: z.boolean().optional(),
@@ -609,7 +603,6 @@ namespace SubPageCms {
                 BENEFITS_AND_FACILITIES: z.array(z.string()),
                 MILITARY_ORDER: z.boolean().optional(),
             }),
-            //
             price: z.object({
                 isRightPriceArray: z.boolean().optional(),
                 from: z.string().min(1, messageRequiredGenerator("حداقل حقوق")),
@@ -628,12 +621,10 @@ namespace SubPageCms {
             register,
             watch,
             control,
-            getValues,
             handleSubmit,
             setValue,
             reset,
             getFieldState,
-            setError,
             formState: { errors },
         } = useForm<TypeMainAddFormSchema>({
             resolver: zodResolver(mainAddFormSchema),
@@ -691,6 +682,14 @@ namespace SubPageCms {
                     type: "error",
                     message: getFieldState(item as keyof TypeMainAddFormSchema).error?.message,
                 });
+            });
+            showMess({
+                type: "error",
+                message: errors.price?.from?.message,
+            });
+            showMess({
+                type: "error",
+                message: errors.oldYears?.yearFrom?.message,
             });
         }, [errors]);
 
@@ -774,7 +773,7 @@ namespace SubPageCms {
                                 <p className="my-2 pr-2 text-xs">تا</p>
                                 <NumberInput
                                     min={10}
-                                    className="block w-full"
+                                    className="block"
                                     placeholder="25 سال"
                                     register={register("oldYears.yearTo")}
                                 />
@@ -950,16 +949,27 @@ namespace SubPageCms {
 }
 
 const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, setMainPage, subPage, showMess }) => {
-    const HomePage: React.FC<HomePageProps> = ({ isEditShow }) => {
+    const ShowFromTopComponent: React.FC<React.PropsWithChildren> = ({ children }) => {
         return (
             <motion.div variants={ShortShowFromTop} initial="hidden" whileInView="visible">
-                {isEditShow ? <SubPageCms.EditHomePage showMess={showMess} /> : <SubPageCms.MainHomePage />}
+                {children}
             </motion.div>
+        );
+    };
+    const HomePage: React.FC<HomePageProps> = ({ isEditShow }) => {
+        return (
+            <ShowFromTopComponent>
+                {isEditShow ? <SubPageCms.EditHomePage showMess={showMess} /> : <SubPageCms.MainHomePage />}
+            </ShowFromTopComponent>
         );
     };
 
     const AdvertsisingsPage: React.FC<AdvertsisingsPageProps> = ({ isAddShow }) => {
-        return isAddShow ? <SubPageCms.Advertising_Add showMess={showMess} /> : <SubPageCms.Advertising_Main />;
+        return (
+            <ShowFromTopComponent>
+                {isAddShow ? <SubPageCms.Advertising_Add showMess={showMess} /> : <SubPageCms.Advertising_Main />}
+            </ShowFromTopComponent>
+        );
     };
     return (
         <div className="h-full flex flex-col overflow-hidden">

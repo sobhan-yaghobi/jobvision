@@ -46,6 +46,8 @@ export type EditHomePageProps = {
     showMess: CmsPageGeneratorProps["showMess"];
 };
 
+export type AdvertisingAddProps = EditHomePageProps;
+
 export type ProgressBarCardType = {
     percent: number;
     userCount: number;
