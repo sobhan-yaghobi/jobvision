@@ -19,7 +19,6 @@ type setType = {
 
 export type MenuProps = {
     defaultItem?: MenuItemType["key"];
-    // setDefaultAction: ({}: setType) => void;
     items: MenuItemType[];
     className?: string;
     onSelect: (mainItem: MenuItemType) => void;
@@ -38,3 +37,10 @@ export namespace MenuClassNames {
         fillCaretDown: "absolute left-2 bg-inherit text-xs transition-none",
     };
 }
+
+export type ItemGeneratorPorps = {
+    mainItem: MenuItemType;
+    item: MenuItemType;
+    setMainItem: React.Dispatch<React.SetStateAction<MenuItemType>>;
+    setSelectMenuKey: React.Dispatch<React.SetStateAction<React.Key | undefined>>;
+};

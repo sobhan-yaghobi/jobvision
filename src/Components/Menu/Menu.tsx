@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 // Types
-import { MenuItemType, MenuProps, MenuClassNames, mainItemType } from "./Menu.type";
+import { MenuItemType, MenuProps, MenuClassNames, ItemGeneratorPorps } from "./Menu.type";
 
 // Functions
 import { twMerge } from "tailwind-merge";
@@ -9,22 +9,39 @@ import { twMerge } from "tailwind-merge";
 // Icons
 import { AiFillCaretDown } from "react-icons/ai";
 
+const ItemGenerator: React.FC<ItemGeneratorPorps> = ({ mainItem, item, setMainItem, setSelectMenuKey }) => {
+    return (
+        <li
+            onClick={() => {
+                setMainItem(item);
+                setSelectMenuKey(item.parentKey);
+            }}
+            className={`${MenuClassNames.className.itemMenu} ${
+                item.key === mainItem.key
+                    ? MenuClassNames.className.itemMenuActive
+                    : MenuClassNames.className.itemMenuDisable
+            }`}
+        >
+            {item.icon}
+            <p className={MenuClassNames.className.titleItem}>{item.label}</p>
+        </li>
+    );
+};
+
 const Menu: React.FC<MenuProps> = ({ defaultItem, className, items, onSelect }) => {
     const getItemAction = (): MenuItemType => {
-        let mainItem: MenuItemType | undefined = {} as MenuItemType;
-
+        let mainItem: MenuItemType = {} as MenuItemType;
         items.filter((item) => {
             if (Array.isArray(item.children)) {
-                mainItem = item.children.find((subItem) => subItem.key === defaultItem);
+                item.children.find((subItem) =>
+                    subItem.key === defaultItem ? Object.assign(mainItem, subItem) : undefined
+                );
             } else {
                 if (item.key === defaultItem) {
-                    // console.log("else Bruhhhhhhhhh", "defaultItem", defaultItem, "item", item, item.children);
-                    mainItem = { ...item };
+                    Object.assign(mainItem, item);
                 }
             }
         });
-        // console.log("mainItem", mainItem);
-
         return mainItem;
     };
 
@@ -33,16 +50,10 @@ const Menu: React.FC<MenuProps> = ({ defaultItem, className, items, onSelect }) 
     );
     const [mainSelectMenuKey, setMainSelectMenuKey] = useState<React.Key>();
 
-    // console.log("getItemAction", getItemAction());
-
-    useEffect(() => {
-        // console.log("mainItem ", mainItem);
-        // console.log("mainSelectMenuKey ", mainSelectMenuKey);
-
-        if (typeof mainItem !== "undefined" && Object.entries(mainItem).length) {
-            onSelect(mainItem);
-        }
-    }, [mainItem]);
+    useEffect(
+        () => (typeof mainItem !== "undefined" && Object.entries(mainItem).length ? onSelect(mainItem) : undefined),
+        [mainItem]
+    );
 
     return (
         <div className={MenuClassNames.className.wrapperMenu}>
@@ -50,20 +61,12 @@ const Menu: React.FC<MenuProps> = ({ defaultItem, className, items, onSelect }) 
                 {items.map((item) => (
                     <React.Fragment key={item.key}>
                         {typeof item.children === "undefined" ? (
-                            <li
-                                onClick={() => {
-                                    setMainItem(item);
-                                    setMainSelectMenuKey(item.parentKey);
-                                }}
-                                className={`${MenuClassNames.className.itemMenu} ${
-                                    mainItem.key === item.key
-                                        ? MenuClassNames.className.itemMenuActive
-                                        : MenuClassNames.className.itemMenuDisable
-                                }`}
-                            >
-                                {item.icon}
-                                <p className={MenuClassNames.className.titleItem}>{item.label}</p>
-                            </li>
+                            <ItemGenerator
+                                item={item}
+                                mainItem={mainItem}
+                                setMainItem={setMainItem}
+                                setSelectMenuKey={setMainSelectMenuKey}
+                            />
                         ) : (
                             <>
                                 <div
@@ -90,21 +93,12 @@ const Menu: React.FC<MenuProps> = ({ defaultItem, className, items, onSelect }) 
                                 >
                                     <ul className={MenuClassNames.className.listMenu}>
                                         {item.children.map((subItem) => (
-                                            <li
-                                                key={subItem.key}
-                                                onClick={() => {
-                                                    setMainItem(subItem);
-                                                    setMainSelectMenuKey(subItem.parentKey);
-                                                }}
-                                                className={`${MenuClassNames.className.itemMenu} ${
-                                                    mainItem.key === subItem.key
-                                                        ? MenuClassNames.className.itemMenuActive
-                                                        : MenuClassNames.className.itemMenuDisable
-                                                }`}
-                                            >
-                                                {subItem.icon}
-                                                <p className={MenuClassNames.className.titleItem}>{subItem.label}</p>
-                                            </li>
+                                            <ItemGenerator
+                                                item={subItem}
+                                                mainItem={mainItem}
+                                                setMainItem={setMainItem}
+                                                setSelectMenuKey={setMainSelectMenuKey}
+                                            />
                                         ))}
                                     </ul>
                                 </div>
@@ -114,33 +108,6 @@ const Menu: React.FC<MenuProps> = ({ defaultItem, className, items, onSelect }) 
                 ))}
             </ul>
         </div>
-    );
-};
-
-type ItemGeneratorPorps = {
-    mainItem: mainItemType;
-    itemData: MenuItemType;
-    setMainItem: React.Dispatch<React.SetStateAction<mainItemType>>;
-};
-
-const ItemGenerator: React.FC<ItemGeneratorPorps> = ({ mainItem, itemData, setMainItem }) => {
-    return (
-        <li
-            onClick={() =>
-                setMainItem({
-                    mainItem: itemData,
-                    mainItemSelected: typeof itemData.parentKey !== "undefined" ? itemData.parentKey : undefined,
-                })
-            }
-            className={`${MenuClassNames.className.itemMenu} ${
-                mainItem.mainItem?.key === itemData.key
-                    ? MenuClassNames.className.itemMenuActive
-                    : MenuClassNames.className.itemMenuDisable
-            }`}
-        >
-            {itemData.icon}
-            <p className={MenuClassNames.className.titleItem}>{itemData.label}</p>
-        </li>
     );
 };
 

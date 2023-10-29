@@ -818,6 +818,8 @@ const CmsEmployer: React.FC = () => {
         typeof mainItem !== "undefined" ? setMainPage({ mainKey: mainItem.key, subPage: mainItem.mainSubPage }) : null;
     };
 
+    console.log("`${MainPage.mainKey}-${MainPage.subPage}-Menu`", `${MainPage.mainKey}-${MainPage.subPage}-Menu`);
+
     return (
         <>
             {ShowContext}
@@ -826,8 +828,7 @@ const CmsEmployer: React.FC = () => {
                     <img className="h-10 self-start" src={Logo} alt="" />
                     <div className="mt-1 h-full overflow-y-auto no-scrollbar">
                         <Menu
-                            // key={`${MainPage.mainKey}-Menu`}
-                            // setDefaultAction={setPageAction}
+                            key={`${MainPage.mainKey}-${MainPage.subPage}-Menu`}
                             defaultItem={MainPage.mainKey}
                             onSelect={setMainPageAction}
                             items={pageItems}
