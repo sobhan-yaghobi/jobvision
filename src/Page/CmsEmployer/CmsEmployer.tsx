@@ -48,6 +48,7 @@ import { CiEdit, CiUser } from "react-icons/ci";
 import { AiOutlineEye } from "react-icons/ai";
 import { PiSpeakerHigh, PiStudentDuotone } from "react-icons/pi";
 import { FaFileCirclePlus } from "react-icons/fa6";
+import { AdvertsingCmsBox } from "../../Components/AdvertisingBox/AdvertisingBox";
 
 const pageItems: MenuItemType[] = [
     {
@@ -107,8 +108,8 @@ namespace SubPageCms {
             subPage: "Home_Edit",
             title: "درباره شرکت",
         },
-        { parnetPage: "Advertsisings", subPage: "Advertsisings_Add", title: "آگهی جدید" },
         { parnetPage: "Advertsisings", subPage: "Advertsisings_Main", title: "آگهی ها" },
+        { parnetPage: "Advertsisings", subPage: "Advertsisings_Add", title: "آگهی جدید" },
     ];
 
     // Components
@@ -201,8 +202,7 @@ namespace SubPageCms {
         );
     };
 
-    // Pages
-
+    //? Pages
     export const EditHomePage: React.FC<SubPageCmsTypes.EditHomePageProps> = ({ showMess }) => {
         const CompanyFormSchema = z.object({
             name: z.string().min(3, messageLengthGenerator("Min", "نام شرکت", 3)).trim(),
@@ -462,7 +462,14 @@ namespace SubPageCms {
     };
 
     export const Advertising_Main: React.FC = () => {
-        return <>Advertising_Main</>;
+        return (
+            <>
+                <h3>تمامی آگهی ها شما</h3>
+                <div className="mt-3">
+                    <AdvertsingCmsBox></AdvertsingCmsBox>
+                </div>
+            </>
+        );
     };
 
     export const Advertising_Add: React.FC<SubPageCmsTypes.AdvertisingAddProps> = ({ showMess }) => {
@@ -803,7 +810,7 @@ const CmsEmployer: React.FC = () => {
 
     const [MainPage, setMainPage] = useState<LiteralsMainPage.TypeMainPage>({
         mainKey: LiteralsMainPage.Advertsisings,
-        subPage: "Advertsisings_Add",
+        subPage: "Advertsisings_Main",
     } as LiteralsMainPage.TypeMainPage);
 
     const setMainPageAction: MenuProps["onSelect"] = (mainItem) => {

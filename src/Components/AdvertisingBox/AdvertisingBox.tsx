@@ -4,15 +4,16 @@ import { AdvertisingBoxProps } from "./AdvertisingBox.type";
 
 // Functions
 import { TimeType, getTime } from "../../Utils/Utils";
+import { includes } from "lodash";
 
 // Components
 import { Link } from "react-router-dom";
+import { TimeGenerator } from "../../Utils/UtilsComponent";
 
 // Icons
 import Button from "../Button/Button";
 import StarSvg from "/Svg/Star.svg";
-import { TimeGenerator } from "../../Utils/UtilsComponent";
-import { includes } from "lodash";
+import { CiMenuKebab } from "react-icons/ci";
 
 const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
     const jobData = props.data;
@@ -153,6 +154,48 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
             </>
         );
     }
+};
+
+export const AdvertsingCmsBox: React.FC = () => {
+    return (
+        <div className={`mb-2 bg-jv-white py-5 px-3 rounded-lg`}>
+            <div className="flex justify-between">
+                <section className="h-full">
+                    <p className="text-base text-jv-lightGray">Front End Developer (React.js)</p>
+                    <div className="text-xs flex flex-nowrap overflow-x-hidden">
+                        <div className="box-info-type">امکان جذب کارآموز</div>
+                        <div className="box-info-type">امکان دورکاری</div>
+                    </div>
+                    <p className="text-xs mt-2">8 - 6 میلیون تومان</p>
+                </section>
+                <section className="h-full flex items-start">
+                    <p className="box-info-type m-0">4 روز پیش</p>
+                    <div className="mt-1 mr-2 flex items-center justify-center cursor-pointer">
+                        <CiMenuKebab />
+                    </div>
+                </section>
+            </div>
+            <div className="mt-4 text-xs grid grid-cols-2 grid-rows-2">
+                <div>
+                    <span className="font-semibold text-jv-gray">نوع همکاری</span>
+                    <p>قراردادی / پروژه ای</p>
+                </div>
+                <div className="min-w-max truncate">6 اسفند 1400 - 7 اسفند 1400</div>
+                <div className="col-span-2">
+                    <span className="font-semibold text-jv-gray">شاخص های کلیدی</span>
+                    <div className="flex flex-wrap">
+                        <div className="box-info-type">2 سال سابقه کار در گروه شغلی مشابه</div>
+                        <div className="box-info-type">React - پیشرفته</div>
+                        <div className="box-info-type">ترجیحا ساکن اصفهان</div>
+                        <div className="box-info-type">شاخص های کلیدی 1</div>
+                        <div className="box-info-type">شاخص های کلیدی 2</div>
+                        <div className="box-info-type">شاخص های کلیدی 3</div>
+                        <div className="box-info-type">شاخص های کلیدی 4</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default AdvertisingBox;
