@@ -23,6 +23,19 @@ export namespace LiteralsMainPage {
     export type TypeSubMainPage = "Home_Edit" | "Home_Main" | "Advertsisings_Main" | "Advertsisings_Add";
 }
 
+export type MenuItemType = {
+    key: React.Key;
+    label: string;
+    icon?: React.ReactNode;
+    mainSubPage?: LiteralsMainPage.TypeSubMainPage;
+    children?: MenuItemType[];
+    parentKey?: MenuItemType["key"];
+};
+
+export type ItemGeneratorPorps = {
+    item: MenuItemType;
+};
+
 export type CmsPageGeneratorProps = {
     mainPage: LiteralsMainPage.AllPage;
     subPage?: LiteralsMainPage.TypeMainPage["subPage"];

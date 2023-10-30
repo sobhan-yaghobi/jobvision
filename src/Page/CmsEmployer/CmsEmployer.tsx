@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 
 // Functions
 import {
@@ -10,9 +10,14 @@ import {
 import { z } from "zod";
 
 // Types
-import { CmsPageGeneratorProps, LiteralsMainPage, SubPageCmsTypes } from "./CmsEmployer.type";
+import {
+    CmsPageGeneratorProps,
+    ItemGeneratorPorps,
+    LiteralsMainPage,
+    MenuItemType,
+    SubPageCmsTypes,
+} from "./CmsEmployer.type";
 import { CheckBox, DateInput, NumberInput, SelectInput, TextInput, TextareaInput } from "../../Components/Input/Input";
-import { MenuItemType, MenuProps } from "../../Components/Menu/Menu.type";
 
 // Hook
 import { useForm } from "react-hook-form";
@@ -23,7 +28,6 @@ import useShowMssAndNotif from "../../Hooks/useShowMssAndNotif";
 import { motion } from "framer-motion";
 import Button from "../../Components/Button/Button";
 import { Link } from "react-router-dom";
-import Menu from "../../Components/Menu/Menu";
 import { ConfigProvider, Progress } from "antd";
 
 // Animations
@@ -45,10 +49,11 @@ import Logo from "/Svg/Logo/PrimaryColorLogo.svg";
 import reportIcon from "/images/report.webp";
 import { HiOutlineLogout } from "react-icons/hi";
 import { CiEdit, CiUser } from "react-icons/ci";
-import { AiOutlineEye } from "react-icons/ai";
+import { AiFillCaretDown, AiOutlineEye } from "react-icons/ai";
 import { PiSpeakerHigh, PiStudentDuotone } from "react-icons/pi";
 import { FaFileCirclePlus } from "react-icons/fa6";
 import { AdvertsingCmsBox } from "../../Components/AdvertisingBox/AdvertisingBox";
+import { twMerge } from "tailwind-merge";
 
 const pageItems: MenuItemType[] = [
     {
@@ -813,12 +818,94 @@ const CmsEmployer: React.FC = () => {
         subPage: "Advertsisings_Main",
     } as LiteralsMainPage.TypeMainPage);
 
-    const setMainPageAction: MenuProps["onSelect"] = (mainItem) => {
-        console.log("setMainPageAction");
-        typeof mainItem !== "undefined" ? setMainPage({ mainKey: mainItem.key, subPage: mainItem.mainSubPage }) : null;
-    };
+    const Menu: React.FC = memo(() => {
+        const [mainSelectMenuItem, setMainSelectMenuItem] = useState({} as MenuItemType);
+        const isItemIsSub = (item: MenuItemType): boolean =>
+            Boolean(
+                typeof item.children !== "undefined"
+                    ? item.children.filter((mainItem) => mainItem.key === MainPage.mainKey).length
+                    : false
+            );
 
-    console.log("`${MainPage.mainKey}-${MainPage.subPage}-Menu`", `${MainPage.mainKey}-${MainPage.subPage}-Menu`);
+        const className = {
+            wrapperMenu: "w-full overflow-hidden duration-700 grid",
+            wrapperMenuActive: "grid-rows-[1fr]",
+            wrapperMenuDisable: "grid-rows-[0fr]",
+            listMenu: "w-full bg-transparent min-h-0 px-1 overflow-hidden",
+            itemMenu:
+                "w-full text-sm my-1 pl-10 pr-2 py-2 rounded-lg flex items-center transition-none relative cursor-pointer",
+            itemMenuActive: "bg-jv-lightPrimary text-jv-primary",
+            itemMenuDisable: "hover:text-jv-lightGray hover:bg-jv-light",
+            titleItem: "mr-3 truncate transition-none",
+            fillCaretDown: "absolute left-2 bg-inherit text-xs transition-none",
+        };
+        const ItemGenerator: React.FC<ItemGeneratorPorps> = ({ item }) => {
+            return (
+                <li
+                    onClick={() => {
+                        setMainPage({ mainKey: item.key, subPage: item.mainSubPage });
+                    }}
+                    className={`w-full text-sm my-1 pl-10 pr-2 py-2 rounded-lg flex items-center transition-none relative cursor-pointer ${
+                        item.key === MainPage.mainKey || item.key === MainPage.subPage
+                            ? `bg-jv-lightPrimary text-jv-primary`
+                            : `hover:text-jv-lightGray hover:bg-jv-light`
+                    }`}
+                >
+                    {item.icon}
+                    <p className={`mr-3 truncate transition-none`}>{item.label}</p>
+                </li>
+            );
+        };
+
+        return (
+            <div className={className.wrapperMenu}>
+                <ul className={className.listMenu}>
+                    {pageItems.map((item) => (
+                        <React.Fragment key={item.key}>
+                            {typeof item.children === "undefined" ? (
+                                <ItemGenerator item={item} />
+                            ) : (
+                                <>
+                                    <div
+                                        onClick={() => {
+                                            setMainSelectMenuItem((prev) =>
+                                                prev.key === item.key ? ({} as MenuItemType) : item
+                                            );
+                                        }}
+                                        className={`${className.itemMenu} ${
+                                            isItemIsSub(item)
+                                                ? "text-jv-primary border-r-2 border-solid border-jv-lightPrimary"
+                                                : ""
+                                        }`}
+                                    >
+                                        <div className="flex">
+                                            {item.icon}
+                                            <p className={className.titleItem}>{item.label}</p>
+                                        </div>
+                                        <AiFillCaretDown className={className.fillCaretDown} />
+                                    </div>
+                                    <div
+                                        className={twMerge(
+                                            className.wrapperMenu,
+                                            item.key === mainSelectMenuItem.key
+                                                ? className.wrapperMenuActive
+                                                : className.wrapperMenuDisable
+                                        )}
+                                    >
+                                        <ul className={className.listMenu}>
+                                            {item.children.map((subItem) => (
+                                                <ItemGenerator item={subItem} />
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </>
+                            )}
+                        </React.Fragment>
+                    ))}
+                </ul>
+            </div>
+        );
+    });
 
     return (
         <>
@@ -827,12 +914,7 @@ const CmsEmployer: React.FC = () => {
                 <div className="w-2/12 p-1 flex flex-col justify-between text-jv-lightGray2x">
                     <img className="h-10 self-start" src={Logo} alt="" />
                     <div className="mt-1 h-full overflow-y-auto no-scrollbar">
-                        <Menu
-                            key={`${MainPage.mainKey}-${MainPage.subPage}-Menu`}
-                            defaultItem={MainPage.mainKey}
-                            onSelect={setMainPageAction}
-                            items={pageItems}
-                        ></Menu>
+                        <Menu />
                     </div>
                     <div className="w-full h-[35%] text-center rounded-lg bg-slate-100 flex flex-col items-center">
                         <img className="h-[45%] mb-2" src={reportIcon} alt="" />
@@ -890,6 +972,20 @@ const CmsEmployer: React.FC = () => {
                                 </span>
                                 <span className="mt-3 text-xs">درخواست ها</span>
                             </li>
+                            <li
+                                onClick={() =>
+                                    setMainPage({
+                                        mainKey: LiteralsMainPage.Advertsisings,
+                                        subPage: "Advertsisings_Add",
+                                    })
+                                }
+                                className="select-none cursor-pointer text-jv-primary flex flex-col items-center justify-center group relative"
+                            >
+                                <span className="button-Cms-type border-jv-lightPrimary bg-jv-lightPrimary shadow-jv-primary group-hover:shadow-xl group-active:scale-90">
+                                    <FaFileCirclePlus className="text-inherit transform-none" />
+                                </span>
+                                <span className="mt-3 text-xs">آگهی جدید</span>
+                            </li>
                         </ul>
                     </div>
                     <div className="h-3/6 w-full">
@@ -936,7 +1032,7 @@ const CmsEmployer: React.FC = () => {
     );
 };
 
-const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, setMainPage, subPage, showMess }) => {
+const CmsPageGenerator: React.FC<CmsPageGeneratorProps> = ({ mainPage, setMainPage, showMess, subPage }) => {
     const ShowFromTopComponent: React.FC<React.PropsWithChildren> = ({ children }) => {
         return (
             <motion.div variants={ShortShowFromTop} initial="hidden" whileInView="visible">
