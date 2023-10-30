@@ -166,7 +166,8 @@ export const AdvertsingCmsBox: React.FC = () => {
                         <div className="box-info-type">امکان جذب کارآموز</div>
                         <div className="box-info-type">امکان دورکاری</div>
                     </div>
-                    <p className="text-xs mt-2">8 - 6 میلیون تومان</p>
+                    <p className="truncate text-xs my-2">8 - 6 میلیون تومان</p>
+                    <div className="truncate text-xs">6 اسفند 1400 - 7 اسفند 1400</div>
                 </section>
                 <section className="h-full flex items-start">
                     <p className="box-info-type m-0">4 روز پیش</p>
@@ -177,10 +178,16 @@ export const AdvertsingCmsBox: React.FC = () => {
             </div>
             <div className="mt-4 text-xs grid grid-cols-2 grid-rows-2">
                 <div>
+                    <span className="font-semibold text-jv-gray">شرح شغل و وظایف</span>
+                    <p className="w-10/12">
+                        پروژه برنامه نویسی اختصاصی وب اپلیکیشن برای برند بسیار معروف می باشد. نیاز به فرانت کار ماهر جهت
+                        ادامه ی پروژه. تسویه 15 روزه
+                    </p>
+                </div>
+                <div>
                     <span className="font-semibold text-jv-gray">نوع همکاری</span>
                     <p>قراردادی / پروژه ای</p>
                 </div>
-                <div className="min-w-max truncate">6 اسفند 1400 - 7 اسفند 1400</div>
                 <div className="col-span-2">
                     <span className="font-semibold text-jv-gray">شاخص های کلیدی</span>
                     <div className="flex flex-wrap">
