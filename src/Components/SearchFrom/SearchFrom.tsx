@@ -1,12 +1,56 @@
-import React, { memo } from "react";
+import React, { memo, useState, useEffect } from "react";
 
 // Components
 import { TextInput } from "../Input/Input";
 import Button from "../Button/Button";
-
+import uuidGenerator from "../../Utils/UuidGenerator";
+import { uniqBy } from "lodash";
 interface SearchFromProps {}
 
+interface TypeCitis {
+    id: string;
+    name: string;
+}
+
+type TypeGroupsJobs = TypeCitis;
+
+const citis: TypeCitis[] = [
+    { id: uuidGenerator(), name: "مشهد" },
+    { id: uuidGenerator(), name: "تهران" },
+    { id: uuidGenerator(), name: "نیشابور" },
+];
+
+const groupJobs: TypeGroupsJobs[] = [
+    { id: uuidGenerator(), name: "برنامه نویس" },
+    { id: uuidGenerator(), name: "برنامه نویس فرانت اند" },
+    { id: uuidGenerator(), name: "برنامه نویس بک اند" },
+];
+
+type ItemGeneratorProps = {
+    array: TypeCitis[] | TypeGroupsJobs[];
+    mainValue: string;
+    setMainValue: React.Dispatch<React.SetStateAction<string>>;
+};
+
 const SearchFrom: React.FC<SearchFromProps> = memo(() => {
+    const [mainGroupJobs, setMainGroupJobs] = useState("");
+    const [mainCity, setMainCity] = useState("");
+
+    const ItemGenerator: React.FC<ItemGeneratorProps> = ({ array, mainValue, setMainValue }) => {
+        const listItems: ItemGeneratorProps["array"] = array.map((item) =>
+            item.name.includes(mainValue) ? item : { id: "1", name: mainValue }
+        );
+        return uniqBy(listItems, "id").map((item) => (
+            <li
+                onClick={() => setMainValue(item.name)}
+                key={item.id}
+                className="p-2 my-1 cursor-pointer hover:bg-jv-white last:mb-0 first:mt-0"
+            >
+                {item.name}
+            </li>
+        ));
+    };
+
     return (
         <>
             <div className="w-full flex flex-col items-center justify-between md:flex-row">
@@ -25,6 +69,8 @@ const SearchFrom: React.FC<SearchFromProps> = memo(() => {
                     iconSide="Right"
                 />
                 <TextInput
+                    onChange={setMainGroupJobs}
+                    value={mainGroupJobs}
                     placeholder="گروه شغلی"
                     className={[{ inputwrapperClassName: "mx-1 my-1 md:my-0" }]}
                     icon={
@@ -54,18 +100,15 @@ const SearchFrom: React.FC<SearchFromProps> = memo(() => {
                     register={{}}
                     iconSide="Right"
                 >
-                    {Array(20)
-                        .fill("")
-                        .map((item, index) => (
-                            <li
-                                key={index + 1}
-                                className="p-2 my-1 cursor-pointer hover:bg-jv-white last:mb-0 first:mt-0"
-                            >
-                                {index + 1}
-                            </li>
-                        ))}
+                    <ItemGenerator
+                        array={groupJobs}
+                        mainValue={mainGroupJobs}
+                        setMainValue={setMainGroupJobs}
+                    ></ItemGenerator>
                 </TextInput>
                 <TextInput
+                    onChange={setMainCity}
+                    value={mainCity}
                     placeholder="شهر"
                     className={[{ inputwrapperClassName: "mx-1 my-1 md:my-0" }]}
                     icon={
@@ -79,16 +122,7 @@ const SearchFrom: React.FC<SearchFromProps> = memo(() => {
                     register={{}}
                     iconSide="Right"
                 >
-                    {Array(20)
-                        .fill("")
-                        .map((item, index) => (
-                            <li
-                                key={index + 1}
-                                className="p-2 my-1 cursor-pointer hover:bg-jv-white last:mb-0 first:mt-0"
-                            >
-                                {index + 1}
-                            </li>
-                        ))}
+                    <ItemGenerator array={citis} mainValue={mainCity} setMainValue={setMainCity}></ItemGenerator>
                 </TextInput>
                 <Button
                     textColor="primary"
