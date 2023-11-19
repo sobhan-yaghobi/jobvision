@@ -81,7 +81,8 @@ const Jobs: React.FC = () => {
                 const isTypesValid: boolean[] = advertising.data.type.map((Type) =>
                     includes(filterSelection, Type) ? true : false
                 );
-                if (proModeFilter && !includes(isTypesValid, false)) {
+
+                if (proModeFilter && isTypesValid.filter((type) => type === true).length === filterSelection.length) {
                     return advertising;
                 } else {
                     if (!proModeFilter && includes(isTypesValid, !proModeFilter)) {

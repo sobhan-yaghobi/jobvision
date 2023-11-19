@@ -33,9 +33,9 @@ const SearchFrom: React.FC = memo(() => {
         );
 
         return listItems.length ? (
-            uniqBy(listItems, "id").map((item) => <LiGenerator {...item}></LiGenerator>)
+            uniqBy(listItems, "id").map((item) => <LiGenerator key={`LiGenerator-${item.id}`} {...item}></LiGenerator>)
         ) : (
-            <LiGenerator {...mainValue}></LiGenerator>
+            <LiGenerator key={`LiGenerator-${mainValue.id}`} {...mainValue}></LiGenerator>
         );
     };
 
