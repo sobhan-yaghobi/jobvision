@@ -26,7 +26,7 @@ import { includes } from "lodash";
 // Components
 import Header from "../../Components/Header/Header";
 import Footer from "../../Components/Footer/Footer";
-import SearchFrom from "../../Components/SearchFrom/SearchFrom";
+import SearchFrom from "../../Components/SearchFrom/SearchForm";
 import Button from "../../Components/Button/Button";
 import AdvertisingBox from "../../Components/AdvertisingBox/AdvertisingBox";
 import Accordion from "../../Components/Accordion/Accordion";

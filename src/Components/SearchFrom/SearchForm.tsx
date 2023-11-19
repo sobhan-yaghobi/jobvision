@@ -1,40 +1,17 @@
-import React, { memo, useState, useEffect } from "react";
+import React, { memo, useState } from "react";
+
+// Types
+import { ItemGeneratorProps, TypeCitis, TypeGroupsJobs, citis, groupJobs } from "./SearchForm.type";
 
 // Components
 import { TextInput } from "../Input/Input";
 import Button from "../Button/Button";
+
+// Functions
 import uuidGenerator from "../../Utils/UuidGenerator";
 import { uniqBy } from "lodash";
-interface SearchFromProps {}
 
-interface TypeCitis {
-    id: string;
-    name: string;
-}
-
-type TypeGroupsJobs = TypeCitis;
-
-const citis: TypeCitis[] = [
-    { id: uuidGenerator(), name: "مشهد" },
-    { id: uuidGenerator(), name: "تهران" },
-    { id: uuidGenerator(), name: "نیشابور" },
-];
-
-const groupJobs: TypeGroupsJobs[] = [
-    { id: uuidGenerator(), name: "برنامه نویس" },
-    { id: uuidGenerator(), name: "برنامه نویس فرانت اند" },
-    { id: uuidGenerator(), name: "برنامه نویس بک اند" },
-    { id: uuidGenerator(), name: "طراحی گرافیک" },
-    { id: uuidGenerator(), name: "طراحی" },
-];
-
-type ItemGeneratorProps = {
-    array: TypeCitis[] | TypeGroupsJobs[];
-    mainValue: TypeCitis | TypeGroupsJobs;
-    setMainValue: React.Dispatch<React.SetStateAction<TypeCitis | TypeGroupsJobs>>;
-};
-
-const SearchFrom: React.FC<SearchFromProps> = memo(() => {
+const SearchFrom: React.FC = memo(() => {
     const [mainGroupJob, setMainGroupJob] = useState<TypeGroupsJobs>({ id: uuidGenerator(), name: "" });
     const [mainCity, setMainCity] = useState<TypeCitis>({ id: uuidGenerator(), name: "" });
 

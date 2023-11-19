@@ -25,7 +25,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 // Components
 import Button from "../../Components/Button/Button";
-import SearchFrom from "../../Components/SearchFrom/SearchFrom";
+import SearchFrom from "../../Components/SearchFrom/SearchForm";
 import MapCircle from "../../Components/MapCircle/MapCircle";
 import AdvertisingBox from "../../Components/AdvertisingBox/AdvertisingBox";
 import CompanyBox from "../../Components/CompanyBox/CompanyBox";
