@@ -31,7 +31,7 @@ import Button from "../../Components/Button/Button";
 import AdvertisingBox from "../../Components/AdvertisingBox/AdvertisingBox";
 import Accordion from "../../Components/Accordion/Accordion";
 import { AnimatePresence, motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { ScoreIconGenerator } from "../../Utils/UtilsComponent";
 import JobsFilter from "../../Components/JobsFilter/JobsFilter";
 import ErrorBox from "../../Components/ErrorBox/ErrorBox";
@@ -97,8 +97,16 @@ const Jobs: React.FC = () => {
     //! ---------------------------------- Box Lists
 
     //? ---------------------------------- Box Info
+    const [searchParam, setSearchParam] = useSearchParams({ advertisingId: "" });
     const [mainItemInfo, setMainItemInfo] = useState<MainItemBoxInfoType>(mainItemsBoxInfos[0]);
-    const [mainJobInfo, setMainJobInfo] = useState<mainJobInfoType>({} as mainJobInfoType);
+
+    const mainJobIdFromRoute = searchParam.get("advertisingId");
+    const mainJobsFromRoute = AdvertisingArray.filter((ads) => ads.data.id === mainJobIdFromRoute).at(0);
+    const [mainJobInfo, setMainJobInfo] = useState<mainJobInfoType>(
+        typeof mainJobsFromRoute !== "undefined"
+            ? { isShow: true, mainInfo: mainJobsFromRoute?.data }
+            : ({} as mainJobInfoType)
+    );
     //! ---------------------------------- Box Info
 
     return (

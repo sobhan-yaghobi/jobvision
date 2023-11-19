@@ -10,6 +10,9 @@ import { includes } from "lodash";
 import { Link } from "react-router-dom";
 import { TimeGenerator } from "../../Utils/UtilsComponent";
 
+// Hooks
+import { useNavigate } from "react-router-dom";
+
 // Icons
 import Button from "../Button/Button";
 import StarSvg from "/Svg/Star.svg";
@@ -88,14 +91,18 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
         );
     };
 
+    const navigate = useNavigate();
     if (props.type === "ShowSendCv") {
         return (
             <>
-                <div id="Box" className={className.wrapperBoxClass}>
-                    <Link to="/jobs" className={className.wrapperContentClass}>
+                <div
+                    onClick={() => navigate(`/jobs?advertisingId=${jobData.id}`)}
+                    id="Box"
+                    className={className.wrapperBoxClass}
+                >
+                    <div className={className.wrapperContentClass}>
                         <BoxContentElm />
-                    </Link>
-
+                    </div>
                     <div className="row-span-1 border-t-[1px] border-solid border-jv-lightGray3x pt-2 text-xs flex items-center justify-between">
                         <div className="flex items-center">
                             {jobStatus.isImportant ? (
