@@ -27,7 +27,7 @@ export interface TypeTextInput extends Omit<TypeMainInput, "className"> {
     iconSide?: TypeIconSide;
     icon?: ReactNode;
     value?: string;
-    onChange?: React.Dispatch<React.SetStateAction<string>>;
+    onChange?: (value: string) => void | React.Dispatch<React.SetStateAction<string>>;
 }
 
 export type TypeSelectInput = TypeMainInput &

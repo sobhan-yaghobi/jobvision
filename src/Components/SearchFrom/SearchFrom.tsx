@@ -24,31 +24,41 @@ const groupJobs: TypeGroupsJobs[] = [
     { id: uuidGenerator(), name: "برنامه نویس" },
     { id: uuidGenerator(), name: "برنامه نویس فرانت اند" },
     { id: uuidGenerator(), name: "برنامه نویس بک اند" },
+    { id: uuidGenerator(), name: "طراحی گرافیک" },
+    { id: uuidGenerator(), name: "طراحی" },
 ];
 
 type ItemGeneratorProps = {
     array: TypeCitis[] | TypeGroupsJobs[];
-    mainValue: string;
-    setMainValue: React.Dispatch<React.SetStateAction<string>>;
+    mainValue: TypeCitis | TypeGroupsJobs;
+    setMainValue: React.Dispatch<React.SetStateAction<TypeCitis | TypeGroupsJobs>>;
 };
 
 const SearchFrom: React.FC<SearchFromProps> = memo(() => {
-    const [mainGroupJobs, setMainGroupJobs] = useState("");
-    const [mainCity, setMainCity] = useState("");
+    const [mainGroupJob, setMainGroupJob] = useState<TypeGroupsJobs>({ id: uuidGenerator(), name: "" });
+    const [mainCity, setMainCity] = useState<TypeCitis>({ id: uuidGenerator(), name: "" });
 
     const ItemGenerator: React.FC<ItemGeneratorProps> = ({ array, mainValue, setMainValue }) => {
-        const listItems: ItemGeneratorProps["array"] = array.map((item) =>
-            item.name.includes(mainValue) ? item : { id: "1", name: mainValue }
+        const listItems: ItemGeneratorProps["array"] = array.filter(
+            (item) => item.name.includes(mainValue.name) && item
         );
-        return uniqBy(listItems, "id").map((item) => (
+        const LiGenerator = (value: ItemGeneratorProps["mainValue"]) => (
             <li
-                onClick={() => setMainValue(item.name)}
-                key={item.id}
+                onClick={() => {
+                    setMainValue(value);
+                }}
+                key={value.id}
                 className="p-2 my-1 cursor-pointer hover:bg-jv-white last:mb-0 first:mt-0"
             >
-                {item.name}
+                {value.name}
             </li>
-        ));
+        );
+
+        return listItems.length ? (
+            uniqBy(listItems, "id").map((item) => <LiGenerator {...item}></LiGenerator>)
+        ) : (
+            <LiGenerator {...mainValue}></LiGenerator>
+        );
     };
 
     return (
@@ -69,8 +79,9 @@ const SearchFrom: React.FC<SearchFromProps> = memo(() => {
                     iconSide="Right"
                 />
                 <TextInput
-                    onChange={setMainGroupJobs}
-                    value={mainGroupJobs}
+                    key={`mainGroupJob-${mainGroupJob.id}`}
+                    onChange={(data) => setMainGroupJob((prev) => ({ ...prev, name: data }))}
+                    value={mainGroupJob.name}
                     placeholder="گروه شغلی"
                     className={[{ inputwrapperClassName: "mx-1 my-1 md:my-0" }]}
                     icon={
@@ -102,13 +113,14 @@ const SearchFrom: React.FC<SearchFromProps> = memo(() => {
                 >
                     <ItemGenerator
                         array={groupJobs}
-                        mainValue={mainGroupJobs}
-                        setMainValue={setMainGroupJobs}
+                        mainValue={mainGroupJob}
+                        setMainValue={setMainGroupJob}
                     ></ItemGenerator>
                 </TextInput>
                 <TextInput
-                    onChange={setMainCity}
-                    value={mainCity}
+                    key={`mainCity-${mainCity.id}`}
+                    onChange={(data) => setMainCity((prev) => ({ ...prev, name: data }))}
+                    value={mainCity.name}
                     placeholder="شهر"
                     className={[{ inputwrapperClassName: "mx-1 my-1 md:my-0" }]}
                     icon={
