@@ -228,9 +228,13 @@ const Jobs: React.FC = () => {
                                 <div key={index + 1} className="mt-2">
                                     <AdvertisingBox
                                         type="HideSendCv"
-                                        clickHandler={() =>
-                                            setMainJobInfo({ isShow: true, mainInfo: { ...item.data } })
-                                        }
+                                        clickHandler={() => {
+                                            setMainJobInfo({ isShow: true, mainInfo: { ...item.data } });
+                                            setSearchParam((prev) => {
+                                                prev.set("advertisingId", item.data.id);
+                                                return prev;
+                                            });
+                                        }}
                                         data={{ ...item.data }}
                                         isActive={item.data.id === mainJobInfo.mainInfo?.id ? true : false}
                                     ></AdvertisingBox>
