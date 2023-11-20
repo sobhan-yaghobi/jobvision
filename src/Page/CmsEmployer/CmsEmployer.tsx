@@ -802,7 +802,7 @@ namespace SubPageCms {
                         ClickHandler={() => {}}
                         isLoading={false}
                     >
-                        آپدیت
+                        ایجاد آگهی
                     </Button>
                 </form>
             </>

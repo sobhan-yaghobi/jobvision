@@ -14,9 +14,14 @@ import uuidGenerator from "../../Utils/UuidGenerator";
 import { uniqBy } from "lodash";
 
 const SearchFrom: React.FC = memo(() => {
-    const { setRoute, routeTitle: jobTitle, routeJobsTag: jobTag, routeCity: jobCity } = useSearchForm();
+    const { route, setRoute, routeTitle: jobTitle, routeJobsTag: jobTag, routeCity: jobCity } = useSearchForm();
     const [mainGroupJob, setMainGroupJob] = useState<TypeGroupsJobs>({ id: uuidGenerator(), name: jobTag });
     const [mainCity, setMainCity] = useState<TypeCitis>({ id: uuidGenerator(), name: jobCity });
+
+    useEffect(() => {
+        setMainGroupJob({ id: uuidGenerator(), name: jobTag });
+        setMainCity({ id: uuidGenerator(), name: jobCity });
+    }, [route]);
 
     const setRouteAction = (name: string, value: string): void =>
         setRoute((prev) => {

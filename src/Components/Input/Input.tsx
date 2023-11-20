@@ -96,12 +96,8 @@ namespace InputUtils {
 
 const TextInput: React.FC<React.PropsWithChildren<TypeTextInput>> = (props) => {
     const [showAutoComplete, setShowAutoComplete] = useState(false);
-    const [value, setValue] = useState(props.value);
     const changeHanlderAction = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (typeof value !== "undefined") {
-            setValue(event.currentTarget.value);
-            typeof props.onChange !== "undefined" ? props.onChange(event.currentTarget.value) : undefined;
-        }
+        typeof props.onChange !== "undefined" ? props.onChange(event.currentTarget.value) : undefined;
     };
     return (
         <span
@@ -125,8 +121,8 @@ const TextInput: React.FC<React.PropsWithChildren<TypeTextInput>> = (props) => {
                 </span>
             ) : null}
             <input
-                value={typeof value !== "undefined" ? value : undefined}
-                onChange={changeHanlderAction}
+                value={typeof props.value !== "undefined" ? props.value : undefined}
+                onInput={changeHanlderAction}
                 className={twMerge(InputUtils.className.inputClassName, props.className?.[0].inputClassName)}
                 type="text"
                 placeholder={props.placeholder}

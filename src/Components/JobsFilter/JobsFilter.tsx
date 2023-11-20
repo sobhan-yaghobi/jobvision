@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import useSearchForm from "../../Hooks/useSearchForm";
 
 //  Types
 import {
@@ -34,6 +35,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { GoTrash } from "react-icons/go";
 
 const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnProMode, setIsFilterOnProMode }) => {
+    const { setRoute } = useSearchForm();
     const [WindowsSize] = useWindowsSize();
     const [menuMobile, setMenuMobile] = useState<{ mode: "ShowSettingFilter" | "ShowFilter"; isShow: boolean }>({
         mode: "ShowFilter",
@@ -59,6 +61,13 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
         selectedFilters.map((selectedFilter) => mainSelectedFilters.push(selectedFilter.type));
         setSelectedFilter(mainSelectedFilters);
     }, [selectedFilters]);
+
+    const removeAllFillterAction = () => {
+        console.log("clic");
+        setRoute((prev) => ({ ...prev, title: "", jobsGroup: "", city: "" }));
+
+        setSelectedFilters([]);
+    };
 
     const diActiveMenu = () =>
         setMainFilterMenu({
@@ -310,7 +319,7 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
                     }`}
                 >
                     <li
-                        onClick={() => (selectedFilters.length ? setSelectedFilters([]) : null)}
+                        onClick={removeAllFillterAction}
                         className={`${itemClassName} text-jv-danger hover:bg-jv-lightDanger`}
                     >
                         <span>حذف همه</span>

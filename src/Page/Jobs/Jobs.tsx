@@ -177,7 +177,7 @@ const Jobs: React.FC = () => {
                         فعال سازی اطلاع رسانی شغل ها
                     </Button>
                     <div className="p-3 mt-2 rounded-lg bg-jv-white flex items-center justify-between">
-                        <section>37524 فرصت شغلی فعال</section>
+                        <section>{AdvertisingArray.length} فرصت شغلی فعال</section>
                         {Object.values(orderMain).length ? (
                             <section className="flex items-center">
                                 <span>مرتب سازی :</span>
