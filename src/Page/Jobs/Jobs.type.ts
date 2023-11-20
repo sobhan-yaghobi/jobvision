@@ -12,6 +12,11 @@ export interface mainJobInfoType {
     mainInfo: AdvertisingType | undefined;
 }
 
+export type TypeRoutes = {
+    isRouteValue: boolean;
+    isValueExist: boolean;
+};
+
 export interface BoxsOrderType {
     id: string;
     title: string;

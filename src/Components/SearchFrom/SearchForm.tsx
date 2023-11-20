@@ -15,19 +15,17 @@ import { uniqBy } from "lodash";
 
 const SearchFrom: React.FC = memo(() => {
     const [route, setRoute] = useSearchParams({ title: "", jobsGroup: "", city: "" });
-    const [mainGroupJob, setMainGroupJob] = useState<TypeGroupsJobs>({ id: uuidGenerator(), name: "" });
-    const [mainCity, setMainCity] = useState<TypeCitis>({ id: uuidGenerator(), name: "" });
     const jobTitle: string = route.get("title") ?? "";
+    const jobTag = route.get("jobsGroup") ?? "";
+    const jobCity = route.get("city") ?? "";
+    const [mainGroupJob, setMainGroupJob] = useState<TypeGroupsJobs>({ id: uuidGenerator(), name: jobTag });
+    const [mainCity, setMainCity] = useState<TypeCitis>({ id: uuidGenerator(), name: jobCity });
+
     const setRouteAction = (name: string, value: string): void =>
-        setRoute(
-            (prev) => {
-                prev.set(name, value);
-                return prev;
-            },
-            {
-                replace: true,
-            }
-        );
+        setRoute((prev) => {
+            prev.set(name, value);
+            return prev;
+        });
     useEffect(() => setRouteAction("jobsGroup", mainGroupJob.name), [mainGroupJob]);
     useEffect(() => setRouteAction("city", mainCity.name), [mainCity]);
 

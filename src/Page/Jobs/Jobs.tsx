@@ -11,6 +11,7 @@ import {
     boxOrderArray,
     mainItemsBoxInfos,
     mainJobInfoType,
+    TypeRoutes,
 } from "./Jobs.type";
 import {
     AdvertisingArray,
@@ -103,27 +104,32 @@ const Jobs: React.FC = () => {
             });
             setBoxList(newAdvertisingArray);
         } else if (routeTitle.length || routeJobsTag.length || routeCity.length) {
-            const isTitle = (title: string, name: string): boolean =>
-                routeTitle.length
+            const isTitle = (title: string, name: string): TypeRoutes => ({
+                isRouteValue: Boolean(routeTitle.length),
+                isValueExist: routeTitle.length
                     ? toLowerCaseAction(title).includes(toLowerCaseAction(routeTitle)) ||
                       toLowerCaseAction(name).includes(toLowerCaseAction(routeTitle))
-                    : false;
-            const isTag = (tags: string[] | undefined): boolean =>
-                routeJobsTag.length
+                    : false,
+            });
+            const isTag = (tags: string[] | undefined): TypeRoutes => ({
+                isRouteValue: Boolean(routeJobsTag.length),
+                isValueExist: routeJobsTag.length
                     ? Boolean(
                           tags?.filter((tag) => toLowerCaseAction(tag).includes(toLowerCaseAction(routeJobsTag))).length
                       )
-                    : false;
-            const isCity = (city: string): boolean =>
-                routeCity.length ? toLowerCaseAction(city).includes(toLowerCaseAction(routeCity)) : false;
+                    : false,
+            });
+            const isCity = (city: string): TypeRoutes => ({
+                isRouteValue: Boolean(routeCity.length),
+                isValueExist: routeCity.length ? toLowerCaseAction(city).includes(toLowerCaseAction(routeCity)) : false,
+            });
 
             const mainAdsArray: AdvertisingBoxMainProps[] = AdvertisingArray.filter((ads) => {
-                console.log("---------------");
-
                 if (
-                    isTitle(ads.data.title, ads.data.company.name) ||
-                    isTag(ads.data.adTags) ||
-                    isCity(ads.data.company.location)
+                    (isTitle(ads.data.title, ads.data.company.name).isValueExist ||
+                        !isTitle(ads.data.title, ads.data.company.name).isRouteValue) &&
+                    (isTag(ads.data.adTags).isValueExist || !isTag(ads.data.adTags).isRouteValue) &&
+                    (isCity(ads.data.company.location).isValueExist || !isCity(ads.data.company.location).isRouteValue)
                 ) {
                     return ads;
                 }
