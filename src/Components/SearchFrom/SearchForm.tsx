@@ -1,5 +1,6 @@
 // Hooks
-import React, { memo, useState } from "react";
+import React, { memo, useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 
 // Types
 import { ItemGeneratorProps, TypeCitis, TypeGroupsJobs, citis, groupJobs } from "./SearchForm.type";
@@ -13,8 +14,22 @@ import uuidGenerator from "../../Utils/UuidGenerator";
 import { uniqBy } from "lodash";
 
 const SearchFrom: React.FC = memo(() => {
+    const [route, setRoute] = useSearchParams({ title: "", jobsGroup: "", city: "" });
     const [mainGroupJob, setMainGroupJob] = useState<TypeGroupsJobs>({ id: uuidGenerator(), name: "" });
     const [mainCity, setMainCity] = useState<TypeCitis>({ id: uuidGenerator(), name: "" });
+    const jobTitle: string = route.get("title") ?? "";
+    const setRouteAction = (name: string, value: string): void =>
+        setRoute(
+            (prev) => {
+                prev.set(name, value);
+                return prev;
+            },
+            {
+                replace: true,
+            }
+        );
+    useEffect(() => setRouteAction("jobsGroup", mainGroupJob.name), [mainGroupJob]);
+    useEffect(() => setRouteAction("city", mainCity.name), [mainCity]);
 
     const ItemGenerator: React.FC<ItemGeneratorProps> = ({ array, mainValue, setMainValue }) => {
         const listItems: ItemGeneratorProps["array"] = array.filter(
@@ -43,6 +58,8 @@ const SearchFrom: React.FC = memo(() => {
         <>
             <div className="w-full flex flex-col items-center justify-between md:flex-row">
                 <TextInput
+                    value={jobTitle}
+                    onChange={(value) => setRouteAction("title", value)}
                     placeholder="عنوان شغلی یا شرکت"
                     className={[{ inputwrapperClassName: "mx-1 my-1 md:my-0" }]}
                     icon={

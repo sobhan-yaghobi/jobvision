@@ -1,4 +1,6 @@
+// Hooks
 import React, { useState, useRef, Fragment, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 
 // Types
 import {
@@ -10,7 +12,11 @@ import {
     mainItemsBoxInfos,
     mainJobInfoType,
 } from "./Jobs.type";
-import { AdvertisingArray, AdvertisingBoxMainProps } from "../../Components/AdvertisingBox/AdvertisingBox.type";
+import {
+    AdvertisingArray,
+    AdvertisingBoxMainProps,
+    AdvertisingBoxProps,
+} from "../../Components/AdvertisingBox/AdvertisingBox.type";
 
 // Animations
 import {
@@ -21,7 +27,8 @@ import {
 } from "../../Animations/UtilsAnimation";
 
 // Functions
-import { includes } from "lodash";
+import { includes as includes_lodash, uniqBy } from "lodash";
+import { toLowerCaseAction } from "../../Utils/Utils";
 
 // Components
 import Header from "../../Components/Header/Header";
@@ -31,7 +38,7 @@ import Button from "../../Components/Button/Button";
 import AdvertisingBox from "../../Components/AdvertisingBox/AdvertisingBox";
 import Accordion from "../../Components/Accordion/Accordion";
 import { AnimatePresence, motion } from "framer-motion";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ScoreIconGenerator } from "../../Utils/UtilsComponent";
 import JobsFilter from "../../Components/JobsFilter/JobsFilter";
 import ErrorBox from "../../Components/ErrorBox/ErrorBox";
@@ -72,29 +79,60 @@ const Jobs: React.FC = () => {
     //! ---------------------------------- Box Order
 
     //? ---------------------------------- Box Lists
+    const [route, setRoute] = useSearchParams({ title: "", jobsGroup: "", city: "" });
+    const routeTitle = route.get("title") ?? "";
+    const routeJobsTag = route.get("jobsGroup") ?? "";
+    const routeCity = route.get("city") ?? "";
     const [proModeFilter, setProModeFilter] = useState(false);
     const [boxList, setBoxList] = useState<AdvertisingBoxMainProps[]>(AdvertisingArray);
     const [filterSelection, setFilterSelection] = useState<string[]>([]);
     useEffect(() => {
         if (filterSelection.length) {
-            const newAdvertisingArray: AdvertisingBoxMainProps[] = AdvertisingArray.filter((advertising) => {
+            const newAdvertisingArray: AdvertisingBoxMainProps[] = boxList.filter((advertising) => {
                 const isTypesValid: boolean[] = advertising.data.type.map((Type) =>
-                    includes(filterSelection, Type) ? true : false
+                    includes_lodash(filterSelection, Type) ? true : false
                 );
 
                 if (proModeFilter && isTypesValid.filter((type) => type === true).length === filterSelection.length) {
                     return advertising;
                 } else {
-                    if (!proModeFilter && includes(isTypesValid, !proModeFilter)) {
+                    if (!proModeFilter && includes_lodash(isTypesValid, !proModeFilter)) {
                         return advertising;
                     }
                 }
             });
             setBoxList(newAdvertisingArray);
+        } else if (routeTitle.length || routeJobsTag.length || routeCity.length) {
+            const isTitle = (title: string, name: string): boolean =>
+                routeTitle.length
+                    ? toLowerCaseAction(title).includes(toLowerCaseAction(routeTitle)) ||
+                      toLowerCaseAction(name).includes(toLowerCaseAction(routeTitle))
+                    : false;
+            const isTag = (tags: string[] | undefined): boolean =>
+                routeJobsTag.length
+                    ? Boolean(
+                          tags?.filter((tag) => toLowerCaseAction(tag).includes(toLowerCaseAction(routeJobsTag))).length
+                      )
+                    : false;
+            const isCity = (city: string): boolean =>
+                routeCity.length ? toLowerCaseAction(city).includes(toLowerCaseAction(routeCity)) : false;
+
+            const mainAdsArray: AdvertisingBoxMainProps[] = AdvertisingArray.filter((ads) => {
+                console.log("---------------");
+
+                if (
+                    isTitle(ads.data.title, ads.data.company.name) ||
+                    isTag(ads.data.adTags) ||
+                    isCity(ads.data.company.location)
+                ) {
+                    return ads;
+                }
+            });
+            setBoxList(mainAdsArray);
         } else {
             setBoxList(AdvertisingArray);
         }
-    }, [filterSelection, proModeFilter]);
+    }, [filterSelection, proModeFilter, route]);
     //! ---------------------------------- Box Lists
 
     //? ---------------------------------- Box Info

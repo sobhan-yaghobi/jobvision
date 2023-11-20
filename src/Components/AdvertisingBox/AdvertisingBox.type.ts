@@ -62,6 +62,7 @@ export interface AdvertisingType {
         acceptTrainees: boolean;
         acceptTelecommuting: boolean;
     };
+    adTags?: string[];
     type: FiltreTypes[];
     CreateAt: Date;
 }
@@ -176,6 +177,14 @@ const AdvertisingArray: AdvertisingBoxMainProps[] = [
                 acceptTelecommuting: false,
             },
             type: ["IS_EMPLOYMENT_OF_THE_DISABLED", "MILITARY_ORDER", "RIGHTS_AMONG_12_20_MILLION"],
+            adTags: [
+                "front developer",
+                "react js",
+                "react",
+                "توسعه دهنده ری اکت",
+                "برنامه نویسی سایت",
+                "برنامه نویس فرانت اند",
+            ],
             CreateAt: new Date(2023, 9, 4, 22, 30, 0, 0),
         },
     },

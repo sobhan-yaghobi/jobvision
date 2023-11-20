@@ -38,4 +38,13 @@ const messageUrlNotValid = (name: string): string => `لینک ${name} معتب�
 const messageRequiredGenerator = (name: string) => `${name} اجباری میباشد`;
 const messageSuccess = (name: string) => `${name} با موفقیت به اتمام رسید`;
 
-export { getTime, messageLengthGenerator, messageUrlNotValid, messageRequiredGenerator, messageSuccess };
+const toLowerCaseAction = (value: string): string => value.toLocaleLowerCase();
+
+export {
+    getTime,
+    messageLengthGenerator,
+    messageUrlNotValid,
+    messageRequiredGenerator,
+    messageSuccess,
+    toLowerCaseAction,
+};
