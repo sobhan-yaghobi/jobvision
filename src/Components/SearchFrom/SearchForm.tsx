@@ -1,6 +1,6 @@
 // Hooks
 import React, { memo, useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import useSearchForm from "../../Hooks/useSearchForm";
 
 // Types
 import { ItemGeneratorProps, TypeCitis, TypeGroupsJobs, citis, groupJobs } from "./SearchForm.type";
@@ -14,10 +14,7 @@ import uuidGenerator from "../../Utils/UuidGenerator";
 import { uniqBy } from "lodash";
 
 const SearchFrom: React.FC = memo(() => {
-    const [route, setRoute] = useSearchParams({ title: "", jobsGroup: "", city: "" });
-    const jobTitle: string = route.get("title") ?? "";
-    const jobTag = route.get("jobsGroup") ?? "";
-    const jobCity = route.get("city") ?? "";
+    const { setRoute, routeTitle: jobTitle, routeJobsTag: jobTag, routeCity: jobCity } = useSearchForm();
     const [mainGroupJob, setMainGroupJob] = useState<TypeGroupsJobs>({ id: uuidGenerator(), name: jobTag });
     const [mainCity, setMainCity] = useState<TypeCitis>({ id: uuidGenerator(), name: jobCity });
 

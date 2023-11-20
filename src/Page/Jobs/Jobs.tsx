@@ -1,6 +1,7 @@
 // Hooks
 import React, { useState, useRef, Fragment, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import useSearchForm from "../../Hooks/useSearchForm";
 
 // Types
 import {
@@ -43,6 +44,7 @@ import { Link } from "react-router-dom";
 import { ScoreIconGenerator } from "../../Utils/UtilsComponent";
 import JobsFilter from "../../Components/JobsFilter/JobsFilter";
 import ErrorBox from "../../Components/ErrorBox/ErrorBox";
+import CompanyBox from "../../Components/CompanyBox/CompanyBox";
 
 // Icons
 import { AiFillCaretDown, AiOutlineHeart, AiOutlineShareAlt } from "react-icons/ai";
@@ -57,7 +59,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import CompanyBox from "../../Components/CompanyBox/CompanyBox";
 
 const Jobs: React.FC = () => {
     //? ---------------------------------- Notification
@@ -80,10 +81,7 @@ const Jobs: React.FC = () => {
     //! ---------------------------------- Box Order
 
     //? ---------------------------------- Box Lists
-    const [route, setRoute] = useSearchParams({ title: "", jobsGroup: "", city: "" });
-    const routeTitle = route.get("title") ?? "";
-    const routeJobsTag = route.get("jobsGroup") ?? "";
-    const routeCity = route.get("city") ?? "";
+    const { route, routeTitle, routeJobsTag, routeCity } = useSearchForm();
     const [proModeFilter, setProModeFilter] = useState(false);
     const [boxList, setBoxList] = useState<AdvertisingBoxMainProps[]>(AdvertisingArray);
     const [filterSelection, setFilterSelection] = useState<string[]>([]);
