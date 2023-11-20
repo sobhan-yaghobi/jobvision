@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 
 const useSearchForm = () => {
-    const [route, setRoute] = useSearchParams({ title: "", jobsGroup: "", city: "" });
+    const [route, setRoute] = useSearchParams({ title: "", jobsGroup: "", city: "", advertisingId: "" });
     const routeTitle = route.get("title") ?? "";
     const routeJobsTag = route.get("jobsGroup") ?? "";
     const routeCity = route.get("city") ?? "";

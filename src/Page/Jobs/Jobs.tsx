@@ -14,11 +14,7 @@ import {
     mainJobInfoType,
     TypeRoutes,
 } from "./Jobs.type";
-import {
-    AdvertisingArray,
-    AdvertisingBoxMainProps,
-    AdvertisingBoxProps,
-} from "../../Components/AdvertisingBox/AdvertisingBox.type";
+import { AdvertisingArray, AdvertisingBoxMainProps } from "../../Components/AdvertisingBox/AdvertisingBox.type";
 
 // Animations
 import {
@@ -61,6 +57,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 const Jobs: React.FC = () => {
+    const { route, setRoute, routeTitle, routeJobsTag, routeCity } = useSearchForm();
     //? ---------------------------------- Notification
     const [isNotification, setIsNotification] = useState(false);
     const [notifPending, setNotifPending] = useState(isNotification);
@@ -81,7 +78,6 @@ const Jobs: React.FC = () => {
     //! ---------------------------------- Box Order
 
     //? ---------------------------------- Box Lists
-    const { route, routeTitle, routeJobsTag, routeCity } = useSearchForm();
     const [proModeFilter, setProModeFilter] = useState(false);
     const [boxList, setBoxList] = useState<AdvertisingBoxMainProps[]>(AdvertisingArray);
     const [filterSelection, setFilterSelection] = useState<string[]>([]);
@@ -140,10 +136,8 @@ const Jobs: React.FC = () => {
     //! ---------------------------------- Box Lists
 
     //? ---------------------------------- Box Info
-    const [searchParam, setSearchParam] = useSearchParams({ advertisingId: "" });
     const [mainItemInfo, setMainItemInfo] = useState<MainItemBoxInfoType>(mainItemsBoxInfos[0]);
-
-    const mainJobIdFromRoute = searchParam.get("advertisingId");
+    const mainJobIdFromRoute = route.get("advertisingId");
     const mainJobsFromRoute = AdvertisingArray.filter((ads) => ads.data.id === mainJobIdFromRoute).at(0);
     const [mainJobInfo, setMainJobInfo] = useState<mainJobInfoType>(
         typeof mainJobsFromRoute !== "undefined"
@@ -228,7 +222,7 @@ const Jobs: React.FC = () => {
                                         type="HideSendCv"
                                         clickHandler={() => {
                                             setMainJobInfo({ isShow: true, mainInfo: { ...item.data } });
-                                            setSearchParam((prev) => {
+                                            setRoute((prev) => {
                                                 prev.set("advertisingId", item.data.id);
                                                 return prev;
                                             });
