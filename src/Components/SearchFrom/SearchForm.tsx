@@ -15,42 +15,35 @@ import { uniqBy } from "lodash";
 
 const SearchFrom: React.FC = memo(() => {
     const { route, setRoute, routeTitle: jobTitle, routeJobsTag: jobTag, routeCity: jobCity } = useSearchForm();
-    const [mainGroupJob, setMainGroupJob] = useState<TypeGroupsJobs>({ id: uuidGenerator(), name: jobTag });
-    const [mainCity, setMainCity] = useState<TypeCitis>({ id: uuidGenerator(), name: jobCity });
-
-    useEffect(() => {
-        setMainGroupJob({ id: uuidGenerator(), name: jobTag });
-        setMainCity({ id: uuidGenerator(), name: jobCity });
-    }, [route]);
 
     const setRouteAction = (name: string, value: string): void =>
         setRoute((prev) => {
             prev.set(name, value);
             return prev;
         });
-    useEffect(() => setRouteAction("jobsGroup", mainGroupJob.name), [mainGroupJob]);
-    useEffect(() => setRouteAction("city", mainCity.name), [mainCity]);
 
     const ItemGenerator: React.FC<ItemGeneratorProps> = ({ array, mainValue, setMainValue }) => {
-        const listItems: ItemGeneratorProps["array"] = array.filter(
-            (item) => item.name.includes(mainValue.name) && item
-        );
-        const LiGenerator = (value: ItemGeneratorProps["mainValue"]) => (
+        const listItems: ItemGeneratorProps["array"] = array.filter((item) => item.name.includes(mainValue) && item);
+        type LiGeneratorProps = {
+            value: ItemGeneratorProps["mainValue"];
+        };
+        const LiGenerator: React.FC<LiGeneratorProps> = ({ value }) => (
             <li
                 onClick={() => {
                     setMainValue(value);
                 }}
-                key={value.id}
                 className="p-2 my-1 cursor-pointer hover:bg-jv-white last:mb-0 first:mt-0"
             >
-                {value.name}
+                {value}
             </li>
         );
 
         return listItems.length ? (
-            uniqBy(listItems, "id").map((item) => <LiGenerator key={`LiGenerator-${item.id}`} {...item}></LiGenerator>)
+            uniqBy(listItems, "id").map((item) => (
+                <LiGenerator key={`LiGenerator-${item.id}`} value={item.name}></LiGenerator>
+            ))
         ) : (
-            <LiGenerator key={`LiGenerator-${mainValue.id}`} {...mainValue}></LiGenerator>
+            <LiGenerator key={`LiGenerator_main_value`} value={mainValue}></LiGenerator>
         );
     };
 
@@ -74,9 +67,8 @@ const SearchFrom: React.FC = memo(() => {
                     iconSide="Right"
                 />
                 <TextInput
-                    key={`mainGroupJob-${mainGroupJob.id}`}
-                    onChange={(data) => setMainGroupJob((prev) => ({ ...prev, name: data }))}
-                    value={mainGroupJob.name}
+                    value={jobTag}
+                    onChange={(value) => setRouteAction("jobsGroup", value)}
                     placeholder="گروه شغلی"
                     className={[{ inputwrapperClassName: "mx-1 my-1 md:my-0" }]}
                     icon={
@@ -108,14 +100,13 @@ const SearchFrom: React.FC = memo(() => {
                 >
                     <ItemGenerator
                         array={groupJobs}
-                        mainValue={mainGroupJob}
-                        setMainValue={setMainGroupJob}
+                        mainValue={jobTag}
+                        setMainValue={(value) => setRouteAction("jobsGroup", value)}
                     ></ItemGenerator>
                 </TextInput>
                 <TextInput
-                    key={`mainCity-${mainCity.id}`}
-                    onChange={(data) => setMainCity((prev) => ({ ...prev, name: data }))}
-                    value={mainCity.name}
+                    onChange={(value) => setRouteAction("city", value)}
+                    value={jobCity}
                     placeholder="شهر"
                     className={[{ inputwrapperClassName: "mx-1 my-1 md:my-0" }]}
                     icon={
@@ -129,7 +120,11 @@ const SearchFrom: React.FC = memo(() => {
                     register={{}}
                     iconSide="Right"
                 >
-                    <ItemGenerator array={citis} mainValue={mainCity} setMainValue={setMainCity}></ItemGenerator>
+                    <ItemGenerator
+                        array={citis}
+                        mainValue={jobCity}
+                        setMainValue={(value) => setRouteAction("city", value)}
+                    ></ItemGenerator>
                 </TextInput>
                 <Button
                     textColor="primary"

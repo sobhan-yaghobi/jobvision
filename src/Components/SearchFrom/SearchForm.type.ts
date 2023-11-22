@@ -23,6 +23,6 @@ export const groupJobs: TypeGroupsJobs[] = [
 
 export type ItemGeneratorProps = {
     array: TypeCitis[] | TypeGroupsJobs[];
-    mainValue: TypeCitis | TypeGroupsJobs;
-    setMainValue: React.Dispatch<React.SetStateAction<TypeCitis | TypeGroupsJobs>>;
+    mainValue: string;
+    setMainValue: (value: string) => void;
 };
