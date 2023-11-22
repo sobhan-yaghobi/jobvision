@@ -11,7 +11,7 @@ import {
 } from "./menuItem.type";
 
 // Animations
-import { ShowOpacity, ShowSvgPath } from "../../Animations/UtilsAnimation";
+import { ShowOpacity } from "../../Animations/UtilsAnimation";
 
 // Components
 import { motion } from "framer-motion";
@@ -51,12 +51,14 @@ export const MenuDesktopItemGenerate: React.FC<MenuDesktopItemGenerateProps> = (
                             className={[
                                 {
                                     ParentClassName:
-                                        "bg-white w-full columns-4 absolute top-16 bottom-0 left-0 right-0 cursor-default p-3 rounded-b-xl overflow-y-auto",
+                                        "text-sm bg-white w-full columns-4 absolute top-12 bottom-0 left-0 right-0 cursor-default p-3 rounded-b-xl overflow-y-auto",
                                     ChildClassName: "overflow-hidden max-w-max h-max max-h-max m-1",
                                     LinksWrapperClassName:
-                                        "text-jv-lightGray dana-bold w-full h-full flex flex-col px-3 py-1 hover:text-jv-primary",
+                                        "text-jv-lightGray dana-bold w-full h-full flex flex-col px-3 py-1 hover:text-jv-primary ",
+                                    LinksTitleClassName:
+                                        "relative mb-1 after:content-[''] after:absolute after:top-0 after:-right-2 after:w-1 after:h-full after:bg-jv-primary after:rounded-sm",
                                     //
-                                    SublinkParentClassName: "w-full p-3 cursor-default hiiden",
+                                    SublinkParentClassName: "w-full px-3 cursor-default hiiden",
                                     SublinkChildClassName: "w-full flex items-center mt-2 first:mt-0",
                                     SublinkLinkWrapperClassName:
                                         "text-jv-gray w-full inline-block hover:text-jv-primary",
@@ -254,7 +256,7 @@ export const LinkGenerator: React.FC<React.PropsWithChildren<LinkGeneratorProps>
                 {Data.map((link) => (
                     <li key={link.id} className={className[0].ChildClassName}>
                         <div onClick={() => clickAction(link)} className={className[0].LinksWrapperClassName}>
-                            <span>{link.title}</span>
+                            <span className={className[0].LinksTitleClassName}>{link.title}</span>
                             {/* <span className={`${Type === "Mobile" ? "flex items-center gap-2" : ""}`}>
                                 {children}
                             </span> */}
@@ -271,20 +273,6 @@ export const LinkGenerator: React.FC<React.PropsWithChildren<LinkGeneratorProps>
                                 >
                                     {link.sublinks.map((subLink) => (
                                         <li key={subLink.id} className={className[0].SublinkChildClassName}>
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                strokeWidth={1.5}
-                                                stroke="currentColor"
-                                                className="w-3 h-3 ml-1.5"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    d="M15.75 19.5L8.25 12l7.5-7.5"
-                                                />
-                                            </svg>
                                             <a
                                                 className={className[0].SublinkLinkWrapperClassName}
                                                 href={`#${subLink.link}`}
