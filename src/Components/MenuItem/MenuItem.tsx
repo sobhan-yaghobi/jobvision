@@ -33,9 +33,13 @@ export const MenuDesktopItemGenerate: React.FC<MenuDesktopItemGenerateProps> = (
                     <ItemGenerator
                         DesktopVarient={ShowOpacity}
                         Type="Desktop"
-                        ParentClassName="relative mega-menu shadow-md shadow-[#05050510] w-full h-10 flex"
-                        ChildClassName="menu__item border-transparent"
-                        ChildClassActivion="text-jv-primary !border-jv-primary"
+                        className={[
+                            {
+                                ParentClassName: "relative mega-menu shadow-md shadow-[#05050510] w-full h-10 flex",
+                                ChildClassName: "menu__item border-transparent",
+                                ChildClassActivion: "text-jv-primary !border-jv-primary",
+                            },
+                        ]}
                         ClickHandler={setMainItem}
                         Data={menuData}
                         mainItemData={mainItem}
@@ -44,13 +48,20 @@ export const MenuDesktopItemGenerate: React.FC<MenuDesktopItemGenerateProps> = (
                         <LinkGenerator
                             DesktopVarient={ShowOpacity}
                             Type="Desktop"
-                            ParentClassName="bg-white w-full columns-4 absolute top-16 bottom-0 left-0 right-0 cursor-default p-3 rounded-b-xl overflow-y-auto"
-                            ChildClassName="overflow-hidden max-w-max h-max max-h-max m-1"
-                            LinksWrapperClassName="text-jv-lightGray dana-bold w-full h-full flex flex-col px-3 py-1 hover:text-jv-primary"
-                            //
-                            SublinkParentClassName="w-full p-3 cursor-default hiiden"
-                            SublinkChildClassName="w-full flex items-center mt-2 first:mt-0"
-                            SublinkLinkWrapperClassName="text-jv-gray w-full inline-block hover:text-jv-primary"
+                            className={[
+                                {
+                                    ParentClassName:
+                                        "bg-white w-full columns-4 absolute top-16 bottom-0 left-0 right-0 cursor-default p-3 rounded-b-xl overflow-y-auto",
+                                    ChildClassName: "overflow-hidden max-w-max h-max max-h-max m-1",
+                                    LinksWrapperClassName:
+                                        "text-jv-lightGray dana-bold w-full h-full flex flex-col px-3 py-1 hover:text-jv-primary",
+                                    //
+                                    SublinkParentClassName: "w-full p-3 cursor-default hiiden",
+                                    SublinkChildClassName: "w-full flex items-center mt-2 first:mt-0",
+                                    SublinkLinkWrapperClassName:
+                                        "text-jv-gray w-full inline-block hover:text-jv-primary",
+                                },
+                            ]}
                             Data={mainItem.links}
                             ClickHandler={() => {}}
                             isChildrenShow
@@ -98,9 +109,7 @@ export const SubMenuGenerator: React.FC<SubMenuGeneratorProps> = ({
     MobileVarient,
     DesktopVarient,
     Type,
-    ClassWhenActive,
-    ParentClassName,
-    ChildClassName,
+    className,
     Data,
     ClickHandler,
     children,
@@ -122,7 +131,7 @@ export const SubMenuGenerator: React.FC<SubMenuGeneratorProps> = ({
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className={ParentClassName}
+                className={className[0]?.ParentClassName}
             >
                 {Data.map((item) =>
                     item.items.length ? (
@@ -130,7 +139,9 @@ export const SubMenuGenerator: React.FC<SubMenuGeneratorProps> = ({
                             key={item.id}
                             ref={Ref}
                             onClick={(e) => clickAction(item)}
-                            className={`${ChildClassName} ${item.id === mainMenuDesktop?.id ? ClassWhenActive : ""}`}
+                            className={`${className[0]?.ChildClassName} ${
+                                item.id === mainMenuDesktop?.id ? className[0]?.ClassWhenActive : ""
+                            }`}
                         >
                             <span>{item.title}</span>
                             {children}
@@ -138,7 +149,9 @@ export const SubMenuGenerator: React.FC<SubMenuGeneratorProps> = ({
                     ) : (
                         <li
                             key={item.id}
-                            className={`${ChildClassName} ${item.id === mainMenuDesktop?.id ? ClassWhenActive : ""}`}
+                            className={`${className[0]?.ChildClassName} ${
+                                item.id === mainMenuDesktop?.id ? className[0]?.ClassWhenActive : ""
+                            }`}
                         >
                             {item.title}
                         </li>
@@ -171,13 +184,11 @@ export const ItemGenerator: React.FC<ItemGeneratorProps> = ({
     MobileVarient,
     DesktopVarient,
     Type,
-    ParentClassName,
-    ChildClassName,
+    className,
     Data,
     children,
     ClickHandler,
     mainItemData,
-    ChildClassActivion,
 }) => {
     const clickAction = (item: Item) => {
         if (Type === "Desktop") {
@@ -193,14 +204,14 @@ export const ItemGenerator: React.FC<ItemGeneratorProps> = ({
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className={ParentClassName}
+                className={className[0].ParentClassName}
             >
                 {Data.items.map((item) => (
                     <li
                         key={item.id}
                         onClick={() => clickAction(item)}
-                        className={`${ChildClassName} ${
-                            Type === "Desktop" && mainItemData?.id === item.id ? ChildClassActivion : ""
+                        className={`${className[0].ChildClassName} ${
+                            Type === "Desktop" && mainItemData?.id === item.id ? className[0].ChildClassActivion : ""
                         }`}
                     >
                         <span>{item.title}</span>
@@ -217,12 +228,7 @@ export const LinkGenerator: React.FC<React.PropsWithChildren<LinkGeneratorProps>
     MobileVarient,
     DesktopVarient,
     Type,
-    ParentClassName,
-    ChildClassName,
-    LinksWrapperClassName,
-    SublinkParentClassName,
-    SublinkChildClassName,
-    SublinkLinkWrapperClassName,
+    className,
     children,
     Data,
     ClickHandler,
@@ -243,11 +249,11 @@ export const LinkGenerator: React.FC<React.PropsWithChildren<LinkGeneratorProps>
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className={ParentClassName}
+                className={className[0].ParentClassName}
             >
                 {Data.map((link) => (
-                    <li key={link.id} className={ChildClassName}>
-                        <div onClick={() => clickAction(link)} className={LinksWrapperClassName}>
+                    <li key={link.id} className={className[0].ChildClassName}>
+                        <div onClick={() => clickAction(link)} className={className[0].LinksWrapperClassName}>
                             <span>{link.title}</span>
                             {/* <span className={`${Type === "Mobile" ? "flex items-center gap-2" : ""}`}>
                                 {children}
@@ -261,10 +267,10 @@ export const LinkGenerator: React.FC<React.PropsWithChildren<LinkGeneratorProps>
                                     initial="hidden"
                                     animate="visible"
                                     exit="exit"
-                                    className={SublinkParentClassName}
+                                    className={className[0].SublinkParentClassName}
                                 >
                                     {link.sublinks.map((subLink) => (
-                                        <li key={subLink.id} className={SublinkChildClassName}>
+                                        <li key={subLink.id} className={className[0].SublinkChildClassName}>
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 fill="none"
@@ -279,7 +285,10 @@ export const LinkGenerator: React.FC<React.PropsWithChildren<LinkGeneratorProps>
                                                     d="M15.75 19.5L8.25 12l7.5-7.5"
                                                 />
                                             </svg>
-                                            <a className={SublinkLinkWrapperClassName} href={`#${subLink.link}`}>
+                                            <a
+                                                className={className[0].SublinkLinkWrapperClassName}
+                                                href={`#${subLink.link}`}
+                                            >
                                                 {subLink.title}
                                             </a>
                                         </li>

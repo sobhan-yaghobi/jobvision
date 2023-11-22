@@ -27,9 +27,13 @@ export interface SubMenuGeneratorProps {
     MobileVarient?: {};
     DesktopVarient?: {};
     Type: "Desktop" | "Mobile";
-    ClassWhenActive?: String;
-    ParentClassName: string;
-    ChildClassName: string;
+    className: [
+        {
+            ClassWhenActive?: String;
+            ParentClassName?: string;
+            ChildClassName?: string;
+        }
+    ];
     Data: SubMenu[];
     ClickHandler: Function;
     // Mobile Type
@@ -43,12 +47,16 @@ export interface ItemGeneratorProps {
     MobileVarient?: {};
     DesktopVarient?: {};
     Type: "Desktop" | "Mobile";
-    ParentClassName: string;
-    ChildClassName: string;
+    className: [
+        {
+            ParentClassName: string;
+            ChildClassName: string;
+            ChildClassActivion?: string;
+        }
+    ];
     Data: SubMenu;
     ClickHandler: Function;
     children?: React.ReactNode;
-    ChildClassActivion?: string;
     mainItemData?: Item;
 }
 export interface LinkGeneratorProps {
@@ -56,12 +64,16 @@ export interface LinkGeneratorProps {
     MobileVarient?: {};
     DesktopVarient?: {};
     Type: "Desktop" | "Mobile";
-    ParentClassName: string;
-    ChildClassName: string;
-    LinksWrapperClassName: string;
-    SublinkParentClassName: string;
-    SublinkChildClassName: string;
-    SublinkLinkWrapperClassName: string;
+    className: [
+        {
+            ParentClassName: string;
+            ChildClassName: string;
+            LinksWrapperClassName: string;
+            SublinkParentClassName: string;
+            SublinkChildClassName: string;
+            SublinkLinkWrapperClassName: string;
+        }
+    ];
     children?: React.ReactNode;
     Data: Link[];
     ClickHandler: Function;

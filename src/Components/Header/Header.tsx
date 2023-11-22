@@ -83,9 +83,13 @@ const Header: React.FC = () => {
                                 <div className="lg:w-full flex items-center">
                                     <SubMenuGenerator
                                         Type="Desktop"
-                                        ParentClassName="h-full flex"
-                                        ChildClassName="menu__item border-transparent"
-                                        ClassWhenActive="!border-jv-primary"
+                                        className={[
+                                            {
+                                                ParentClassName: "h-full flex",
+                                                ChildClassName: "menu__item border-transparent",
+                                                ClassWhenActive: "!border-jv-primary",
+                                            },
+                                        ]}
                                         ClickHandler={menuDesktopFire}
                                         Data={menu}
                                         Ref={elm}
@@ -221,8 +225,12 @@ const Header: React.FC = () => {
                                                 Boolean(MenuMobile.goAnimationTo === "Forward")
                                             )}
                                             Type="Mobile"
-                                            ParentClassName=""
-                                            ChildClassName="cursor-pointer text-xl text-jv-light my-5 flex items-center justify-between"
+                                            className={[
+                                                {
+                                                    ChildClassName:
+                                                        "cursor-pointer text-xl text-jv-light my-5 flex items-center justify-between",
+                                                },
+                                            ]}
                                             ClickHandler={menuMobileFire}
                                             Data={menu}
                                         >
@@ -235,8 +243,13 @@ const Header: React.FC = () => {
                                                 Boolean(MenuMobile.goAnimationTo === "Forward")
                                             )}
                                             Type="Mobile"
-                                            ParentClassName="h-5/6 overflow-y-auto px-4"
-                                            ChildClassName="cursor-pointer text-xl text-jv-light my-5 flex items-center justify-between"
+                                            className={[
+                                                {
+                                                    ParentClassName: "h-5/6 overflow-y-auto px-4",
+                                                    ChildClassName:
+                                                        "cursor-pointer text-xl text-jv-light my-5 flex items-center justify-between",
+                                                },
+                                            ]}
                                             ClickHandler={menuMobileFire}
                                             Data={MenuMobile.menuData.Item}
                                         >
@@ -249,12 +262,17 @@ const Header: React.FC = () => {
                                                 Boolean(MenuMobile.goAnimationTo === "Forward")
                                             )}
                                             Type="Mobile"
-                                            ParentClassName="w-full h-full"
-                                            ChildClassName="cursor-pointer text-xl text-jv-light my-4 flex flex-col"
-                                            LinksWrapperClassName="flex items-start flex-col"
-                                            SublinkParentClassName="my-3 flex items-start flex-col"
-                                            SublinkChildClassName="mr-5 flex text-base flex items-center"
-                                            SublinkLinkWrapperClassName="text-jv-light opacity-70"
+                                            className={[
+                                                {
+                                                    ParentClassName: "w-full h-full",
+                                                    ChildClassName:
+                                                        "cursor-pointer text-xl text-jv-light my-4 flex fle,x-col",
+                                                    LinksWrapperClassName: "flex items-start flex-col",
+                                                    SublinkParentClassName: "my-3 flex items-start flex-col",
+                                                    SublinkChildClassName: "mr-5 flex text-base items-center",
+                                                    SublinkLinkWrapperClassName: "text-jv-light opacity-70",
+                                                },
+                                            ]}
                                             ClickHandler={menuMobileFire}
                                             Data={MenuMobile.menuData.Links}
                                             isChildrenShow
