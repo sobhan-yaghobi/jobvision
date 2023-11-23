@@ -47,7 +47,7 @@ const SearchFrom: React.FC = memo(() => {
             <div className="w-full flex flex-col items-center justify-between md:flex-row">
                 <TextInput
                     value={routeTitle}
-                    onChange={(value) => setValue("title", value)}
+                    onChange={(value) => setValue({ name: "title", value })}
                     placeholder="عنوان شغلی یا شرکت"
                     className={[{ inputwrapperClassName: "mx-1 my-1 md:my-0" }]}
                     icon={
@@ -63,7 +63,7 @@ const SearchFrom: React.FC = memo(() => {
                 ></TextInput>
                 <TextInput
                     value={routeJobsTag}
-                    onChange={(value) => setValue("jobsGroup", value)}
+                    onChange={(value) => setValue({ name: "jobsGroup", value })}
                     placeholder="گروه شغلی"
                     className={[{ inputwrapperClassName: "mx-1 my-1 md:my-0" }]}
                     icon={
@@ -96,11 +96,11 @@ const SearchFrom: React.FC = memo(() => {
                     <ItemGenerator
                         array={groupJobs}
                         mainValue={routeJobsTag}
-                        setMainValue={(value) => setValue("jobsGroup", value)}
+                        setMainValue={(value) => setValue({ name: "jobsGroup", value })}
                     ></ItemGenerator>
                 </TextInput>
                 <TextInput
-                    onChange={(value) => setValue("city", value)}
+                    onChange={(value) => setValue({ name: "city", value })}
                     value={routeCity}
                     placeholder="شهر"
                     className={[{ inputwrapperClassName: "mx-1 my-1 md:my-0" }]}
@@ -118,7 +118,7 @@ const SearchFrom: React.FC = memo(() => {
                     <ItemGenerator
                         array={citis}
                         mainValue={routeCity}
-                        setMainValue={(value) => setValue("city", value)}
+                        setMainValue={(value) => setValue({ name: "city", value })}
                     ></ItemGenerator>
                 </TextInput>
                 <Button

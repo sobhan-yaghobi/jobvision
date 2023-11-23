@@ -222,7 +222,7 @@ const Jobs: React.FC = () => {
                                         type="HideSendCv"
                                         clickHandler={() => {
                                             setMainJobInfo({ isShow: true, mainInfo: { ...item.data } });
-                                            setValue("advertisingId", item.data.id);
+                                            setValue({ name: "advertisingId", value: item.data.id });
                                         }}
                                         data={{ ...item.data }}
                                         isActive={item.data.id === mainJobInfo.mainInfo?.id ? true : false}
