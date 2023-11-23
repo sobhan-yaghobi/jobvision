@@ -1,20 +1,21 @@
 // Hooks
-import React, { memo, useState, useEffect } from "react";
+import React, { memo } from "react";
 import useSearchForm from "../../Hooks/useSearchForm";
+import { useNavigate } from "react-router-dom";
 
 // Types
-import { ItemGeneratorProps, TypeCitis, TypeGroupsJobs, citis, groupJobs } from "./SearchForm.type";
+import { ItemGeneratorProps, citis, groupJobs } from "./SearchForm.type";
 
 // Components
 import { TextInput } from "../Input/Input";
 import Button from "../Button/Button";
 
 // Functions
-import uuidGenerator from "../../Utils/UuidGenerator";
 import { uniqBy } from "lodash";
 
 const SearchFrom: React.FC = memo(() => {
-    const { route, setRoute, routeTitle: jobTitle, routeJobsTag: jobTag, routeCity: jobCity } = useSearchForm();
+    const navigate = useNavigate();
+    const { setRoute, routeTitle: jobTitle, routeJobsTag: jobTag, routeCity: jobCity, getForm } = useSearchForm();
 
     const setRouteAction = (name: string, value: string): void =>
         setRoute((prev) => {
@@ -65,7 +66,7 @@ const SearchFrom: React.FC = memo(() => {
                     }
                     register={{}}
                     iconSide="Right"
-                />
+                ></TextInput>
                 <TextInput
                     value={jobTag}
                     onChange={(value) => setRouteAction("jobsGroup", value)}
@@ -131,9 +132,13 @@ const SearchFrom: React.FC = memo(() => {
                     size="small"
                     ClassName="hover:!bg-jv-primary hover:!text-jv-light w-full my-1 md:w-auto"
                     isLoading={false}
-                    ClickHandler={() => {}}
+                    ClickHandler={() => {
+                        navigate(
+                            `/jobs?title=${getForm().title}&jobsGroup=${getForm().jobsGroup}&city=${getForm().city}`
+                        );
+                    }}
                 >
-                    جستجو کن
+                    جستجو در مشاغل
                 </Button>
             </div>
         </>
