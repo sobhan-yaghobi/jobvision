@@ -57,7 +57,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 const Jobs: React.FC = () => {
-    const { route, setRoute, routeTitle, routeJobsTag, routeCity } = useSearchForm();
+    const { route, setValue, routeTitle, routeJobsTag, routeCity } = useSearchForm();
     //? ---------------------------------- Notification
     const [isNotification, setIsNotification] = useState(false);
     const [notifPending, setNotifPending] = useState(isNotification);
@@ -222,10 +222,7 @@ const Jobs: React.FC = () => {
                                         type="HideSendCv"
                                         clickHandler={() => {
                                             setMainJobInfo({ isShow: true, mainInfo: { ...item.data } });
-                                            setRoute((prev) => {
-                                                prev.set("advertisingId", item.data.id);
-                                                return prev;
-                                            });
+                                            setValue("advertisingId", item.data.id);
                                         }}
                                         data={{ ...item.data }}
                                         isActive={item.data.id === mainJobInfo.mainInfo?.id ? true : false}

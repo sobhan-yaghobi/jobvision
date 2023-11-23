@@ -15,13 +15,7 @@ import { uniqBy } from "lodash";
 
 const SearchFrom: React.FC = memo(() => {
     const navigate = useNavigate();
-    const { setRoute, routeTitle: jobTitle, routeJobsTag: jobTag, routeCity: jobCity, getForm } = useSearchForm();
-
-    const setRouteAction = (name: string, value: string): void =>
-        setRoute((prev) => {
-            prev.set(name, value);
-            return prev;
-        });
+    const { setValue, routeTitle, routeJobsTag, routeCity, getForm } = useSearchForm();
 
     const ItemGenerator: React.FC<ItemGeneratorProps> = ({ array, mainValue, setMainValue }) => {
         const listItems: ItemGeneratorProps["array"] = array.filter((item) => item.name.includes(mainValue) && item);
@@ -52,8 +46,8 @@ const SearchFrom: React.FC = memo(() => {
         <>
             <div className="w-full flex flex-col items-center justify-between md:flex-row">
                 <TextInput
-                    value={jobTitle}
-                    onChange={(value) => setRouteAction("title", value)}
+                    value={routeTitle}
+                    onChange={(value) => setValue("title", value)}
                     placeholder="عنوان شغلی یا شرکت"
                     className={[{ inputwrapperClassName: "mx-1 my-1 md:my-0" }]}
                     icon={
@@ -68,8 +62,8 @@ const SearchFrom: React.FC = memo(() => {
                     iconSide="Right"
                 ></TextInput>
                 <TextInput
-                    value={jobTag}
-                    onChange={(value) => setRouteAction("jobsGroup", value)}
+                    value={routeJobsTag}
+                    onChange={(value) => setValue("jobsGroup", value)}
                     placeholder="گروه شغلی"
                     className={[{ inputwrapperClassName: "mx-1 my-1 md:my-0" }]}
                     icon={
@@ -101,13 +95,13 @@ const SearchFrom: React.FC = memo(() => {
                 >
                     <ItemGenerator
                         array={groupJobs}
-                        mainValue={jobTag}
-                        setMainValue={(value) => setRouteAction("jobsGroup", value)}
+                        mainValue={routeJobsTag}
+                        setMainValue={(value) => setValue("jobsGroup", value)}
                     ></ItemGenerator>
                 </TextInput>
                 <TextInput
-                    onChange={(value) => setRouteAction("city", value)}
-                    value={jobCity}
+                    onChange={(value) => setValue("city", value)}
+                    value={routeCity}
                     placeholder="شهر"
                     className={[{ inputwrapperClassName: "mx-1 my-1 md:my-0" }]}
                     icon={
@@ -123,8 +117,8 @@ const SearchFrom: React.FC = memo(() => {
                 >
                     <ItemGenerator
                         array={citis}
-                        mainValue={jobCity}
-                        setMainValue={(value) => setRouteAction("city", value)}
+                        mainValue={routeCity}
+                        setMainValue={(value) => setValue("city", value)}
                     ></ItemGenerator>
                 </TextInput>
                 <Button

@@ -35,7 +35,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { GoTrash } from "react-icons/go";
 
 const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnProMode, setIsFilterOnProMode }) => {
-    const { setRoute } = useSearchForm();
+    const { clearForm: clearRouteParams } = useSearchForm();
     const [WindowsSize] = useWindowsSize();
     const [menuMobile, setMenuMobile] = useState<{ mode: "ShowSettingFilter" | "ShowFilter"; isShow: boolean }>({
         mode: "ShowFilter",
@@ -63,9 +63,7 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
     }, [selectedFilters]);
 
     const removeAllFillterAction = () => {
-        console.log("clic");
-        setRoute((prev) => ({ ...prev, title: "", jobsGroup: "", city: "" }));
-
+        clearRouteParams();
         setSelectedFilters([]);
     };
 
