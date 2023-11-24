@@ -8,6 +8,7 @@ import {
     SubMenuGeneratorProps,
     ItemGeneratorProps,
     LinkGeneratorProps,
+    SubLink,
 } from "./menuItem.type";
 
 // Animations
@@ -20,7 +21,7 @@ import ErrorBox from "../ErrorBox/ErrorBox";
 import { twMerge } from "tailwind-merge";
 import useSearchForm from "../../Hooks/useSearchForm";
 
-export const MenuDesktopItemGenerate: React.FC<MenuDesktopItemGenerateProps> = ({ menuData }) => {
+export const MenuDesktopItemGenerate: React.FC<MenuDesktopItemGenerateProps> = ({ menuData, onClose }) => {
     if (menuData.megaMenu) {
         const [mainItem, setMainItem] = useState<Item>({} as Item);
 
@@ -48,8 +49,11 @@ export const MenuDesktopItemGenerate: React.FC<MenuDesktopItemGenerateProps> = (
                     ></ItemGenerator>
                     {mainItem.links.length ? (
                         <LinkGenerator
-                            DesktopVarient={ShowOpacity}
                             Type="Desktop"
+                            DesktopVarient={ShowOpacity}
+                            Data={mainItem.links}
+                            mainItem={mainItem}
+                            isChildrenShow
                             className={[
                                 {
                                     ParentClassName:
@@ -66,9 +70,7 @@ export const MenuDesktopItemGenerate: React.FC<MenuDesktopItemGenerateProps> = (
                                         "text-jv-gray w-full inline-block hover:text-jv-primary",
                                 },
                             ]}
-                            Data={mainItem.links}
-                            ClickHandler={() => {}}
-                            isChildrenShow
+                            onClose={onClose}
                         ></LinkGenerator>
                     ) : (
                         <ErrorBox errTitle="منویی یافت نشد" />
@@ -182,7 +184,7 @@ export const ItemGenerator: React.FC<ItemGeneratorProps> = (props) => {
         props.Type === "Desktop"
             ? props.ClickHandler(item)
             : props.Type === "Mobile"
-            ? props.ClickHandler({ SpecialType: "isShowLinks", data: item.links })
+            ? props.ClickHandler({ SpecialType: "isShowLinks", data: item.links, mainItem: item })
             : undefined;
     return (
         <>
@@ -211,7 +213,7 @@ export const ItemGenerator: React.FC<ItemGeneratorProps> = (props) => {
                         )}
                     >
                         <span>{item.title}</span>
-                        {item.links.length ? props.children : null}
+                        {item.links.length && props.Type === "Mobile" ? props.children : null}
                     </li>
                 ))}
             </motion.ul>
@@ -221,15 +223,16 @@ export const ItemGenerator: React.FC<ItemGeneratorProps> = (props) => {
 
 export const LinkGenerator: React.FC<React.PropsWithChildren<LinkGeneratorProps>> = (props) => {
     const { navigate_SetValue } = useSearchForm();
-    const clickAction = (item: Link) => {
-        if (props.Type === "Desktop") {
-            // ClickHandler(item);
-        } else {
-            console.log("Item Mobile Click");
-        }
-    };
+    const linkClickAction = (value: string) => {
+        console.log("linkClickAction", value);
 
-    console.log("Data", props.Data);
+        props.mainItem.link === "most-jobs"
+            ? navigate_SetValue({ to: "/jobs", name: "jobsGroup", value })
+            : props.mainItem.link === "cityes"
+            ? navigate_SetValue({ to: "/jobs", name: "city", value })
+            : navigate_SetValue({ to: "/jobs", name: "title", value: "" });
+        props.onClose();
+    };
 
     return (
         <>
@@ -248,7 +251,10 @@ export const LinkGenerator: React.FC<React.PropsWithChildren<LinkGeneratorProps>
             >
                 {props.Data.map((link) => (
                     <li key={link.id} className={props.className[0].ChildClassName}>
-                        <div onClick={() => clickAction(link)} className={props.className[0].LinksWrapperClassName}>
+                        <div
+                            onClick={() => linkClickAction(link.title)}
+                            className={props.className[0].LinksWrapperClassName}
+                        >
                             <span className={props.className[0].LinksTitleClassName}>{link.title}</span>
 
                             {link.sublinks.length && props.isChildrenShow ? (
@@ -266,7 +272,14 @@ export const LinkGenerator: React.FC<React.PropsWithChildren<LinkGeneratorProps>
                                     className={props.className[0].SublinkParentClassName}
                                 >
                                     {link.sublinks.map((subLink) => (
-                                        <li key={subLink.id} className={props.className[0].SublinkChildClassName}>
+                                        <li
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                linkClickAction(subLink.title);
+                                            }}
+                                            key={subLink.id}
+                                            className={props.className[0].SublinkChildClassName}
+                                        >
                                             <span className={props.className[0].SublinkLinkWrapperClassName}>
                                                 {subLink.title}
                                             </span>

@@ -1,6 +1,6 @@
-import React, { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // Types
-import { Link, SubMenu } from "../../Components/MenuItem/menuItem.type";
+import { Item, Link, SubMenu } from "../../Components/MenuItem/menuItem.type";
 import { DesktopMenuType, menuMobileFireProps, MobileMenuType } from "./useShowMenu.type";
 // Functions
 import { mapValues } from "lodash";
@@ -8,10 +8,11 @@ import { mapValues } from "lodash";
 const useShowMenu = (menu: SubMenu[]) => {
     const elm = useRef<HTMLLIElement>(null);
 
-    const [menuMobile, setMenuMobiele] = useState<MobileMenuType>({
+    const menuMobileDefaultValue: MobileMenuType = {
         menuData: {
-            SubMenu: [] as SubMenu[],
-            Item: {} as SubMenu,
+            SubMenus: [] as SubMenu[],
+            SubMenu: {} as SubMenu,
+            Item: {} as Item,
             Links: [] as Link[],
         },
         isOpen: false,
@@ -22,7 +23,8 @@ const useShowMenu = (menu: SubMenu[]) => {
         },
         goButtonTitle: "بازگشت",
         goAnimationTo: "Back",
-    });
+    };
+    const [menuMobile, setMenuMobiele] = useState<MobileMenuType>({ ...menuMobileDefaultValue });
     const [menuDesktop, setMenuDesktop] = useState<DesktopMenuType>({
         mainItem: {} as SubMenu,
         isShow: false,
@@ -33,8 +35,12 @@ const useShowMenu = (menu: SubMenu[]) => {
         width: null,
     });
 
-    const menuMobileFire = ({ SpecialType, data }: menuMobileFireProps) => {
-        if (SpecialType === "isShowSubMenu") {
+    useEffect(() => {
+        console.log("menuMobile", menuMobile);
+    }, [menuMobile]);
+
+    const menuMobileFire = (props: menuMobileFireProps) => {
+        if (props.SpecialType === "isShowSubMenu") {
             setMenuMobiele((prev) => ({
                 ...prev,
                 goAnimationTo: "Back",
@@ -45,12 +51,13 @@ const useShowMenu = (menu: SubMenu[]) => {
                     Links: false,
                 },
                 menuData: {
-                    SubMenu: menu,
-                    Item: {} as SubMenu,
+                    SubMenus: menu,
+                    SubMenu: {} as SubMenu,
                     Links: [] as Link[],
+                    Item: {} as Item,
                 },
             }));
-        } else if (SpecialType === "isShowItem") {
+        } else if (props.SpecialType === "isShowItem") {
             setMenuMobiele((prev) => ({
                 ...prev,
                 goAnimationTo: "Back",
@@ -61,12 +68,13 @@ const useShowMenu = (menu: SubMenu[]) => {
                     Links: false,
                 },
                 menuData: {
-                    SubMenu: prev.menuData.SubMenu,
-                    Item: data,
+                    SubMenus: prev.menuData.SubMenus,
+                    SubMenu: props.data,
                     Links: [] as Link[],
+                    Item: {} as Item,
                 },
             }));
-        } else if (SpecialType === "isShowLinks") {
+        } else if (props.SpecialType === "isShowLinks") {
             setMenuMobiele((prev) => ({
                 ...prev,
                 goAnimationTo: "Back",
@@ -77,13 +85,16 @@ const useShowMenu = (menu: SubMenu[]) => {
                     Links: !prev.isShow.Links,
                 },
                 menuData: {
-                    SubMenu: menu,
-                    Item: prev.menuData.Item,
-                    Links: data,
+                    SubMenus: menu,
+                    SubMenu: prev.menuData.SubMenu,
+                    Links: props.data,
+                    Item: props.mainItem,
                 },
             }));
         }
     };
+
+    const closeMenuMobile = () => setMenuMobiele({ ...menuMobileDefaultValue });
 
     const backButtonAcion = () => {
         if (menuMobile.isShow.Item) {
@@ -145,7 +156,19 @@ const useShowMenu = (menu: SubMenu[]) => {
         });
     };
 
-    return { elm, menuMobile, backButtonAcion, menuDesktop, menuMobileFire, menuMobileToggle, menuDesktopFire };
+    const closeMenuDesktop = () => menuDesktopFire("", false);
+
+    return {
+        elm,
+        menuMobile,
+        menuDesktop,
+        backButtonAcion,
+        menuMobileFire,
+        closeMenuMobile,
+        menuMobileToggle,
+        menuDesktopFire,
+        closeMenuDesktop,
+    };
 };
 
 export default useShowMenu;

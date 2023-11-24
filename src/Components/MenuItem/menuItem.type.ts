@@ -1,3 +1,4 @@
+import { isForLinks } from "../../Hooks/useShowMenu/useShowMenu.type";
 import uuidGenerator from "../../Utils/UuidGenerator";
 
 export interface SubLink {
@@ -20,6 +21,7 @@ export interface SubMenu extends SubLink {
 }
 
 export interface MenuDesktopItemGenerateProps {
+    onClose: () => void;
     menuData: SubMenu;
 }
 
@@ -38,7 +40,7 @@ export type SubMenuGeneratorMain = {
     IsAnimation?: boolean;
 };
 
-export type SubMenuGenerator =
+export type SubMenuGeneratorTypes =
     | {
           Type: "Desktop";
           DesktopVarient?: {};
@@ -49,13 +51,9 @@ export type SubMenuGenerator =
           MobileVarient?: {};
       };
 
-export type SubMenuGeneratorProps = SubMenuGeneratorMain & SubMenuGenerator;
+export type SubMenuGeneratorProps = SubMenuGeneratorMain & SubMenuGeneratorTypes;
 
-export interface ItemGeneratorProps {
-    IsAnimation?: boolean;
-    MobileVarient?: {};
-    DesktopVarient?: {};
-    Type: "Desktop" | "Mobile";
+export type ItemGeneratorMain = {
     className: [
         {
             ParentClassName: string;
@@ -64,10 +62,23 @@ export interface ItemGeneratorProps {
         }
     ];
     Data: SubMenu;
-    ClickHandler: Function;
-    children?: React.ReactNode;
-    mainItemData?: Item;
-}
+    IsAnimation?: boolean;
+};
+export type ItemGeneratorTypes =
+    | {
+          Type: "Desktop";
+          DesktopVarient?: {};
+          mainItemData?: Item;
+          ClickHandler: (item: Item) => void;
+      }
+    | {
+          Type: "Mobile";
+          MobileVarient?: {};
+          children: React.ReactNode;
+          ClickHandler: ({}: isForLinks) => void;
+      };
+
+export type ItemGeneratorProps = ItemGeneratorMain & ItemGeneratorTypes;
 export interface LinkGeneratorProps {
     IsAnimation?: boolean;
     MobileVarient?: {};
@@ -86,7 +97,8 @@ export interface LinkGeneratorProps {
     ];
     children?: React.ReactNode;
     Data: Link[];
-    ClickHandler: Function;
+    onClose: MenuDesktopItemGenerateProps["onClose"];
+    mainItem: Item;
     isChildrenShow?: boolean;
 }
 

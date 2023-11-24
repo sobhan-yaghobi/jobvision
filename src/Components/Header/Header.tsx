@@ -34,8 +34,17 @@ import { AuthContext } from "../../Context/AuthContext";
 const Header: React.FC = () => {
     const authContext = useContext(AuthContext);
 
-    const { elm, menuMobile, backButtonAcion, menuDesktop, menuMobileFire, menuMobileToggle, menuDesktopFire } =
-        useShowMenu(menu);
+    const {
+        elm,
+        menuDesktop,
+        menuDesktopFire,
+        closeMenuDesktop,
+        menuMobile,
+        menuMobileFire,
+        closeMenuMobile,
+        menuMobileToggle,
+        backButtonAcion,
+    } = useShowMenu(menu);
 
     const megaBgClickAction = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         const target = event.target as HTMLDivElement;
@@ -165,7 +174,10 @@ const Header: React.FC = () => {
                             }`}
                             variants={LongStripVertical_Ex}
                         >
-                            <MenuDesktopItemGenerate menuData={menuDesktop.mainItem}></MenuDesktopItemGenerate>
+                            <MenuDesktopItemGenerate
+                                onClose={closeMenuDesktop}
+                                menuData={menuDesktop.mainItem}
+                            ></MenuDesktopItemGenerate>
                         </motion.div>
                     </motion.div>
                 ) : null}
@@ -180,7 +192,7 @@ const Header: React.FC = () => {
                             initial="hidden"
                             animate="visible"
                             exit="exit"
-                            className="bg-jv-bgColor fixed top-0 right-0 w-full h-full z-30"
+                            className="bg-jv-bgColor fixed top-0 right-0 w-full h-full z-30 lg:hidden"
                         ></motion.div>
                         <motion.div
                             variants={ShowHideClipFromBottom_Ex}
@@ -220,10 +232,11 @@ const Header: React.FC = () => {
                                 <div className="h-full overflow-y-auto px-4 no-scrollbar">
                                     {menuMobile.isShow.SubMenu ? (
                                         <SubMenuGenerator
+                                            Type="Mobile"
+                                            Data={menu}
                                             MobileVarient={ShowHideMenuItemChildToLeftOrRight(
                                                 Boolean(menuMobile.goAnimationTo === "Forward")
                                             )}
-                                            Type="Mobile"
                                             className={[
                                                 {
                                                     ChildClassName:
@@ -231,17 +244,16 @@ const Header: React.FC = () => {
                                                 },
                                             ]}
                                             ClickHandler={menuMobileFire}
-                                            Data={menu}
                                         >
                                             <img src={ArrowLeftIconWhite} alt="" />
                                         </SubMenuGenerator>
                                     ) : menuMobile.isShow.Item ? (
                                         <ItemGenerator
-                                            DesktopVarient={ShowOpacity}
+                                            Type="Mobile"
+                                            Data={menuMobile.menuData.SubMenu}
                                             MobileVarient={ShowHideMenuItemChildToLeftOrRight(
                                                 Boolean(menuMobile.goAnimationTo === "Forward")
                                             )}
-                                            Type="Mobile"
                                             className={[
                                                 {
                                                     ParentClassName: "h-5/6 overflow-y-auto px-4",
@@ -250,17 +262,18 @@ const Header: React.FC = () => {
                                                 },
                                             ]}
                                             ClickHandler={menuMobileFire}
-                                            Data={menuMobile.menuData.Item}
                                         >
                                             <img src={ArrowLeftIconWhite} alt="" />
                                         </ItemGenerator>
                                     ) : menuMobile.isShow.Links ? (
                                         <LinkGenerator
-                                            DesktopVarient={ShowOpacity}
+                                            Type="Mobile"
+                                            Data={menuMobile.menuData.Links}
+                                            mainItem={menuMobile.menuData.Item}
+                                            isChildrenShow
                                             MobileVarient={ShowHideMenuItemChildToLeftOrRight(
                                                 Boolean(menuMobile.goAnimationTo === "Forward")
                                             )}
-                                            Type="Mobile"
                                             className={[
                                                 {
                                                     ParentClassName: "w-full h-full",
@@ -272,9 +285,8 @@ const Header: React.FC = () => {
                                                     SublinkLinkWrapperClassName: "text-jv-light opacity-70",
                                                 },
                                             ]}
-                                            ClickHandler={menuMobileFire}
-                                            Data={menuMobile.menuData.Links}
-                                            isChildrenShow
+                                            // ClickHandler={menuMobileFire}
+                                            onClose={closeMenuMobile}
                                         >
                                             <img src={LeftIcon} alt="" />
                                         </LinkGenerator>
