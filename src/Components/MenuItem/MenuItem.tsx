@@ -224,8 +224,6 @@ export const ItemGenerator: React.FC<ItemGeneratorProps> = (props) => {
 export const LinkGenerator: React.FC<React.PropsWithChildren<LinkGeneratorProps>> = (props) => {
     const { navigate_SetValue } = useSearchForm();
     const linkClickAction = (value: string) => {
-        console.log("linkClickAction", value);
-
         props.mainItem.link === "most-jobs"
             ? navigate_SetValue({ to: "/jobs", name: "jobsGroup", value })
             : props.mainItem.link === "cityes"

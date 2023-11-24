@@ -35,10 +35,6 @@ const useShowMenu = (menu: SubMenu[]) => {
         width: null,
     });
 
-    useEffect(() => {
-        console.log("menuMobile", menuMobile);
-    }, [menuMobile]);
-
     const menuMobileFire = (props: menuMobileFireProps) => {
         if (props.SpecialType === "isShowSubMenu") {
             setMenuMobiele((prev) => ({
