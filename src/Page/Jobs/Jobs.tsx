@@ -163,7 +163,7 @@ const Jobs: React.FC = () => {
 
             <div className="w-full py-5 px-2 md:px-10 lg:px-24 bg-jv-light flex">
                 {/*//? -------------------------------------- List Boxs -------------------------------------- */}
-                <div className="listBox ml-2 w-full flex flex-col lg:w-5/12 text-xs xl:text-base">
+                <div className="listBox w-full flex flex-col lg:w-5/12 text-xs xl:text-base">
                     <Button
                         textColor="light"
                         size="middle"
@@ -177,7 +177,7 @@ const Jobs: React.FC = () => {
                         فعال سازی اطلاع رسانی شغل ها
                     </Button>
                     <div className="p-3 mt-2 rounded-lg bg-jv-white flex items-center justify-between">
-                        <section>{AdvertisingArray.length} فرصت شغلی فعال</section>
+                        <section>{boxList.length} فرصت شغلی فعال</section>
                         {Object.values(orderMain).length ? (
                             <section className="flex items-center">
                                 <span>مرتب سازی :</span>
@@ -408,7 +408,7 @@ const BoxInfoCard: React.FC<BoxInfoCardProps> = ({ mainInfoJob, mainItemInfo, se
             </div>
             <div className="px-3 w-full border-b-2">
                 <div className="flex flex-col w-full">
-                    <p className="text-jv-lightGray2x text-sm">تهران ، تهرانپارس</p>
+                    <p className="text-jv-lightGray2x text-sm">{mainInfoJob.company.location}</p>
                     <div className="mb-2 flex flex-wrap">
                         <div className="box-info-type">امکان جذب کارآموز</div>
                         <div className="box-info-type">امکان دورکاری</div>
