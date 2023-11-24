@@ -76,7 +76,7 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
                     <div className="flex items-center mb-3 flex-nowrap">
                         {jobTypes.map((type) =>
                             type === "TELECOMMUTING" || type === "INTERSHIP" ? (
-                                <div className="box-info-type text-jv-lightGray2x truncate">
+                                <div key={`job-type-${type}`} className="box-info-type text-jv-lightGray2x truncate">
                                     {type === "TELECOMMUTING"
                                         ? "امکان دورکاری"
                                         : type === "INTERSHIP"

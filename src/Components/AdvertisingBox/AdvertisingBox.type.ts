@@ -172,7 +172,7 @@ const AdvertisingArray: AdvertisingBoxMainProps[] = [
                 isImportant: true,
                 responsibleEmployer: true,
             },
-            type: ["IS_EMPLOYMENT_OF_THE_DISABLED", "MILITARY_ORDER", "RIGHTS_AMONG_12_20_MILLION", "INTERSHIP"],
+            type: ["IS_EMPLOYMENT_OF_THE_DISABLED", "MILITARY_ORDER", "INTERSHIP"],
             adTags: [
                 "front developer",
                 "react js",
@@ -379,7 +379,7 @@ const AdvertisingArray: AdvertisingBoxMainProps[] = [
                 isImportant: false,
                 responsibleEmployer: false,
             },
-            type: ["TELECOMMUTING", "PUBLICATION_DATE_LAST_1_MONTH", "PUBLICATION_DATE_LAST_3_DAY"],
+            type: ["TELECOMMUTING", "BENEFITS_AND_FACILITIES_PARKING"],
             CreateAt: new Date(2023, 9, 8, 14, 36),
             // Date(year,month,day,hours,minutes,seconds)
         },
@@ -450,13 +450,7 @@ const AdvertisingArray: AdvertisingBoxMainProps[] = [
                 isImportant: false,
                 responsibleEmployer: false,
             },
-            type: [
-                "TELECOMMUTING",
-                "MILITARY_ORDER",
-                "INTERSHIP",
-                "RIGHTS_OVER_60_MILLION",
-                "BENEFITS_AND_FACILITIES_PARKING",
-            ],
+            type: ["MILITARY_ORDER", "INTERSHIP", "BENEFITS_AND_FACILITIES_REWARD"],
             CreateAt: new Date(2023, 9, 8, 15, 36),
             // Date(year,month,day,hours,minutes,seconds)
         },
@@ -482,7 +476,7 @@ const AdvertisingArray: AdvertisingBoxMainProps[] = [
             jobInfo: {
                 rightsPrice: [50, 65],
                 workTime: "نیمه وقت",
-                typeOfCooperation: "TYPE_OF_COOPERTION_PART_TIME",
+                typeOfCooperation: "TYPE_OF_COOPERTION_FULL_TIME",
                 // businessTrips: ,
                 benefitsAndFacilities: "امریه‌ی سربازی -بیمه درمان تکمیلی -بسته ها و هدایای مناسبتی",
                 keyIndicators: [
@@ -527,7 +521,7 @@ const AdvertisingArray: AdvertisingBoxMainProps[] = [
                 isImportant: true,
                 responsibleEmployer: false,
             },
-            type: ["TELECOMMUTING", "RIGHTS_OVER_60_MILLION", "TYPE_OF_COOPERTION_FULL_TIME"],
+            type: ["TELECOMMUTING", "TYPE_OF_COOPERTION_FULL_TIME"],
             CreateAt: new Date(2023, 9, 8, 15, 49),
             // Date(year,month,day,hours,minutes,seconds)
         },
@@ -598,7 +592,7 @@ const AdvertisingArray: AdvertisingBoxMainProps[] = [
                 isImportant: false,
                 responsibleEmployer: false,
             },
-            type: ["RIGHTS_AMONG_4_8_MILLION", "TYPE_OF_COOPERTION_PART_TIME"],
+            type: ["TYPE_OF_COOPERTION_PART_TIME"],
             CreateAt: new Date(2023, 9, 8, 15, 49),
             // Date(year,month,day,hours,minutes,seconds)
         },
@@ -669,7 +663,7 @@ const AdvertisingArray: AdvertisingBoxMainProps[] = [
                 isImportant: false,
                 responsibleEmployer: false,
             },
-            type: ["RIGHTS_AMONG_8_12_MILLION", "TYPE_OF_COOPERTION_PART_TIME", "BENEFITS_AND_FACILITIES_REWARD"],
+            type: ["TYPE_OF_COOPERTION_PART_TIME", "BENEFITS_AND_FACILITIES_REWARD"],
             CreateAt: new Date(2023, 9, 8, 15, 50),
             // Date(year,month,day,hours,minutes,seconds)
         },
@@ -740,7 +734,7 @@ const AdvertisingArray: AdvertisingBoxMainProps[] = [
                 isImportant: true,
                 responsibleEmployer: true,
             },
-            type: ["RIGHTS_AMONG_4_8_MILLION", "TYPE_OF_COOPERTION_PART_TIME", "BENEFITS_AND_FACILITIES_PARKING"],
+            type: ["TYPE_OF_COOPERTION_FULL_TIME", "SENIORITY_LEVEL_EXPERT"],
             CreateAt: new Date(2023, 9, 8, 16, 0),
             // Date(year,month,day,hours,minutes,seconds)
         },

@@ -188,6 +188,7 @@ const Header: React.FC = () => {
                 {menuMobile.isOpen ? (
                     <>
                         <motion.div
+                            onClick={closeMenuMobile}
                             variants={ShowAndHideOpacity_Ex}
                             initial="hidden"
                             animate="visible"
@@ -286,7 +287,6 @@ const Header: React.FC = () => {
                                                     SublinkLinkWrapperClassName: "text-jv-light opacity-70",
                                                 },
                                             ]}
-                                            // ClickHandler={menuMobileFire}
                                             onClose={closeMenuMobile}
                                         >
                                             <img src={LeftIcon} alt="" />

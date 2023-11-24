@@ -43,6 +43,10 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
     });
     const [selectedFilters, setSelectedFilters] = useState<selectedFiltersType[]>([]);
 
+    useEffect(() => {
+        console.log("selectedFilters", selectedFilters);
+    }, [selectedFilters]);
+
     const [mainFilterMenu, setMainFilterMenu] = useState<{
         data: FilterType;
         position: {
@@ -410,6 +414,13 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
                         exit="exit"
                         transition={{ duration: 0.4 }}
                     >
+                        <div
+                            onClick={() => {
+                                setMenuMobile({ mode: "ShowFilter", isShow: false });
+                                diActiveMenu();
+                            }}
+                            className="w-full h-full top-0 left-0 fixed bg-jv-bgColor"
+                        ></div>
                         <motion.div
                             className="w-full pt-5 fixed overflow-hidden bottom-0 right-0 rounded-t-xl bg-jv-white"
                             initial={{ opacity: 0 }}
