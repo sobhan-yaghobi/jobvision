@@ -222,10 +222,11 @@ const Header: React.FC = () => {
                                             textColor="light"
                                             ClickHandler={backButtonAcion}
                                             size="large"
-                                            ClassName="w-full flex justify-between items-center border-b-2 border-solid border-jv-light"
+                                            ClassName="w-full flex flex-row-reverse justify-between items-center border-b-2 border-solid border-jv-light"
+                                            IconType="JSX_ICON"
+                                            Icon={<img className="rotate-180" src={ArrowLeftIconWhite} alt="" />}
                                         >
                                             <span>{menuMobile.goButtonTitle}</span>
-                                            <img className="rotate-180" src={ArrowLeftIconWhite} alt="" />
                                         </Button>
                                     </div>
                                 )}
@@ -278,10 +279,10 @@ const Header: React.FC = () => {
                                                 {
                                                     ParentClassName: "w-full h-full",
                                                     ChildClassName:
-                                                        "cursor-pointer text-xl text-jv-light my-4 flex fle,x-col",
+                                                        "cursor-pointer text-xl text-jv-light flex flex-col my-3",
                                                     LinksWrapperClassName: "flex items-start flex-col",
-                                                    SublinkParentClassName: "my-3 flex items-start flex-col",
-                                                    SublinkChildClassName: "mr-5 flex text-base items-center",
+                                                    SublinkParentClassName: "flex items-start flex-col",
+                                                    SublinkChildClassName: "mr-5 flex text-base items-center mt-2",
                                                     SublinkLinkWrapperClassName: "text-jv-light opacity-70",
                                                 },
                                             ]}

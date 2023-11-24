@@ -249,11 +249,13 @@ export const LinkGenerator: React.FC<React.PropsWithChildren<LinkGeneratorProps>
             >
                 {props.Data.map((link) => (
                     <li key={link.id} className={props.className[0].ChildClassName}>
-                        <div
-                            onClick={() => linkClickAction(link.title)}
-                            className={props.className[0].LinksWrapperClassName}
-                        >
-                            <span className={props.className[0].LinksTitleClassName}>{link.title}</span>
+                        <div className={props.className[0].LinksWrapperClassName}>
+                            <span
+                                onClick={() => linkClickAction(link.title)}
+                                className={props.className[0].LinksTitleClassName}
+                            >
+                                {link.title}
+                            </span>
 
                             {link.sublinks.length && props.isChildrenShow ? (
                                 <motion.ul
@@ -271,10 +273,7 @@ export const LinkGenerator: React.FC<React.PropsWithChildren<LinkGeneratorProps>
                                 >
                                     {link.sublinks.map((subLink) => (
                                         <li
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                linkClickAction(subLink.title);
-                                            }}
+                                            onClick={(e) => linkClickAction(subLink.title)}
                                             key={subLink.id}
                                             className={props.className[0].SublinkChildClassName}
                                         >

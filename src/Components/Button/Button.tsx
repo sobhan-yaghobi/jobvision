@@ -10,6 +10,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 // Icons
 import { AiOutlineLoading } from "react-icons/ai";
+import { twMerge } from "tailwind-merge";
 
 type ButtonMainProps = {
     isLoading: boolean;
@@ -57,12 +58,15 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = (props) => {
        ${props.textColor === "primary" ? "bg-jv-light" : "bg-jv-primary"}
        ${!props.noBorder ? `border-2 border-solid rounded-lg ${borderColorStyle} ` : ""}`;
 
-    const classList = `
-  ${loadingClass}
-  ${sizeClass}
-  ${textColorStyle}
-  ${props.isDefault ? "" : defaultClass}
-  ${props.ClassName ? props.ClassName : ""} min-w-fit flex items-center justify-center overflow-hidden`;
+    const classList = twMerge(
+        loadingClass,
+        sizeClass,
+        textColorStyle,
+        props.isDefault ? "" : defaultClass,
+        typeof props.ClassName === "undefined"
+            ? "min-w-fit flex items-center justify-center overflow-hidden"
+            : props.ClassName
+    );
 
     return (
         <>

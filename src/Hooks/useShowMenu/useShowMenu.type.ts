@@ -40,19 +40,3 @@ export interface MobileMenuType {
     goButtonTitle: string;
     goAnimationTo: "Forward" | "Back";
 }
-
-// export interface MobileMenuType {
-//     menuData: {
-//         SubMenu: SubMenu[];
-//         Item: SubMenu;
-//         Links: Link[];
-//     };
-//     isOpen: boolean;
-//     isShow: {
-//         SubMenu: boolean;
-//         Item: boolean;
-//         Links: boolean;
-//     };
-//     goButtonTitle: string;
-//     goAnimationTo: "Forward" | "Back";
-// }
