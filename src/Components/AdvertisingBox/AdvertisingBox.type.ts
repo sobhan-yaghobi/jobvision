@@ -59,8 +59,6 @@ export interface AdvertisingType {
         isImportant: boolean;
         cvPending: boolean;
         responsibleEmployer: boolean;
-        acceptTrainees: boolean;
-        acceptTelecommuting: boolean;
     };
     adTags?: string[];
     type: FiltreTypes[];
@@ -173,10 +171,8 @@ const AdvertisingArray: AdvertisingBoxMainProps[] = [
                 cvPending: true,
                 isImportant: true,
                 responsibleEmployer: true,
-                acceptTrainees: true,
-                acceptTelecommuting: false,
             },
-            type: ["IS_EMPLOYMENT_OF_THE_DISABLED", "MILITARY_ORDER", "RIGHTS_AMONG_12_20_MILLION"],
+            type: ["IS_EMPLOYMENT_OF_THE_DISABLED", "MILITARY_ORDER", "RIGHTS_AMONG_12_20_MILLION", "INTERSHIP"],
             adTags: [
                 "front developer",
                 "react js",
@@ -286,8 +282,6 @@ const AdvertisingArray: AdvertisingBoxMainProps[] = [
                 cvPending: false,
                 isImportant: true,
                 responsibleEmployer: true,
-                acceptTrainees: true,
-                acceptTelecommuting: true,
             },
             adTags: [
                 "front developer",
@@ -384,8 +378,6 @@ const AdvertisingArray: AdvertisingBoxMainProps[] = [
                 cvPending: false,
                 isImportant: false,
                 responsibleEmployer: false,
-                acceptTrainees: false,
-                acceptTelecommuting: true,
             },
             type: ["TELECOMMUTING", "PUBLICATION_DATE_LAST_1_MONTH", "PUBLICATION_DATE_LAST_3_DAY"],
             CreateAt: new Date(2023, 9, 8, 14, 36),
@@ -457,8 +449,6 @@ const AdvertisingArray: AdvertisingBoxMainProps[] = [
                 cvPending: true,
                 isImportant: false,
                 responsibleEmployer: false,
-                acceptTrainees: true,
-                acceptTelecommuting: true,
             },
             type: [
                 "TELECOMMUTING",
@@ -536,8 +526,6 @@ const AdvertisingArray: AdvertisingBoxMainProps[] = [
                 cvPending: true,
                 isImportant: true,
                 responsibleEmployer: false,
-                acceptTrainees: true,
-                acceptTelecommuting: true,
             },
             type: ["TELECOMMUTING", "RIGHTS_OVER_60_MILLION", "TYPE_OF_COOPERTION_FULL_TIME"],
             CreateAt: new Date(2023, 9, 8, 15, 49),
@@ -609,8 +597,6 @@ const AdvertisingArray: AdvertisingBoxMainProps[] = [
                 cvPending: true,
                 isImportant: false,
                 responsibleEmployer: false,
-                acceptTrainees: false,
-                acceptTelecommuting: false,
             },
             type: ["RIGHTS_AMONG_4_8_MILLION", "TYPE_OF_COOPERTION_PART_TIME"],
             CreateAt: new Date(2023, 9, 8, 15, 49),
@@ -682,8 +668,6 @@ const AdvertisingArray: AdvertisingBoxMainProps[] = [
                 cvPending: true,
                 isImportant: false,
                 responsibleEmployer: false,
-                acceptTrainees: false,
-                acceptTelecommuting: false,
             },
             type: ["RIGHTS_AMONG_8_12_MILLION", "TYPE_OF_COOPERTION_PART_TIME", "BENEFITS_AND_FACILITIES_REWARD"],
             CreateAt: new Date(2023, 9, 8, 15, 50),
@@ -755,8 +739,6 @@ const AdvertisingArray: AdvertisingBoxMainProps[] = [
                 cvPending: true,
                 isImportant: true,
                 responsibleEmployer: true,
-                acceptTrainees: true,
-                acceptTelecommuting: false,
             },
             type: ["RIGHTS_AMONG_4_8_MILLION", "TYPE_OF_COOPERTION_PART_TIME", "BENEFITS_AND_FACILITIES_PARKING"],
             CreateAt: new Date(2023, 9, 8, 16, 0),

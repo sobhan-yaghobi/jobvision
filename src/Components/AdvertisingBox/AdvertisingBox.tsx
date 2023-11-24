@@ -7,7 +7,6 @@ import { TimeType, getTime } from "../../Utils/Utils";
 import { includes } from "lodash";
 
 // Components
-import { Link } from "react-router-dom";
 import { TimeGenerator } from "../../Utils/UtilsComponent";
 
 // Hooks
@@ -23,6 +22,7 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
     const jobInfo = jobData.jobInfo;
     const jobCompany = jobData.company;
     const jobStatus = jobData.status;
+    const jobTypes = jobData.type;
     const AdvertisingPublisTime: TimeType = getTime(jobData.CreateAt);
     const className = {
         wrapperBoxClass: `cursor-pointer w-full h-full max-h-[13rem] border-2 border-solid rounded-xl py-3 px-3 bg-transparent grid ${
@@ -74,12 +74,17 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
                         ) : null}
                     </div>
                     <div className="flex items-center mb-3 flex-nowrap">
-                        {jobStatus.acceptTelecommuting ? (
-                            <div className="box-info-type text-jv-lightGray2x truncate">امکان دورکاری</div>
-                        ) : null}
-                        {jobStatus.acceptTrainees ? (
-                            <div className="box-info-type text-jv-lightGray2x truncate">امکان جذب کارآموز</div>
-                        ) : null}
+                        {jobTypes.map((type) =>
+                            type === "TELECOMMUTING" || type === "INTERSHIP" ? (
+                                <div className="box-info-type text-jv-lightGray2x truncate">
+                                    {type === "TELECOMMUTING"
+                                        ? "امکان دورکاری"
+                                        : type === "INTERSHIP"
+                                        ? "امکان جذب کارآموز"
+                                        : ""}
+                                </div>
+                            ) : null
+                        )}
                     </div>
                     {props.type === "ShowSendCv" ? null : (
                         <div className="text-xs text-jv-lightGray2x ">

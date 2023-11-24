@@ -814,8 +814,8 @@ const CmsEmployer: React.FC = () => {
     const { ShowContext, showMess } = useShowMssAndNotif({ placementOfNotif: "bottomLeft" });
 
     const [MainPage, setMainPage] = useState<LiteralsMainPage.TypeMainPage>({
-        mainKey: LiteralsMainPage.Advertsisings,
-        subPage: "Advertsisings_Main",
+        mainKey: LiteralsMainPage.Home,
+        subPage: "Home_Main",
     } as LiteralsMainPage.TypeMainPage);
 
     const Menu: React.FC = memo(() => {
