@@ -23,7 +23,7 @@ const useAnimationStop = ({ screen, diActiveAnimation, animation, intervalTime }
             : 1536;
 
     const [WindowsSize] = useWindowsSize();
-    const myInterval = useRef(0);
+    const myInterval = useRef<ReturnType<typeof setInterval> | null>(null);
     const [runAnimation, setRunAnimation] = useState(false);
 
     const animationAction = useCallback(() => {
@@ -37,7 +37,7 @@ const useAnimationStop = ({ screen, diActiveAnimation, animation, intervalTime }
             animationAction();
             setRunAnimation(true);
         }
-        return () => clearInterval(myInterval.current);
+        return () => clearInterval(myInterval.current as NodeJS.Timeout);
     };
 
     useEffect(() => {
