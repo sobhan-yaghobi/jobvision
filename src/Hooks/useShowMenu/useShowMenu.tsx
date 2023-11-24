@@ -5,20 +5,10 @@ import { DesktopMenuType, menuMobileFireProps, MobileMenuType } from "./useShowM
 // Functions
 import { mapValues } from "lodash";
 
-const UseShowMenu = (
-    menu: SubMenu[]
-): [
-    React.RefObject<HTMLLIElement>,
-    MobileMenuType,
-    () => void,
-    DesktopMenuType,
-    ({}: menuMobileFireProps) => void,
-    () => void,
-    (ID: string, isMega: boolean) => DesktopMenuType | void
-] => {
+const useShowMenu = (menu: SubMenu[]) => {
     const elm = useRef<HTMLLIElement>(null);
 
-    const [isMenuMobile, setIsMenuMobile] = useState<MobileMenuType>({
+    const [menuMobile, setMenuMobiele] = useState<MobileMenuType>({
         menuData: {
             SubMenu: [] as SubMenu[],
             Item: {} as SubMenu,
@@ -33,7 +23,7 @@ const UseShowMenu = (
         goButtonTitle: "بازگشت",
         goAnimationTo: "Back",
     });
-    const [isMenuDesktop, setIsMenuDesktop] = useState<DesktopMenuType>({
+    const [menuDesktop, setMenuDesktop] = useState<DesktopMenuType>({
         mainItem: {} as SubMenu,
         isShow: false,
         isMega: false,
@@ -45,7 +35,7 @@ const UseShowMenu = (
 
     const menuMobileFire = ({ SpecialType, data }: menuMobileFireProps) => {
         if (SpecialType === "isShowSubMenu") {
-            setIsMenuMobile((prev) => ({
+            setMenuMobiele((prev) => ({
                 ...prev,
                 goAnimationTo: "Back",
                 isOpen: true,
@@ -61,7 +51,7 @@ const UseShowMenu = (
                 },
             }));
         } else if (SpecialType === "isShowItem") {
-            setIsMenuMobile((prev) => ({
+            setMenuMobiele((prev) => ({
                 ...prev,
                 goAnimationTo: "Back",
                 isOpen: true,
@@ -77,7 +67,7 @@ const UseShowMenu = (
                 },
             }));
         } else if (SpecialType === "isShowLinks") {
-            setIsMenuMobile((prev) => ({
+            setMenuMobiele((prev) => ({
                 ...prev,
                 goAnimationTo: "Back",
                 isOpen: true,
@@ -96,14 +86,14 @@ const UseShowMenu = (
     };
 
     const backButtonAcion = () => {
-        if (isMenuMobile.isShow.Item) {
-            setIsMenuMobile((prev) => ({
+        if (menuMobile.isShow.Item) {
+            setMenuMobiele((prev) => ({
                 ...prev,
                 goAnimationTo: "Forward",
                 isShow: { Item: false, Links: false, SubMenu: true },
             }));
-        } else if (isMenuMobile.isShow.Links) {
-            setIsMenuMobile((prev) => ({
+        } else if (menuMobile.isShow.Links) {
+            setMenuMobiele((prev) => ({
                 ...prev,
                 goAnimationTo: "Forward",
                 isShow: { Item: true, Links: false, SubMenu: false },
@@ -111,14 +101,14 @@ const UseShowMenu = (
         }
     };
 
-    const menuMobileClose = () => {
-        const filter = mapValues(isMenuMobile.isShow, (value, property) => {
+    const menuMobileToggle = () => {
+        const filter = mapValues(menuMobile.isShow, (value, property) => {
             if (property.toString() === "SubMenu") {
                 return true;
             }
             return false;
         });
-        setIsMenuMobile((prev) => ({
+        setMenuMobiele((prev) => ({
             ...prev,
             isShow: { ...filter },
             goAnimationTo: "Back",
@@ -130,7 +120,7 @@ const UseShowMenu = (
         const position = elm.current?.getBoundingClientRect();
         const mainItem = menu.filter((item) => item.id === ID)[0];
 
-        setIsMenuDesktop((prev) => {
+        setMenuDesktop((prev) => {
             if (ID === prev.id) {
                 return {
                     mainItem: {} as SubMenu,
@@ -155,7 +145,7 @@ const UseShowMenu = (
         });
     };
 
-    return [elm, isMenuMobile, backButtonAcion, isMenuDesktop, menuMobileFire, menuMobileClose, menuDesktopFire];
+    return { elm, menuMobile, backButtonAcion, menuDesktop, menuMobileFire, menuMobileToggle, menuDesktopFire };
 };
 
-export default UseShowMenu;
+export default useShowMenu;

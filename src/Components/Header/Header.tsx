@@ -14,7 +14,7 @@ import {
 import { ShowHideMenuItemChildToLeftOrRight } from "../../Animations/HeaderAnimation";
 
 // Hooks
-import UseShowMenu from "../../Hooks/useShowMenu/useShowMenu";
+import useShowMenu from "../../Hooks/useShowMenu/useShowMenu";
 
 // Components
 import { AnimatePresence, motion } from "framer-motion";
@@ -34,8 +34,8 @@ import { AuthContext } from "../../Context/AuthContext";
 const Header: React.FC = () => {
     const authContext = useContext(AuthContext);
 
-    const [elm, MenuMobile, backButtonAcion, MenuDesktop, menuMobileFire, menuMobileToggle, menuDesktopFire] =
-        UseShowMenu(menu);
+    const { elm, menuMobile, backButtonAcion, menuDesktop, menuMobileFire, menuMobileToggle, menuDesktopFire } =
+        useShowMenu(menu);
 
     const megaBgClickAction = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         const target = event.target as HTMLDivElement;
@@ -53,7 +53,7 @@ const Header: React.FC = () => {
                     <div className="header-mobile  w-full h-full p-2 lg:hidden flex items-center justify-between">
                         <div className="w-4/12 sm:px-3 flex items-center justify-start">
                             <Button noBorder ClickHandler={menuMobileToggle} textColor="light" isLoading={false}>
-                                {MenuMobile.isOpen ? <AiOutlineClose /> : <HiOutlineMenuAlt1 className="rotate-180" />}
+                                {menuMobile.isOpen ? <AiOutlineClose /> : <HiOutlineMenuAlt1 className="rotate-180" />}
                             </Button>
                         </div>
 
@@ -93,7 +93,7 @@ const Header: React.FC = () => {
                                         ClickHandler={menuDesktopFire}
                                         Data={menu}
                                         Ref={elm}
-                                        mainMenuDesktop={MenuDesktop.mainItem}
+                                        mainMenuDesktop={menuDesktop.mainItem}
                                     ></SubMenuGenerator>
                                     <li className="hidden items-center xl:flex">
                                         <Button
@@ -137,7 +137,7 @@ const Header: React.FC = () => {
             </div>
             {/*//? -------------------- Start Desktop Header DropDown -------------------- */}
             <AnimatePresence>
-                {MenuDesktop.isShow && MenuDesktop.mainItem ? (
+                {menuDesktop.isShow && menuDesktop.mainItem ? (
                     <motion.div
                         variants={ShowAndHideOpacity_Ex}
                         transition={DelayBeforeChilds}
@@ -147,25 +147,25 @@ const Header: React.FC = () => {
                         id="MegaBg"
                         onClick={(event) => megaBgClickAction(event)}
                         className={`current-mega-height bg-jv-bgColor fixed w-full z-20 hidden lg:flex ${
-                            MenuDesktop.isMega ? "flex justify-center" : ""
+                            menuDesktop.isMega ? "flex justify-center" : ""
                         }`}
                     >
                         <motion.div
                             style={
-                                MenuDesktop.isMega
+                                menuDesktop.isMega
                                     ? {}
                                     : {
-                                          width: `${MenuDesktop.width}px`,
-                                          left: `${MenuDesktop.x}px`,
-                                          top: `${MenuDesktop.y}px`,
+                                          width: `${menuDesktop.width}px`,
+                                          left: `${menuDesktop.x}px`,
+                                          top: `${menuDesktop.y}px`,
                                       }
                             }
                             className={`absolute ${
-                                MenuDesktop.isMega ? "w-11/12 h-[95%] bg-jv-light rounded-b-lg p-2" : ""
+                                menuDesktop.isMega ? "w-11/12 h-[95%] bg-jv-light rounded-b-lg p-2" : ""
                             }`}
                             variants={LongStripVertical_Ex}
                         >
-                            <MenuDesktopItemGenerate menuData={MenuDesktop.mainItem}></MenuDesktopItemGenerate>
+                            <MenuDesktopItemGenerate menuData={menuDesktop.mainItem}></MenuDesktopItemGenerate>
                         </motion.div>
                     </motion.div>
                 ) : null}
@@ -173,7 +173,7 @@ const Header: React.FC = () => {
             {/*//? -------------------- Finish Desktop Header DropDown -------------------- */}
             {/*//? -------------------- Start Mobile Header DropDown -------------------- */}
             <AnimatePresence>
-                {MenuMobile.isOpen ? (
+                {menuMobile.isOpen ? (
                     <>
                         <motion.div
                             variants={ShowAndHideOpacity_Ex}
@@ -189,12 +189,12 @@ const Header: React.FC = () => {
                             animate="visible"
                             exit="exit"
                             className={`header-dropwodn-mobile w-full h-4/6 rounded-t-3xl fixed lg:hidden bottom-0 right-0 bg-jv-primary  text-right ${
-                                MenuMobile.isOpen ? "z-30" : "z-10"
+                                menuMobile.isOpen ? "z-30" : "z-10"
                             }`}
                         >
                             <motion.div
                                 variants={ShowHideMenuItemChildToLeftOrRight(
-                                    Boolean(MenuMobile.goAnimationTo === "Forward")
+                                    Boolean(menuMobile.goAnimationTo === "Forward")
                                 )}
                                 transition={DelayBeforeChilds}
                                 initial="hidden"
@@ -202,7 +202,7 @@ const Header: React.FC = () => {
                                 exit="exit"
                                 className="py-6 px-5 h-full"
                             >
-                                {MenuMobile.isShow.SubMenu ? null : (
+                                {menuMobile.isShow.SubMenu ? null : (
                                     <div className="h-1/6 mb-2 flex route Navigation">
                                         <Button
                                             noBorder
@@ -212,17 +212,16 @@ const Header: React.FC = () => {
                                             size="large"
                                             ClassName="w-full flex justify-between items-center border-b-2 border-solid border-jv-light"
                                         >
-                                            <span>{MenuMobile.goButtonTitle}</span>
+                                            <span>{menuMobile.goButtonTitle}</span>
                                             <img className="rotate-180" src={ArrowLeftIconWhite} alt="" />
                                         </Button>
                                     </div>
                                 )}
                                 <div className="h-full overflow-y-auto px-4 no-scrollbar">
-                                    {MenuMobile.isShow.SubMenu ? (
+                                    {menuMobile.isShow.SubMenu ? (
                                         <SubMenuGenerator
-                                            DesktopVarient={ShowOpacity}
                                             MobileVarient={ShowHideMenuItemChildToLeftOrRight(
-                                                Boolean(MenuMobile.goAnimationTo === "Forward")
+                                                Boolean(menuMobile.goAnimationTo === "Forward")
                                             )}
                                             Type="Mobile"
                                             className={[
@@ -236,11 +235,11 @@ const Header: React.FC = () => {
                                         >
                                             <img src={ArrowLeftIconWhite} alt="" />
                                         </SubMenuGenerator>
-                                    ) : MenuMobile.isShow.Item ? (
+                                    ) : menuMobile.isShow.Item ? (
                                         <ItemGenerator
                                             DesktopVarient={ShowOpacity}
                                             MobileVarient={ShowHideMenuItemChildToLeftOrRight(
-                                                Boolean(MenuMobile.goAnimationTo === "Forward")
+                                                Boolean(menuMobile.goAnimationTo === "Forward")
                                             )}
                                             Type="Mobile"
                                             className={[
@@ -251,15 +250,15 @@ const Header: React.FC = () => {
                                                 },
                                             ]}
                                             ClickHandler={menuMobileFire}
-                                            Data={MenuMobile.menuData.Item}
+                                            Data={menuMobile.menuData.Item}
                                         >
                                             <img src={ArrowLeftIconWhite} alt="" />
                                         </ItemGenerator>
-                                    ) : MenuMobile.isShow.Links ? (
+                                    ) : menuMobile.isShow.Links ? (
                                         <LinkGenerator
                                             DesktopVarient={ShowOpacity}
                                             MobileVarient={ShowHideMenuItemChildToLeftOrRight(
-                                                Boolean(MenuMobile.goAnimationTo === "Forward")
+                                                Boolean(menuMobile.goAnimationTo === "Forward")
                                             )}
                                             Type="Mobile"
                                             className={[
@@ -274,7 +273,7 @@ const Header: React.FC = () => {
                                                 },
                                             ]}
                                             ClickHandler={menuMobileFire}
-                                            Data={MenuMobile.menuData.Links}
+                                            Data={menuMobile.menuData.Links}
                                             isChildrenShow
                                         >
                                             <img src={LeftIcon} alt="" />

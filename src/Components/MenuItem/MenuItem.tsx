@@ -17,6 +17,8 @@ import { ShowOpacity } from "../../Animations/UtilsAnimation";
 import { motion } from "framer-motion";
 import Button from "../Button/Button";
 import ErrorBox from "../ErrorBox/ErrorBox";
+import { twMerge } from "tailwind-merge";
+import useSearchForm from "../../Hooks/useSearchForm";
 
 export const MenuDesktopItemGenerate: React.FC<MenuDesktopItemGenerateProps> = ({ menuData }) => {
     if (menuData.megaMenu) {
@@ -106,60 +108,54 @@ export const MenuDesktopItemGenerate: React.FC<MenuDesktopItemGenerateProps> = (
     }
 };
 
-export const SubMenuGenerator: React.FC<SubMenuGeneratorProps> = ({
-    IsAnimation,
-    MobileVarient,
-    DesktopVarient,
-    Type,
-    className,
-    Data,
-    ClickHandler,
-    children,
-    mainMenuDesktop,
-    Ref,
-}) => {
-    const clickAction = (item: SubMenu) => {
-        if (Type === "Desktop") {
-            ClickHandler(item.id, item.megaMenu);
-        } else {
-            ClickHandler({ SpecialType: "isShowItem", data: item });
-        }
-    };
+export const SubMenuGenerator: React.FC<SubMenuGeneratorProps> = (props) => {
+    const subMenuClickAction = (item: SubMenu) =>
+        props.Type === "Desktop"
+            ? props.ClickHandler(item.id, item.megaMenu)
+            : props.Type === "Mobile"
+            ? props.ClickHandler({ SpecialType: "isShowItem", data: item })
+            : undefined;
 
+    const itemClassName = (id: string): string =>
+        twMerge(
+            props.className[0]?.ChildClassName,
+            props.Type === "Desktop" && id === props.mainMenuDesktop?.id ? props.className[0]?.ClassWhenActive : ""
+        );
     return (
         <>
             <motion.ul
-                variants={!IsAnimation ? (Type === "Desktop" ? DesktopVarient : MobileVarient) : undefined}
+                variants={
+                    !props.IsAnimation
+                        ? props.Type === "Desktop"
+                            ? props.DesktopVarient
+                            : props.Type === "Mobile"
+                            ? props.MobileVarient
+                            : undefined
+                        : undefined
+                }
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className={className[0]?.ParentClassName}
+                className={props.className[0]?.ParentClassName}
             >
-                {Data.map((item) =>
+                {props.Data.map((item) =>
                     item.items.length ? (
                         <li
                             key={item.id}
-                            ref={Ref}
-                            onClick={(e) => clickAction(item)}
-                            className={`${className[0]?.ChildClassName} ${
-                                item.id === mainMenuDesktop?.id ? className[0]?.ClassWhenActive : ""
-                            }`}
+                            ref={props.Ref}
+                            onClick={() => subMenuClickAction(item)}
+                            className={itemClassName(item.id)}
                         >
                             <span>{item.title}</span>
-                            {children}
+                            {props.children}
                         </li>
                     ) : (
-                        <li
-                            key={item.id}
-                            className={`${className[0]?.ChildClassName} ${
-                                item.id === mainMenuDesktop?.id ? className[0]?.ClassWhenActive : ""
-                            }`}
-                        >
+                        <li key={item.id} className={itemClassName(item.id)}>
                             {item.title}
                         </li>
                     )
                 )}
-                {Type === "Mobile" ? (
+                {props.Type === "Mobile" ? (
                     <>
                         <li className="flex flex-col items-center justify-center">
                             <div className="w-full h-[1px] bg-jv-light my-5"></div>
@@ -181,43 +177,41 @@ export const SubMenuGenerator: React.FC<SubMenuGeneratorProps> = ({
     );
 };
 
-export const ItemGenerator: React.FC<ItemGeneratorProps> = ({
-    IsAnimation,
-    MobileVarient,
-    DesktopVarient,
-    Type,
-    className,
-    Data,
-    children,
-    ClickHandler,
-    mainItemData,
-}) => {
-    const clickAction = (item: Item) => {
-        if (Type === "Desktop") {
-            ClickHandler(item);
-        } else {
-            ClickHandler({ SpecialType: "isShowLinks", data: item.links });
-        }
-    };
+export const ItemGenerator: React.FC<ItemGeneratorProps> = (props) => {
+    const itemClickAction = (item: Item) =>
+        props.Type === "Desktop"
+            ? props.ClickHandler(item)
+            : props.Type === "Mobile"
+            ? props.ClickHandler({ SpecialType: "isShowLinks", data: item.links })
+            : undefined;
     return (
         <>
             <motion.ul
-                variants={!IsAnimation ? (Type === "Desktop" ? DesktopVarient : MobileVarient) : undefined}
+                variants={
+                    !props.IsAnimation
+                        ? props.Type === "Desktop"
+                            ? props.DesktopVarient
+                            : props.MobileVarient
+                        : undefined
+                }
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className={className[0].ParentClassName}
+                className={props.className[0].ParentClassName}
             >
-                {Data.items.map((item) => (
+                {props.Data.items.map((item) => (
                     <li
                         key={item.id}
-                        onClick={() => clickAction(item)}
-                        className={`${className[0].ChildClassName} ${
-                            Type === "Desktop" && mainItemData?.id === item.id ? className[0].ChildClassActivion : ""
-                        }`}
+                        onClick={() => itemClickAction(item)}
+                        className={twMerge(
+                            props.className[0].ChildClassName,
+                            props.Type === "Desktop" && props.mainItemData?.id === item.id
+                                ? props.className[0].ChildClassActivion
+                                : ""
+                        )}
                     >
                         <span>{item.title}</span>
-                        {item.links.length ? children : null}
+                        {item.links.length ? props.children : null}
                     </li>
                 ))}
             </motion.ul>
@@ -225,60 +219,57 @@ export const ItemGenerator: React.FC<ItemGeneratorProps> = ({
     );
 };
 
-export const LinkGenerator: React.FC<React.PropsWithChildren<LinkGeneratorProps>> = ({
-    IsAnimation,
-    MobileVarient,
-    DesktopVarient,
-    Type,
-    className,
-    children,
-    Data,
-    ClickHandler,
-    isChildrenShow,
-}) => {
+export const LinkGenerator: React.FC<React.PropsWithChildren<LinkGeneratorProps>> = (props) => {
+    const { navigate_SetValue } = useSearchForm();
     const clickAction = (item: Link) => {
-        if (Type === "Desktop") {
+        if (props.Type === "Desktop") {
             // ClickHandler(item);
         } else {
             console.log("Item Mobile Click");
         }
     };
 
+    console.log("Data", props.Data);
+
     return (
         <>
             <motion.ul
-                variants={!IsAnimation ? (Type === "Desktop" ? DesktopVarient : MobileVarient) : undefined}
+                variants={
+                    !props.IsAnimation
+                        ? props.Type === "Desktop"
+                            ? props.DesktopVarient
+                            : props.MobileVarient
+                        : undefined
+                }
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className={className[0].ParentClassName}
+                className={props.className[0].ParentClassName}
             >
-                {Data.map((link) => (
-                    <li key={link.id} className={className[0].ChildClassName}>
-                        <div onClick={() => clickAction(link)} className={className[0].LinksWrapperClassName}>
-                            <span className={className[0].LinksTitleClassName}>{link.title}</span>
-                            {/* <span className={`${Type === "Mobile" ? "flex items-center gap-2" : ""}`}>
-                                {children}
-                            </span> */}
+                {props.Data.map((link) => (
+                    <li key={link.id} className={props.className[0].ChildClassName}>
+                        <div onClick={() => clickAction(link)} className={props.className[0].LinksWrapperClassName}>
+                            <span className={props.className[0].LinksTitleClassName}>{link.title}</span>
 
-                            {link.sublinks.length && isChildrenShow ? (
+                            {link.sublinks.length && props.isChildrenShow ? (
                                 <motion.ul
                                     variants={
-                                        !IsAnimation ? (Type === "Desktop" ? DesktopVarient : MobileVarient) : undefined
+                                        !props.IsAnimation
+                                            ? props.Type === "Desktop"
+                                                ? props.DesktopVarient
+                                                : props.MobileVarient
+                                            : undefined
                                     }
                                     initial="hidden"
                                     animate="visible"
                                     exit="exit"
-                                    className={className[0].SublinkParentClassName}
+                                    className={props.className[0].SublinkParentClassName}
                                 >
                                     {link.sublinks.map((subLink) => (
-                                        <li key={subLink.id} className={className[0].SublinkChildClassName}>
-                                            <a
-                                                className={className[0].SublinkLinkWrapperClassName}
-                                                href={`#${subLink.link}`}
-                                            >
+                                        <li key={subLink.id} className={props.className[0].SublinkChildClassName}>
+                                            <span className={props.className[0].SublinkLinkWrapperClassName}>
                                                 {subLink.title}
-                                            </a>
+                                            </span>
                                         </li>
                                     ))}
                                 </motion.ul>

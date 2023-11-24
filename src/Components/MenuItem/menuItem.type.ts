@@ -22,26 +22,35 @@ export interface SubMenu extends SubLink {
 export interface MenuDesktopItemGenerateProps {
     menuData: SubMenu;
 }
-export interface SubMenuGeneratorProps {
-    IsAnimation?: boolean;
-    MobileVarient?: {};
-    DesktopVarient?: {};
-    Type: "Desktop" | "Mobile";
+
+export type SubMenuGeneratorMain = {
     className: [
         {
-            ClassWhenActive?: String;
+            ClassWhenActive?: string;
             ParentClassName?: string;
             ChildClassName?: string;
         }
     ];
     Data: SubMenu[];
     ClickHandler: Function;
-    // Mobile Type
-    children?: React.ReactNode;
-    // Desktop Type
-    mainMenuDesktop?: SubMenu;
     Ref?: React.RefObject<HTMLLIElement>;
-}
+    children?: React.ReactNode;
+    IsAnimation?: boolean;
+};
+
+export type SubMenuGenerator =
+    | {
+          Type: "Desktop";
+          DesktopVarient?: {};
+          mainMenuDesktop?: SubMenu;
+      }
+    | {
+          Type: "Mobile";
+          MobileVarient?: {};
+      };
+
+export type SubMenuGeneratorProps = SubMenuGeneratorMain & SubMenuGenerator;
+
 export interface ItemGeneratorProps {
     IsAnimation?: boolean;
     MobileVarient?: {};
