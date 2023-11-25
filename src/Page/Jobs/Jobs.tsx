@@ -82,8 +82,10 @@ const Jobs: React.FC = () => {
     const [boxList, setBoxList] = useState<AdvertisingBoxMainProps[]>(AdvertisingArray);
     const [filterSelection, setFilterSelection] = useState<string[]>([]);
     useEffect(() => {
+        const maimAdvertisingArray: AdvertisingBoxMainProps[] =
+            routeTitle.length || routeJobsTag.length || routeCity.length ? [...boxList] : [...AdvertisingArray];
         if (filterSelection.length) {
-            const newAdvertisingArray: AdvertisingBoxMainProps[] = boxList.filter((advertising) => {
+            const newAdvertisingArray: AdvertisingBoxMainProps[] = maimAdvertisingArray.filter((advertising) => {
                 const isTypesValid: boolean[] = advertising.data.type.map((Type) =>
                     includes_lodash(filterSelection, Type) ? true : false
                 );

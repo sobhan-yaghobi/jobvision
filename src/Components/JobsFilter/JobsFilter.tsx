@@ -43,10 +43,6 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
     });
     const [selectedFilters, setSelectedFilters] = useState<selectedFiltersType[]>([]);
 
-    useEffect(() => {
-        console.log("selectedFilters", selectedFilters);
-    }, [selectedFilters]);
-
     const [mainFilterMenu, setMainFilterMenu] = useState<{
         data: FilterType;
         position: {
@@ -309,7 +305,7 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
             <div
                 className={`${
                     mode === "Desktop"
-                        ? "absolute w-[10.5rem] top-full z-10 invisible opacity-0 right-5 group-hover:visible group-hover:opacity-100 group-hover:right-0"
+                        ? "absolute w-[10.5rem] top-full z-10 invisible opacity-0 right-5 group-hover:visible group-hover:opacity-100 group-hover:right-0 md:hidden xl:block"
                         : ""
                 } `}
             >

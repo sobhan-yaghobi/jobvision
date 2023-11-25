@@ -53,6 +53,19 @@ export type CategoryTypes =
     | SENIORITY_LEVEL
     | BENEFITS_AND_FACILITIES;
 
+export type RightType =
+    | RIGHTS_UNDER_4_MILLION
+    | RIGHTS_AMONG_4_8_MILLION
+    | RIGHTS_AMONG_8_12_MILLION
+    | RIGHTS_AMONG_12_20_MILLION
+    | RIGHTS_OVER_60_MILLION;
+
+export type PublicationDayType =
+    | PUBLICATION_DATE_LAST_3_DAY
+    | PUBLICATION_DATE_LAST_1_WEEK
+    | PUBLICATION_DATE_LAST_15_DAY
+    | PUBLICATION_DATE_LAST_1_MONTH;
+
 export type FiltreTypes =
     | TELECOMMUTING
     | INTERSHIP
@@ -61,15 +74,6 @@ export type FiltreTypes =
     | TYPE_OF_COOPERTION_FULL_TIME
     | TYPE_OF_COOPERTION_CONTRACTUAL_TIME
     | TYPE_OF_COOPERTION_PART_TIME
-    | RIGHTS_UNDER_4_MILLION
-    | RIGHTS_AMONG_4_8_MILLION
-    | RIGHTS_AMONG_8_12_MILLION
-    | RIGHTS_AMONG_12_20_MILLION
-    | RIGHTS_OVER_60_MILLION
-    | PUBLICATION_DATE_LAST_3_DAY
-    | PUBLICATION_DATE_LAST_1_WEEK
-    | PUBLICATION_DATE_LAST_15_DAY
-    | PUBLICATION_DATE_LAST_1_MONTH
     | WORK_EXPERIENCE_UNDER_2_YR
     | WORK_EXPERIENCE_AMONG_2_5_YR
     | WORK_EXPERIENCE_AMONG_5_8_YR
@@ -86,17 +90,19 @@ export type FiltreTypes =
     | BENEFITS_AND_FACILITIES_REWARD
     | BENEFITS_AND_FACILITIES_PARKING;
 
+export type categoryFilterArray = RightType | PublicationDayType | FiltreTypes;
+
 export type ChildOfFilterType = {
     id: string;
     title: string;
-    type: FiltreTypes;
+    type: categoryFilterArray;
     category: CategoryTypes;
 };
 
 export interface FilterType {
     id: string;
     title: string;
-    type?: FiltreTypes;
+    type?: categoryFilterArray;
     isMultiple: boolean;
     sub?: ChildOfFilterType | ChildOfFilterType[];
     category?: CategoryTypes;
@@ -311,7 +317,7 @@ export type removeFilterActionTypes =
     | { mode: "RemoveCategory"; mainType: string; isClose: boolean };
 
 export type isDublicateTypes =
-    | { mode: "FilterType"; ItemType: FiltreTypes | undefined }
+    | { mode: "FilterType"; ItemType: categoryFilterArray | undefined }
     | { mode: "CategoryType"; ItemType: CategoryTypes | undefined };
 
 export type FilterContentGeneratorProps =
