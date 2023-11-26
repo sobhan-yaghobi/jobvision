@@ -1,6 +1,5 @@
 // Hooks
 import React, { useState, useRef, Fragment, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
 import useSearchForm from "../../Hooks/useSearchForm";
 
 // Types
@@ -13,6 +12,7 @@ import {
     mainItemsBoxInfos,
     mainJobInfoType,
     TypeRoutes,
+    boxListType,
 } from "./Jobs.type";
 import { AdvertisingArray, AdvertisingBoxMainProps } from "../../Components/AdvertisingBox/AdvertisingBox.type";
 
@@ -25,7 +25,7 @@ import {
 } from "../../Animations/UtilsAnimation";
 
 // Functions
-import { includes as includes_lodash, uniqBy } from "lodash";
+import { includes as includes_lodash } from "lodash";
 import { toLowerCaseAction } from "../../Utils/Utils";
 
 // Components
@@ -79,27 +79,45 @@ const Jobs: React.FC = () => {
 
     //? ---------------------------------- Box Lists
     const [proModeFilter, setProModeFilter] = useState(false);
-    const [boxList, setBoxList] = useState<AdvertisingBoxMainProps[]>(AdvertisingArray);
+    const [boxList, setBoxList] = useState<boxListType>({
+        show: "FILTER_SELCTION",
+        FILTER_SELCTION: AdvertisingArray,
+        FILTER_SEARCH: [] as AdvertisingBoxMainProps[],
+    });
     const [filterSelection, setFilterSelection] = useState<string[]>([]);
-    useEffect(() => {
-        const maimAdvertisingArray: AdvertisingBoxMainProps[] =
-            routeTitle.length || routeJobsTag.length || routeCity.length ? [...boxList] : [...AdvertisingArray];
-        if (filterSelection.length) {
-            const newAdvertisingArray: AdvertisingBoxMainProps[] = maimAdvertisingArray.filter((advertising) => {
-                const isTypesValid: boolean[] = advertising.data.type.map((Type) =>
-                    includes_lodash(filterSelection, Type) ? true : false
-                );
 
-                if (proModeFilter && isTypesValid.filter((type) => type === true).length === filterSelection.length) {
+    const isBoxList = (type: boxListType["show"]): boolean => Boolean(boxList.show === type);
+    const isBoxListLength = (type: boxListType["show"]): boolean => Boolean(boxList[type].length);
+    const boxListArray = (type: boxListType["show"]): AdvertisingBoxMainProps[] => boxList[type];
+
+    const getFiltredBoxs = (): AdvertisingBoxMainProps[] => {
+        const maimAdvertisingArray: AdvertisingBoxMainProps[] =
+            routeTitle.length || routeJobsTag.length || routeCity.length
+                ? [...boxList.FILTER_SELCTION]
+                : [...AdvertisingArray];
+        return maimAdvertisingArray.filter((advertising) => {
+            const isTypesValid: boolean[] = advertising.data.type.map((Type) =>
+                includes_lodash(filterSelection, Type) ? true : false
+            );
+
+            if (proModeFilter && isTypesValid.filter((type) => type === true).length === filterSelection.length) {
+                return advertising;
+            } else {
+                if (!proModeFilter && includes_lodash(isTypesValid, !proModeFilter)) {
                     return advertising;
-                } else {
-                    if (!proModeFilter && includes_lodash(isTypesValid, !proModeFilter)) {
-                        return advertising;
-                    }
                 }
-            });
-            setBoxList(newAdvertisingArray);
-        } else if (routeTitle.length || routeJobsTag.length || routeCity.length) {
+            }
+        });
+    };
+    useEffect(() => {
+        if (filterSelection.length) {
+            setBoxList((prev) => ({ ...prev, show: "FILTER_SELCTION", FILTER_SELCTION: getFiltredBoxs() }));
+        } else {
+            setBoxList((prev) => ({ ...prev, show: "FILTER_SELCTION", FILTER_SELCTION: AdvertisingArray }));
+        }
+    }, [filterSelection, proModeFilter]);
+    useEffect(() => {
+        if (routeTitle.length || routeJobsTag.length || routeCity.length) {
             const isTitle = (title: string, name: string): TypeRoutes => ({
                 isRouteValue: Boolean(routeTitle.length),
                 isValueExist: routeTitle.length
@@ -120,7 +138,7 @@ const Jobs: React.FC = () => {
                 isValueExist: routeCity.length ? toLowerCaseAction(city).includes(toLowerCaseAction(routeCity)) : false,
             });
 
-            const mainAdsArray: AdvertisingBoxMainProps[] = AdvertisingArray.filter((ads) => {
+            const mainAdsArray: AdvertisingBoxMainProps[] = boxListArray("FILTER_SELCTION").filter((ads) => {
                 if (
                     (isTitle(ads.data.title, ads.data.company.name).isValueExist ||
                         !isTitle(ads.data.title, ads.data.company.name).isRouteValue) &&
@@ -130,11 +148,11 @@ const Jobs: React.FC = () => {
                     return ads;
                 }
             });
-            setBoxList(mainAdsArray);
+            setBoxList((prev) => ({ ...prev, show: "FILTER_SEARCH", FILTER_SEARCH: mainAdsArray }));
         } else {
-            setBoxList(AdvertisingArray);
+            setBoxList((prev) => ({ ...prev, show: "FILTER_SELCTION", FILTER_SELCTION: getFiltredBoxs() }));
         }
-    }, [filterSelection, proModeFilter, route]);
+    }, [route]);
     //! ---------------------------------- Box Lists
 
     //? ---------------------------------- Box Info
@@ -179,7 +197,14 @@ const Jobs: React.FC = () => {
                         فعال سازی اطلاع رسانی شغل ها
                     </Button>
                     <div className="p-3 mt-2 rounded-lg bg-jv-white flex items-center justify-between">
-                        <section>{boxList.length} فرصت شغلی فعال</section>
+                        <section>
+                            {isBoxList("FILTER_SEARCH")
+                                ? boxList.FILTER_SEARCH.length
+                                : isBoxList("FILTER_SELCTION")
+                                ? boxList.FILTER_SELCTION.length
+                                : 0}{" "}
+                            فرصت شغلی فعال
+                        </section>
                         {Object.values(orderMain).length ? (
                             <section className="flex items-center">
                                 <span>مرتب سازی :</span>
@@ -217,8 +242,8 @@ const Jobs: React.FC = () => {
                         ) : null}
                     </div>
                     <div className="wrapper flex flex-col">
-                        {boxList.length ? (
-                            boxList.map((item, index) => (
+                        {isBoxListLength(boxList.show) ? (
+                            boxListArray(boxList.show).map((item, index) => (
                                 <div key={index + 1} className="mt-2">
                                     <AdvertisingBox
                                         type="HideSendCv"

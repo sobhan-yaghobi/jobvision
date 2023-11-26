@@ -1,4 +1,4 @@
-import { AdvertisingType } from "../../Components/AdvertisingBox/AdvertisingBox.type";
+import { AdvertisingBoxMainProps, AdvertisingType } from "../../Components/AdvertisingBox/AdvertisingBox.type";
 import uuidGenerator from "../../Utils/UuidGenerator";
 
 export interface MainItemBoxInfoType {
@@ -15,6 +15,12 @@ export interface mainJobInfoType {
 export type TypeRoutes = {
     isRouteValue: boolean;
     isValueExist: boolean;
+};
+
+export type boxListType = {
+    show: "FILTER_SELCTION" | "FILTER_SEARCH";
+    FILTER_SELCTION: AdvertisingBoxMainProps[];
+    FILTER_SEARCH: AdvertisingBoxMainProps[];
 };
 
 export interface BoxsOrderType {
