@@ -150,7 +150,7 @@ const Jobs: React.FC = () => {
             });
             setBoxList((prev) => ({ ...prev, show: "FILTER_SEARCH", FILTER_SEARCH: mainAdsArray }));
         } else {
-            setBoxList((prev) => ({ ...prev, show: "FILTER_SELCTION", FILTER_SELCTION: getFiltredBoxs() }));
+            setBoxList((prev) => ({ ...prev, show: "FILTER_SELCTION" }));
         }
     }, [route]);
     //! ---------------------------------- Box Lists
