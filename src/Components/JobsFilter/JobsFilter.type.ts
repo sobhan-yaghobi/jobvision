@@ -16,17 +16,6 @@ export type TYPE_OF_COOPERTION_FULL_TIME = "TYPE_OF_COOPERTION_FULL_TIME";
 export type TYPE_OF_COOPERTION_CONTRACTUAL_TIME = "TYPE_OF_COOPERTION_CONTRACTUAL_TIME";
 export type TYPE_OF_COOPERTION_PART_TIME = "TYPE_OF_COOPERTION_PART_TIME";
 
-type RIGHTS_UNDER_4_MILLION = "RIGHTS_UNDER_4_MILLION";
-type RIGHTS_AMONG_4_8_MILLION = "RIGHTS_AMONG_4_8_MILLION";
-type RIGHTS_AMONG_8_12_MILLION = "RIGHTS_AMONG_8_12_MILLION";
-type RIGHTS_AMONG_12_20_MILLION = "RIGHTS_AMONG_12_20_MILLION";
-type RIGHTS_OVER_60_MILLION = "RIGHTS_OVER_60_MILLION";
-
-type PUBLICATION_DATE_LAST_3_DAY = "PUBLICATION_DATE_LAST_3_DAY";
-type PUBLICATION_DATE_LAST_1_WEEK = "PUBLICATION_DATE_LAST_1_WEEK";
-type PUBLICATION_DATE_LAST_15_DAY = "PUBLICATION_DATE_LAST_15_DAY";
-type PUBLICATION_DATE_LAST_1_MONTH = "PUBLICATION_DATE_LAST_1_MONTH";
-
 type WORK_EXPERIENCE_UNDER_2_YR = "WORK_EXPERIENCE_UNDER_2_YR";
 type WORK_EXPERIENCE_AMONG_2_5_YR = "WORK_EXPERIENCE_AMONG_2_5_YR";
 type WORK_EXPERIENCE_AMONG_5_8_YR = "WORK_EXPERIENCE_AMONG_5_8_YR";
@@ -53,19 +42,6 @@ export type CategoryTypes =
     | SENIORITY_LEVEL
     | BENEFITS_AND_FACILITIES;
 
-export type RightType =
-    | RIGHTS_UNDER_4_MILLION
-    | RIGHTS_AMONG_4_8_MILLION
-    | RIGHTS_AMONG_8_12_MILLION
-    | RIGHTS_AMONG_12_20_MILLION
-    | RIGHTS_OVER_60_MILLION;
-
-export type PublicationDayType =
-    | PUBLICATION_DATE_LAST_3_DAY
-    | PUBLICATION_DATE_LAST_1_WEEK
-    | PUBLICATION_DATE_LAST_15_DAY
-    | PUBLICATION_DATE_LAST_1_MONTH;
-
 export type FiltreTypes =
     | TELECOMMUTING
     | INTERSHIP
@@ -90,7 +66,7 @@ export type FiltreTypes =
     | BENEFITS_AND_FACILITIES_REWARD
     | BENEFITS_AND_FACILITIES_PARKING;
 
-export type categoryFilterArray = RightType | PublicationDayType | FiltreTypes;
+export type categoryFilterArray = FiltreTypes;
 
 export type ChildOfFilterType = {
     id: string;
@@ -137,71 +113,7 @@ const categoryArray: FilterType[] = [
             },
         ],
     },
-    {
-        id: uuidGenerator(),
-        category: "RIGHTS",
-        title: "حقوق",
-        isMultiple: false,
-        sub: [
-            { id: uuidGenerator(), category: "RIGHTS", title: "زیر 4 میلیون تومان", type: "RIGHTS_UNDER_4_MILLION" },
-            {
-                id: uuidGenerator(),
-                category: "RIGHTS",
-                title: "بین 4 تا 8 میلیون تومان",
-                type: "RIGHTS_AMONG_4_8_MILLION",
-            },
-            {
-                id: uuidGenerator(),
-                category: "RIGHTS",
-                title: "بین 8 تا 12 میلیون تومان",
-                type: "RIGHTS_AMONG_8_12_MILLION",
-            },
-            {
-                id: uuidGenerator(),
-                category: "RIGHTS",
-                title: "بین 12 تا 20 میلیون تومان",
-                type: "RIGHTS_AMONG_12_20_MILLION",
-            },
-            {
-                id: uuidGenerator(),
-                category: "RIGHTS",
-                title: "بالای 60 میلیون تومان",
-                type: "RIGHTS_OVER_60_MILLION",
-            },
-        ],
-    },
-    {
-        id: uuidGenerator(),
-        category: "PUBLICATION_DATE",
-        title: "زمان انتشار",
-        isMultiple: false,
-        sub: [
-            {
-                id: uuidGenerator(),
-                category: "PUBLICATION_DATE",
-                title: "3 روز اخیر",
-                type: "PUBLICATION_DATE_LAST_3_DAY",
-            },
-            {
-                id: uuidGenerator(),
-                category: "PUBLICATION_DATE",
-                title: "1 هفته اخیر",
-                type: "PUBLICATION_DATE_LAST_1_WEEK",
-            },
-            {
-                id: uuidGenerator(),
-                category: "PUBLICATION_DATE",
-                title: "15 روز اخیر",
-                type: "PUBLICATION_DATE_LAST_15_DAY",
-            },
-            {
-                id: uuidGenerator(),
-                category: "PUBLICATION_DATE",
-                title: "1 ماه اخیر",
-                type: "PUBLICATION_DATE_LAST_1_MONTH",
-            },
-        ],
-    },
+
     {
         id: uuidGenerator(),
         category: "WORK_EXPERIENCE",
