@@ -343,7 +343,7 @@ const Jobs: React.FC = () => {
                             transition={{ duration: 0.4 }}
                         >
                             <motion.div
-                                className="w-full current-mega-height-dvh fixed overflow-hidden -bottom-1 right-0 rounded-t-xl bg-jv-white"
+                                className="w-full current-mega-height fixed overflow-hidden -bottom-1 right-0 rounded-t-xl bg-jv-white"
                                 initial={{ opacity: 0 }}
                                 whileInView={{ opacity: 1 }}
                                 transition={{ delay: 0.4 }}
