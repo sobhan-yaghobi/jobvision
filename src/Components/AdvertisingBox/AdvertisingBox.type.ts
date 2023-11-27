@@ -77,7 +77,7 @@ const AdvertisingArray: AdvertisingBoxMainProps[] = [
     {
         data: {
             id: uuidGenerator(),
-            title: "Front End Developer (React.js)",
+            title: "فرانت اند",
             company: {
                 name: "آریان کد",
                 location: "تهران ، سعادت آباد",
@@ -450,6 +450,7 @@ const AdvertisingArray: AdvertisingBoxMainProps[] = [
                 isImportant: false,
                 responsibleEmployer: false,
             },
+            adTags: ["برنامه نویس فرانت اند"],
             type: ["MILITARY_ORDER", "INTERSHIP", "BENEFITS_AND_FACILITIES_REWARD"],
             CreateAt: new Date(2023, 9, 8, 15, 36),
             // Date(year,month,day,hours,minutes,seconds)

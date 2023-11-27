@@ -93,7 +93,7 @@ const Jobs: React.FC = () => {
     const getFiltredBoxs = (): AdvertisingBoxMainProps[] => {
         const maimAdvertisingArray: AdvertisingBoxMainProps[] =
             routeTitle.length || routeJobsTag.length || routeCity.length
-                ? [...boxList.FILTER_SELCTION]
+                ? [...boxList[boxList.show]]
                 : [...AdvertisingArray];
         return maimAdvertisingArray.filter((advertising) => {
             const isTypesValid: boolean[] = advertising.data.type.map((Type) =>
@@ -109,13 +109,6 @@ const Jobs: React.FC = () => {
             }
         });
     };
-    useEffect(() => {
-        if (filterSelection.length) {
-            setBoxList((prev) => ({ ...prev, show: "FILTER_SELCTION", FILTER_SELCTION: getFiltredBoxs() }));
-        } else {
-            setBoxList((prev) => ({ ...prev, show: "FILTER_SELCTION", FILTER_SELCTION: AdvertisingArray }));
-        }
-    }, [filterSelection, proModeFilter]);
     useEffect(() => {
         if (routeTitle.length || routeJobsTag.length || routeCity.length) {
             const isTitle = (title: string, name: string): TypeRoutes => ({
@@ -148,11 +141,37 @@ const Jobs: React.FC = () => {
                     return ads;
                 }
             });
+            console.log("mainAdsArray", mainAdsArray);
+
             setBoxList((prev) => ({ ...prev, show: "FILTER_SEARCH", FILTER_SEARCH: mainAdsArray }));
         } else {
-            setBoxList((prev) => ({ ...prev, show: "FILTER_SELCTION" }));
+            setBoxList((prev) => ({ ...prev, show: "FILTER_SELCTION", FILTER_SELCTION: getFiltredBoxs() }));
         }
     }, [route]);
+    useEffect(() => {
+        if (filterSelection.length) {
+            console.log("getFiltredBoxs()", getFiltredBoxs());
+
+            setBoxList((prev) => ({
+                ...prev,
+                show:
+                    (routeTitle.length || routeJobsTag.length || routeCity.length) && !prev.FILTER_SELCTION.length
+                        ? "FILTER_SEARCH"
+                        : "FILTER_SELCTION",
+                FILTER_SELCTION: getFiltredBoxs(),
+            }));
+        } else {
+            setBoxList((prev) => ({
+                ...prev,
+                show:
+                    routeTitle.length || routeJobsTag.length || routeCity.length ? "FILTER_SEARCH" : "FILTER_SELCTION",
+                FILTER_SELCTION: AdvertisingArray,
+            }));
+        }
+    }, [filterSelection, proModeFilter]);
+    useEffect(() => {
+        console.log("boxList", boxList);
+    }, [boxList]);
     //! ---------------------------------- Box Lists
 
     //? ---------------------------------- Box Info
