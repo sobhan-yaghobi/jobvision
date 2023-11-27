@@ -11,6 +11,7 @@ import {
     ShowFromLeft,
     ShowFromRight,
     ShowItemsDelay_Var,
+    ShowShortFromBottomHiden_Var,
 } from "../../Animations/UtilsAnimation";
 
 // Hooks
@@ -88,7 +89,8 @@ const Home: React.FC = () => {
             {/*//? -------------------------------------- Landing -------------------------------------- */}
             <div className="relative current-mega-height-dvh md:h-auto pt-5 px-2 grid grid-cols-2 grid-rows-2 justify-between md:py-2 md:px-10 md:grid-rows-2 md:items-center lg:grid-rows-3 lg:px-24 z-10">
                 <motion.div
-                    variants={ShowFromRight}
+                    variants={ShowShortFromBottomHiden_Var}
+                    custom={0.3}
                     initial="hidden"
                     animate="visible"
                     className="right-landing py-1 flex flex-col justify-evenly col-span-2 row-span-1 md:col-span-1 lg:row-span-2"
@@ -116,7 +118,8 @@ const Home: React.FC = () => {
                     </div>
                 </motion.div>
                 <motion.div
-                    variants={ShowFromLeft}
+                    variants={ShowAndHideOpacity_Ex}
+                    transition={{ delay: 0.8 }}
                     initial="hidden"
                     animate="visible"
                     className="left-landing col-span-1 row-span-1 hidden md:block lg:row-span-2"
@@ -124,7 +127,8 @@ const Home: React.FC = () => {
                     {WindowsSize.innerWidth <= 768 ? null : <MapCircle></MapCircle>}
                 </motion.div>
                 <motion.div
-                    variants={ShowFromBottom}
+                    variants={ShowShortFromBottomHiden_Var}
+                    custom={0.3}
                     initial="hidden"
                     animate="visible"
                     className="col-span-2 row-span-1 h-full"
@@ -201,7 +205,7 @@ const Home: React.FC = () => {
                             initial="hidden"
                             whileInView="visible"
                             viewport={{ once: true }}
-                            custom={index}
+                            transition={{ duration: 1 }}
                             className={`${includes([3, 4], index) ? "xl:col-span-6 flex" : "xl:col-span-4"} ${
                                 index === 3 ? "flex justify-end" : ""
                             }  row-span-1 p-2 col-span-12 lg:col-span-6`}
@@ -261,7 +265,13 @@ const Home: React.FC = () => {
                             <div className="my-5 lg:my-0 lg:h-full lg:w-2/3 lg:flex lg:flex-col lg:justify-between items-start">
                                 <h2 className="lg:text-base">رزومه ساز جاب ویژن</h2>
                                 <p className="my-5">رزومه ای استاندارد به دو زبان فارسی و انگلیسی بسازید.</p>
-                                <Button textColor="primary" size="small" isLoading={false} ClickHandler={() => {}}>
+                                <Button
+                                    ClassName="m-auto lg:m-[unset]"
+                                    textColor="primary"
+                                    size="small"
+                                    isLoading={false}
+                                    ClickHandler={() => {}}
+                                >
                                     ساخت رزومه
                                 </Button>
                             </div>
@@ -282,7 +292,13 @@ const Home: React.FC = () => {
                                     از حقوق دریافتی افراد در مشاغل مختلف آگاه شوید و تخمین دقیق تری از حقوق منصفانه خود
                                     داشته باشید.
                                 </p>
-                                <Button textColor="primary" size="small" isLoading={false} ClickHandler={() => {}}>
+                                <Button
+                                    ClassName="m-auto lg:m-[unset]"
+                                    textColor="primary"
+                                    size="small"
+                                    isLoading={false}
+                                    ClickHandler={() => {}}
+                                >
                                     حقوق خود را محاسبه کنید
                                 </Button>
                             </div>

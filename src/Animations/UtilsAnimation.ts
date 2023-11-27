@@ -50,13 +50,7 @@ const LongStripVertical_Ex: Variants = {
 
 const ShowAndHideScale_Ex: Variants = {
     hidden: { opacity: 0, scale: 0.8 },
-    visible: {
-        opacity: 1,
-        scale: 1,
-        transition: {
-            scale: { delay: 0.3 },
-        },
-    },
+    visible: { opacity: 1, scale: 1 },
     exit: { opacity: 0, scale: 0.8 },
 };
 
@@ -133,83 +127,51 @@ const ShowHideClipFromBottom_Ex: Variants = {
 };
 
 const ShowFromBottom_Var: Variants = {
-    hidden: {
-        y: "100vh",
-    },
+    hidden: { y: "100vh" },
     visible: (i) => ({ y: 0, transition: { delay: i } }),
 };
 
 const ShowFromRight: Variants = {
     hidden: { opacity: 0, x: "100%" },
-    visible: {
-        opacity: 1,
-        x: 0,
-        transition: {
-            ease: "linear",
-            bounce: 9,
-        },
-    },
+    visible: { opacity: 1, x: 0 },
 };
 
 const ShowFromRight_Ex: Variants = {
     hidden: { opacity: 0, x: "100%" },
-    visible: {
-        opacity: 1,
-        x: 0,
-        transition: {
-            ease: "linear",
-            bounce: 9,
-        },
-    },
+    visible: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: "100%" },
 };
 
 const ShowFromLeft: Variants = {
     hidden: { opacity: 0, x: "-100%" },
-    visible: {
-        opacity: 1,
-        x: 0,
-        transition: {
-            ease: "linear",
-            bounce: 9,
-        },
-    },
+    visible: { opacity: 1, x: 0 },
 };
 
 const ShowFromTop: Variants = {
     hidden: { opacity: 0, y: "-100%" },
-    visible: {
-        opacity: 1,
-        y: 0,
-        transition: {
-            ease: "linear",
-            bounce: 9,
-        },
-    },
+    visible: { opacity: 1, y: 0 },
 };
 const ShowFromBottom: Variants = {
     hidden: { opacity: 0, y: "100%" },
-    visible: {
-        opacity: 1,
-        y: 0,
-        transition: {
-            ease: "linear",
-            bounce: 9,
-        },
-    },
+    visible: { opacity: 1, y: 0 },
 };
 
 const ShowFromBottom_EX: Variants = {
     hidden: { opacity: 0, y: "100%" },
-    visible: {
+    visible: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: "100%" },
+};
+
+const ShowShortFromBottomHiden_Var: Variants = {
+    hidden: { opacity: 0, y: "15%" },
+    visible: (i) => ({
         opacity: 1,
         y: 0,
         transition: {
             ease: "linear",
-            bounce: 9,
+            delay: i,
         },
-    },
-    exit: { opacity: 0, y: "100%" },
+    }),
 };
 
 export {
@@ -230,6 +192,7 @@ export {
     ShowFromTop,
     ShowFromBottom,
     ShowFromBottom_EX,
+    ShowShortFromBottomHiden_Var,
     // Transition
     TweenEaseOutVeryShortly,
     DelayBeforeChilds,
