@@ -95,19 +95,21 @@ const Jobs: React.FC = () => {
             routeTitle.length || routeJobsTag.length || routeCity.length
                 ? [...boxList[boxList.show]]
                 : [...AdvertisingArray];
-        return maimAdvertisingArray.filter((advertising) => {
-            const isTypesValid: boolean[] = advertising.data.type.map((Type) =>
-                includes_lodash(filterSelection, Type) ? true : false
-            );
+        return routeTitle.length || routeJobsTag.length || routeCity.length || filterSelection.length
+            ? maimAdvertisingArray.filter((advertising) => {
+                  const isTypesValid: boolean[] = advertising.data.type.map((Type) =>
+                      includes_lodash(filterSelection, Type) ? true : false
+                  );
 
-            if (proModeFilter && isTypesValid.filter((type) => type === true).length === filterSelection.length) {
-                return advertising;
-            } else {
-                if (!proModeFilter && includes_lodash(isTypesValid, !proModeFilter)) {
-                    return advertising;
-                }
-            }
-        });
+                  if (proModeFilter && isTypesValid.filter((type) => type === true).length === filterSelection.length) {
+                      return advertising;
+                  } else {
+                      if (!proModeFilter && includes_lodash(isTypesValid, !proModeFilter)) {
+                          return advertising;
+                      }
+                  }
+              })
+            : AdvertisingArray;
     };
     useEffect(() => {
         if (routeTitle.length || routeJobsTag.length || routeCity.length) {
@@ -150,8 +152,6 @@ const Jobs: React.FC = () => {
     }, [route]);
     useEffect(() => {
         if (filterSelection.length) {
-            console.log("getFiltredBoxs()", getFiltredBoxs());
-
             setBoxList((prev) => ({
                 ...prev,
                 show:
