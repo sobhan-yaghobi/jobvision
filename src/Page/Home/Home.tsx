@@ -7,7 +7,6 @@ import { AdvertisingArray } from "../../Components/AdvertisingBox/AdvertisingBox
 import {
     ShowAndHideOpacity_Ex,
     ShowAndHideScale_Ex,
-    ShowFromBottom,
     ShowFromLeft,
     ShowFromRight,
     ShowItemsDelay_Var,
