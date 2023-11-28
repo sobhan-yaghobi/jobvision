@@ -75,8 +75,8 @@
     .current-mega-height {
         height: calc(100vh - 5rem);
     }
-    .current-mega-height-dvh {
-        height: calc(100dvh - 5rem);
+    .current-mega-height-svh {
+        height: calc(100svh - 5rem);
     }
 
     .h-d-screen {

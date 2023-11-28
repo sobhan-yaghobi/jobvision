@@ -86,7 +86,7 @@ const Home: React.FC = () => {
         <>
             <Header></Header>
             {/*//? -------------------------------------- Landing -------------------------------------- */}
-            <div className="relative current-mega-height-dvh md:h-auto pt-5 px-2 grid grid-cols-2 grid-rows-2 justify-between md:py-2 md:px-10 md:grid-rows-2 md:items-center lg:grid-rows-3 lg:px-24 z-10">
+            <div className="relative current-mega-height-svh md:h-auto pt-5 px-2 grid grid-cols-2 grid-rows-2 justify-between md:py-2 md:px-10 md:grid-rows-2 md:items-center lg:grid-rows-3 lg:px-24 z-10">
                 <motion.div
                     variants={ShowShortFromBottomHiden_Var}
                     custom={0.3}
