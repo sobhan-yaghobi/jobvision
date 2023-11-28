@@ -12,7 +12,6 @@ import {
     mainItemsBoxInfos,
     mainJobInfoType,
     TypeRoutes,
-    boxListType,
 } from "./Jobs.type";
 import { AdvertisingArray, AdvertisingBoxMainProps } from "../../Components/AdvertisingBox/AdvertisingBox.type";
 
@@ -25,7 +24,7 @@ import {
 } from "../../Animations/UtilsAnimation";
 
 // Functions
-import { includes as includes_lodash } from "lodash";
+import { includes as includes_lodash, pull } from "lodash";
 import { toLowerCaseAction } from "../../Utils/Utils";
 
 // Components
@@ -79,99 +78,62 @@ const Jobs: React.FC = () => {
 
     //? ---------------------------------- Box Lists
     const [proModeFilter, setProModeFilter] = useState(false);
-    const [boxList, setBoxList] = useState<boxListType>({
-        show: "FILTER_SELCTION",
-        FILTER_SELCTION: AdvertisingArray,
-        FILTER_SEARCH: [] as AdvertisingBoxMainProps[],
-    });
+    const [boxList, setBoxList] = useState<AdvertisingBoxMainProps[]>(AdvertisingArray);
     const [filterSelection, setFilterSelection] = useState<string[]>([]);
 
-    const isBoxList = (type: boxListType["show"]): boolean => Boolean(boxList.show === type);
-    const isBoxListLength = (type: boxListType["show"]): boolean => Boolean(boxList[type].length);
-    const boxListArray = (type: boxListType["show"]): AdvertisingBoxMainProps[] => boxList[type];
-
-    const getFiltredBoxs = (): AdvertisingBoxMainProps[] => {
-        const maimAdvertisingArray: AdvertisingBoxMainProps[] =
-            routeTitle.length || routeJobsTag.length || routeCity.length
-                ? [...boxList[boxList.show]]
-                : [...AdvertisingArray];
-        return routeTitle.length || routeJobsTag.length || routeCity.length || filterSelection.length
-            ? maimAdvertisingArray.filter((advertising) => {
-                  const isTypesValid: boolean[] = advertising.data.type.map((Type) =>
-                      includes_lodash(filterSelection, Type) ? true : false
-                  );
-
-                  if (proModeFilter && isTypesValid.filter((type) => type === true).length === filterSelection.length) {
-                      return advertising;
-                  } else {
-                      if (!proModeFilter && includes_lodash(isTypesValid, !proModeFilter)) {
-                          return advertising;
-                      }
-                  }
-              })
-            : AdvertisingArray;
-    };
-    useEffect(() => {
-        if (routeTitle.length || routeJobsTag.length || routeCity.length) {
-            const isTitle = (title: string, name: string): TypeRoutes => ({
-                isRouteValue: Boolean(routeTitle.length),
-                isValueExist: routeTitle.length
-                    ? toLowerCaseAction(title).includes(toLowerCaseAction(routeTitle)) ||
-                      toLowerCaseAction(name).includes(toLowerCaseAction(routeTitle))
-                    : false,
-            });
-            const isTag = (tags: string[] | undefined): TypeRoutes => ({
-                isRouteValue: Boolean(routeJobsTag.length),
-                isValueExist: routeJobsTag.length
-                    ? Boolean(
-                          tags?.filter((tag) => toLowerCaseAction(tag).includes(toLowerCaseAction(routeJobsTag))).length
-                      )
-                    : false,
-            });
-            const isCity = (city: string): TypeRoutes => ({
-                isRouteValue: Boolean(routeCity.length),
-                isValueExist: routeCity.length ? toLowerCaseAction(city).includes(toLowerCaseAction(routeCity)) : false,
-            });
-
-            const mainAdsArray: AdvertisingBoxMainProps[] = boxListArray("FILTER_SELCTION").filter((ads) => {
-                if (
-                    (isTitle(ads.data.title, ads.data.company.name).isValueExist ||
-                        !isTitle(ads.data.title, ads.data.company.name).isRouteValue) &&
-                    (isTag(ads.data.adTags).isValueExist || !isTag(ads.data.adTags).isRouteValue) &&
-                    (isCity(ads.data.company.location).isValueExist || !isCity(ads.data.company.location).isRouteValue)
-                ) {
+    const isTitle = (title: string, name: string): TypeRoutes => ({
+        isRouteValue: Boolean(routeTitle.length),
+        isValueExist: routeTitle.length
+            ? toLowerCaseAction(title).includes(toLowerCaseAction(routeTitle)) ||
+              toLowerCaseAction(name).includes(toLowerCaseAction(routeTitle))
+            : false,
+    });
+    const isTag = (tags: string[] | undefined): TypeRoutes => ({
+        isRouteValue: Boolean(routeJobsTag.length),
+        isValueExist: routeJobsTag.length
+            ? Boolean(tags?.filter((tag) => toLowerCaseAction(tag).includes(toLowerCaseAction(routeJobsTag))).length)
+            : false,
+    });
+    const isCity = (city: string): TypeRoutes => ({
+        isRouteValue: Boolean(routeCity.length),
+        isValueExist: routeCity.length ? toLowerCaseAction(city).includes(toLowerCaseAction(routeCity)) : false,
+    });
+    const boxByFilterSelction = (array: AdvertisingBoxMainProps[]) =>
+        array.filter((ads) => {
+            const isExist = filterSelection.map((filter) => includes_lodash(ads.data.type, filter));
+            if (proModeFilter) {
+                if (pull(isExist, false).length >= filterSelection.length) {
                     return ads;
                 }
-            });
-            console.log("mainAdsArray", mainAdsArray);
-
-            setBoxList((prev) => ({ ...prev, show: "FILTER_SEARCH", FILTER_SEARCH: mainAdsArray }));
-        } else {
-            setBoxList((prev) => ({ ...prev, show: "FILTER_SELCTION", FILTER_SELCTION: getFiltredBoxs() }));
+            } else {
+                if (includes_lodash(isExist, true)) {
+                    return ads;
+                }
+            }
+        });
+    const boxBySearchAds = (array: AdvertisingBoxMainProps[]) =>
+        array.filter((ads) =>
+            (isTitle(ads.data.title, ads.data.company.name).isValueExist ||
+                !isTitle(ads.data.title, ads.data.company.name).isRouteValue) &&
+            (isTag(ads.data.adTags).isValueExist || !isTag(ads.data.adTags).isRouteValue) &&
+            (isCity(ads.data.company.location).isValueExist || !isCity(ads.data.company.location).isRouteValue)
+                ? ads
+                : null
+        );
+    const mergeFilters = () => {
+        let mainBoxList: AdvertisingBoxMainProps[] = [];
+        if ((routeTitle.length || routeJobsTag.length || routeCity.length) && filterSelection.length === 0) {
+            mainBoxList = boxBySearchAds(AdvertisingArray);
         }
-    }, [route]);
-    useEffect(() => {
-        if (filterSelection.length) {
-            setBoxList((prev) => ({
-                ...prev,
-                show:
-                    (routeTitle.length || routeJobsTag.length || routeCity.length) && !prev.FILTER_SELCTION.length
-                        ? "FILTER_SEARCH"
-                        : "FILTER_SELCTION",
-                FILTER_SELCTION: getFiltredBoxs(),
-            }));
-        } else {
-            setBoxList((prev) => ({
-                ...prev,
-                show:
-                    routeTitle.length || routeJobsTag.length || routeCity.length ? "FILTER_SEARCH" : "FILTER_SELCTION",
-                FILTER_SELCTION: AdvertisingArray,
-            }));
+        if (filterSelection.length > 0) {
+            mainBoxList = boxByFilterSelction(boxBySearchAds(AdvertisingArray));
         }
-    }, [filterSelection, proModeFilter]);
-    useEffect(() => {
-        console.log("boxList", boxList);
-    }, [boxList]);
+        if (!routeTitle.length && !routeJobsTag.length && !routeCity.length && !filterSelection.length) {
+            mainBoxList = [...AdvertisingArray];
+        }
+        setBoxList(mainBoxList);
+    };
+    useEffect(() => mergeFilters(), [route, proModeFilter, filterSelection]);
     //! ---------------------------------- Box Lists
 
     //? ---------------------------------- Box Info
@@ -216,14 +178,7 @@ const Jobs: React.FC = () => {
                         فعال سازی اطلاع رسانی شغل ها
                     </Button>
                     <div className="p-3 mt-2 rounded-lg bg-jv-white flex items-center justify-between">
-                        <section>
-                            {isBoxList("FILTER_SEARCH")
-                                ? boxList.FILTER_SEARCH.length
-                                : isBoxList("FILTER_SELCTION")
-                                ? boxList.FILTER_SELCTION.length
-                                : 0}{" "}
-                            فرصت شغلی فعال
-                        </section>
+                        <section>{boxList.length} فرصت شغلی فعال</section>
                         {Object.values(orderMain).length ? (
                             <section className="flex items-center">
                                 <span>مرتب سازی :</span>
@@ -261,8 +216,8 @@ const Jobs: React.FC = () => {
                         ) : null}
                     </div>
                     <div className="wrapper flex flex-col">
-                        {isBoxListLength(boxList.show) ? (
-                            boxListArray(boxList.show).map((item, index) => (
+                        {boxList.length ? (
+                            boxList.map((item, index) => (
                                 <div key={index + 1} className="mt-2">
                                     <AdvertisingBox
                                         type="HideSendCv"

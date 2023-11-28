@@ -17,12 +17,6 @@ export type TypeRoutes = {
     isValueExist: boolean;
 };
 
-export type boxListType = {
-    show: "FILTER_SELCTION" | "FILTER_SEARCH";
-    FILTER_SELCTION: AdvertisingBoxMainProps[];
-    FILTER_SEARCH: AdvertisingBoxMainProps[];
-};
-
 export interface BoxsOrderType {
     id: string;
     title: string;

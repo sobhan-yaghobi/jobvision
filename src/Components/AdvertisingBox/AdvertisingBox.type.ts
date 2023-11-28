@@ -172,7 +172,7 @@ const AdvertisingArray: AdvertisingBoxMainProps[] = [
                 isImportant: true,
                 responsibleEmployer: true,
             },
-            type: ["IS_EMPLOYMENT_OF_THE_DISABLED", "MILITARY_ORDER", "INTERSHIP"],
+            type: ["IS_EMPLOYMENT_OF_THE_DISABLED", "MILITARY_ORDER"],
             adTags: [
                 "front developer",
                 "react js",
@@ -291,7 +291,7 @@ const AdvertisingArray: AdvertisingBoxMainProps[] = [
                 "برنامه نویسی سایت",
                 "برنامه نویس فرانت اند",
             ],
-            type: ["TELECOMMUTING"],
+            type: ["TELECOMMUTING", "INTERSHIP"],
             CreateAt: new Date(2022, 7, 4, 22, 30, 0, 0),
         },
     },
@@ -301,7 +301,7 @@ const AdvertisingArray: AdvertisingBoxMainProps[] = [
             title: "کارآموز طراحی سایت",
             company: {
                 name: "وایت وال",
-                location: "تهران ، سعادت آباد",
+                location: "بندرعباس",
                 logo: "/images/company-whiteVal.webp",
                 score: {
                     companyScore: 4.3,
