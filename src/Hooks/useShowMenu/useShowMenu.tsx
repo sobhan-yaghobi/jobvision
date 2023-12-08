@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 // Types
-import { Item, Link, SubMenu } from "../../Components/MenuItem/menuItem.type";
+import { Item, Link, SubMenu } from "../../Components/Menu/menu.type";
 import { DesktopMenuType, menuMobileFireProps, MobileMenuType } from "./useShowMenu.type";
 // Functions
 import { mapValues } from "lodash";

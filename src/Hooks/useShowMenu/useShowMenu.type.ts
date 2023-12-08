@@ -1,4 +1,4 @@
-import { Item, Link, SubMenu } from "../../Components/MenuItem/menuItem.type";
+import { Item, Link, SubMenu } from "../../Components/Menu/menu.type";
 
 export interface DesktopMenuType {
     mainItem: SubMenu;

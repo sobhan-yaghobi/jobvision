@@ -9,7 +9,7 @@ import {
     ItemGeneratorProps,
     LinkGeneratorProps,
     SubLink,
-} from "./menuItem.type";
+} from "./menu.type";
 
 // Animations
 import { ShowOpacity } from "../../Animations/UtilsAnimation";

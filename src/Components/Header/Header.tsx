@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 // Types
-import { ItemGenerator, LinkGenerator, MenuDesktopItemGenerate, SubMenuGenerator } from "../MenuItem/MenuItem";
-import { menu } from "../MenuItem/menuItem.type";
+import { ItemGenerator, LinkGenerator, MenuDesktopItemGenerate, SubMenuGenerator } from "../Menu/Menu";
+import { menu } from "../Menu/menu.type";
 
 // Animations
 import {
