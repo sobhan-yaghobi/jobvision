@@ -1,44 +1,21 @@
 import { useQueries } from "@tanstack/react-query";
 import supabaseFetch from "../Services/supabaseFetch";
-import useCategories, { categoriesMergeArrayType } from "./useCategories";
-import useProvinces, { provincesMergeArrayType } from "./useProvinces";
+import useCategories from "./useCategories";
+import useProvinces from "./useProvinces";
 import { getItem } from "../Utils/Utils";
 import { concat } from "lodash";
-
-type menuType = {
-    created_at: string;
-    id: string;
-    link: string;
-    megaMenu: boolean;
-    title: string;
-};
-
-interface menuMergeArrayType extends menuType {
-    items: ItemType[];
-}
-
-type ItemType = {
-    created_at: string;
-    id: string;
-    link: string;
-    menu_id: string;
-    title: string;
-};
-
-interface itemMergeArrayType extends ItemType {
-    links: (categoriesMergeArrayType | provincesMergeArrayType)[];
-}
+import { Type_Item, Type_Menu, itemLinks, link, menuItems } from "../Components/Menu/menu.type";
 
 const useMenuFetch = () => {
     const data = useQueries({
         queries: [
             {
                 queryKey: ["menu"],
-                queryFn: async () => await supabaseFetch.get<menuType[]>("menu?select=*").then((res) => res.data),
+                queryFn: async () => await supabaseFetch.get<Type_Menu[]>("menu?select=*").then((res) => res.data),
             },
             {
                 queryKey: ["item"],
-                queryFn: async () => await supabaseFetch.get<ItemType[]>("item?select=*").then((res) => res.data),
+                queryFn: async () => await supabaseFetch.get<Type_Item[]>("item?select=*").then((res) => res.data),
             },
         ],
     });
@@ -47,21 +24,18 @@ const useMenuFetch = () => {
     const { categoriesMergeArray } = useCategories();
     const { provincesMergeArray } = useProvinces();
 
-    const itemMergeArray: itemMergeArrayType[] = Array.isArray(item)
+    const itemMergeArray: itemLinks[] = Array.isArray(item)
         ? [...item].map((Item) => ({
               ...Item,
               links: getItem({
                   main_id: Item.id,
                   key: "item_id",
-                  array: concat<categoriesMergeArrayType | provincesMergeArrayType>(
-                      categoriesMergeArray,
-                      provincesMergeArray
-                  ),
+                  array: concat<link>(categoriesMergeArray, provincesMergeArray),
               }),
           }))
-        : ([] as itemMergeArrayType[]);
+        : ([] as itemLinks[]);
 
-    const menuMergeArray: menuMergeArrayType[] = Array.isArray(menu)
+    const menuMergeArray: menuItems[] = Array.isArray(menu)
         ? [...menu].map((menuItem) => ({
               ...menuItem,
               items: getItem({
@@ -70,7 +44,7 @@ const useMenuFetch = () => {
                   array: itemMergeArray,
               }),
           }))
-        : ([] as menuMergeArrayType[]);
+        : ([] as menuItems[]);
 
     return { menu, item, menuMergeArray };
 };

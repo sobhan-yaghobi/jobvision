@@ -1,34 +1,14 @@
 import { useQueries } from "@tanstack/react-query";
 import supabaseFetch from "../Services/supabaseFetch";
 import { getItem } from "../Utils/Utils";
-
-type provinceType = {
-    created_at: string;
-    id: string;
-    item_id: string;
-    link: string;
-    title: string;
-};
-
-export interface provincesMergeArrayType extends provinceType {
-    sublinks: cityType[];
-}
-
-type cityType = {
-    created_at: string;
-    id: string;
-    link: string;
-    province_id: string;
-    title: string;
-};
+import { Type_Link, cityType, link } from "../Components/Menu/menu.type";
 
 const useProvinces = () => {
     const data = useQueries({
         queries: [
             {
                 queryKey: ["provinces"],
-                queryFn: async () =>
-                    await supabaseFetch.get<provinceType[]>("provinces?select=*").then((res) => res.data),
+                queryFn: async () => await supabaseFetch.get<Type_Link[]>("provinces?select=*").then((res) => res.data),
             },
             {
                 queryKey: ["cities"],
@@ -38,13 +18,13 @@ const useProvinces = () => {
     });
     const provinces = data[0].data;
     const cities = data[1].data;
-    const provincesMergeArray: provincesMergeArrayType[] =
+    const provincesMergeArray: link[] =
         typeof provinces !== "undefined" && Array.isArray(provinces)
             ? [...provinces].map((item) => ({
                   ...item,
                   sublinks: getItem({ main_id: item.id, key: "province_id", array: cities }),
               }))
-            : ([] as provincesMergeArrayType[]);
+            : ([] as link[]);
     return { provinces, cities, provincesMergeArray };
 };
 

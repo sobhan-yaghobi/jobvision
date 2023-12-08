@@ -1,7 +1,7 @@
-import { Item, Link, SubMenu } from "../../Components/Menu/menu.type";
+import { itemLinks, link, menuItems } from "../../Components/Menu/menu.type";
 
 export interface DesktopMenuType {
-    mainItem: SubMenu;
+    mainItem: menuItems;
     isShow: boolean;
     isMega: boolean;
     id: string;
@@ -11,25 +11,25 @@ export interface DesktopMenuType {
 }
 export interface isForSubMenu {
     SpecialType: "isShowSubMenu";
-    data: SubMenu[];
+    data: menuItems[];
 }
 export interface isForItems {
     SpecialType: "isShowItem";
-    data: SubMenu;
+    data: menuItems;
 }
 export interface isForLinks {
     SpecialType: "isShowLinks";
-    data: Link[];
-    mainItem: Item;
+    data: link[];
+    mainItem: itemLinks;
 }
 export type menuMobileFireProps = isForSubMenu | isForItems | isForLinks;
 
 export interface MobileMenuType {
     menuData: {
-        SubMenus: SubMenu[];
-        SubMenu: SubMenu;
-        Item: Item;
-        Links: Link[];
+        SubMenus: menuItems[];
+        SubMenu: menuItems;
+        Item: itemLinks;
+        Links: link[];
     };
     isOpen: boolean;
     isShow: {

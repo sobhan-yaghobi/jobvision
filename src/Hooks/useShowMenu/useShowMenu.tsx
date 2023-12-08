@@ -1,19 +1,19 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 // Types
-import { Item, Link, SubMenu } from "../../Components/Menu/menu.type";
+import { itemLinks, link, menuItems } from "../../Components/Menu/menu.type";
 import { DesktopMenuType, menuMobileFireProps, MobileMenuType } from "./useShowMenu.type";
 // Functions
 import { mapValues } from "lodash";
 
-const useShowMenu = (menu: SubMenu[]) => {
+const useShowMenu = (menu: menuItems[]) => {
     const elm = useRef<HTMLLIElement>(null);
 
     const menuMobileDefaultValue: MobileMenuType = {
         menuData: {
-            SubMenus: [] as SubMenu[],
-            SubMenu: {} as SubMenu,
-            Item: {} as Item,
-            Links: [] as Link[],
+            SubMenus: [] as menuItems[],
+            SubMenu: {} as menuItems,
+            Item: {} as itemLinks,
+            Links: [] as link[],
         },
         isOpen: false,
         isShow: {
@@ -26,7 +26,7 @@ const useShowMenu = (menu: SubMenu[]) => {
     };
     const [menuMobile, setMenuMobiele] = useState<MobileMenuType>({ ...menuMobileDefaultValue });
     const [menuDesktop, setMenuDesktop] = useState<DesktopMenuType>({
-        mainItem: {} as SubMenu,
+        mainItem: {} as menuItems,
         isShow: false,
         isMega: false,
         id: "",
@@ -48,9 +48,9 @@ const useShowMenu = (menu: SubMenu[]) => {
                 },
                 menuData: {
                     SubMenus: menu,
-                    SubMenu: {} as SubMenu,
-                    Links: [] as Link[],
-                    Item: {} as Item,
+                    SubMenu: {} as menuItems,
+                    Links: [] as link[],
+                    Item: {} as itemLinks,
                 },
             }));
         } else if (props.SpecialType === "isShowItem") {
@@ -66,8 +66,8 @@ const useShowMenu = (menu: SubMenu[]) => {
                 menuData: {
                     SubMenus: prev.menuData.SubMenus,
                     SubMenu: props.data,
-                    Links: [] as Link[],
-                    Item: {} as Item,
+                    Links: [] as link[],
+                    Item: {} as itemLinks,
                 },
             }));
         } else if (props.SpecialType === "isShowLinks") {
@@ -130,7 +130,7 @@ const useShowMenu = (menu: SubMenu[]) => {
         setMenuDesktop((prev) => {
             if (ID === prev.id) {
                 return {
-                    mainItem: {} as SubMenu,
+                    mainItem: {} as menuItems,
                     id: "",
                     isShow: false,
                     isMega,

@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 // Types
 import {
-    Item,
-    Link,
-    SubMenu,
     MenuDesktopItemGenerateProps,
     SubMenuGeneratorProps,
     ItemGeneratorProps,
     LinkGeneratorProps,
-    SubLink,
+    menuItems,
+    itemLinks,
 } from "./menu.type";
 
 // Animations
@@ -23,10 +21,10 @@ import useSearchForm from "../../Hooks/useSearchForm";
 
 export const MenuDesktopItemGenerate: React.FC<MenuDesktopItemGenerateProps> = ({ menuData, onClose }) => {
     if (menuData.megaMenu) {
-        const [mainItem, setMainItem] = useState<Item>({} as Item);
+        const [mainItem, setMainItem] = useState<itemLinks>({} as itemLinks);
 
         useEffect(() => {
-            const firstMenuItem: Item = { ...menuData.items[0] };
+            const firstMenuItem: itemLinks = { ...menuData.items[0] };
 
             setMainItem(firstMenuItem);
         }, []);
@@ -111,7 +109,7 @@ export const MenuDesktopItemGenerate: React.FC<MenuDesktopItemGenerateProps> = (
 };
 
 export const SubMenuGenerator: React.FC<SubMenuGeneratorProps> = (props) => {
-    const subMenuClickAction = (item: SubMenu) =>
+    const subMenuClickAction = (item: menuItems) =>
         props.Type === "Desktop"
             ? props.ClickHandler(item.id, item.megaMenu)
             : props.Type === "Mobile"
@@ -180,7 +178,7 @@ export const SubMenuGenerator: React.FC<SubMenuGeneratorProps> = (props) => {
 };
 
 export const ItemGenerator: React.FC<ItemGeneratorProps> = (props) => {
-    const itemClickAction = (item: Item) =>
+    const itemClickAction = (item: itemLinks) =>
         props.Type === "Desktop"
             ? props.ClickHandler(item)
             : props.Type === "Mobile"

@@ -1,25 +1,7 @@
 import { useQueries } from "@tanstack/react-query";
 import supabaseFetch from "../Services/supabaseFetch";
 import { getItem } from "../Utils/Utils";
-
-type categoryType = {
-    created_at: string;
-    id: string;
-    item_id: string;
-    link: string;
-    title: string;
-};
-
-export interface categoriesMergeArrayType extends categoryType {
-    sublinks: tagType[];
-}
-
-type tagType = {
-    category_id: string;
-    created_at: string;
-    id: string;
-    title: string;
-};
+import { Type_Link, link, tagType } from "../Components/Menu/menu.type";
 
 const useCategories = () => {
     const data = useQueries({
@@ -27,8 +9,8 @@ const useCategories = () => {
             {
                 queryKey: ["categories"],
                 queryFn: async () =>
-                    await supabaseFetch.get<categoryType[]>("categories?select=*").then((res) => res.data),
-                select: (data: categoryType[]) => data,
+                    await supabaseFetch.get<Type_Link[]>("categories?select=*").then((res) => res.data),
+                select: (data: Type_Link[]) => data,
             },
             {
                 queryKey: ["tags"],
@@ -39,13 +21,13 @@ const useCategories = () => {
     });
     const categories = data[0].data;
     const tags = data[1].data;
-    const categoriesMergeArray: categoriesMergeArrayType[] =
+    const categoriesMergeArray: link[] =
         typeof categories !== "undefined" && Array.isArray(categories)
             ? [...categories].map((item) => ({
                   ...item,
                   sublinks: getItem({ main_id: item.id, key: "category_id", array: tags }),
               }))
-            : ([] as categoriesMergeArrayType[]);
+            : ([] as link[]);
 
     return { categories, tags, categoriesMergeArray };
 };

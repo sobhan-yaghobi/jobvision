@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 // Types
 import { ItemGenerator, LinkGenerator, MenuDesktopItemGenerate, SubMenuGenerator } from "../Menu/Menu";
-import { menu } from "../Menu/menu.type";
 
 // Animations
 import {
@@ -33,8 +32,7 @@ import useMenuFetch from "../../Hooks/useMenuFetch";
 
 const Header: React.FC = () => {
     const authContext = useContext(AuthContext);
-    const { menuMergeArray: menuss } = useMenuFetch();
-    console.log("menuss ", menuss);
+    const { menuMergeArray: menu } = useMenuFetch();
 
     const {
         elm,
