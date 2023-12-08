@@ -9,7 +9,6 @@ import {
     LongStripVertical_Ex,
     ShowAndHideOpacity_Ex,
     ShowHideClipFromBottom_Ex,
-    ShowOpacity,
 } from "../../Animations/UtilsAnimation";
 import { ShowHideMenuItemChildToLeftOrRight } from "../../Animations/HeaderAnimation";
 
@@ -30,9 +29,12 @@ import ArrowLeftIconWhite from "/Svg/ArrowLeftWhiteColor.svg";
 import { AiOutlineClose } from "react-icons/ai";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
 import { AuthContext } from "../../Context/AuthContext";
+import useMenuFetch from "../../Hooks/useMenuFetch";
 
 const Header: React.FC = () => {
     const authContext = useContext(AuthContext);
+    const { menuMergeArray: menuss } = useMenuFetch();
+    console.log("menuss ", menuss);
 
     const {
         elm,

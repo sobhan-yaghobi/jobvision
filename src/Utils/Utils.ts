@@ -40,6 +40,9 @@ const messageSuccess = (name: string) => `${name} با موفقیت به اتم�
 
 const toLowerCaseAction = (value: string): string => value.toLocaleLowerCase();
 
+const getItem = <T>({ main_id, array, key }: { main_id: string; array: T[] | undefined; key: keyof T }): T[] =>
+    typeof array !== "undefined" ? array.filter((item) => item[key] === main_id) : ([] as T[]);
+
 export {
     getTime,
     messageLengthGenerator,
@@ -47,4 +50,5 @@ export {
     messageRequiredGenerator,
     messageSuccess,
     toLowerCaseAction,
+    getItem,
 };

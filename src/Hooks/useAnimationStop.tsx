@@ -27,6 +27,7 @@ const useAnimationStop = ({ screen, diActiveAnimation, animation, intervalTime }
     const [runAnimation, setRunAnimation] = useState(false);
 
     const animationAction = useCallback(() => {
+        setTimeout(() => animation(), 1500);
         myInterval.current = setInterval(() => {
             animation();
         }, intervalTime);
