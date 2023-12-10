@@ -54,6 +54,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import useAdvertisings from "../../Hooks/useAdvertisings";
+import useCompanies from "../../Hooks/useCompanies";
 
 const Jobs: React.FC = () => {
     const { route, setValue, routeTitle, routeJobsTag, routeCity } = useSearchForm();
