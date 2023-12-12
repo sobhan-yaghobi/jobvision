@@ -1,6 +1,5 @@
 import { TypeMessShow } from "../../Hooks/useShowMssAndNotif";
 import { TypeOptionInput } from "../../Components/Input/Input.type";
-import { categoryFilterArray } from "../../Components/JobsFilter/JobsFilter.type";
 
 export namespace LiteralsMainPage {
     export type TypeMainPage = {
@@ -94,7 +93,7 @@ export namespace SubPageCmsTypes {
     export type AdvertisingAddProps = EditHomePageProps;
     type TypeAdSelectForm = {
         label: string;
-        value: categoryFilterArray;
+        value: string;
     };
     export const typeOfCooperationOption: TypeOptionInput[] = [
         { label: "تمام وقت", value: "TYPE_OF_COOPERTION_FULL_TIME" },

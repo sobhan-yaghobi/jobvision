@@ -3,9 +3,6 @@ import useSearchForm from "../../Hooks/useSearchForm";
 
 //  Types
 import {
-    ChildOfFilterType,
-    FilterType,
-    categoryArray,
     selectedFiltersType,
     removeFilterActionTypes,
     isDublicateTypes,
@@ -13,6 +10,8 @@ import {
     FilterGeneratorProps,
     JobsFilterProps,
     MenuSettingProps,
+    TypeFilterTypes,
+    Type_category_merged_array,
 } from "./JobsFilter.type";
 
 // Animations
@@ -23,6 +22,7 @@ import { includes } from "lodash";
 
 // Hooks
 import useWindowsSize from "../../Hooks/useWindowsSize";
+import useAdsFilterCategories from "../../Hooks/useAdsFilterCategories";
 
 // Components
 import { motion, AnimatePresence } from "framer-motion";
@@ -37,6 +37,7 @@ import { GoTrash } from "react-icons/go";
 const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnProMode, setIsFilterOnProMode }) => {
     const { clearForm: clearRouteParams } = useSearchForm();
     const [WindowsSize] = useWindowsSize();
+    const { categoryMergeArray } = useAdsFilterCategories();
     const [menuMobile, setMenuMobile] = useState<{ mode: "ShowSettingFilter" | "ShowFilter"; isShow: boolean }>({
         mode: "ShowFilter",
         isShow: false,
@@ -44,7 +45,7 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
     const [selectedFilters, setSelectedFilters] = useState<selectedFiltersType[]>([]);
 
     const [mainFilterMenu, setMainFilterMenu] = useState<{
-        data: FilterType;
+        data: Type_category_merged_array;
         position: {
             x: number | undefined;
             y: number | undefined;
@@ -52,7 +53,7 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
             height: number | undefined;
         };
     }>({
-        data: {} as FilterType,
+        data: {} as Type_category_merged_array,
         position: { x: undefined, y: undefined, width: undefined, height: undefined },
     });
 
@@ -69,7 +70,7 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
 
     const diActiveMenu = () =>
         setMainFilterMenu({
-            data: {} as FilterType,
+            data: {} as Type_category_merged_array,
             position: { x: undefined, y: undefined, width: undefined, height: undefined },
         });
 
@@ -85,24 +86,28 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
     };
 
     const filterAction = (
-        Item: FilterType,
-        SubItem: ChildOfFilterType | undefined,
+        Item: Type_category_merged_array,
+        SubItem: TypeFilterTypes | undefined,
         event: React.MouseEvent<HTMLSpanElement, MouseEvent>
     ) => {
         setSelectedFilters((prev) => {
-            if (!Item.isMultiple) {
-                if (typeof Item.type !== "undefined" && typeof Item.sub === "undefined") {
-                    return isDublicate({ mode: "FilterType", ItemType: Item.type })
-                        ? [...prev.filter((filterItem) => filterItem.type !== Item.type)]
+            if (!Item.is_multiple) {
+                if (Item.sub.length === 0) {
+                    return isDublicate({ mode: "FilterType", ItemType: Item.category_type })
+                        ? [...prev.filter((filterItem) => filterItem.type !== Item.category_type)]
                         : [
                               ...prev,
-                              { title: Item.title, type: Item.type, category: Item.category ? Item.category : "" },
+                              {
+                                  title: Item.title,
+                                  type: Item.category_type,
+                                  category: Item.category_type ? Item.category_type : "",
+                              },
                           ];
                 } else {
                     return typeof SubItem !== "undefined"
                         ? isDublicate({ mode: "CategoryType", ItemType: SubItem.category })
                             ? [
-                                  ...prev.filter((filterItem) => filterItem.category !== Item.category),
+                                  ...prev.filter((filterItem) => filterItem.category !== Item.category_type),
                                   { title: SubItem.title, type: SubItem.type, category: SubItem.category },
                               ]
                             : [...prev, { title: SubItem.title, type: SubItem.type, category: SubItem.category }]
@@ -118,30 +123,35 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
         });
         // FOR MENU
         if (WindowsSize.innerWidth >= 768) {
-            const isExsist = Boolean(mainFilterMenu.data.id === Item.id);
-            if (isExsist && !Item.isMultiple) {
+            const isExsist = Boolean(mainFilterMenu.data.category_type === Item.category_type);
+            if (isExsist && !Item.is_multiple) {
                 diActiveMenu();
             } else if (!isExsist) {
                 setMainFilterAction(event, Item);
             }
         } else {
-            if (typeof Item.sub !== "undefined") {
+            if (Item.sub.length > 0) {
                 setMenuMobile({ mode: "ShowFilter", isShow: true });
                 setMainFilterAction(event, Item);
             }
         }
     };
 
-    const setMainFilterAction = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>, Item: FilterType) => {
-        setMainFilterMenu({
-            data: Item,
-            position: {
-                x: event.currentTarget.offsetLeft,
-                y: event.currentTarget.offsetTop,
-                height: event.currentTarget.clientHeight,
-                width: event.currentTarget.clientWidth,
-            },
-        });
+    const setMainFilterAction = (
+        event: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+        Item: Type_category_merged_array
+    ) => {
+        Item.sub.length > 0
+            ? setMainFilterMenu({
+                  data: Item,
+                  position: {
+                      x: event.currentTarget.offsetLeft,
+                      y: event.currentTarget.offsetTop,
+                      height: event.currentTarget.clientHeight,
+                      width: event.currentTarget.clientWidth,
+                  },
+              })
+            : null;
     };
 
     const isDublicate = ({ mode, ItemType }: isDublicateTypes): boolean => {
@@ -214,7 +224,7 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
                         <>
                             <AiOutlineDown
                                 className={`mr-1 transition-all ${
-                                    mainFilterMenu.data.id === props.Item.id ? "rotate-180" : ""
+                                    mainFilterMenu.data.category_type === props.Item.category_type ? "rotate-180" : ""
                                 }`}
                             ></AiOutlineDown>
                         </>
@@ -229,47 +239,54 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
     const FilterGenerator: React.FC<FilterGeneratorProps> = (props) => {
         if (props.mode === "ShowFilter") {
             const filterSelectAction = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-                if (!isDublicate({ mode: "CategoryType", ItemType: props.item.category }) || props.item.isMultiple) {
+                if (
+                    !isDublicate({ mode: "CategoryType", ItemType: props.item.category_type }) ||
+                    props.item.is_multiple
+                ) {
                     filterAction(props.item, undefined, e);
                 }
                 if (
-                    isDublicate({ mode: "CategoryType", ItemType: props.item.category }) &&
-                    typeof props.item.category !== "undefined" &&
-                    !props.item.isMultiple
+                    isDublicate({ mode: "CategoryType", ItemType: props.item.category_type }) &&
+                    typeof props.item.category_type !== "undefined" &&
+                    !props.item.is_multiple
                 ) {
-                    removeFilterAction({ mode: "RemoveCategory", mainType: props.item.category, isClose: true });
+                    removeFilterAction({ mode: "RemoveCategory", mainType: props.item.category_type, isClose: true });
                 }
-                if (mainFilterMenu.data.id === props.item.id) {
+                if (mainFilterMenu.data.category_type === props.item.category_type) {
                     diActiveMenu();
                 }
             };
             const FilterItemClassName = `filtredItem select-none box-info-type text-sm flex items-center px-4 py-2 rounded-2xl cursor-pointer relative ${
-                isDublicate({ mode: "FilterType", ItemType: props.item.type }) ||
-                isDublicate({ mode: "CategoryType", ItemType: props.item.category })
+                isDublicate({ mode: "FilterType", ItemType: props.item.category_type }) ||
+                isDublicate({ mode: "CategoryType", ItemType: props.item.category_type })
                     ? "text-jv-primary bg-jv-lightPrimary"
                     : ""
             }`;
             return (
                 <>
-                    <div key={props.item.id} onClick={filterSelectAction} className={FilterItemClassName}>
-                        {isDublicate({ mode: "FilterType", ItemType: props.item.type }) ? (
+                    <div
+                        key={`FilterGenerator-${props.item.category_type}`}
+                        onClick={filterSelectAction}
+                        className={FilterItemClassName}
+                    >
+                        {isDublicate({ mode: "FilterType", ItemType: props.item.category_type }) ? (
                             <FilterContentGenerator
                                 mode="SUB_FALSE_MULTIPLE_FALSE"
                                 ItemType={props.item}
                             ></FilterContentGenerator>
-                        ) : typeof props.item.category !== "undefined" &&
-                          isDublicate({ mode: "CategoryType", ItemType: props.item.category }) ? (
+                        ) : typeof props.item.category_type !== "undefined" &&
+                          isDublicate({ mode: "CategoryType", ItemType: props.item.category_type }) ? (
                             <>
-                                {props.item.isMultiple ? (
+                                {props.item.is_multiple ? (
                                     <FilterContentGenerator
                                         mode="SUB_&_MULTIPLE_TRUE"
-                                        ItemType={props.item.category}
+                                        ItemType={props.item.category_type}
                                         Item={props.item}
                                     ></FilterContentGenerator>
                                 ) : (
                                     <FilterContentGenerator
                                         mode="SUB_TRUE_MULTIPLE_FALSE"
-                                        ItemType={props.item.category}
+                                        ItemType={props.item.category_type}
                                     ></FilterContentGenerator>
                                 )}
                             </>
@@ -353,8 +370,15 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
             <div>
                 <FilterGenerator mode="ShowFilterIcon"></FilterGenerator>
             </div>
-            {categoryArray.map((item) => (
+            {/* {categoryArray.map((item) => (
                 <FilterGenerator mode="ShowFilter" key={item.id} item={{ ...item }}></FilterGenerator>
+            ))} */}
+            {categoryMergeArray.map((item) => (
+                <FilterGenerator
+                    mode="ShowFilter"
+                    key={`category-item-${item.category_type}`}
+                    item={{ ...item }}
+                ></FilterGenerator>
             ))}
             {/*//! -------------------------------------- Filter Desktop Menu -------------------------------------- */}
             <AnimatePresence>
@@ -378,7 +402,7 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
                             {mainFilterMenu.data.sub.map((subItem) => (
                                 <li
                                     onClick={(e) => filterAction(mainFilterMenu.data, subItem, e)}
-                                    key={subItem.id}
+                                    key={`subitem-${subItem.type}`}
                                     className="py-2 flex items-center cursor-pointer"
                                 >
                                     <div
@@ -386,7 +410,7 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
                                             isDublicate({ mode: "FilterType", ItemType: subItem.type })
                                                 ? "bg-jv-primary"
                                                 : "bg-jv-lightGray3x"
-                                        } ${mainFilterMenu.data.isMultiple ? "rounded-sm" : "rounded-full"}`}
+                                        } ${mainFilterMenu.data.is_multiple ? "rounded-sm" : "rounded-full"}`}
                                     ></div>
 
                                     <span className="mr-2">{subItem.title}</span>
@@ -443,7 +467,7 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
                                             {mainFilterMenu.data.sub.map((subItem) => (
                                                 <li
                                                     onClick={(e) => filterAction(mainFilterMenu.data, subItem, e)}
-                                                    key={subItem.id}
+                                                    key={`main_filter-${subItem.type}`}
                                                     className="py-2 flex items-center cursor-pointer text-jv-black"
                                                 >
                                                     <div
@@ -452,7 +476,7 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
                                                                 ? "bg-jv-primary"
                                                                 : "bg-jv-lightGray3x"
                                                         } ${
-                                                            mainFilterMenu.data.isMultiple
+                                                            mainFilterMenu.data.is_multiple
                                                                 ? "rounded-sm"
                                                                 : "rounded-full"
                                                         }`}
@@ -469,10 +493,10 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
                                                 textColor="primary"
                                                 size="small"
                                                 ClickHandler={() =>
-                                                    typeof mainFilterMenu.data.category !== "undefined" &&
+                                                    typeof mainFilterMenu.data.category_type !== "undefined" &&
                                                     removeFilterAction({
                                                         mode: "RemoveCategory",
-                                                        mainType: mainFilterMenu.data.category,
+                                                        mainType: mainFilterMenu.data.category_type,
                                                         isClose: false,
                                                     })
                                                 }
