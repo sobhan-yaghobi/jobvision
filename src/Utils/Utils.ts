@@ -2,10 +2,10 @@ export interface TimeType {
     date: number;
     type: "Second" | "Minute" | "Hour" | "Day" | "Month" | "Year" | "NotValid";
 }
-const getTime = (date: Date): TimeType => {
+const getTime = (date: Date | string): TimeType => {
     const now = new Date();
     const nowTime = now.getTime();
-    const dateTime = date.getTime();
+    const dateTime = typeof date === "string" ? new Date(date).getTime() : date.getTime();
 
     const mainTime = nowTime - dateTime;
     const secondsTime = Math.floor(mainTime / 1000);

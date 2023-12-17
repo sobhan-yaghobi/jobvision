@@ -1,6 +1,7 @@
 // Hooks
 import React, { useState, useRef, Fragment, useEffect } from "react";
 import useSearchForm from "../../Hooks/useSearchForm";
+import useBoxList from "../../Hooks/useBoxList";
 
 // Types
 import {
@@ -13,7 +14,7 @@ import {
     mainJobInfoType,
     TypeRoutes,
 } from "./Jobs.type";
-import { AdvertisingArray, AdvertisingBoxMainProps } from "../../Components/AdvertisingBox/AdvertisingBox.type";
+import { MainTypeAdvertisingBoxProps, TypeAdvertising } from "../../Components/AdvertisingBox/AdvertisingBox.type";
 
 // Animations
 import {
@@ -24,7 +25,7 @@ import {
 } from "../../Animations/UtilsAnimation";
 
 // Functions
-import { includes as includes_lodash, pull } from "lodash";
+import { eq, includes as includes_lodash, isEqual, pull } from "lodash";
 import { toLowerCaseAction } from "../../Utils/Utils";
 
 // Components
@@ -54,8 +55,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import useAdvertisings from "../../Hooks/useAdvertisings";
-import useCompanies from "../../Hooks/useCompanies";
 
 const Jobs: React.FC = () => {
     const { route, setValue, routeTitle, routeJobsTag, routeCity } = useSearchForm();
@@ -80,9 +79,14 @@ const Jobs: React.FC = () => {
 
     //? ---------------------------------- Box Lists
     const [proModeFilter, setProModeFilter] = useState(false);
-    const [boxList, setBoxList] = useState<AdvertisingBoxMainProps[]>(AdvertisingArray);
+    const {
+        boxList,
+        setBoxList,
+        getAdvertisingWithCompany,
+        mainBox: mainJobInfo,
+        setMainBox: setMainJobInfo,
+    } = useBoxList();
     const [filterSelection, setFilterSelection] = useState<string[]>([]);
-
     const isTitle = (title: string, name: string): TypeRoutes => ({
         isRouteValue: Boolean(routeTitle.length),
         isValueExist: routeTitle.length
@@ -100,9 +104,9 @@ const Jobs: React.FC = () => {
         isRouteValue: Boolean(routeCity.length),
         isValueExist: routeCity.length ? toLowerCaseAction(city).includes(toLowerCaseAction(routeCity)) : false,
     });
-    const boxByFilterSelction = (array: AdvertisingBoxMainProps[]) =>
+    const boxByFilterSelction = (array: TypeAdvertising[]) =>
         array.filter((ads) => {
-            const isExist = filterSelection.map((filter) => includes_lodash(ads.data.type, filter));
+            const isExist = filterSelection.map((filter) => includes_lodash(ads.ads_types, filter));
             if (proModeFilter) {
                 if (pull(isExist, false).length >= filterSelection.length) {
                     return ads;
@@ -113,25 +117,24 @@ const Jobs: React.FC = () => {
                 }
             }
         });
-    const boxBySearchAds = (array: AdvertisingBoxMainProps[]) =>
+    const boxBySearchAds = (array: TypeAdvertising[]) =>
         array.filter((ads) =>
-            (isTitle(ads.data.title, ads.data.company.name).isValueExist ||
-                !isTitle(ads.data.title, ads.data.company.name).isRouteValue) &&
-            (isTag(ads.data.adTags).isValueExist || !isTag(ads.data.adTags).isRouteValue) &&
-            (isCity(ads.data.company.location).isValueExist || !isCity(ads.data.company.location).isRouteValue)
+            (isTitle(ads.title, ads.company.name).isValueExist || !isTitle(ads.title, ads.company.name).isRouteValue) &&
+            (isTag(ads.ads_tags).isValueExist || !isTag(ads.ads_tags).isRouteValue) &&
+            (isCity(ads.company.location).isValueExist || !isCity(ads.company.location).isRouteValue)
                 ? ads
                 : null
         );
     const mergeFilters = () => {
-        let mainBoxList: AdvertisingBoxMainProps[] = [];
+        let mainBoxList: TypeAdvertising[] = [];
         if ((routeTitle.length || routeJobsTag.length || routeCity.length) && filterSelection.length === 0) {
-            mainBoxList = boxBySearchAds(AdvertisingArray);
+            mainBoxList = boxBySearchAds(getAdvertisingWithCompany());
         }
         if (filterSelection.length > 0) {
-            mainBoxList = boxByFilterSelction(boxBySearchAds(AdvertisingArray));
+            mainBoxList = boxByFilterSelction(boxBySearchAds(getAdvertisingWithCompany()));
         }
         if (!routeTitle.length && !routeJobsTag.length && !routeCity.length && !filterSelection.length) {
-            mainBoxList = [...AdvertisingArray];
+            mainBoxList = [...getAdvertisingWithCompany()];
         }
         setBoxList(mainBoxList);
     };
@@ -140,13 +143,7 @@ const Jobs: React.FC = () => {
 
     //? ---------------------------------- Box Info
     const [mainItemInfo, setMainItemInfo] = useState<MainItemBoxInfoType>(mainItemsBoxInfos[0]);
-    const mainJobIdFromRoute = route.get("advertisingId");
-    const mainJobsFromRoute = AdvertisingArray.filter((ads) => ads.data.id === mainJobIdFromRoute).at(0);
-    const [mainJobInfo, setMainJobInfo] = useState<mainJobInfoType>(
-        typeof mainJobsFromRoute !== "undefined"
-            ? { isShow: true, mainInfo: mainJobsFromRoute?.data }
-            : ({} as mainJobInfoType)
-    );
+
     //! ---------------------------------- Box Info
 
     return (
@@ -180,7 +177,7 @@ const Jobs: React.FC = () => {
                         فعال سازی اطلاع رسانی شغل ها
                     </Button>
                     <div className="p-3 mt-2 rounded-lg bg-jv-white flex items-center justify-between">
-                        <section>{boxList.length} فرصت شغلی فعال</section>
+                        <section>{boxList?.length} فرصت شغلی فعال</section>
                         {Object.values(orderMain).length ? (
                             <section className="flex items-center">
                                 <span>مرتب سازی :</span>
@@ -218,17 +215,17 @@ const Jobs: React.FC = () => {
                         ) : null}
                     </div>
                     <div className="wrapper flex flex-col">
-                        {boxList.length ? (
-                            boxList.map((item, index) => (
+                        {boxList?.length ? (
+                            boxList?.map((item, index) => (
                                 <div key={index + 1} className="mt-2">
                                     <AdvertisingBox
                                         type="HideSendCv"
                                         clickHandler={() => {
-                                            setMainJobInfo({ isShow: true, mainInfo: { ...item.data } });
-                                            setValue({ name: "advertisingId", value: item.data.id });
+                                            setMainJobInfo({ isShow: true, mainInfo: { ...item } });
+                                            setValue({ name: "advertisingId", value: item.id });
                                         }}
-                                        data={{ ...item.data }}
-                                        isActive={item.data.id === mainJobInfo.mainInfo?.id ? true : false}
+                                        data={{ ...item }}
+                                        isActive={item.id === mainJobInfo.mainInfo?.id ? true : false}
                                     ></AdvertisingBox>
                                 </div>
                             ))
@@ -273,7 +270,7 @@ const Jobs: React.FC = () => {
                                 key={mainItemInfo.id}
                                 className="px-3 py-6 -z-10"
                             >
-                                <BoxInfo type={mainItemInfo.type} info={{ ...mainJobInfo.mainInfo }}></BoxInfo>
+                                <BoxInfo type={mainItemInfo.type} jobInfo={{ ...mainJobInfo.mainInfo }}></BoxInfo>
                             </motion.div>
                         </>
                     ) : (
@@ -328,7 +325,10 @@ const Jobs: React.FC = () => {
                                         transition={{ ease: "backOut" }}
                                         className="px-3 py-6"
                                     >
-                                        <BoxInfo type={mainItemInfo.type} info={{ ...mainJobInfo.mainInfo }}></BoxInfo>
+                                        <BoxInfo
+                                            type={mainItemInfo.type}
+                                            jobInfo={{ ...mainJobInfo.mainInfo }}
+                                        ></BoxInfo>
                                     </motion.div>
                                 </div>
                             </motion.div>
@@ -449,11 +449,11 @@ const BoxInfoCard: React.FC<BoxInfoCardProps> = ({ mainInfoJob, mainItemInfo, se
 
                         <path d="M19.2917 18.3169C19.0146 18.7792 19.3153 19.5 19.8543 19.5H20C22.0711 19.5 23.75 17.8211 23.75 15.75C23.75 13.6789 22.0711 12 20 12H19.8543C19.3153 12 19.0146 12.7208 19.2917 13.1831C19.4052 13.3725 19.6056 13.5 19.8264 13.5H20C21.2426 13.5 22.25 14.5074 22.25 15.75C22.25 16.9926 21.2426 18 20 18H19.8264C19.6056 18 19.4052 18.1275 19.2917 18.3169Z" />
                     </svg>
-                    <p className="mr-3 text-xs truncate">{mainInfoJob.company.OrganizationEmploy} نفر</p>
+                    <p className="mr-3 text-xs truncate">{mainInfoJob.company.organization_employ} نفر</p>
                 </div>
                 <div className="w-8/12 flex items-center text-jv-lightGray">
                     <VscPreview className="text-2xl text-jv-lightGray2x" />
-                    <p className="mr-3 text-xs truncate w-10/12">{mainInfoJob.company.CompanySlogan}</p>
+                    <p className="mr-3 text-xs truncate w-10/12">{mainInfoJob.company.compnay_slogan}</p>
                 </div>
             </div>
             <div className="w-full sticky top-28 bg-jv-white z-40">
@@ -477,9 +477,8 @@ const BoxInfoCard: React.FC<BoxInfoCardProps> = ({ mainInfoJob, mainItemInfo, se
     );
 };
 
-const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
-    const jobInfo = info.jobInfo;
-    const jobCompany = info.company;
+const BoxInfo: React.FC<BoxInfoProps> = ({ type, jobInfo }) => {
+    const jobCompany = jobInfo.company;
 
     if (type === "INFO_JOB") {
         return (
@@ -489,39 +488,27 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
                     <div className="text-sm pr-3 flex flex-wrap">
                         <div className="w-1/2 pl-5 mt-5">
                             <h5>روز و ساعت کاری</h5>
-                            <p className="truncate text-jv-lightGray2x">{info.jobInfo.workTime}</p>
+                            <p className="truncate text-jv-lightGray2x">{jobInfo.work_time}</p>
                         </div>
                         <div className="w-1/2 pl-5 mt-5">
                             <h5>نوع همکاری</h5>
-                            <p className="truncate text-jv-lightGray2x">
-                                {jobInfo.typeOfCooperation === "TYPE_OF_COOPERTION_CONTRACTUAL_TIME"
-                                    ? "قراردادی / پروژه ای"
-                                    : jobInfo.typeOfCooperation === "TYPE_OF_COOPERTION_FULL_TIME"
-                                    ? "تمام وقت"
-                                    : jobInfo.typeOfCooperation === "TYPE_OF_COOPERTION_PART_TIME"
-                                    ? "نیمه وقت"
-                                    : ""}
-                            </p>
+                            <p className="truncate text-jv-lightGray2x">{jobInfo.cooperation_ads_type}</p>
                         </div>
                         <div className="w-1/2 pl-5 mt-5">
                             <h5>سفرهای کاری</h5>
-                            <p className="truncate text-jv-lightGray2x">
-                                {typeof jobInfo.businessTrips !== "undefined" ? jobInfo.businessTrips : "-"}
-                            </p>
+                            <p className="truncate text-jv-lightGray2x">{jobInfo.business_trips ?? "-"}</p>
                         </div>
-                        {typeof jobInfo.benefitsAndFacilities !== "undefined" ? (
-                            <div className="w-1/2 pl-5 mt-5">
-                                <h5>مزایا و تسهیلات</h5>
-                                <p className="truncate text-jv-lightGray2x">{jobInfo.benefitsAndFacilities}</p>
-                            </div>
-                        ) : null}
+                        <div className="w-1/2 pl-5 mt-5">
+                            <h5>مزایا و تسهیلات</h5>
+                            <p className="truncate text-jv-lightGray2x">{jobInfo.benefits_and_facilities}</p>
+                        </div>
                     </div>
                 </section>
-                {typeof jobInfo.keyIndicators !== "undefined" ? (
+                {typeof jobInfo.key_indicators !== "undefined" ? (
                     <section className="mb-6">
                         <h2>شاخص های کلیدی از نظر کارفرما</h2>
                         <div className="pr-3 pt-2 text-jv-lightGray2x flex flex-col">
-                            {jobInfo.keyIndicators.map((item, index) => (
+                            {jobInfo.key_indicators.map((item, index) => (
                                 <div
                                     key={index + 1}
                                     className={`mt-5 w-fit ${item.includes("-") ? "box-info-type" : "text-sm"}`}
@@ -532,81 +519,36 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
                         </div>
                     </section>
                 ) : null}
-
-                <section className="mb-6">
-                    <h2>شرح شغل و وظایف</h2>
-                    <div className="mt-5 pr-3">
-                        <p className="text-sm mb-6">{jobInfo.jobDuties.desc}</p>
-                        {jobInfo.jobDuties.lists.map((mainItem, index) => (
-                            <Fragment key={index + 1}>
-                                <div className="flex items-center">
-                                    <div className="w-2 h-2 ml-2 bg-jv-primary rounded-full"></div>
-                                    <h5 className="text-base mb-1">{mainItem.title}</h5>
-                                </div>
-                                <ul key={index + 1} className="mb-6 text-jv-lightGray2x text-sm">
-                                    {!Array.isArray(mainItem.item) ? (
-                                        <li>- {mainItem.item.itemDesc}</li>
-                                    ) : (
-                                        mainItem.item.map((item, index) =>
-                                            item.itemTitle ? (
-                                                <li key={index + 1}>
-                                                    <span>
-                                                        - <span className="text-jv-lightGray">{item.itemTitle}</span> :
-                                                    </span>
-                                                    <span> {item.itemDesc}</span>
-                                                </li>
-                                            ) : (
-                                                <li key={index + 1}>- {item.itemDesc}</li>
-                                            )
-                                        )
-                                    )}
-                                </ul>
-                            </Fragment>
-                        ))}
-                    </div>
-                </section>
                 <section className="mb-6 pb-6 border-b-[1px] border-solid border-jv-lightGray3x">
                     <h2>شرایط احراز شغل</h2>
                     <div className="text-sm pr-3 flex flex-wrap">
                         <div className="w-full pl-5 mt-5">
                             <h4>سن</h4>
                             <p className="truncate text-jv-lightGray2x">
-                                {`${jobInfo.employmentConditions.yearsOld[0]} -
-                                    ${jobInfo.employmentConditions.yearsOld[1]} `}
+                                {`${jobInfo.employment_conditions_years_old.at(0)} -
+                                    ${jobInfo.employment_conditions_years_old.at(1)} `}
                                 سال
                             </p>
                         </div>
                         <div className="w-full pl-5 mt-5">
                             <h4>جنسیت</h4>
-                            <p className="truncate text-jv-lightGray2x">
-                                {jobInfo.employmentConditions.gender === "Female"
-                                    ? "خانوم"
-                                    : jobInfo.employmentConditions.gender === "Male"
-                                    ? "آقا"
-                                    : "فرقی ندارد"}
-                            </p>
+                            <p className="truncate text-jv-lightGray2x">{jobInfo.employment_conditions_gender}</p>
                         </div>
-                        {typeof jobInfo.employmentConditions.education !== "undefined" ? (
-                            <div className="w-full pl-5 mt-5">
-                                <h4>تحصیلات</h4>
-                                <div className="text-jv-lightGray2x flex flex-row flex-wrap">
-                                    {Array.isArray(jobInfo.employmentConditions.education) ? (
-                                        jobInfo.employmentConditions.education.map((item, index) => (
-                                            <span key={index + 1} className="box-info-type">
-                                                {item}
-                                            </span>
-                                        ))
-                                    ) : (
-                                        <span className="box-info-type">{jobInfo.employmentConditions.education}</span>
-                                    )}
-                                </div>
+                        <div className="w-full pl-5 mt-5">
+                            <h4>تحصیلات</h4>
+                            <div className="text-jv-lightGray2x flex flex-row flex-wrap">
+                                {jobInfo.employment_conditions_education.map((item, index) => (
+                                    <span key={index + 1} className="box-info-type">
+                                        {item}
+                                    </span>
+                                ))}
                             </div>
-                        ) : null}
+                        </div>
 
                         <div className="w-full pl-5 mt-5">
                             <h4>نرم افزارها</h4>
                             <div className="text-jv-lightGray2x flex flex-row flex-wrap">
-                                {jobInfo.employmentConditions.Softwares.map((item, index) => (
+                                {jobInfo.employment_conditions_softwares.map((item, index) => (
                                     <span key={index + 1} className="box-info-type">
                                         {item}
                                     </span>
@@ -630,62 +572,59 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
             </>
         );
     } else if (type === "ABOUT_COMPANY") {
-        const ScoreTitle: React.FC = () => {
-            return typeof jobCompany.score !== "undefined" ? (
-                <div className="flex items-center text-lg text-jv-golden">
-                    <p className="text-jv-lightGray ml-3">{jobCompany.score.companyScore.toFixed(1)}</p>
+        const ScoreTitle: React.FC = () => (
+            <div className="flex items-center text-lg text-jv-golden">
+                <p className="text-jv-lightGray ml-3">{jobCompany.score_company.toFixed(1)}</p>
 
-                    <ScoreIconGenerator key={info.id} score={jobCompany.score.companyScore}></ScoreIconGenerator>
-                </div>
-            ) : (
-                <p>-</p>
-            );
-        };
+                <ScoreIconGenerator
+                    key={`score_icon_${jobInfo.id}`}
+                    score={jobCompany.score_company}
+                ></ScoreIconGenerator>
+            </div>
+        );
         return (
             <>
-                {typeof jobCompany.score !== "undefined" ? (
-                    <section className="mb-6">
-                        <h2>امتیاز سازمان</h2>
-                        <div className="mt-2">
-                            <div>
-                                <Accordion
-                                    type="Children"
-                                    title={<ScoreTitle />}
-                                    index={1}
-                                    isResponsive
-                                    listStyle="Ul"
-                                    theme="Light"
-                                    noSpace
-                                    isOpen
-                                >
-                                    <div className="flex flex-wrap text-sm py-3">
-                                        <div className="w-full mb-2 lg:w-1/2 lg:mb-0">
-                                            <span className="danaBold">
-                                                {jobCompany.score.popularityScore.toFixed(1)}
-                                                <FaStar className="text-jv-golden mx-1 inline-block" />
-                                            </span>
-                                            <span>محبوبیت (براساس بازدید کارجویان)</span>
-                                        </div>
-                                        <div className="w-full mb-2 lg:w-1/2 lg:mb-0">
-                                            <span className="danaBold">
-                                                {jobCompany.score.responsivenessScore.toFixed(1)}
-                                                <FaStar className="text-jv-golden mx-1 inline-block" />
-                                            </span>
-                                            <span>پاسخگویی به رزومه‌های دریافتی</span>
-                                        </div>
-                                        <div className="w-full mb-2 lg:w-1/2 lg:mb-0">
-                                            <span className="danaBold">
-                                                {jobCompany.score.experienceOfJobSeekersScore.toFixed(1)}
-                                                <FaStar className="text-jv-golden mx-1 inline-block" />
-                                            </span>
-                                            <span>تجربه کارجویان از جلسه مصاحبه</span>
-                                        </div>
+                <section className="mb-6">
+                    <h2>امتیاز سازمان</h2>
+                    <div className="mt-2">
+                        <div>
+                            <Accordion
+                                type="Children"
+                                title={<ScoreTitle />}
+                                index={1}
+                                isResponsive
+                                listStyle="Ul"
+                                theme="Light"
+                                noSpace
+                                isOpen
+                            >
+                                <div className="flex flex-wrap text-sm py-3">
+                                    <div className="w-full mb-2 lg:w-1/2 lg:mb-0">
+                                        <span className="danaBold">
+                                            {jobCompany.score_popularity.toFixed(1)}
+                                            <FaStar className="text-jv-golden mx-1 inline-block" />
+                                        </span>
+                                        <span>محبوبیت (براساس بازدید کارجویان)</span>
                                     </div>
-                                </Accordion>
-                            </div>
+                                    <div className="w-full mb-2 lg:w-1/2 lg:mb-0">
+                                        <span className="danaBold">
+                                            {jobCompany.score_responsiveness.toFixed(1)}
+                                            <FaStar className="text-jv-golden mx-1 inline-block" />
+                                        </span>
+                                        <span>پاسخگویی به رزومه‌های دریافتی</span>
+                                    </div>
+                                    <div className="w-full mb-2 lg:w-1/2 lg:mb-0">
+                                        <span className="danaBold">
+                                            {jobCompany.score_experience_of_job_seekers.toFixed(1)}
+                                            <FaStar className="text-jv-golden mx-1 inline-block" />
+                                        </span>
+                                        <span>تجربه کارجویان از جلسه مصاحبه</span>
+                                    </div>
+                                </div>
+                            </Accordion>
                         </div>
-                    </section>
-                ) : null}
+                    </div>
+                </section>
                 <section className="mb-6">
                     <div className="flex items-center justify-between">
                         <h2 className="w-6/12 truncate">درباره {jobCompany.name}</h2>
@@ -702,43 +641,30 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
                         </Button>
                     </div>
                 </section>
-                {typeof jobCompany.Benefits !== "undefined" ? (
-                    <section className="mb-6">
-                        <h2>مزایا و امکانات رفاهی</h2>
-                        <div className="flex flex-wrap py-3">
-                            {jobCompany.Benefits.map((item, index) => (
-                                <span key={index + 1} className="box-info-type__success">
-                                    {item}
-                                </span>
-                            ))}
-                        </div>
-                    </section>
-                ) : null}
-
+                <section className="mb-6">
+                    <h2>مزایا و امکانات رفاهی</h2>
+                    <div className="flex flex-wrap py-3">
+                        {jobInfo.benefits.map((item, index) => (
+                            <span key={index + 1} className="box-info-type__success">
+                                {item}
+                            </span>
+                        ))}
+                    </div>
+                </section>
                 <div className="min-h-fit">
                     <h3>در یک نگاه</h3>
                     <div className="text-sm pr-3 flex flex-wrap">
                         <div className="min-w-[50%] pl-5 mt-5">
                             <h5>سال تاسیس</h5>
-                            <p className="truncate text-jv-lightGray2x">{jobCompany.establishedyear}</p>
+                            <p className="truncate text-jv-lightGray2x">{jobCompany.established_year}</p>
                         </div>
                         <div className="min-w-[50%] pl-5 mt-5">
                             <h5>اندازه سازمان</h5>
-                            <p className="truncate text-jv-lightGray2x">{jobCompany.OrganizationEmploy}</p>
+                            <p className="truncate text-jv-lightGray2x">{jobCompany.organization_employ}</p>
                         </div>
                         <div className="min-w-[50%] pl-5 mt-5">
                             <h5>نوع فعالیت</h5>
-                            <p className="truncate text-jv-lightGray2x">{jobCompany.typeOfActivity}</p>
-                        </div>
-                        <div className="min-w-[50%] pl-5 mt-5">
-                            <h5>مالکیت</h5>
-                            <p className="truncate text-jv-lightGray2x">
-                                {jobCompany.ownership === "Private"
-                                    ? "خصوصی"
-                                    : jobCompany.ownership === "Government"
-                                    ? "دولتی"
-                                    : "مشخص نشده"}
-                            </p>
+                            <p className="truncate text-jv-lightGray2x">{jobCompany.type_of_activity}</p>
                         </div>
                         <div className="min-w-[50%] pl-5 mt-5">
                             <h5>صنعت</h5>
@@ -749,14 +675,15 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, info }) => {
             </>
         );
     } else if (type === "RELATED_ADS") {
+        const { boxList } = useBoxList();
         return (
             <>
                 <section className="mb-6">
-                    {AdvertisingArray.map((item, index) => (
+                    {boxList?.map((item, index) => (
                         <div key={index + 1} className="mt-3">
                             <AdvertisingBox
                                 type="HideSendCv"
-                                data={{ ...item.data }}
+                                data={{ ...item }}
                                 clickHandler={() => {}}
                             ></AdvertisingBox>
                         </div>

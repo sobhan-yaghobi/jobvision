@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 // Types
 import { WhyUsDescType, WhyUsType, AboutUsItemArray, whyUsArray } from "./Home.type";
-import { AdvertisingArray } from "../../Components/AdvertisingBox/AdvertisingBox.type";
 
 // Animation
 import {
@@ -36,8 +35,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import useAdvertisings from "../../Hooks/useAdvertisings";
+import useBoxList from "../../Hooks/useBoxList";
 
 const Home: React.FC = () => {
+    const { boxList } = useBoxList();
     const isEven = (num: number): boolean => num === 0 || !!(num && !(num % 2));
     const [WindowsSize] = useWindowsSize();
 
@@ -187,7 +189,7 @@ const Home: React.FC = () => {
             <div className="min-h-screen px-1 pt-5 flex overflow-hidden justify-center flex-col md:px-10 lg:px-24">
                 <h1 className="px-2 mb-5 text-xl lg:h-20 lg:mb-0 lg:text-3xl">تازه‌ترین آگهی‌های شغلی برای شما</h1>
                 <div className="w-full grid grid-cols-12 grid-rows-3">
-                    {AdvertisingArray.map((item, index) => (
+                    {boxList?.slice(0, 7).map((item, index) => (
                         <motion.div
                             key={index + 1}
                             variants={
@@ -211,10 +213,10 @@ const Home: React.FC = () => {
                         >
                             {includes([3, 4], index) ? (
                                 <div className={`w-full xl:w-2/3`}>
-                                    <AdvertisingBox data={{ ...item.data }} type="ShowSendCv"></AdvertisingBox>
+                                    <AdvertisingBox data={{ ...item }} type="ShowSendCv"></AdvertisingBox>
                                 </div>
                             ) : (
-                                <AdvertisingBox data={{ ...item.data }} type="ShowSendCv"></AdvertisingBox>
+                                <AdvertisingBox data={{ ...item }} type="ShowSendCv"></AdvertisingBox>
                             )}
                         </motion.div>
                     ))}

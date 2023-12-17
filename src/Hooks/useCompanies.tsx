@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import supabaseFetch from "../Services/supabaseFetch";
 
-type companyType = {
+export type companyType = {
     compnay_slogan: string;
     created_at: string;
     desc: string;
@@ -38,6 +38,7 @@ const useCompanies = (props: useCompaniesProps) => {
             await supabaseFetch
                 .get<companyType>(`companies?select=*&id=eq.${props.mode === "single" ? props.id : ""}`)
                 .then((res) => res.data),
+        enabled: props.mode === "single",
     });
 
     return { companies, company };

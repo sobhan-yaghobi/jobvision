@@ -1,4 +1,8 @@
-import { AdvertisingBoxMainProps, AdvertisingType } from "../../Components/AdvertisingBox/AdvertisingBox.type";
+import {
+    MainTypeAdvertisingBoxProps,
+    AdvertisingType,
+    TypeAdvertising,
+} from "../../Components/AdvertisingBox/AdvertisingBox.type";
 import uuidGenerator from "../../Utils/UuidGenerator";
 
 export interface MainItemBoxInfoType {
@@ -7,11 +11,18 @@ export interface MainItemBoxInfoType {
     type: InfoTypes;
 }
 
+// 5555555555555555555555555555555555555555555555555555555555
 export interface mainJobInfoType {
     isShow: boolean;
-    mainInfo: AdvertisingType | undefined;
+    mainInfo: TypeAdvertising | undefined;
 }
 
+// export interface mainJobInfoType {
+//     isShow: boolean;
+//     mainInfo: AdvertisingType | undefined;
+// }
+
+// 5555555555555555555555555555555555555555555555555555555555
 export type TypeRoutes = {
     isRouteValue: boolean;
     isValueExist: boolean;
@@ -29,17 +40,30 @@ export interface AboutJob {
     item: { id: string; itemTitle?: string; itemDesc: string } | { id: string; itemTitle?: string; itemDesc: string }[];
 }
 
+// 55555555555555555555555555555555555555555555555555555555555555555555555
 export interface BoxInfoCardProps {
-    mainInfoJob: AdvertisingType;
+    mainInfoJob: TypeAdvertising;
     mainItemInfo: MainItemBoxInfoType;
     setMainItemInfo: React.Dispatch<MainItemBoxInfoType>;
 }
+// export interface BoxInfoCardProps {
+//     mainInfoJob: AdvertisingType;
+//     mainItemInfo: MainItemBoxInfoType;
+//     setMainItemInfo: React.Dispatch<MainItemBoxInfoType>;
+// }
+// 55555555555555555555555555555555555555555555555555555555555555555555555
 
 type InfoTypes = "INFO_JOB" | "ABOUT_COMPANY" | "RELATED_ADS" | "RESUME_RECRRDS";
+// 55555555555555555555555555555555555555555555555555555555555555555555555
 export interface BoxInfoProps {
     type: InfoTypes;
-    info: AdvertisingType;
+    jobInfo: TypeAdvertising;
 }
+// export interface BoxInfoProps {
+//     type: InfoTypes;
+//     info: AdvertisingType;
+// }
+// 55555555555555555555555555555555555555555555555555555555555555555555555
 
 const mainItemsBoxInfos: MainItemBoxInfoType[] = [
     { id: uuidGenerator(), title: "درباره شغل", type: "INFO_JOB" },
