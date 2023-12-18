@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import useBoxList from "../../Hooks/useBoxList";
 // Types
 import { WhyUsDescType, WhyUsType, AboutUsItemArray, whyUsArray } from "./Home.type";
 
@@ -35,8 +36,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import useAdvertisings from "../../Hooks/useAdvertisings";
-import useBoxList from "../../Hooks/useBoxList";
 
 const Home: React.FC = () => {
     const { boxList } = useBoxList();

@@ -29,10 +29,12 @@ import { AiOutlineClose } from "react-icons/ai";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
 import { AuthContext } from "../../Context/AuthContext";
 import useMenuFetch from "../../Hooks/useMenuFetch";
+import { useNavigate } from "react-router-dom";
 
 const Header: React.FC = () => {
     const authContext = useContext(AuthContext);
     const { menuMergeArray: menu } = useMenuFetch();
+    const navigate = useNavigate();
 
     const {
         elm,
@@ -129,7 +131,7 @@ const Header: React.FC = () => {
                                     ورود/ثبت نام کارجو
                                 </Button>
                                 <Button
-                                    ClickHandler={() => {}}
+                                    ClickHandler={() => navigate("/CmsEmployer")}
                                     textColor="primary"
                                     size="middle"
                                     ClassName="!bg-transparent !border-none"
