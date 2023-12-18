@@ -1,5 +1,5 @@
 // Hooks
-import React, { useState, useRef, Fragment, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import useSearchForm from "../../Hooks/useSearchForm";
 import useBoxList from "../../Hooks/useBoxList";
 
@@ -11,10 +11,7 @@ import {
     BoxInfoProps,
     boxOrderArray,
     mainItemsBoxInfos,
-    mainJobInfoType,
-    TypeRoutes,
 } from "./Jobs.type";
-import { MainTypeAdvertisingBoxProps, TypeAdvertising } from "../../Components/AdvertisingBox/AdvertisingBox.type";
 
 // Animations
 import {
@@ -23,10 +20,6 @@ import {
     ShowFromBottom_EX,
     ShowItemsDelay_Var,
 } from "../../Animations/UtilsAnimation";
-
-// Functions
-import { eq, includes as includes_lodash, isEqual, pull } from "lodash";
-import { toLowerCaseAction } from "../../Utils/Utils";
 
 // Components
 import Header from "../../Components/Header/Header";
@@ -55,9 +48,10 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import useFilterBoxList from "../../Hooks/useFilterBoxList";
 
 const Jobs: React.FC = () => {
-    const { route, setValue, routeTitle, routeJobsTag, routeCity } = useSearchForm();
+    const { setValue } = useSearchForm();
     //? ---------------------------------- Notification
     const [isNotification, setIsNotification] = useState(false);
     const [notifPending, setNotifPending] = useState(isNotification);
@@ -79,71 +73,19 @@ const Jobs: React.FC = () => {
 
     //? ---------------------------------- Box Lists
     const [proModeFilter, setProModeFilter] = useState(false);
-    const {
-        boxList,
-        setBoxList,
-        getAdvertisingWithCompany,
-        mainBox: mainJobInfo,
-        setMainBox: setMainJobInfo,
-    } = useBoxList();
     const [filterSelection, setFilterSelection] = useState<string[]>([]);
-    const isTitle = (title: string, name: string): TypeRoutes => ({
-        isRouteValue: Boolean(routeTitle.length),
-        isValueExist: routeTitle.length
-            ? toLowerCaseAction(title).includes(toLowerCaseAction(routeTitle)) ||
-              toLowerCaseAction(name).includes(toLowerCaseAction(routeTitle))
-            : false,
+    const { boxList, setBoxList, mainBox, setMainBox, getAdvertisingWithCompany } = useBoxList();
+    useFilterBoxList({
+        filter_selection: filterSelection,
+        pro_mode: proModeFilter,
+        box_list: boxList,
+        boxs: getAdvertisingWithCompany,
+        set_box_list: setBoxList,
     });
-    const isTag = (tags: string[] | undefined): TypeRoutes => ({
-        isRouteValue: Boolean(routeJobsTag.length),
-        isValueExist: routeJobsTag.length
-            ? Boolean(tags?.filter((tag) => toLowerCaseAction(tag).includes(toLowerCaseAction(routeJobsTag))).length)
-            : false,
-    });
-    const isCity = (city: string): TypeRoutes => ({
-        isRouteValue: Boolean(routeCity.length),
-        isValueExist: routeCity.length ? toLowerCaseAction(city).includes(toLowerCaseAction(routeCity)) : false,
-    });
-    const boxByFilterSelction = (array: TypeAdvertising[]) =>
-        array.filter((ads) => {
-            const isExist = filterSelection.map((filter) => includes_lodash(ads.ads_types, filter));
-            if (proModeFilter) {
-                if (pull(isExist, false).length >= filterSelection.length) {
-                    return ads;
-                }
-            } else {
-                if (includes_lodash(isExist, true)) {
-                    return ads;
-                }
-            }
-        });
-    const boxBySearchAds = (array: TypeAdvertising[]) =>
-        array.filter((ads) =>
-            (isTitle(ads.title, ads.company.name).isValueExist || !isTitle(ads.title, ads.company.name).isRouteValue) &&
-            (isTag(ads.ads_tags).isValueExist || !isTag(ads.ads_tags).isRouteValue) &&
-            (isCity(ads.company.location).isValueExist || !isCity(ads.company.location).isRouteValue)
-                ? ads
-                : null
-        );
-    const mergeFilters = () => {
-        let mainBoxList: TypeAdvertising[] = [];
-        if ((routeTitle.length || routeJobsTag.length || routeCity.length) && filterSelection.length === 0) {
-            mainBoxList = boxBySearchAds(getAdvertisingWithCompany());
-        }
-        if (filterSelection.length > 0) {
-            mainBoxList = boxByFilterSelction(boxBySearchAds(getAdvertisingWithCompany()));
-        }
-        if (!routeTitle.length && !routeJobsTag.length && !routeCity.length && !filterSelection.length) {
-            mainBoxList = [...getAdvertisingWithCompany()];
-        }
-        setBoxList(mainBoxList);
-    };
-    useEffect(() => mergeFilters(), [route, proModeFilter, filterSelection]);
     //! ---------------------------------- Box Lists
 
     //? ---------------------------------- Box Info
     const [mainItemInfo, setMainItemInfo] = useState<MainItemBoxInfoType>(mainItemsBoxInfos[0]);
-
     //! ---------------------------------- Box Info
 
     return (
@@ -221,11 +163,11 @@ const Jobs: React.FC = () => {
                                     <AdvertisingBox
                                         type="HideSendCv"
                                         clickHandler={() => {
-                                            setMainJobInfo({ isShow: true, mainInfo: { ...item } });
+                                            setMainBox({ isShow: true, mainInfo: { ...item } });
                                             setValue({ name: "advertisingId", value: item.id });
                                         }}
                                         data={{ ...item }}
-                                        isActive={item.id === mainJobInfo.mainInfo?.id ? true : false}
+                                        isActive={item.id === mainBox.mainInfo?.id ? true : false}
                                     ></AdvertisingBox>
                                 </div>
                             ))
@@ -241,15 +183,15 @@ const Jobs: React.FC = () => {
                 {/*//?-------------------------------------- Box Info -------------------------------------- */}
                 <div
                     className={`hidden boxInfo mr-2 w-7/12 bg-jv-white sticky top-24 overflow-x-hidden overflow-y-auto h-[82vh] rounded-xl lg:table-column lg:w-7/12 ${
-                        typeof mainJobInfo.mainInfo !== "undefined" && Object.values(mainJobInfo.mainInfo).length
+                        typeof mainBox.mainInfo !== "undefined" && Object.values(mainBox.mainInfo).length
                             ? ""
                             : "bg-jv-light"
                     }`}
                 >
-                    {typeof mainJobInfo.mainInfo !== "undefined" && Object.values(mainJobInfo.mainInfo).length ? (
+                    {typeof mainBox.mainInfo !== "undefined" && Object.values(mainBox.mainInfo).length ? (
                         <>
                             <motion.div
-                                key={mainJobInfo.mainInfo.id}
+                                key={mainBox.mainInfo.id}
                                 variants={ShowAndHideOpacity_Ex}
                                 transition={{ duration: 0.7 }}
                                 initial="hidden"
@@ -257,7 +199,7 @@ const Jobs: React.FC = () => {
                                 exit="exit"
                             >
                                 <BoxInfoCard
-                                    mainInfoJob={mainJobInfo.mainInfo}
+                                    mainInfoJob={mainBox.mainInfo}
                                     mainItemInfo={mainItemInfo}
                                     setMainItemInfo={setMainItemInfo}
                                 ></BoxInfoCard>
@@ -270,7 +212,7 @@ const Jobs: React.FC = () => {
                                 key={mainItemInfo.id}
                                 className="px-3 py-6 -z-10"
                             >
-                                <BoxInfo type={mainItemInfo.type} jobInfo={{ ...mainJobInfo.mainInfo }}></BoxInfo>
+                                <BoxInfo type={mainItemInfo.type} jobInfo={{ ...mainBox.mainInfo }}></BoxInfo>
                             </motion.div>
                         </>
                     ) : (
@@ -285,10 +227,10 @@ const Jobs: React.FC = () => {
 
                 {/*//? -------------------- Start Mobile Header DropDown -------------------- */}
                 <AnimatePresence>
-                    {typeof mainJobInfo.mainInfo !== "undefined" && mainJobInfo.isShow ? (
+                    {typeof mainBox.mainInfo !== "undefined" && mainBox.isShow ? (
                         <motion.div
                             className={`w-full h-screen fixed bg-jv-bgColor lg:hidden bottom-0 right-0 text-right ${
-                                mainJobInfo.isShow ? "z-20" : "z-10"
+                                mainBox.isShow ? "z-20" : "z-10"
                             }`}
                             variants={ShowFromBottom_EX}
                             initial="hidden"
@@ -301,17 +243,17 @@ const Jobs: React.FC = () => {
                                 initial={{ opacity: 0 }}
                                 whileInView={{ opacity: 1 }}
                                 transition={{ delay: 0.4 }}
-                                key={mainJobInfo.mainInfo?.id}
+                                key={mainBox.mainInfo?.id}
                             >
                                 <div
                                     className="px-3 py-2 flex items-center"
-                                    onClick={() => setMainJobInfo({ isShow: false, mainInfo: undefined })}
+                                    onClick={() => setMainBox({ isShow: false, mainInfo: undefined })}
                                 >
                                     <AiOutlineClose className="text-jv-black text-2xl" />
                                 </div>
                                 <div className="max-h-full pb-10 overflow-y-auto no-scrollbar">
                                     <BoxInfoCard
-                                        mainInfoJob={mainJobInfo.mainInfo}
+                                        mainInfoJob={mainBox.mainInfo}
                                         mainItemInfo={mainItemInfo}
                                         setMainItemInfo={setMainItemInfo}
                                     ></BoxInfoCard>
@@ -325,10 +267,7 @@ const Jobs: React.FC = () => {
                                         transition={{ ease: "backOut" }}
                                         className="px-3 py-6"
                                     >
-                                        <BoxInfo
-                                            type={mainItemInfo.type}
-                                            jobInfo={{ ...mainJobInfo.mainInfo }}
-                                        ></BoxInfo>
+                                        <BoxInfo type={mainItemInfo.type} jobInfo={{ ...mainBox.mainInfo }}></BoxInfo>
                                     </motion.div>
                                 </div>
                             </motion.div>
