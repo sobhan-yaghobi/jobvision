@@ -7,7 +7,7 @@ import {
     messageSuccess,
     messageUrlNotValid,
 } from "../../Utils/Utils";
-import { z } from "zod";
+import { object, z } from "zod";
 
 // Types
 import {
@@ -20,7 +20,7 @@ import {
 import { CheckBox, DateInput, NumberInput, SelectInput, TextInput, TextareaInput } from "../../Components/Input/Input";
 
 // Hook
-import { useForm } from "react-hook-form";
+import { FieldError, FieldErrorsImpl, Merge, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useShowMssAndNotif from "../../Hooks/useShowMssAndNotif";
 
@@ -54,6 +54,7 @@ import { PiSpeakerHigh, PiStudentDuotone } from "react-icons/pi";
 import { FaFileCirclePlus } from "react-icons/fa6";
 import { AdvertsingCmsBox } from "../../Components/AdvertisingBox/AdvertisingBox";
 import { twMerge } from "tailwind-merge";
+import { parse } from "uuid";
 
 const pageItems: MenuItemType[] = [
     {
@@ -478,47 +479,123 @@ namespace SubPageCms {
     };
 
     export const Advertising_Add: React.FC<SubPageCmsTypes.AdvertisingAddProps> = ({ showMess }) => {
+        const checkRefine = ({
+            isToActive,
+            from,
+            to,
+            both,
+            ctx,
+        }: {
+            isToActive: boolean;
+            from: {
+                value: string;
+                message: string;
+                path: [string];
+            };
+            to: {
+                value: string;
+                message: string;
+                path: [string];
+            };
+            both: { message: string };
+            ctx: z.RefinementCtx;
+        }) => {
+            isToActive && parseInt(from.value) >= parseInt(to.value)
+                ? ctx.addIssue({ code: z.ZodIssueCode.custom, message: both.message })
+                : null;
+            !isToActive && from.value.length < 1
+                ? ctx.addIssue({
+                      code: z.ZodIssueCode.custom,
+                      message: from.message,
+                      path: from.path,
+                  })
+                : null;
+            isToActive && to.value.length < 1
+                ? ctx.addIssue({
+                      code: z.ZodIssueCode.custom,
+                      message: to.message,
+                      path: to.path,
+                  })
+                : null;
+        };
         const mainAddFormSchema = z.object({
-            workTime: z.string().min(1, messageRequiredGenerator("زمان کار")),
-            typeOfCooperation: z.string(),
-            businessTrips: z.string().optional(),
-            benefitsAndFacilities: z.string().optional(),
-            keyIndicators: z.array(z.string()),
-            // jobDuties: z.string().min(1, messageRequiredGenerator("وظایف شغلی")),
-            Softwares: z.array(z.string()).min(1, messageRequiredGenerator("مهارت های نرم افزاری")),
-            gender: z.string(),
-            education: z.array(z.string()),
-            adTags: z.array(z.string()).min(1, messageRequiredGenerator("تگ های آگهی")),
-            isImportant: z.boolean().optional(),
-            responsibleEmployer: z.boolean().optional(),
-            acceptTrainees: z.boolean().optional(),
-            acceptTelecommuting: z.boolean().optional(),
+            work_time: z.string().min(1, messageRequiredGenerator("زمان کار")),
+            cooperation_type: z.string().min(1, messageRequiredGenerator("نوع همکاری")),
+            business_trips: z.string().optional(),
+            key_indicators: z.array(z.string()).min(1, messageRequiredGenerator("شاخص های کلیدی")),
+            employment_conditions_softwares: z
+                .array(z.string())
+                .min(1, messageRequiredGenerator("مهارت های نرم افزاری")),
+            employment_conditions_gender: z.string().min(1, messageRequiredGenerator("تایین جنسیت")),
+            employment_conditions_education: z.array(z.string()),
+            status_is_important: z.boolean().optional(),
+            status_responsible_employer: z.boolean().optional(),
+            ads_tags: z.array(z.string()).min(1, messageRequiredGenerator("تگ های آگهی")),
             type: z.object({
-                BENEFITS_AND_FACILITIES: z.array(z.string()),
-                MILITARY_ORDER: z.boolean().optional(),
+                acceptTrainees: z.boolean().optional(),
+                acceptTelecommuting: z.boolean().optional(),
+                benefits_and_facilities: z.array(z.string()),
+                military_order: z.boolean().optional(),
             }),
-            price: z.object({
-                isRightPriceArray: z.boolean().optional(),
-                from: z.string().min(1, messageRequiredGenerator("حداقل حقوق")),
-                to: z.string(),
-            }),
-            oldYears: z.object({
-                isYearArray: z.boolean().optional(),
-                yearFrom: z.string().min(1, messageRequiredGenerator("حداقل سن")),
-                yearTo: z.string(),
-            }),
+            price: z
+                .object({
+                    isTo: z.boolean().optional(),
+                    from: z.string(),
+                    to: z.string(),
+                })
+                .superRefine(({ isTo, from, to }, ctx) =>
+                    checkRefine({
+                        isToActive: Boolean(isTo),
+                        from: {
+                            value: from,
+                            message: messageRequiredGenerator("حداقل حقوق"),
+                            path: ["from"],
+                        },
+                        to: {
+                            value: to,
+                            message: messageRequiredGenerator("حداکثر حقوق"),
+                            path: ["to"],
+                        },
+                        both: { message: "حداقل حقوق از حداکثر حقوق بیشتر است" },
+                        ctx,
+                    })
+                ),
+            oldYears: z
+                .object({
+                    isTo: z.boolean().optional(),
+                    from: z.string().min(1, messageRequiredGenerator("حداقل سن")),
+                    to: z.string(),
+                })
+                .superRefine(({ isTo, from, to }, ctx) =>
+                    checkRefine({
+                        isToActive: Boolean(isTo),
+                        from: {
+                            value: from,
+                            message: messageRequiredGenerator("حداقل سن"),
+                            path: ["from"],
+                        },
+                        to: {
+                            value: to,
+                            message: messageRequiredGenerator("حداکثر سن"),
+                            path: ["to"],
+                        },
+                        both: { message: "حداقل سن از حداکثر سن بیشتر است" },
+                        ctx,
+                    })
+                ),
+            seniority_level: z.string().min(1, messageRequiredGenerator("سطح ارشدیت")),
+            work_experience: z.string().min(1, messageRequiredGenerator("سابقه کار")),
         });
-
         type TypeMainAddFormSchema = z.infer<typeof mainAddFormSchema>;
 
         const {
             register,
             watch,
-            control,
             handleSubmit,
             setValue,
             reset,
             getFieldState,
+            control,
             formState: { errors },
         } = useForm<TypeMainAddFormSchema>({
             resolver: zodResolver(mainAddFormSchema),
@@ -533,25 +610,42 @@ namespace SubPageCms {
                 }, 2000);
             });
         };
+
+        const showMultipleError = (
+            field: Merge<
+                FieldError,
+                FieldErrorsImpl<{
+                    from: string;
+                    to: string;
+                    isTo: NonNullable<boolean | undefined>;
+                }>
+            >
+        ) => {
+            showMess({
+                type: "error",
+                message:
+                    typeof field.root?.message !== "undefined"
+                        ? field.root?.message
+                        : typeof field.from?.message !== "undefined"
+                        ? field.from?.message
+                        : typeof field.to?.message !== "undefined"
+                        ? field.to?.message
+                        : undefined,
+            });
+        };
         useEffect(() => {
+            typeof errors.price !== "undefined" ? showMultipleError(errors.price) : null;
+            typeof errors.oldYears !== "undefined" ? showMultipleError(errors.oldYears) : null;
             Object.keys(errors).map((item) => {
                 showMess({
                     type: "error",
                     message: getFieldState(item as keyof TypeMainAddFormSchema).error?.message,
                 });
             });
-            showMess({
-                type: "error",
-                message: errors.price?.from?.message,
-            });
-            showMess({
-                type: "error",
-                message: errors.oldYears?.yearFrom?.message,
-            });
         }, [errors]);
 
-        const isRightPriceArray = watch("price.isRightPriceArray");
-        const isYearArray = watch("oldYears.isYearArray");
+        const isToPrice = watch("price.isTo");
+        const isToOldYears = watch("oldYears.isTo");
 
         return (
             <>
@@ -564,11 +658,11 @@ namespace SubPageCms {
                             className="block w-full"
                             placeholder="برای مثال : 7 میلیون تومان"
                             register={register("price.from")}
-                            isError={errors.price?.from?.message}
+                            isError={errors.price?.from?.message || errors.price?.root?.message}
                         />
                         <div
                             className={`overflow-hidden grid transition-all duration-700 delay-100 mb-2 ${
-                                isRightPriceArray ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                                isToPrice ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
                             }`}
                         >
                             <div className="min-h-0">
@@ -578,12 +672,13 @@ namespace SubPageCms {
                                     className="block w-full"
                                     placeholder="20 میلیون تومان"
                                     register={register("price.to")}
+                                    isError={errors.price?.to?.message || errors.price?.root?.message}
                                 />
                             </div>
                         </div>
                         <CheckBox
                             label="نوشتن حداقل و حداکثر حقوق"
-                            name={register("price.isRightPriceArray").name}
+                            name={register("price.isTo").name}
                             control={control}
                         />
                     </section>
@@ -591,17 +686,17 @@ namespace SubPageCms {
                         <h5 className="mr-2">زمان کار</h5>
                         <TextInput
                             placeholder="برای مثال : از شنبه تا چهارشنبه ساعت 7 صبح تا 5 عصر"
-                            register={register("workTime")}
+                            register={register("work_time")}
                             icon={<BiTimer></BiTimer>}
                             iconSide="Right"
-                            isError={errors.workTime?.message}
+                            isError={errors.work_time?.message}
                         ></TextInput>
                     </section>
                     <section>
                         <h5 className="mr-2">مزایای مسافرتی</h5>
                         <TextInput
                             placeholder="برای مثال : سفر به جزیره کیش"
-                            register={register("businessTrips")}
+                            register={register("business_trips")}
                             icon={<BiTrip></BiTrip>}
                             iconSide="Right"
                         ></TextInput>
@@ -612,7 +707,7 @@ namespace SubPageCms {
                             icon={<PiStudentDuotone />}
                             iconSide="Right"
                             placeholder="برای مثال : پورسانت ، جوایز سال تحویل و ..."
-                            register={register("benefitsAndFacilities")}
+                            register={register("type.benefits_and_facilities")}
                         ></TextInput>
                     </section>
                     <section>
@@ -621,27 +716,28 @@ namespace SubPageCms {
                             min={10}
                             className="block w-full"
                             placeholder="برای مثال : 18 سال"
-                            register={register("oldYears.yearFrom")}
-                            isError={errors.oldYears?.yearFrom?.message}
+                            register={register("oldYears.from")}
+                            isError={errors.oldYears?.from?.message || errors.oldYears?.root?.message}
                         ></NumberInput>
                         <div
                             className={`overflow-hidden grid transition-all duration-700 delay-100 mb-2 ${
-                                isYearArray ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                                isToOldYears ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
                             }`}
                         >
                             <div className="min-h-0">
                                 <p className="my-2 pr-2 text-xs">تا</p>
                                 <NumberInput
                                     min={10}
-                                    className="block"
+                                    className="block w-full"
                                     placeholder="25 سال"
-                                    register={register("oldYears.yearTo")}
+                                    register={register("oldYears.to")}
+                                    isError={errors.oldYears?.to?.message || errors.oldYears?.root?.message}
                                 />
                             </div>
                         </div>
                         <CheckBox
                             label="نوشتن حداقل و حداکثر سن"
-                            name={register("oldYears.isYearArray").name}
+                            name={register("oldYears.isTo").name}
                             control={control}
                         />
                     </section>
@@ -652,9 +748,9 @@ namespace SubPageCms {
                             id="Edicu"
                             mode="Multiple"
                             callBackFn={(param: string[]) => {
-                                setValue("education", param);
+                                setValue("employment_conditions_education", param);
                             }}
-                            register={register("education")}
+                            register={register("employment_conditions_education")}
                             className="border-jv-lightGray3x"
                         ></SelectInput>
                     </section>
@@ -665,9 +761,9 @@ namespace SubPageCms {
                             id="keyIndicatorsMenu"
                             mode="Multiple"
                             callBackFn={(param: string[]) => {
-                                setValue("keyIndicators", param);
+                                setValue("key_indicators", param);
                             }}
-                            register={register("keyIndicators")}
+                            register={register("key_indicators")}
                             className="border-jv-lightGray3x"
                         ></SelectInput>
                     </section>
@@ -678,25 +774,25 @@ namespace SubPageCms {
                             id="SoftwaresMenu"
                             mode="Multiple"
                             callBackFn={(param: string[]) => {
-                                setValue("Softwares", param);
+                                setValue("employment_conditions_softwares", param);
                             }}
-                            register={register("Softwares")}
+                            register={register("employment_conditions_softwares")}
                             className="border-jv-lightGray3x"
-                            isError={errors.Softwares?.message}
+                            isError={errors.employment_conditions_softwares?.message}
                         ></SelectInput>
                     </section>
                     <section>
                         <h5 className="mr-2">تگ های آگهی</h5>
                         <SelectInput
                             placeholder="برای مثال : برنامه نویسی فرانت اند ، برنامه نویسی ری اکت و ..."
-                            id="adTags"
+                            id="ads_tags"
                             mode="Multiple"
                             callBackFn={(param: string[]) => {
-                                setValue("adTags", param);
+                                setValue("ads_tags", param);
                             }}
-                            register={register("adTags")}
+                            register={register("ads_tags")}
                             className="border-jv-lightGray3x"
-                            isError={errors.adTags?.message}
+                            isError={errors.ads_tags?.message}
                         ></SelectInput>
                     </section>
                     <section className="my-5">
@@ -704,13 +800,13 @@ namespace SubPageCms {
                         <div className="my-1">
                             <h6>مزایا</h6>
                             <SelectInput
-                                id="BENEFITS_AND_FACILITIES"
+                                id="benefits_and_facilities"
                                 placeholder="مزایا و امکانات اراعه دهنده خود را انتخاب کنید"
                                 mode="Multiple_Option"
-                                register={register("type.BENEFITS_AND_FACILITIES")}
+                                register={register("type.benefits_and_facilities")}
                                 options={SubPageCmsTypes.BenefitsTypeArray}
                                 callBackFn={(param: string[]) => {
-                                    setValue("type.BENEFITS_AND_FACILITIES", param);
+                                    setValue("type.benefits_and_facilities", param);
                                 }}
                                 className="mb-2"
                             ></SelectInput>
@@ -718,29 +814,23 @@ namespace SubPageCms {
                         <div className="my-1">
                             <h6>سطح ارشدیت</h6>
                             <SelectInput
-                                id=""
-                                placeholder="سطح ارشدیت مورد  نیاز خود را انتخاب کنید"
-                                mode="Multiple_Option"
-                                register={register("type.BENEFITS_AND_FACILITIES")}
+                                mode="Single"
+                                label="سطح ارشدیت مورد  نیاز خود را انتخاب کنید"
                                 options={SubPageCmsTypes.seniorityLevelArray}
-                                callBackFn={(param: string[]) => {
-                                    setValue("type.BENEFITS_AND_FACILITIES", param);
-                                }}
+                                register={register("seniority_level")}
                                 className="mb-2"
+                                isError={errors.seniority_level?.message}
                             ></SelectInput>
                         </div>
                         <div className="my-1">
                             <h6>سابقه کار</h6>
                             <SelectInput
-                                id="BENEFITS_AND_FACILITIES"
-                                placeholder="سابقه کار مورد نیاز خود را انتخاب کنید"
-                                mode="Multiple_Option"
-                                register={register("type.BENEFITS_AND_FACILITIES")}
+                                mode="Single"
+                                label="سابقه کار مورد نیاز خود را انتخاب کنید"
                                 options={SubPageCmsTypes.workExperienceArray}
-                                callBackFn={(param: string[]) => {
-                                    setValue("type.BENEFITS_AND_FACILITIES", param);
-                                }}
+                                register={register("work_experience")}
                                 className="mb-2"
+                                isError={errors.work_experience?.message}
                             ></SelectInput>
                         </div>
                     </section>
@@ -748,10 +838,11 @@ namespace SubPageCms {
                         <h5 className="mr-2">جنسیت</h5>
                         <SelectInput
                             mode="Single"
-                            label="نوع همکاری"
+                            label="جنسیت"
                             options={SubPageCmsTypes.genderOption}
-                            register={register("gender")}
+                            register={register("employment_conditions_gender")}
                             className="border-jv-lightGray3x"
+                            isError={errors.employment_conditions_gender?.message}
                         ></SelectInput>
                     </section>
                     <section className="my-5">
@@ -760,8 +851,9 @@ namespace SubPageCms {
                             mode="Single"
                             label="نوع همکاری"
                             options={SubPageCmsTypes.typeOfCooperationOption}
-                            register={register("typeOfCooperation")}
+                            register={register("cooperation_type")}
                             className="border-jv-lightGray3x"
+                            isError={errors.cooperation_type?.message}
                         ></SelectInput>
                     </section>
                     <section>
@@ -770,27 +862,27 @@ namespace SubPageCms {
                             <CheckBox
                                 control={control}
                                 label="این آگهی فوری میباشد"
-                                name={register("isImportant").name}
+                                name={register("status_is_important").name}
                             />
                             <CheckBox
                                 control={control}
                                 label="پاسخگویی در اصرع وقت"
-                                name={register("responsibleEmployer").name}
+                                name={register("status_responsible_employer").name}
                             />
                             <CheckBox
                                 control={control}
                                 label="امکان دریافت کارآموز"
-                                name={register("acceptTrainees").name}
+                                name={register("type.acceptTrainees").name}
                             />
                             <CheckBox
                                 control={control}
                                 label="امکان دورکاری"
-                                name={register("acceptTelecommuting").name}
+                                name={register("type.acceptTelecommuting").name}
                             />
                             <CheckBox
                                 control={control}
                                 label="امریه سربازی"
-                                name={register("type.MILITARY_ORDER").name}
+                                name={register("type.military_order").name}
                             />
                         </div>
                     </section>
