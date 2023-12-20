@@ -439,7 +439,7 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, jobInfo }) => {
                         </div>
                         <div className="w-1/2 pl-5 mt-5">
                             <h5>مزایا و تسهیلات</h5>
-                            <p className="truncate text-jv-lightGray2x">{jobInfo.benefits_and_facilities}</p>
+                            <p className="truncate text-jv-lightGray2x">---</p>
                         </div>
                     </div>
                 </section>
@@ -582,13 +582,7 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, jobInfo }) => {
                 </section>
                 <section className="mb-6">
                     <h2>مزایا و امکانات رفاهی</h2>
-                    <div className="flex flex-wrap py-3">
-                        {jobInfo.benefits.map((item, index) => (
-                            <span key={index + 1} className="box-info-type__success">
-                                {item}
-                            </span>
-                        ))}
-                    </div>
+                    <div className="flex flex-wrap py-3">---</div>
                 </section>
                 <div className="min-h-fit">
                     <h3>در یک نگاه</h3>

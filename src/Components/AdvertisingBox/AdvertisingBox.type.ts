@@ -14,26 +14,24 @@ interface jobDutiesListType {
 // 55555555555555555555555555555555555555555555555555555555555555555
 
 export type TypeAdvertisingQuery = {
-    ads_tags: string[];
-    ads_types: string[];
-    benefits: string[];
-    benefits_and_facilities: string;
-    business_trips: string | null;
+    ads_tags: string[]; //
+    ads_types: string[]; //
+    business_trips: string | null; //
     company_id: string;
-    cooperation_ads_type: string;
+    cooperation_ads_type: string; //
     created_at: Date;
-    employment_conditions_education: string[];
-    employment_conditions_gender: string;
-    employment_conditions_softwares: string[];
-    employment_conditions_years_old: [number, number];
+    employment_conditions_education: string[]; //
+    employment_conditions_gender: string; //
+    employment_conditions_softwares: string[]; //
+    employment_conditions_years_old: [number, number]; //
     id: string;
-    key_indicators: string[];
-    rights_price: [number, number];
+    key_indicators: string[]; //
+    rights_price: [number, number]; //
     status_cv_pending: boolean;
-    status_is_important: boolean;
-    status_responsible_employer: boolean;
+    status_is_important: boolean; //
+    status_responsible_employer: boolean; //
     title: string;
-    work_time: string;
+    work_time: string; //
 };
 
 export interface TypeAdvertising extends TypeAdvertisingQuery {

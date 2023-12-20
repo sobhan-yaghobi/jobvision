@@ -103,6 +103,132 @@ const pageItems: MenuItemType[] = [
 ];
 
 namespace SubPageCms {
+    //% Schema
+    const checkRefine = ({
+        isToActive,
+        from,
+        to,
+        both,
+        ctx,
+    }: {
+        isToActive: boolean;
+        from: {
+            value: string;
+            message: string;
+            path: [string];
+        };
+        to: {
+            value: string;
+            message: string;
+            path: [string];
+        };
+        both: { message: string };
+        ctx: z.RefinementCtx;
+    }) => {
+        isToActive && parseInt(from.value) >= parseInt(to.value)
+            ? ctx.addIssue({ code: z.ZodIssueCode.custom, message: both.message })
+            : null;
+        !isToActive && from.value.length < 1
+            ? ctx.addIssue({
+                  code: z.ZodIssueCode.custom,
+                  message: from.message,
+                  path: from.path,
+              })
+            : null;
+        isToActive && to.value.length < 1
+            ? ctx.addIssue({
+                  code: z.ZodIssueCode.custom,
+                  message: to.message,
+                  path: to.path,
+              })
+            : null;
+    };
+    const CompanyFormSchema = z.object({
+        name: z.string().min(3, messageLengthGenerator("Min", "نام شرکت", 3)).trim(),
+        location: z.string().min(10, messageLengthGenerator("Min", "موقعیت مکانی", 10)).trim(),
+        logo: z.string().min(1, messageRequiredGenerator("لینک لوگو شرکت")).url(messageUrlNotValid("لوگو شرکت")).trim(),
+        website: z.string().url(messageUrlNotValid("وب سایت شرکت")).trim(),
+        desc: z.string().min(1, messageRequiredGenerator("درباره ی شرکت")).trim(),
+        CompanySlogan: z
+            .string()
+            .min(1, messageRequiredGenerator("شعار شرکت"))
+            .max(50, messageLengthGenerator("Max", "شعار شرکت شما", 50))
+            .trim(),
+        establishedyear: z.date({ required_error: messageRequiredGenerator("سال تاسیس شرکت") }),
+        OrganizationEmploy: z.string().min(1, messageRequiredGenerator("تعداد کارکنان")),
+        ownership: z.string({ required_error: "انتخاب نوع شرکت اجباری است" }).trim(),
+    });
+    type TypeCompanyFormSchema = z.infer<typeof CompanyFormSchema>;
+
+    const AddAdsFormSchema = z.object({
+        title: z.string().min(1, messageRequiredGenerator("عنوان آگهی")),
+        work_time: z.string().min(1, messageRequiredGenerator("زمان کار")),
+        cooperation_ads_type: z.string().min(1, messageRequiredGenerator("نوع همکاری")),
+        business_trips: z.string().optional(),
+        key_indicators: z.array(z.string()).min(1, messageRequiredGenerator("شاخص های کلیدی")),
+        employment_conditions_softwares: z.array(z.string()).min(1, messageRequiredGenerator("مهارت های نرم افزاری")),
+        employment_conditions_gender: z.string().min(1, messageRequiredGenerator("تایین جنسیت")),
+        employment_conditions_education: z.array(z.string()),
+        status_is_important: z.boolean().optional(),
+        status_responsible_employer: z.boolean().optional(),
+        ads_tags: z.array(z.string()).min(1, messageRequiredGenerator("تگ های آگهی")),
+        type: z.object({
+            acceptTrainees: z.boolean().optional(),
+            acceptTelecommuting: z.boolean().optional(),
+            benefits_and_facilities: z.array(z.string()),
+            military_order: z.boolean().optional(),
+            seniority_level: z.string().min(1, messageRequiredGenerator("سطح ارشدیت")),
+            work_experience: z.string().min(1, messageRequiredGenerator("سابقه کار")),
+        }),
+        rights_price: z
+            .object({
+                isTo: z.boolean().optional(),
+                from: z.string(),
+                to: z.string(),
+            })
+            .superRefine(({ isTo, from, to }, ctx) =>
+                checkRefine({
+                    isToActive: Boolean(isTo),
+                    from: {
+                        value: from,
+                        message: messageRequiredGenerator("حداقل حقوق"),
+                        path: ["from"],
+                    },
+                    to: {
+                        value: to,
+                        message: messageRequiredGenerator("حداکثر حقوق"),
+                        path: ["to"],
+                    },
+                    both: { message: "حداقل حقوق از حداکثر حقوق بیشتر است" },
+                    ctx,
+                })
+            ),
+        employment_conditions_years_old: z
+            .object({
+                isTo: z.boolean().optional(),
+                from: z.string().min(1, messageRequiredGenerator("حداقل سن")),
+                to: z.string(),
+            })
+            .superRefine(({ isTo, from, to }, ctx) =>
+                checkRefine({
+                    isToActive: Boolean(isTo),
+                    from: {
+                        value: from,
+                        message: messageRequiredGenerator("حداقل سن"),
+                        path: ["from"],
+                    },
+                    to: {
+                        value: to,
+                        message: messageRequiredGenerator("حداکثر سن"),
+                        path: ["to"],
+                    },
+                    both: { message: "حداقل سن از حداکثر سن بیشتر است" },
+                    ctx,
+                })
+            ),
+    });
+    type TypeAddAdsFormSchema = z.infer<typeof AddAdsFormSchema>;
+
     export const subPageItem: SubPageCmsTypes.TypeSubPageItem[] = [
         {
             parnetPage: "Home",
@@ -118,7 +244,7 @@ namespace SubPageCms {
         { parnetPage: "Advertsisings", subPage: "Advertsisings_Add", title: "آگهی جدید" },
     ];
 
-    // Components
+    //# Components
 
     export const ReqeustBox: React.FC<SubPageCmsTypes.ReqeustBoxProps> = ({ status }) => {
         return (
@@ -210,26 +336,6 @@ namespace SubPageCms {
 
     //? Pages
     export const EditHomePage: React.FC<SubPageCmsTypes.EditHomePageProps> = ({ showMess }) => {
-        const CompanyFormSchema = z.object({
-            name: z.string().min(3, messageLengthGenerator("Min", "نام شرکت", 3)).trim(),
-            location: z.string().min(10, messageLengthGenerator("Min", "موقعیت مکانی", 10)).trim(),
-            logo: z
-                .string()
-                .min(1, messageRequiredGenerator("لینک لوگو شرکت"))
-                .url(messageUrlNotValid("لوگو شرکت"))
-                .trim(),
-            website: z.string().url(messageUrlNotValid("وب سایت شرکت")).trim(),
-            desc: z.string().min(1, messageRequiredGenerator("درباره ی شرکت")).trim(),
-            CompanySlogan: z
-                .string()
-                .min(1, messageRequiredGenerator("شعار شرکت"))
-                .max(50, messageLengthGenerator("Max", "شعار شرکت شما", 50))
-                .trim(),
-            establishedyear: z.date({ required_error: messageRequiredGenerator("سال تاسیس شرکت") }),
-            OrganizationEmploy: z.string().min(1, messageRequiredGenerator("تعداد کارکنان")),
-            ownership: z.string({ required_error: "انتخاب نوع شرکت اجباری است" }).trim(),
-        });
-        type TypeCompanyFormSchema = z.infer<typeof CompanyFormSchema>;
         const {
             register,
             setValue,
@@ -479,115 +585,6 @@ namespace SubPageCms {
     };
 
     export const Advertising_Add: React.FC<SubPageCmsTypes.AdvertisingAddProps> = ({ showMess }) => {
-        const checkRefine = ({
-            isToActive,
-            from,
-            to,
-            both,
-            ctx,
-        }: {
-            isToActive: boolean;
-            from: {
-                value: string;
-                message: string;
-                path: [string];
-            };
-            to: {
-                value: string;
-                message: string;
-                path: [string];
-            };
-            both: { message: string };
-            ctx: z.RefinementCtx;
-        }) => {
-            isToActive && parseInt(from.value) >= parseInt(to.value)
-                ? ctx.addIssue({ code: z.ZodIssueCode.custom, message: both.message })
-                : null;
-            !isToActive && from.value.length < 1
-                ? ctx.addIssue({
-                      code: z.ZodIssueCode.custom,
-                      message: from.message,
-                      path: from.path,
-                  })
-                : null;
-            isToActive && to.value.length < 1
-                ? ctx.addIssue({
-                      code: z.ZodIssueCode.custom,
-                      message: to.message,
-                      path: to.path,
-                  })
-                : null;
-        };
-        const mainAddFormSchema = z.object({
-            work_time: z.string().min(1, messageRequiredGenerator("زمان کار")),
-            cooperation_type: z.string().min(1, messageRequiredGenerator("نوع همکاری")),
-            business_trips: z.string().optional(),
-            key_indicators: z.array(z.string()).min(1, messageRequiredGenerator("شاخص های کلیدی")),
-            employment_conditions_softwares: z
-                .array(z.string())
-                .min(1, messageRequiredGenerator("مهارت های نرم افزاری")),
-            employment_conditions_gender: z.string().min(1, messageRequiredGenerator("تایین جنسیت")),
-            employment_conditions_education: z.array(z.string()),
-            status_is_important: z.boolean().optional(),
-            status_responsible_employer: z.boolean().optional(),
-            ads_tags: z.array(z.string()).min(1, messageRequiredGenerator("تگ های آگهی")),
-            type: z.object({
-                acceptTrainees: z.boolean().optional(),
-                acceptTelecommuting: z.boolean().optional(),
-                benefits_and_facilities: z.array(z.string()),
-                military_order: z.boolean().optional(),
-            }),
-            price: z
-                .object({
-                    isTo: z.boolean().optional(),
-                    from: z.string(),
-                    to: z.string(),
-                })
-                .superRefine(({ isTo, from, to }, ctx) =>
-                    checkRefine({
-                        isToActive: Boolean(isTo),
-                        from: {
-                            value: from,
-                            message: messageRequiredGenerator("حداقل حقوق"),
-                            path: ["from"],
-                        },
-                        to: {
-                            value: to,
-                            message: messageRequiredGenerator("حداکثر حقوق"),
-                            path: ["to"],
-                        },
-                        both: { message: "حداقل حقوق از حداکثر حقوق بیشتر است" },
-                        ctx,
-                    })
-                ),
-            oldYears: z
-                .object({
-                    isTo: z.boolean().optional(),
-                    from: z.string().min(1, messageRequiredGenerator("حداقل سن")),
-                    to: z.string(),
-                })
-                .superRefine(({ isTo, from, to }, ctx) =>
-                    checkRefine({
-                        isToActive: Boolean(isTo),
-                        from: {
-                            value: from,
-                            message: messageRequiredGenerator("حداقل سن"),
-                            path: ["from"],
-                        },
-                        to: {
-                            value: to,
-                            message: messageRequiredGenerator("حداکثر سن"),
-                            path: ["to"],
-                        },
-                        both: { message: "حداقل سن از حداکثر سن بیشتر است" },
-                        ctx,
-                    })
-                ),
-            seniority_level: z.string().min(1, messageRequiredGenerator("سطح ارشدیت")),
-            work_experience: z.string().min(1, messageRequiredGenerator("سابقه کار")),
-        });
-        type TypeMainAddFormSchema = z.infer<typeof mainAddFormSchema>;
-
         const {
             register,
             watch,
@@ -597,8 +594,8 @@ namespace SubPageCms {
             getFieldState,
             control,
             formState: { errors },
-        } = useForm<TypeMainAddFormSchema>({
-            resolver: zodResolver(mainAddFormSchema),
+        } = useForm<TypeAddAdsFormSchema>({
+            resolver: zodResolver(AddAdsFormSchema),
         });
 
         const submitAction = () => {
@@ -634,18 +631,20 @@ namespace SubPageCms {
             });
         };
         useEffect(() => {
-            typeof errors.price !== "undefined" ? showMultipleError(errors.price) : null;
-            typeof errors.oldYears !== "undefined" ? showMultipleError(errors.oldYears) : null;
+            typeof errors.rights_price !== "undefined" ? showMultipleError(errors.rights_price) : null;
+            typeof errors.employment_conditions_years_old !== "undefined"
+                ? showMultipleError(errors.employment_conditions_years_old)
+                : null;
             Object.keys(errors).map((item) => {
                 showMess({
                     type: "error",
-                    message: getFieldState(item as keyof TypeMainAddFormSchema).error?.message,
+                    message: getFieldState(item as keyof TypeAddAdsFormSchema).error?.message,
                 });
             });
         }, [errors]);
 
-        const isToPrice = watch("price.isTo");
-        const isToOldYears = watch("oldYears.isTo");
+        const is_to_rights_price = watch("rights_price.isTo");
+        const is_to_employment_conditions_years_old = watch("employment_conditions_years_old.isTo");
 
         return (
             <>
@@ -657,12 +656,12 @@ namespace SubPageCms {
                             min={0}
                             className="block w-full"
                             placeholder="برای مثال : 7 میلیون تومان"
-                            register={register("price.from")}
-                            isError={errors.price?.from?.message || errors.price?.root?.message}
+                            register={register("rights_price.from")}
+                            isError={errors.rights_price?.from?.message || errors.rights_price?.root?.message}
                         />
                         <div
                             className={`overflow-hidden grid transition-all duration-700 delay-100 mb-2 ${
-                                isToPrice ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                                is_to_rights_price ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
                             }`}
                         >
                             <div className="min-h-0">
@@ -671,14 +670,14 @@ namespace SubPageCms {
                                     min={0}
                                     className="block w-full"
                                     placeholder="20 میلیون تومان"
-                                    register={register("price.to")}
-                                    isError={errors.price?.to?.message || errors.price?.root?.message}
+                                    register={register("rights_price.to")}
+                                    isError={errors.rights_price?.to?.message || errors.rights_price?.root?.message}
                                 />
                             </div>
                         </div>
                         <CheckBox
                             label="نوشتن حداقل و حداکثر حقوق"
-                            name={register("price.isTo").name}
+                            name={register("rights_price.isTo").name}
                             control={control}
                         />
                     </section>
@@ -716,12 +715,15 @@ namespace SubPageCms {
                             min={10}
                             className="block w-full"
                             placeholder="برای مثال : 18 سال"
-                            register={register("oldYears.from")}
-                            isError={errors.oldYears?.from?.message || errors.oldYears?.root?.message}
+                            register={register("employment_conditions_years_old.from")}
+                            isError={
+                                errors.employment_conditions_years_old?.from?.message ||
+                                errors.employment_conditions_years_old?.root?.message
+                            }
                         ></NumberInput>
                         <div
                             className={`overflow-hidden grid transition-all duration-700 delay-100 mb-2 ${
-                                isToOldYears ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                                is_to_employment_conditions_years_old ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
                             }`}
                         >
                             <div className="min-h-0">
@@ -730,14 +732,17 @@ namespace SubPageCms {
                                     min={10}
                                     className="block w-full"
                                     placeholder="25 سال"
-                                    register={register("oldYears.to")}
-                                    isError={errors.oldYears?.to?.message || errors.oldYears?.root?.message}
+                                    register={register("employment_conditions_years_old.to")}
+                                    isError={
+                                        errors.employment_conditions_years_old?.to?.message ||
+                                        errors.employment_conditions_years_old?.root?.message
+                                    }
                                 />
                             </div>
                         </div>
                         <CheckBox
                             label="نوشتن حداقل و حداکثر سن"
-                            name={register("oldYears.isTo").name}
+                            name={register("employment_conditions_years_old.isTo").name}
                             control={control}
                         />
                     </section>
@@ -817,9 +822,9 @@ namespace SubPageCms {
                                 mode="Single"
                                 label="سطح ارشدیت مورد  نیاز خود را انتخاب کنید"
                                 options={SubPageCmsTypes.seniorityLevelArray}
-                                register={register("seniority_level")}
+                                register={register("type.seniority_level")}
                                 className="mb-2"
-                                isError={errors.seniority_level?.message}
+                                isError={errors.type?.seniority_level?.message}
                             ></SelectInput>
                         </div>
                         <div className="my-1">
@@ -828,9 +833,9 @@ namespace SubPageCms {
                                 mode="Single"
                                 label="سابقه کار مورد نیاز خود را انتخاب کنید"
                                 options={SubPageCmsTypes.workExperienceArray}
-                                register={register("work_experience")}
+                                register={register("type.work_experience")}
                                 className="mb-2"
-                                isError={errors.work_experience?.message}
+                                isError={errors.type?.work_experience?.message}
                             ></SelectInput>
                         </div>
                     </section>
@@ -851,9 +856,9 @@ namespace SubPageCms {
                             mode="Single"
                             label="نوع همکاری"
                             options={SubPageCmsTypes.typeOfCooperationOption}
-                            register={register("cooperation_type")}
+                            register={register("cooperation_ads_type")}
                             className="border-jv-lightGray3x"
-                            isError={errors.cooperation_type?.message}
+                            isError={errors.cooperation_ads_type?.message}
                         ></SelectInput>
                     </section>
                     <section>
