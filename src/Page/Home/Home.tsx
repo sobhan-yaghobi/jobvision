@@ -37,6 +37,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import { AdsSkeleton } from "../../Components/Skeleton/Skeleton";
 
 const Home: React.FC = () => {
     const { boxList } = useBoxList();
@@ -199,10 +200,14 @@ const Home: React.FC = () => {
                         >
                             {includes([3, 4], index) ? (
                                 <div className={`w-full xl:w-2/3`}>
-                                    <AdvertisingBox data={{ ...item }} type="ShowSendCv"></AdvertisingBox>
+                                    <AdsSkeleton loading={false}>
+                                        <AdvertisingBox data={{ ...item }} type="ShowSendCv"></AdvertisingBox>
+                                    </AdsSkeleton>
                                 </div>
                             ) : (
-                                <AdvertisingBox data={{ ...item }} type="ShowSendCv"></AdvertisingBox>
+                                <AdsSkeleton loading={false}>
+                                    <AdvertisingBox data={{ ...item }} type="ShowSendCv"></AdvertisingBox>
+                                </AdsSkeleton>
                             )}
                         </motion.div>
                     ))}

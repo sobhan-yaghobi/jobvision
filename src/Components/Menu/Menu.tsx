@@ -121,6 +121,7 @@ export const SubMenuGenerator: React.FC<SubMenuGeneratorProps> = (props) => {
             props.className[0]?.ChildClassName,
             props.Type === "Desktop" && id === props.mainMenuDesktop?.id ? props.className[0]?.ClassWhenActive : ""
         );
+
     return (
         <>
             <motion.ul
