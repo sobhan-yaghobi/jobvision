@@ -10,6 +10,7 @@ import {
     ShowFromLeft,
     ShowFromRight,
     ShowItemsDelay_Var,
+    ShowOpacity,
     ShowShortFromBottomHiden_Var,
 } from "../../Animations/UtilsAnimation";
 
@@ -93,29 +94,17 @@ const Home: React.FC = () => {
                     custom={0.3}
                     initial="hidden"
                     animate="visible"
-                    className="right-landing py-1 flex flex-col justify-evenly col-span-2 row-span-1 md:col-span-1 lg:row-span-2"
+                    className="right-landing py-1 text-center md:text-right flex flex-col justify-evenly col-span-2 row-span-1 md:col-span-1 lg:row-span-2"
                 >
-                    <h1 className="text-xl lg:text-3xl">
-                        <span className="text-jv-primary danaBold text-3xl lg:text-3xl lg:mx-2">38,346</span> آگهی شغلی
-                        در
-                        <span className="text-jv-primary danaBold text-3xl lg:text-3xl lg:mx-2"> 489</span> شهر
+                    <h1 className="text-2xl lg:text-3xl danaBold">
+                        <span className="text-inherit text-jv-primary lg:mx-2">38,346</span> آگهی شغلی در
+                        <span className="text-inherit text-jv-primary lg:mx-2"> 489</span> شهر
                     </h1>
-                    <p className="my-3 md:my-5 text-xs lg:text-lg">
+                    <p className="my-3 md:my-5 text-lg lg:text-lg">
                         لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.
                         چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی
                         مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد.
                     </p>
-                    <div>
-                        <Button
-                            ClassName="w-full md:w-auto"
-                            textColor="light"
-                            size="middle"
-                            isLoading={false}
-                            ClickHandler={() => {}}
-                        >
-                            همین الان روزمه بساز
-                        </Button>
-                    </div>
                 </motion.div>
                 <motion.div
                     variants={ShowAndHideOpacity_Ex}
@@ -198,9 +187,7 @@ const Home: React.FC = () => {
                                     ? ShowFromRight
                                     : includes([2, 4, 7], index) && WindowsSize.innerWidth >= 1280
                                     ? ShowFromLeft
-                                    : WindowsSize.innerWidth < 1280 && isEven(index)
-                                    ? ShowFromRight
-                                    : ShowFromLeft
+                                    : ShowOpacity
                             }
                             initial="hidden"
                             whileInView="visible"
