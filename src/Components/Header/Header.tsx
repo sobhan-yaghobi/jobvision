@@ -100,6 +100,7 @@ const Header: React.FC = () => {
                                             .fill("")
                                             .map((item, index) => (
                                                 <motion.div
+                                                    key={`SkeletonElm_submenu_${index}`}
                                                     variants={ShowAndHideScale_Ex}
                                                     initial="hidden"
                                                     animate="visible"
@@ -114,7 +115,7 @@ const Header: React.FC = () => {
                                     ) : (
                                         <motion.div
                                             variants={ShowOpacity}
-                                            transition={{ duration: 3 }}
+                                            transition={{ duration: 2 }}
                                             initial="hidden"
                                             animate="visible"
                                         >

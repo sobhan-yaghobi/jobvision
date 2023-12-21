@@ -19,8 +19,6 @@ type AdsSkeletonProps = {
     loading: boolean;
 };
 const AdsSkeleton: React.FC<React.PropsWithChildren<AdsSkeletonProps>> = ({ loading, children }) => {
-    console.log("loading", loading);
-
     if (loading) {
         return (
             <>

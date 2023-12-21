@@ -43,12 +43,9 @@ import { AiOutlineClose } from "react-icons/ai";
 import { GoReport } from "react-icons/go";
 import { VscPreview } from "react-icons/vsc";
 
-// Slider
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Navigation } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
 import useFilterBoxList from "../../Hooks/useFilterBoxList";
+import { AdsSkeleton } from "../../Components/Skeleton/Skeleton";
+import CompanySlider from "../../Components/CompanySlider/CompanySlider";
 
 const Jobs: React.FC = () => {
     const { setValue } = useSearchForm();
@@ -74,7 +71,7 @@ const Jobs: React.FC = () => {
     //? ---------------------------------- Box Lists
     const [proModeFilter, setProModeFilter] = useState(false);
     const [filterSelection, setFilterSelection] = useState<string[]>([]);
-    const { boxList, setBoxList, mainBox, setMainBox, getAdvertisingWithCompany } = useBoxList();
+    const { boxList, setBoxList, mainBox, setMainBox, getAdvertisingWithCompany, isLoading } = useBoxList();
     useFilterBoxList({
         filter_selection: filterSelection,
         pro_mode: proModeFilter,
@@ -157,7 +154,15 @@ const Jobs: React.FC = () => {
                         ) : null}
                     </div>
                     <div className="wrapper flex flex-col">
-                        {boxList?.length ? (
+                        {isLoading ? (
+                            Array(3)
+                                .fill("")
+                                .map((item, index) => (
+                                    <div key={`AdsSkeleton_${index}`} className="mt-2">
+                                        <AdsSkeleton loading></AdsSkeleton>
+                                    </div>
+                                ))
+                        ) : boxList.length ? (
                             boxList?.map((item, index) => (
                                 <div key={index + 1} className="mt-2">
                                     <AdvertisingBox
@@ -277,46 +282,9 @@ const Jobs: React.FC = () => {
                 {/*//? -------------------- Finish Mobile Header DropDown -------------------- */}
             </div>
 
-            <div>
+            <div className="w-full py-10 bg-jv-light">
                 {/*//? -------------------------------------- Company Box Slider -------------------------------------- */}
-                <motion.div
-                    variants={ShowItemsDelay_Var}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    className="w-full px-2 md:px-10 lg:px-24 py-10 bg-jv-light"
-                >
-                    <Swiper
-                        className={`rounded-md`}
-                        slidesPerView={"auto"}
-                        spaceBetween={16}
-                        breakpoints={{
-                            540: {
-                                slidesPerView: 3,
-                            },
-                            768: {
-                                slidesPerView: 4,
-                            },
-                            1024: {
-                                slidesPerView: 5,
-                            },
-                        }}
-                        navigation={true}
-                        autoplay={{
-                            delay: 3000,
-                            disableOnInteraction: false,
-                        }}
-                        modules={[Autoplay, Navigation]}
-                    >
-                        {Array(7)
-                            .fill("")
-                            .map((item, index) => (
-                                <SwiperSlide key={index + 1} className="!w-52 !h-64 select-none">
-                                    <CompanyBox></CompanyBox>
-                                </SwiperSlide>
-                            ))}
-                    </Swiper>
-                </motion.div>
+                <CompanySlider></CompanySlider>
                 {/*//! -------------------------------------- Company Box Slider -------------------------------------- */}
             </div>
             <Footer></Footer>

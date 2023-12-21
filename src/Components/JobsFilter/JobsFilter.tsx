@@ -384,15 +384,12 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
                 : categoryMergeArray.map((item) => (
                       <motion.div
                           variants={ShowOpacity}
-                          transition={{ duration: 3 }}
+                          transition={{ duration: 2 }}
                           initial="hidden"
                           animate="visible"
+                          key={`category-item-${item.category_type}`}
                       >
-                          <FilterGenerator
-                              mode="ShowFilter"
-                              key={`category-item-${item.category_type}`}
-                              item={{ ...item }}
-                          ></FilterGenerator>
+                          <FilterGenerator mode="ShowFilter" item={{ ...item }}></FilterGenerator>
                       </motion.div>
                   ))}
             {/*//! -------------------------------------- Filter Desktop Menu -------------------------------------- */}
