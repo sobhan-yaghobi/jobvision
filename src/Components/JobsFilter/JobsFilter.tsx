@@ -15,7 +15,7 @@ import {
 } from "./JobsFilter.type";
 
 // Animations
-import { ShowAndHideOpacity_Ex, ShowFromBottom_EX } from "../../Animations/UtilsAnimation";
+import { ShowAndHideOpacity_Ex, ShowFromBottom_EX, ShowOpacity } from "../../Animations/UtilsAnimation";
 
 // Functions
 import { includes } from "lodash";
@@ -33,11 +33,12 @@ import { AiOutlineDown } from "react-icons/ai";
 import { isArray } from "lodash";
 import { AiOutlineClose } from "react-icons/ai";
 import { GoTrash } from "react-icons/go";
+import { SkeletonElm } from "../Skeleton/Skeleton";
 
 const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnProMode, setIsFilterOnProMode }) => {
     const { clearForm: clearRouteParams } = useSearchForm();
     const [WindowsSize] = useWindowsSize();
-    const { categoryMergeArray } = useAdsFilterCategories();
+    const { categoryMergeArray, isLoading } = useAdsFilterCategories();
     const [menuMobile, setMenuMobile] = useState<{ mode: "ShowSettingFilter" | "ShowFilter"; isShow: boolean }>({
         mode: "ShowFilter",
         isShow: false,
@@ -370,16 +371,30 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
             <div>
                 <FilterGenerator mode="ShowFilterIcon"></FilterGenerator>
             </div>
-            {/* {categoryArray.map((item) => (
-                <FilterGenerator mode="ShowFilter" key={item.id} item={{ ...item }}></FilterGenerator>
-            ))} */}
-            {categoryMergeArray.map((item) => (
-                <FilterGenerator
-                    mode="ShowFilter"
-                    key={`category-item-${item.category_type}`}
-                    item={{ ...item }}
-                ></FilterGenerator>
-            ))}
+
+            {isLoading
+                ? Array(8)
+                      .fill("")
+                      .map((item, index) => (
+                          <SkeletonElm
+                              key={`category_filter_${index}`}
+                              className={[{ wrapper: "w-20 h-10 ml-1 mt-2 rounded-2xl" }]}
+                          ></SkeletonElm>
+                      ))
+                : categoryMergeArray.map((item) => (
+                      <motion.div
+                          variants={ShowOpacity}
+                          transition={{ duration: 3 }}
+                          initial="hidden"
+                          animate="visible"
+                      >
+                          <FilterGenerator
+                              mode="ShowFilter"
+                              key={`category-item-${item.category_type}`}
+                              item={{ ...item }}
+                          ></FilterGenerator>
+                      </motion.div>
+                  ))}
             {/*//! -------------------------------------- Filter Desktop Menu -------------------------------------- */}
             <AnimatePresence>
                 {Object.entries(mainFilterMenu).length &&
