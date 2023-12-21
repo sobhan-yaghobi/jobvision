@@ -36,7 +36,7 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
             <>
                 <div
                     id="LogoCompany"
-                    className="col-span-3 sm:col-span-2 h-full flex flex-col items-center justify-start p-1"
+                    className="col-span-3 sm:col-span-2 h-full flex flex-col items-center justify-start"
                 >
                     <img className="px-1 w-auto max-w-full h-auto max-h-20 rounded-lg" src={jobCompany.logo} alt="" />
                     <span className="mt-2 text-xs flex justify-center gap-1 items-center">

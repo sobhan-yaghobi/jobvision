@@ -26,8 +26,8 @@ const AdsSkeleton: React.FC<React.PropsWithChildren<AdsSkeletonProps>> = ({ load
             <>
                 <div className="cursor-pointer w-full h-full max-h-[13rem] border-2 border-solid rounded-xl py-3 px-3 bg-transparent grid border-jv-lightGray3x grid-rows-3">
                     <div className="text-inherit grid grid-cols-12 row-span-2">
-                        <div className="col-span-3 gap-2 sm:col-span-2 h-full flex flex-col items-center justify-start p-1">
-                            <SkeletonElm className={[{ wrapper: "w-12 h-12 rounded-lg" }]}></SkeletonElm>
+                        <div className="col-span-3 gap-2 sm:col-span-2 h-full flex flex-col items-center justify-start">
+                            <SkeletonElm className={[{ wrapper: "px-1 w-full h-12 rounded-lg" }]}></SkeletonElm>
                             <SkeletonElm className={[{ wrapper: "w-10 h-5 rounded-lg" }]}></SkeletonElm>
                         </div>
                         <div className="text-sm px-1 flex flex-col gap-2 col-span-9 sm:col-span-10 overflow-hidden">

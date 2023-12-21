@@ -205,7 +205,7 @@ const Home: React.FC = () => {
                                     </AdsSkeleton>
                                 </div>
                             ) : (
-                                <AdsSkeleton loading={false}>
+                                <AdsSkeleton loading={index === 0 ? true : false}>
                                     <AdvertisingBox data={{ ...item }} type="ShowSendCv"></AdvertisingBox>
                                 </AdsSkeleton>
                             )}
