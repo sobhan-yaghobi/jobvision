@@ -29,7 +29,12 @@ const useCategories = () => {
               }))
             : ([] as link[]);
 
-    return { categories, tags, categoriesMergeArray };
+    return {
+        categories,
+        tags,
+        categoriesMergeArray,
+        isLoading: data[0].status === "success" && data[1].status === "success" ? false : true,
+    };
 };
 
 export default useCategories;

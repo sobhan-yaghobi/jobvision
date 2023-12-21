@@ -21,19 +21,20 @@ const useMenuFetch = () => {
     });
     const menu = data[0].data;
     const item = data[1].data;
-    const { categoriesMergeArray } = useCategories();
-    const { provincesMergeArray } = useProvinces();
+    const { categoriesMergeArray, isLoading: categoriesIsLoading } = useCategories();
+    const { provincesMergeArray, isLoading: provincesIsLoading } = useProvinces();
 
-    const itemMergeArray: itemLinks[] = Array.isArray(item)
-        ? [...item].map((Item) => ({
-              ...Item,
-              links: getItem({
-                  main_id: Item.id,
-                  key: "item_id",
-                  array: concat<link>(categoriesMergeArray, provincesMergeArray),
-              }),
-          }))
-        : ([] as itemLinks[]);
+    const itemMergeArray: itemLinks[] =
+        Array.isArray(item) && !categoriesIsLoading && !provincesIsLoading
+            ? [...item].map((Item) => ({
+                  ...Item,
+                  links: getItem({
+                      main_id: Item.id,
+                      key: "item_id",
+                      array: concat<link>(categoriesMergeArray, provincesMergeArray),
+                  }),
+              }))
+            : ([] as itemLinks[]);
 
     const menuMergeArray: menuItems[] = Array.isArray(menu)
         ? [...menu].map((menuItem) => ({
@@ -46,7 +47,7 @@ const useMenuFetch = () => {
           }))
         : ([] as menuItems[]);
 
-    return { menu, item, menuMergeArray };
+    return { menu, item, menuMergeArray, isLoading: !categoriesIsLoading && !provincesIsLoading ? false : true };
 };
 
 export default useMenuFetch;

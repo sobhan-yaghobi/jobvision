@@ -7,7 +7,9 @@ import {
     DelayBeforeChilds,
     LongStripVertical_Ex,
     ShowAndHideOpacity_Ex,
+    ShowAndHideScale_Ex,
     ShowHideClipFromBottom_Ex,
+    ShowOpacity,
 } from "../../Animations/UtilsAnimation";
 import { ShowHideMenuItemChildToLeftOrRight } from "../../Animations/HeaderAnimation";
 
@@ -30,10 +32,11 @@ import { HiOutlineMenuAlt1 } from "react-icons/hi";
 import { AuthContext } from "../../Context/AuthContext";
 import useMenuFetch from "../../Hooks/useMenuFetch";
 import { useNavigate } from "react-router-dom";
+import { SkeletonElm } from "../Skeleton/Skeleton";
 
 const Header: React.FC = () => {
     const authContext = useContext(AuthContext);
-    const { menuMergeArray: menu } = useMenuFetch();
+    const { menuMergeArray: menu, isLoading } = useMenuFetch();
     const navigate = useNavigate();
 
     const {
@@ -92,20 +95,45 @@ const Header: React.FC = () => {
                         <div className="header-desktop-right w-6/12 h-full flex items-center">
                             <section className="flex w-full h-full justify-around">
                                 <div className="lg:w-full flex items-center">
-                                    <SubMenuGenerator
-                                        Type="Desktop"
-                                        className={[
-                                            {
-                                                ParentClassName: "h-full flex",
-                                                ChildClassName: "menu__item border-transparent",
-                                                ClassWhenActive: "!border-jv-primary",
-                                            },
-                                        ]}
-                                        ClickHandler={menuDesktopFire}
-                                        Data={menu}
-                                        Ref={elm}
-                                        mainMenuDesktop={menuDesktop.mainItem}
-                                    ></SubMenuGenerator>
+                                    {isLoading ? (
+                                        Array(4)
+                                            .fill("")
+                                            .map((item, index) => (
+                                                <motion.div
+                                                    variants={ShowAndHideScale_Ex}
+                                                    initial="hidden"
+                                                    animate="visible"
+                                                    exit="exit"
+                                                >
+                                                    <SkeletonElm
+                                                        key={`SkeletonElm_${index}`}
+                                                        className={[{ wrapper: "w-20 h-8 mx-2 rounded-md" }]}
+                                                    ></SkeletonElm>
+                                                </motion.div>
+                                            ))
+                                    ) : (
+                                        <motion.div
+                                            variants={ShowOpacity}
+                                            transition={{ duration: 3 }}
+                                            initial="hidden"
+                                            animate="visible"
+                                        >
+                                            <SubMenuGenerator
+                                                Type="Desktop"
+                                                className={[
+                                                    {
+                                                        ParentClassName: "h-full flex",
+                                                        ChildClassName: "menu__item border-transparent",
+                                                        ClassWhenActive: "!border-jv-primary",
+                                                    },
+                                                ]}
+                                                ClickHandler={menuDesktopFire}
+                                                Data={menu}
+                                                Ref={elm}
+                                                mainMenuDesktop={menuDesktop.mainItem}
+                                            ></SubMenuGenerator>
+                                        </motion.div>
+                                    )}
                                     <li className="hidden items-center xl:flex">
                                         <Button
                                             size="middle"

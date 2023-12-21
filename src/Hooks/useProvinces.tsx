@@ -25,7 +25,12 @@ const useProvinces = () => {
                   sublinks: getItem({ main_id: item.id, key: "province_id", array: cities }),
               }))
             : ([] as link[]);
-    return { provinces, cities, provincesMergeArray };
+    return {
+        provinces,
+        cities,
+        provincesMergeArray,
+        isLoading: data[0].status === "success" && data[1].status === "success" ? false : true,
+    };
 };
 
 export default useProvinces;

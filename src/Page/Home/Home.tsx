@@ -1,30 +1,25 @@
-import React, { useState } from "react";
+import React from "react";
 import useBoxList from "../../Hooks/useBoxList";
 // Types
-import { WhyUsDescType, WhyUsType, AboutUsItemArray, whyUsArray } from "./Home.type";
+import { AboutUsItemArray } from "./Home.type";
 
 // Animation
 import {
     ShortShowFromBottom,
     ShowAndHideOpacity_Ex,
     ShowAndHideScale_Ex,
-    ShowFromBottom,
-    ShowFromLeft,
-    ShowFromRight,
-    ShowItemsDelay_Var,
     ShowOpacity,
     ShowShortFromBottomHiden_Var,
 } from "../../Animations/UtilsAnimation";
 
 // Hooks
-import useAnimationStop from "../../Hooks/useAnimationStop";
 
 // Functions
 import Footer from "../../Components/Footer/Footer";
 import Header from "../../Components/Header/Header";
 import useWindowsSize from "../../Hooks/useWindowsSize";
-import { includes, chunk } from "lodash";
-import { AnimatePresence, motion } from "framer-motion";
+import { includes } from "lodash";
+import { motion } from "framer-motion";
 
 // Components
 import Button from "../../Components/Button/Button";

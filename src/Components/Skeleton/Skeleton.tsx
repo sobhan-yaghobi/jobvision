@@ -56,4 +56,16 @@ const AdsSkeleton: React.FC<React.PropsWithChildren<AdsSkeletonProps>> = ({ load
     }
 };
 
-export { SkeletonElm, AdsSkeleton };
+type CustomSkeletonProps = {
+    className: SkeletonElmProps["className"];
+    loading: boolean;
+};
+const CustomSkeleton: React.FC<React.PropsWithChildren<CustomSkeletonProps>> = ({ className, loading, children }) => {
+    if (loading) {
+        <SkeletonElm className={className}></SkeletonElm>;
+    } else {
+        return children;
+    }
+};
+
+export { SkeletonElm, AdsSkeleton, CustomSkeleton };
