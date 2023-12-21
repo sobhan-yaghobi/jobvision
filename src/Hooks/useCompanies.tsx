@@ -27,12 +27,13 @@ type useCompaniesProps =
       };
 
 const useCompanies = (props: useCompaniesProps) => {
-    const { data: companies } = useQuery({
+    const { data: companiesQuery, status: companiesStatus } = useQuery({
         queryKey: ["companies"],
         queryFn: async () => await supabaseFetch.get<companyType[]>("companies?select=*").then((res) => res.data),
+        enabled: props.mode === "array",
     });
 
-    const { data: company } = useQuery({
+    const { data: companyQuery, status: companyStatus } = useQuery({
         queryKey: ["company"],
         queryFn: async () =>
             await supabaseFetch
@@ -41,7 +42,15 @@ const useCompanies = (props: useCompaniesProps) => {
         enabled: props.mode === "single",
     });
 
-    return { companies, company };
+    return {
+        companies: typeof companiesQuery !== "undefined" ? companiesQuery : ([] as companyType[]),
+        company: typeof companyQuery !== "undefined" ? companyQuery : ({} as companyType),
+        isLoading:
+            (props.mode === "array" && companiesStatus === "success") ||
+            (props.mode === "single" && companyStatus === "success")
+                ? false
+                : true,
+    };
 };
 
 export default useCompanies;
