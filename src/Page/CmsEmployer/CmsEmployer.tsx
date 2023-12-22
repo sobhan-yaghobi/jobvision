@@ -1,15 +1,5 @@
-import React, { useState, useEffect, memo } from "react";
-
-// Functions
-import {
-    messageLengthGenerator,
-    messageRequiredGenerator,
-    messageSuccess,
-    messageUrlNotValid,
-} from "../../Utils/Utils";
-import { object, z } from "zod";
-
 // Types
+import React, { useState, useEffect, memo } from "react";
 import {
     CmsPageGeneratorProps,
     ItemGeneratorPorps,
@@ -18,6 +8,16 @@ import {
     SubPageCmsTypes,
 } from "./CmsEmployer.type";
 import { CheckBox, DateInput, NumberInput, SelectInput, TextInput, TextareaInput } from "../../Components/Input/Input";
+import { z } from "zod";
+
+// Functions
+import {
+    messageLengthGenerator,
+    messageRequiredGenerator,
+    messageSuccess,
+    messageUrlNotValid,
+} from "../../Utils/Utils";
+import { twMerge } from "tailwind-merge";
 
 // Hook
 import { FieldError, FieldErrorsImpl, Merge, useForm } from "react-hook-form";
@@ -29,6 +29,7 @@ import { motion } from "framer-motion";
 import Button from "../../Components/Button/Button";
 import { Link } from "react-router-dom";
 import { ConfigProvider, Progress } from "antd";
+import { AdvertsingCmsBox } from "../../Components/AdvertisingBox/AdvertisingBox";
 
 // Animations
 import { ShortShowFromBottom, ShortShowFromTop, SpringBackOutVeryShortly } from "../../Animations/UtilsAnimation";
@@ -52,9 +53,6 @@ import { CiEdit, CiUser } from "react-icons/ci";
 import { AiFillCaretDown, AiOutlineEye } from "react-icons/ai";
 import { PiSpeakerHigh, PiStudentDuotone } from "react-icons/pi";
 import { FaFileCirclePlus } from "react-icons/fa6";
-import { AdvertsingCmsBox } from "../../Components/AdvertisingBox/AdvertisingBox";
-import { twMerge } from "tailwind-merge";
-import { parse } from "uuid";
 
 const pageItems: MenuItemType[] = [
     {
