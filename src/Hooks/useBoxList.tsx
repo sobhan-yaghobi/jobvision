@@ -12,28 +12,24 @@ const useBoxList = () => {
     const [mainBox, setMainBox] = useState<mainJobInfoType>({ isShow: false, mainInfo: {} as TypeAdvertising });
     const { companies, isLoading: companiesLoading } = useCompanies({ mode: "array" });
     const { advertisings, isLoading: advertisingsLoading } = useAdvertisings({ mode: "array" });
-    const getAdvertisingWithCompany: TypeAdvertising[] =
-        !companiesLoading && !advertisingsLoading
-            ? advertisings.map((ads) => ({
-                  ...ads,
-                  ...{
-                      company:
-                          typeof getItem({ main_id: ads.company_id, array: companies, key: "id" }).at(0) === "undefined"
-                              ? ({} as companyType)
-                              : getItem({ main_id: ads.company_id, array: companies, key: "id" }).at(0) ||
-                                ({} as companyType),
-                  },
-              }))
-            : [];
+
+    const getAdvertisingWithCompany: TypeAdvertising[] = advertisings.map((ads) => ({
+        ...ads,
+        ...{
+            company:
+                typeof getItem({ main_id: ads.company_id, array: companies, key: "id" }).at(0) === "undefined"
+                    ? ({} as companyType)
+                    : getItem({ main_id: ads.company_id, array: companies, key: "id" }).at(0) || ({} as companyType),
+        },
+    }));
+
     const mainJobIdFromRoute = route.get("advertisingId");
     const mainJobsFromRoute = getAdvertisingWithCompany.filter((ads) => ads.id === mainJobIdFromRoute).at(0);
 
     useEffect(() => {
         setBoxList(getAdvertisingWithCompany);
-    }, [advertisings]);
-    useEffect(() => {
         setMainBox((prev) => ({ ...prev, mainInfo: mainJobsFromRoute }));
-    }, [advertisings]);
+    }, [advertisings, companies]);
 
     return {
         boxList,

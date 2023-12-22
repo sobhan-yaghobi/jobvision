@@ -45,6 +45,7 @@ const useFilterBoxList = ({ filter_selection, pro_mode, box_list, boxs, set_box_
                 }
             }
         });
+
     const boxBySearchAds = (array: TypeAdvertising[]) =>
         array.filter((ads) =>
             (isTitle(ads.title, ads.company.name).isValueExist || !isTitle(ads.title, ads.company.name).isRouteValue) &&
@@ -68,7 +69,11 @@ const useFilterBoxList = ({ filter_selection, pro_mode, box_list, boxs, set_box_
     };
 
     useEffect(() => mergeFilters(), [route, pro_mode, filter_selection]);
-    return { mergeFilters };
+    return {
+        mergeFilters,
+        isFillter:
+            !routeTitle.length && !routeJobsTag.length && !routeCity.length && !filter_selection.length ? true : false,
+    };
 };
 
 export default useFilterBoxList;

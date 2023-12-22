@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import supabaseFetch from "../Services/supabaseFetch";
-
 export type companyType = {
     compnay_slogan: string;
     created_at: string;
@@ -19,7 +18,6 @@ export type companyType = {
     type_of_activity: string;
     website: string;
 };
-
 type useCompaniesProps =
     | { mode: "single"; id: string }
     | {

@@ -72,7 +72,7 @@ const Jobs: React.FC = () => {
     const [proModeFilter, setProModeFilter] = useState(false);
     const [filterSelection, setFilterSelection] = useState<string[]>([]);
     const { boxList, setBoxList, mainBox, setMainBox, getAdvertisingWithCompany, isLoading } = useBoxList();
-    useFilterBoxList({
+    const { isFillter } = useFilterBoxList({
         filter_selection: filterSelection,
         pro_mode: proModeFilter,
         box_list: boxList,
@@ -176,11 +176,11 @@ const Jobs: React.FC = () => {
                                     ></AdvertisingBox>
                                 </div>
                             ))
-                        ) : (
+                        ) : boxList.length === 0 && !isFillter ? (
                             <div className="mt-3 rounded-lg bg-jv-lightDanger flex items-center justify-center py-10">
                                 <p className="text-jv-danger">آگهی مورد نظر یافت نشد</p>
                             </div>
-                        )}
+                        ) : null}
                     </div>
                 </div>
                 {/*//! -------------------------------------- List Boxs -------------------------------------- */}

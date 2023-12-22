@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useBoxList from "../../Hooks/useBoxList";
 // Types
 import { AboutUsItemArray } from "./Home.type";
@@ -31,11 +31,8 @@ import CompanySlider from "../../Components/CompanySlider/CompanySlider";
 import WhyUs from "../../Components/WhyUs/WhyUs";
 
 const Home: React.FC = () => {
-    const { boxList, isLoading } = useBoxList();
+    const { getAdvertisingWithCompany, isLoading } = useBoxList();
     const [WindowsSize] = useWindowsSize();
-
-    console.log("boxList ", boxList);
-
     return (
         <>
             <Header></Header>
@@ -115,16 +112,23 @@ const Home: React.FC = () => {
                             >
                                 {includes([3, 4], index) ? (
                                     <div className={`w-full xl:w-2/3`}>
-                                        <AdsSkeleton loading={boxList[index] !== undefined ? isLoading : true}>
-                                            {boxList[index] !== undefined ? (
-                                                <AdvertisingBox data={boxList[index]} type="ShowSendCv" />
+                                        <AdsSkeleton
+                                            loading={getAdvertisingWithCompany[index] !== undefined ? isLoading : true}
+                                        >
+                                            {getAdvertisingWithCompany[index] !== undefined ? (
+                                                <AdvertisingBox
+                                                    data={getAdvertisingWithCompany[index]}
+                                                    type="ShowSendCv"
+                                                />
                                             ) : null}
                                         </AdsSkeleton>
                                     </div>
                                 ) : (
-                                    <AdsSkeleton loading={boxList[index] !== undefined ? isLoading : true}>
-                                        {boxList[index] !== undefined ? (
-                                            <AdvertisingBox data={boxList[index]} type="ShowSendCv" />
+                                    <AdsSkeleton
+                                        loading={getAdvertisingWithCompany[index] !== undefined ? isLoading : true}
+                                    >
+                                        {getAdvertisingWithCompany[index] !== undefined ? (
+                                            <AdvertisingBox data={getAdvertisingWithCompany[index]} type="ShowSendCv" />
                                         ) : null}
                                     </AdsSkeleton>
                                 )}
