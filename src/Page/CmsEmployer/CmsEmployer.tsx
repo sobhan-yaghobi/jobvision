@@ -493,11 +493,13 @@ namespace SubPageCms {
         return (
             <>
                 <section className="w-full group mt-8 py-2 px-4 h-36 rounded-lg bg-jv-primary relative">
-                    <img
-                        className="w-6/12 scale-90 absolute -bottom-[2.4rem] left-0 group-hover:scale-100 group-hover:-bottom-[1.83rem] duration-700 ease-in-out"
-                        src="/images/cmsHome.webp"
-                        alt=""
-                    />
+                    <div className="absolute flex flex-row-reverse w-5/12 bottom-0 left-4 overflow-hidden group">
+                        <img
+                            className="w-10/12 group-hover:w-full duration-700 ease-in-out"
+                            src="/images/cmsHome.webp"
+                            alt=""
+                        />
+                    </div>
                     <div className="w-6/12 h-full text-jv-light flex flex-col justify-evenly">
                         <h4>سلامم کارفرمای عزیز</h4>
                         <p className="text-xs">
