@@ -6,10 +6,6 @@ export type MenuItemType = {
     children?: MenuItemType[];
     parentKey?: MenuItemType["key"];
 };
-export type MenuProps = {
-    mainSubItem: MenuItemType;
-    setMainSubItem: React.Dispatch<React.SetStateAction<MenuItemType>>;
-};
 export type ItemGeneratorPorps = {
     item: MenuItemType;
 };

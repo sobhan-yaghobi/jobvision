@@ -1,15 +1,19 @@
 // Types
-import React, { useState, memo, useRef } from "react";
-import { ItemGeneratorPorps, MenuItemType, MenuProps } from "./CmsEmployer.type";
+import React, { useState } from "react";
+import { ItemGeneratorPorps, MenuItemType } from "./CmsEmployer.type";
 
 // Functions
 
 import { twMerge } from "tailwind-merge";
 
+// Hooks
+import useItemCmsPage from "../../Hooks/useItemCmsPage";
+
 // Components
 import { motion } from "framer-motion";
 import Button from "../../Components/Button/Button";
 import { Link, NavLink, Outlet } from "react-router-dom";
+import RequestNotificationBox from "../../Components/RequestNotificationBox/RequestNotificationBox";
 
 // Animations
 import { ShortShowFromBottom, ShortShowFromTop, SpringBackOutVeryShortly } from "../../Animations/UtilsAnimation";
@@ -28,7 +32,6 @@ import { HiOutlineLogout } from "react-icons/hi";
 import { CiEdit } from "react-icons/ci";
 import { AiFillCaretDown } from "react-icons/ai";
 import { FaFileCirclePlus } from "react-icons/fa6";
-import RequestNotificationBox from "../../Components/RequestNotificationBox/RequestNotificationBox";
 
 const pageItems: MenuItemType[] = [
     {
@@ -76,15 +79,33 @@ const pageItems: MenuItemType[] = [
     },
 ];
 
+const quickAccessArray = [
+    {
+        title: "آگهی جدید",
+        link: "/CmsEmployer/Advertsisings?page=add_advertising",
+        icon: <FaFileCirclePlus className="text-inherit transform-none" />,
+    },
+    {
+        title: "درخواست ها",
+        link: "/CmsEmployer/Request_All",
+        icon: <BiGitPullRequest className="text-inherit transform-none" />,
+    },
+    {
+        title: "ویرایش",
+        link: "/CmsEmployer?page=edit_home",
+        icon: <CiEdit className="text-inherit transform-none" />,
+    },
+];
+
 const CmsEmployer: React.FC = () => {
-    const [mainSubItem, setMainSubItem] = useState({} as MenuItemType);
+    const { list, mainItemKey, clickItemHandler } = useItemCmsPage();
     return (
         <>
             <div className="w-full h-screen flex justify-between p-4 relative">
                 <div className="w-2/12 p-1 flex flex-col justify-between text-jv-lightGray2x">
                     <img className="h-10 self-start" src={Logo} alt="" />
                     <div className="mt-1 h-full overflow-y-auto no-scrollbar">
-                        <Menu mainSubItem={mainSubItem} setMainSubItem={setMainSubItem} />
+                        <Menu />
                     </div>
                     <div className="w-full h-[35%] text-center rounded-lg bg-slate-100 flex flex-col items-center">
                         <img className="h-[45%] mb-2" src={reportIcon} alt="" />
@@ -107,34 +128,32 @@ const CmsEmployer: React.FC = () => {
                             variants={ShortShowFromTop}
                             initial="hidden"
                             animate="visible"
+                            key={`main_item_list_${mainItemKey}`}
                             transition={SpringBackOutVeryShortly}
-                            className="w-full flex bg-jv-white"
+                            className="w-full flex bg-jv-white mr-5"
                         >
-                            {/* {SubPageCms.subPageItem.map((item) =>
-                                item.parnetPage === mainPage ? (
-                                    <li
-                                        key={`${item.subPage}-multiPageItem`}
-                                        onClick={() => setMainPage({ mainKey: item.parnetPage, subPage: item.subPage })}
-                                        className={`py-2 px-4 cursor-pointer ${
-                                            item.subPage === subPage
-                                                ? "bg-jv-light rounded-t-lg text-jv-primary"
-                                                : "text-jv-lightGray2x"
-                                        }`}
-                                    >
-                                        {item.title}
-                                    </li>
-                                ) : null
-                            )} */}
+                            {list.map((item) => (
+                                <li
+                                    onClick={() => clickItemHandler({ key: item.key })}
+                                    key={`${item.key}-multiPageItem`}
+                                    className={`select-none py-2 px-4 cursor-pointer ${
+                                        item.key === mainItemKey
+                                            ? "bg-jv-light rounded-t-lg text-jv-primary"
+                                            : "text-jv-lightGray2x"
+                                    }`}
+                                >
+                                    {item.label}
+                                </li>
+                            ))}
                         </motion.ul>
                         <motion.div
                             variants={ShortShowFromBottom}
                             initial="hidden"
                             animate="visible"
+                            key={`main_item_page_${mainItemKey}`}
                             className="w-full h-full text-jv-lightGray2x rounded-lg bg-jv-light p-4 overflow-y-auto no-scrollbar"
                         >
-                            {/* <motion.div variants={ShortShowFromTop} initial="hidden" whileInView="visible"> */}
                             <Outlet />
-                            {/* </motion.div> */}
                         </motion.div>
                     </div>
                 </div>
@@ -153,38 +172,18 @@ const CmsEmployer: React.FC = () => {
                         <img className="rounded-full h-16 shadow-xl" src="/images/company-Sheypoor.webp" alt="" />
                         <h3 className="mt-3 text-jv-lightGray2x">شیپور</h3>
                         <ul className="w-full my-5 flex items-center justify-evenly">
-                            <li
-                                // onClick={() => setMainPage({ mainKey: "Home", subPage: "Home_Edit" })}
-                                className="select-none cursor-pointer text-jv-primary flex flex-col items-center justify-center group"
-                            >
-                                <span className="button-Cms-type border-jv-lightPrimary bg-jv-lightPrimary shadow-jv-primary group-hover:shadow-xl group-active:scale-90">
-                                    <CiEdit className="text-inherit transform-none" />
-                                </span>
-                                <span className="mt-3 text-xs">ویرایش</span>
-                            </li>
-                            <li
-                                // onClick={() => setMainPage({ mainKey: "RqAll", subPage: undefined })}
-                                className="select-none cursor-pointer text-jv-primary flex flex-col items-center justify-center group relative"
-                            >
-                                <span className="button-Cms-type border-jv-lightPrimary bg-jv-lightPrimary shadow-jv-primary group-hover:shadow-xl group-active:scale-90">
-                                    <BiGitPullRequest className="text-inherit transform-none" />
-                                </span>
-                                <span className="mt-3 text-xs">درخواست ها</span>
-                            </li>
-                            <li
-                                // onClick={() =>
-                                //     setMainPage({
-                                //         mainKey: "Advertsisings",
-                                //         subPage: "Advertsisings_Add",
-                                //     })
-                                // }
-                                className="select-none cursor-pointer text-jv-primary flex flex-col items-center justify-center group relative"
-                            >
-                                <span className="button-Cms-type border-jv-lightPrimary bg-jv-lightPrimary shadow-jv-primary group-hover:shadow-xl group-active:scale-90">
-                                    <FaFileCirclePlus className="text-inherit transform-none" />
-                                </span>
-                                <span className="mt-3 text-xs">آگهی جدید</span>
-                            </li>
+                            {quickAccessArray.map((item, index) => (
+                                <NavLink
+                                    key={`quick_access_item_${index}`}
+                                    to={item.link}
+                                    className="select-none cursor-pointer text-jv-primary flex flex-col items-center justify-center group relative"
+                                >
+                                    <span className="button-Cms-type border-jv-lightPrimary bg-jv-lightPrimary shadow-jv-primary group-hover:shadow-xl group-active:scale-90">
+                                        {item.icon}
+                                    </span>
+                                    <span className="mt-3 text-xs">{item.title}</span>
+                                </NavLink>
+                            ))}
                         </ul>
                     </div>
                     <div className="h-3/6 w-full">
@@ -216,7 +215,8 @@ const CmsEmployer: React.FC = () => {
     );
 };
 
-const Menu: React.FC<MenuProps> = ({ mainSubItem, setMainSubItem }) => {
+const Menu: React.FC = () => {
+    const [mainSubItem, setMainSubItem] = useState({} as MenuItemType);
     const className = {
         wrapperMenu: "w-full overflow-hidden duration-700 grid",
         wrapperMenuActive: "grid-rows-[1fr] pr-3",
@@ -268,7 +268,7 @@ const Menu: React.FC<MenuProps> = ({ mainSubItem, setMainSubItem }) => {
                                 >
                                     <ul className={className.listMenu}>
                                         {item.children.map((subItem) => (
-                                            <ItemGenerator item={subItem} />
+                                            <ItemGenerator key={`sub_item_${subItem.key}`} item={subItem} />
                                         ))}
                                     </ul>
                                 </div>
