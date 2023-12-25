@@ -83,6 +83,7 @@ const checkRefine = ({
               path: to.path,
           })
         : null;
+    return z.NEVER;
 };
 
 export {

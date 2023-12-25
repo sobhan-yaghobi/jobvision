@@ -55,6 +55,11 @@
     font-size: 20px !important ;
 }
 
+select {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
 @layer base {
     *:not(.ant-picker-dropdown, .ant-picker-panel-container, .ant-select-dropdown, .rmdp-container *) {
         @apply p-0 m-0 border-0 outline-0 decoration-transparent list-none box-border transition-all duration-150;

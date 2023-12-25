@@ -1,4 +1,7 @@
 import React from "react";
+
+import CompanyBox from "../CompanyBox/CompanyBox";
+
 import { motion } from "framer-motion";
 import { ShowItemsDelay_Var } from "../../Animations/UtilsAnimation";
 
@@ -7,7 +10,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import CompanyBox from "../CompanyBox/CompanyBox";
 
 const CompanySlider: React.FC = () => {
     return (

@@ -20,6 +20,7 @@ export interface TypeMainInput {
     className?: string;
     register: {};
     isError?: string | undefined;
+    disabled ?: boolean
 }
 
 export interface TypeTextInput extends Omit<TypeMainInput, "className"> {

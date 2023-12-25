@@ -187,14 +187,15 @@ const SelectInput: React.FC<TypeSelectInput> = (props) => {
             <>
                 <div
                     className={twMerge(
-                        `select w-fit border-[1px] border-solid border-jv-primary rounded-lg p-2 bg-transparent cursor-pointer text-lg`,
+                        `select w-full border-[1px] border-solid border-jv-primary rounded-lg bg-transparent cursor-pointer text-lg relative`,
                         props.className,
                         Boolean(props.isError) ? InputUtils.className.dangerInputClassName : ""
                     )}
                 >
+                    <AiFillCaretDown className="w-3 h-3 -z-10 flex absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-4" />
                     <select
                         {...props.register}
-                        className="w-full bg-transparent cursor-pointer text-inherit"
+                        className="w-full p-2 bg-transparent cursor-pointer text-inherit"
                         id="standard-select"
                     >
                         <option value="">{props.label}</option>
@@ -376,10 +377,20 @@ const DateInput: React.FC<TypeDateInput> = ({ placeholder, date, setDate }) => {
     );
 };
 
-const NumberInput: React.FC<TypeNumberInput> = ({ placeholder, defValue, max, min, register, className, isError }) => {
+const NumberInput: React.FC<TypeNumberInput> = ({
+    placeholder,
+    defValue,
+    max,
+    min,
+    register,
+    className,
+    isError,
+    disabled,
+}) => {
     return (
         <>
             <input
+                disabled={disabled}
                 value={defValue}
                 placeholder={placeholder}
                 max={max}

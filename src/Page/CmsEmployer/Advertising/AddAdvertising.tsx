@@ -1,14 +1,23 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+// Types
 import React, { useEffect } from "react";
-import { FieldError, FieldErrorsImpl, Merge, useForm } from "react-hook-form";
 import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+// Hooks
+import useShowMssAndNotif from "../../../Hooks/useShowMssAndNotif";
+import useGenderType from "../../../Hooks/useGenderType";
+import { FieldError, FieldErrorsImpl, Merge, SubmitHandler, useForm } from "react-hook-form";
+
+// Functions
 import { checkRefine, messageRequiredGenerator, messageSuccess } from "../../../Utils/Utils";
+
 import { CheckBox, NumberInput, SelectInput, TextInput } from "../../../Components/Input/Input";
-import { BiTimer, BiTrip } from "react-icons/bi";
-import { PiStudentDuotone } from "react-icons/pi";
 import Button from "../../../Components/Button/Button";
 import { TypeOptionInput } from "../../../Components/Input/Input.type";
-import useShowMssAndNotif from "../../../Hooks/useShowMssAndNotif";
+import { TypeAdvertisingQuery } from "../../../Components/AdvertisingBox/AdvertisingBox.type";
+
+import { BiTimer, BiTrip } from "react-icons/bi";
+import { PiStudentDuotone } from "react-icons/pi";
 
 const AddAdsFormSchema = z.object({
     title: z.string().min(1, messageRequiredGenerator("عنوان آگهی")),
@@ -79,18 +88,13 @@ const AddAdsFormSchema = z.object({
 });
 type TypeAddAdsFormSchema = z.infer<typeof AddAdsFormSchema>;
 
-type TypeAdSelectForm = {
-    label: string;
-    value: string;
-};
-
-export const BenefitsTypeArray: TypeAdSelectForm[] = [
+export const BenefitsTypeArray: TypeOptionInput[] = [
     { label: "وام", value: "BENEFITS_AND_FACILITIES_LOAN" },
     { label: "پارکینگ", value: "BENEFITS_AND_FACILITIES_PARKING" },
     { label: "پاداش", value: "BENEFITS_AND_FACILITIES_REWARD" },
 ];
 
-export const seniorityLevelArray: TypeAdSelectForm[] = [
+export const seniorityLevelArray: TypeOptionInput[] = [
     { label: "کارگر", value: "SENIORITY_LEVEL_MANUAL_WORKER" },
     { label: "کارمند", value: "SENIORITY_LEVEL_EMPLOYEE" },
     { label: "کارشناس", value: "SENIORITY_LEVEL_EXPERT" },
@@ -105,13 +109,8 @@ export const typeOfCooperationOption: TypeOptionInput[] = [
     { label: "پاره وقت", value: "TYPE_OF_COOPERTION_PART_TIME" },
     { label: "قراردادی", value: "TYPE_OF_COOPERTION_CONTRACTUAL_TIME" },
 ];
-export const genderOption: TypeOptionInput[] = [
-    { label: "تفاوتی ندارد", value: "NotImportant" },
-    { label: "مرد", value: "Male" },
-    { label: "زن", value: "Female" },
-];
 
-export const workExperienceArray: TypeAdSelectForm[] = [
+export const workExperienceArray: TypeOptionInput[] = [
     { label: "کمتر از دو سال", value: "WORK_EXPERIENCE_UNDER_2_YR" },
     { label: "بین دو تا پنج سال", value: "WORK_EXPERIENCE_AMONG_2_5_YR" },
     { label: "بین پنج تا هشت سال", value: "WORK_EXPERIENCE_AMONG_5_8_YR" },
@@ -120,6 +119,7 @@ export const workExperienceArray: TypeAdSelectForm[] = [
 ];
 
 const AddAdvertising: React.FC = () => {
+    const { options: genderOption } = useGenderType();
     const { ShowContext, showMess } = useShowMssAndNotif({ placementOfNotif: "bottomLeft" });
     const {
         register,
@@ -134,7 +134,30 @@ const AddAdvertising: React.FC = () => {
         resolver: zodResolver(AddAdsFormSchema),
     });
 
-    const submitAction = () => {
+    const submitAction: SubmitHandler<TypeAddAdsFormSchema> = (data) => {
+        // ads_tags: ['برنامه نویسی فرانت اند', 'برنامه نویسی', 'فرانت اند', 'توسعه دهنده فرانت اند', 'طراح سایت'],
+        // business_trips: "سفر به جزیره قشم",
+        // cooperation_ads_type: "TYPE_OF_COOPERTION_PART_TIME",
+        // employment_conditions_education: ['مدرک زبان معتبر', 'لیسانس', 'دپیلم', 'فوق دیپلم']
+        // employment_conditions_gender: "Male",
+        // employment_conditions_softwares: ['react - پیشرفته', 'pure js - متوسط'],
+        // employment_conditions_years_old: {isTo: true, from: '19', to: '43'},
+        // key_indicators: ['3 سال سباقه کار با - react', 'pure js', 'tailwind', 'sass'],
+        // rights_price: {isTo: true, from: '31', to: '50'},
+        // status_is_important: true,
+        // status_responsible_employer: true,
+        // title: "کارآموز طراحی سایت",
+        // type: {
+        //     acceptTrainees: true,
+        //     acceptTelecommuting: true,
+        //     benefits_and_facilities: Array,
+        //     military_order: true,
+        //     seniority_level: 'SENIORITY_LEVEL_EXPERT'
+        // }
+        // work_time: "از شنبه تا دوشنبه"
+        const newAdsBox: TypeAdvertisingQuery = {} as TypeAdvertisingQuery;
+        console.log("newAdsBox", newAdsBox);
+
         return new Promise<void>((resolve) => {
             setTimeout(() => {
                 showMess({ type: "success", message: messageSuccess("ثبت آگهی") });
@@ -167,6 +190,8 @@ const AddAdvertising: React.FC = () => {
         });
     };
     useEffect(() => {
+        console.log("errors", errors);
+
         typeof errors.rights_price !== "undefined" ? showMultipleError(errors.rights_price) : null;
         typeof errors.employment_conditions_years_old !== "undefined"
             ? showMultipleError(errors.employment_conditions_years_old)
@@ -188,6 +213,15 @@ const AddAdvertising: React.FC = () => {
             <h3>فرم ثبت آگهی تازه</h3>
             <form onSubmit={handleSubmit(submitAction)} className="my-10">
                 <section>
+                    <h5 className="mr-2">عنوان آگهی</h5>
+                    <TextInput
+                        placeholder="برای مثال : کارآموز طراحی سایت"
+                        register={register("title")}
+                        icon
+                        isError={errors.title?.message}
+                    ></TextInput>
+                </section>
+                <section className="my-5">
                     <h5 className="mr-2">حقوق ماهانه</h5>
                     <NumberInput
                         min={0}
@@ -205,7 +239,8 @@ const AddAdvertising: React.FC = () => {
                             <p className="my-2 pr-2 text-xs">تا</p>
                             <NumberInput
                                 min={0}
-                                className="block w-full"
+                                disabled={!is_to_rights_price}
+                                className={`w-full`}
                                 placeholder="20 میلیون تومان"
                                 register={register("rights_price.to")}
                                 isError={errors.rights_price?.to?.message || errors.rights_price?.root?.message}
@@ -237,15 +272,6 @@ const AddAdvertising: React.FC = () => {
                         iconSide="Right"
                     ></TextInput>
                 </section>
-                <section className="my-5">
-                    <h5 className="mr-2">مزایا و تحصیلات</h5>
-                    <TextInput
-                        icon={<PiStudentDuotone />}
-                        iconSide="Right"
-                        placeholder="برای مثال : پورسانت ، جوایز سال تحویل و ..."
-                        register={register("type.benefits_and_facilities")}
-                    ></TextInput>
-                </section>
                 <section>
                     <h5 className="mr-2">شرایط سنی</h5>
                     <NumberInput
@@ -267,7 +293,8 @@ const AddAdvertising: React.FC = () => {
                             <p className="my-2 pr-2 text-xs">تا</p>
                             <NumberInput
                                 min={10}
-                                className="block w-full"
+                                disabled={!is_to_employment_conditions_years_old}
+                                className="w-full"
                                 placeholder="25 سال"
                                 register={register("employment_conditions_years_old.to")}
                                 isError={
