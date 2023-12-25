@@ -360,7 +360,7 @@ const AddAdvertising: React.FC = () => {
                             label="سطح ارشدیت مورد  نیاز خود را انتخاب کنید"
                             options={seniorityLevelArray}
                             register={register("type.seniority_level")}
-                            className="mb-2"
+                            className="mb-2 border-jv-lightGray3x"
                             isError={errors.type?.seniority_level?.message}
                         ></SelectInput>
                     </div>
@@ -371,7 +371,7 @@ const AddAdvertising: React.FC = () => {
                             label="سابقه کار مورد نیاز خود را انتخاب کنید"
                             options={workExperienceArray}
                             register={register("type.work_experience")}
-                            className="mb-2"
+                            className="mb-2 border-jv-lightGray3x"
                             isError={errors.type?.work_experience?.message}
                         ></SelectInput>
                     </div>

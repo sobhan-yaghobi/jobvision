@@ -160,7 +160,7 @@ const Header: React.FC = () => {
                                     ورود/ثبت نام کارجو
                                 </Button>
                                 <Button
-                                    ClickHandler={() => navigate("/CmsEmployer")}
+                                    ClickHandler={() => navigate("/cmsEmployer")}
                                     textColor="primary"
                                     size="middle"
                                     ClassName="!bg-transparent !border-none"

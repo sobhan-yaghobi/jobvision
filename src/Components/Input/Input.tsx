@@ -192,7 +192,11 @@ const SelectInput: React.FC<TypeSelectInput> = (props) => {
                         Boolean(props.isError) ? InputUtils.className.dangerInputClassName : ""
                     )}
                 >
-                    <select {...props.register} className="w-full bg-transparent cursor-pointer" id="standard-select">
+                    <select
+                        {...props.register}
+                        className="w-full bg-transparent cursor-pointer text-inherit"
+                        id="standard-select"
+                    >
                         <option value="">{props.label}</option>
                         {props.options.map((item, index) => (
                             <option value={item.value} key={index}>

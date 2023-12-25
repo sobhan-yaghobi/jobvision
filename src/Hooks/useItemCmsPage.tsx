@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { getItem } from "../Utils/Utils";
 
+type ParnetLinks = "cmsEmployer" | "Advertsisings";
+type PageLinks = "main_home" | "edit_home" | "main_advertising" | "add_advertising";
+
 type itemPageType = {
-    parentLink: React.Key;
-    key: string;
+    parentLink: ParnetLinks;
+    key: PageLinks;
     label: string;
     isMain?: boolean;
 };
@@ -13,13 +16,13 @@ const itemPage: itemPageType[] = [
     {
         label: "صفحه اصلی",
         key: "main_home",
-        parentLink: "CmsEmployer",
+        parentLink: "cmsEmployer",
         isMain: true,
     },
     {
         label: "درباره شرکت",
         key: "edit_home",
-        parentLink: "CmsEmployer",
+        parentLink: "cmsEmployer",
     },
     {
         label: "آگهی ها",
@@ -38,7 +41,6 @@ const useItemCmsPage = () => {
     const [route, setRoute] = useSearchParams({ page: "" });
     const { pathname } = useLocation();
     const [mainItems, setMainItems] = useState([] as itemPageType[]);
-    const [mainItem, setMainItem] = useState({} as itemPageType);
     const setMainRouteAction = ({ item }: { item: itemPageType | undefined }) =>
         typeof item !== "undefined" ? setRoute((prev) => ({ ...prev, page: item?.key })) : null;
 
@@ -50,7 +52,11 @@ const useItemCmsPage = () => {
     useEffect(() => {
         const pageFromQuery = getPageQuery();
         const lastPath = pathname.split("/").at(-1) ?? "";
-        const mainItemsOfPage = getItem({ array: itemPage, key: "parentLink", main_id: lastPath });
+        const mainItemsOfPage = getItem({
+            array: itemPage,
+            key: "parentLink",
+            main_id: lastPath,
+        });
         const mainItemByIsMain = mainItemsOfPage.filter((item) => item.isMain).at(0);
 
         if (pageFromQuery?.length === 0) {
@@ -64,7 +70,7 @@ const useItemCmsPage = () => {
         setMainItems(mainItemsOfPage);
     }, [pathname, getPageQuery()]);
 
-    return { list: mainItems, clickItemHandler: itemClickAction, mainItemKey: getPageQuery() };
+    return { list: mainItems, clickItemHandler: itemClickAction, mainItemKey: getPageQuery() as PageLinks };
 };
 
 export default useItemCmsPage;

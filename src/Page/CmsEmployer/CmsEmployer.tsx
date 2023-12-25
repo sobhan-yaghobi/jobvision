@@ -82,17 +82,17 @@ const pageItems: MenuItemType[] = [
 const quickAccessArray = [
     {
         title: "آگهی جدید",
-        link: "/CmsEmployer/Advertsisings?page=add_advertising",
+        link: "/cmsEmployer/Advertsisings?page=add_advertising",
         icon: <FaFileCirclePlus className="text-inherit transform-none" />,
     },
     {
         title: "درخواست ها",
-        link: "/CmsEmployer/Request_All",
+        link: "/cmsEmployer/Request_All",
         icon: <BiGitPullRequest className="text-inherit transform-none" />,
     },
     {
         title: "ویرایش",
-        link: "/CmsEmployer?page=edit_home",
+        link: "/cmsEmployer?page=edit_home",
         icon: <CiEdit className="text-inherit transform-none" />,
     },
 ];

@@ -1,12 +1,17 @@
 import React from "react";
-import { useSearchParams } from "react-router-dom";
+import useItemCmsPage from "../../../Hooks/useItemCmsPage";
+import EditHome from "./EditHome";
+import MainHome from "./MainHome";
+import ErrorBox from "../../../Components/ErrorBox/ErrorBox";
 
 const CmsHome: React.FC = () => {
-    const [route, setRoute] = useSearchParams({ page: "main" });
-    return (
-        <div>
-            <button onClick={() => setRoute((prev) => ({ ...prev, page: "sobhan" }))}>Click me</button>
-        </div>
+    const { mainItemKey } = useItemCmsPage();
+    return mainItemKey === "edit_home" ? (
+        <EditHome />
+    ) : mainItemKey === "main_home" ? (
+        <MainHome />
+    ) : (
+        <ErrorBox errTitle="صفحه ای یافت نشد" />
     );
 };
 

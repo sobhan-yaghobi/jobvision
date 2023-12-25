@@ -25,7 +25,7 @@ const routes: routesProps[] = [
     { path: "/", element: <Home /> },
     { path: "/jobs", element: <Jobs /> },
     {
-        path: "/CmsEmployer",
+        path: "/cmsEmployer",
         element: <CmsEmployer />,
         children: [
             { path: "", element: <CmsHome /> },

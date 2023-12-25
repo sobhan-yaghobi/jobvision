@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { SubPageCmsTypes } from "../CmsEmployer.type";
 import { z } from "zod";
 
 import { useForm } from "react-hook-form";
@@ -35,7 +34,6 @@ const CompanyFormSchema = z.object({
         .trim(),
     establishedyear: z.date({ required_error: messageRequiredGenerator("سال تاسیس شرکت") }),
     OrganizationEmploy: z.string().min(1, messageRequiredGenerator("تعداد کارکنان")),
-    ownership: z.string({ required_error: "انتخاب نوع شرکت اجباری است" }).trim(),
 });
 type TypeCompanyFormSchema = z.infer<typeof CompanyFormSchema>;
 
@@ -155,17 +153,6 @@ const EditHome: React.FC = () => {
                         placeholder={`برای مثال ${new DateObject().convert(Persian_cl)}`}
                         setDate={setEstablishDate}
                     ></DateInput>
-                </section>
-                <section>
-                    <h5 className="mr-2">نوع شرکت</h5>
-                    <SelectInput
-                        mode="Single"
-                        label="نوع شرکت"
-                        options={SubPageCmsTypes.ownershipOptions}
-                        register={register("ownership")}
-                        className="border-jv-lightGray3x"
-                        isError={errors.ownership?.message}
-                    ></SelectInput>
                 </section>
                 <Button
                     ClassName="mt-5 w-full"
