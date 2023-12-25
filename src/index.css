@@ -82,6 +82,10 @@
     .h-d-screen {
         height: 100dvh;
     }
+    .no-drag {
+        user-drag: none;
+        -webkit-user-drag: none;
+    }
 
     .twoLine {
         overflow: hidden;
@@ -237,5 +241,20 @@
         visibility: visible;
         top: 100%;
         opacity: 1;
+    }
+
+    .cms_navlink {
+        @apply text-inherit w-full text-sm my-1 pl-10 pr-2 py-2 rounded-lg flex items-center transition-none relative cursor-pointer;
+    }
+    .cms_navlink:not(.no_activation):is(.active) {
+        @apply text-jv-primary border-r-2 border-solid border-jv-lightPrimary bg-jv-lightPrimary;
+    }
+    .glass {
+        background: #dde1e686;
+        border-radius: 16px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        border: 1px solid #dde1e686;
     }
 }

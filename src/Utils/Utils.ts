@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export interface TimeType {
     date: number;
     type: "Second" | "Minute" | "Hour" | "Day" | "Month" | "Year" | "NotValid";
@@ -43,6 +45,46 @@ const toLowerCaseAction = (value: string): string => value.toLocaleLowerCase();
 const getItem = <T>({ main_id, array, key }: { main_id: string; array: T[] | undefined; key: keyof T }): T[] =>
     typeof array !== "undefined" ? array.filter((item) => item[key] === main_id) : ([] as T[]);
 
+const checkRefine = ({
+    isToActive,
+    from,
+    to,
+    both,
+    ctx,
+}: {
+    isToActive: boolean;
+    from: {
+        value: string;
+        message: string;
+        path: [string];
+    };
+    to: {
+        value: string;
+        message: string;
+        path: [string];
+    };
+    both: { message: string };
+    ctx: z.RefinementCtx;
+}) => {
+    isToActive && parseInt(from.value) >= parseInt(to.value)
+        ? ctx.addIssue({ code: z.ZodIssueCode.custom, message: both.message })
+        : null;
+    !isToActive && from.value.length < 1
+        ? ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: from.message,
+              path: from.path,
+          })
+        : null;
+    isToActive && to.value.length < 1
+        ? ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: to.message,
+              path: to.path,
+          })
+        : null;
+};
+
 export {
     getTime,
     messageLengthGenerator,
@@ -51,4 +93,5 @@ export {
     messageSuccess,
     toLowerCaseAction,
     getItem,
+    checkRefine,
 };
