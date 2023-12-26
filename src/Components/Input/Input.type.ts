@@ -20,7 +20,7 @@ export interface TypeMainInput {
     className?: string;
     register: {};
     isError?: string | undefined;
-    disabled ?: boolean
+    disabled?: boolean;
 }
 
 export interface TypeTextInput extends Omit<TypeMainInput, "className"> {
@@ -37,6 +37,7 @@ export type TypeSelectInput = TypeMainInput &
               mode: "Multiple";
               id: string;
               callBackFn: (param: string[]) => void;
+              isReset?: boolean;
           }
         | {
               mode: "Single";
@@ -48,6 +49,7 @@ export type TypeSelectInput = TypeMainInput &
               mode: "Multiple_Option";
               options: TypeOptionInput[];
               callBackFn: (param: string[]) => void;
+              isReset?: boolean;
           }
     );
 

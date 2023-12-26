@@ -23,7 +23,7 @@ export type TypeAdvertisingQuery = {
     employment_conditions_education: string[]; //
     employment_conditions_gender: string; //
     employment_conditions_softwares: string[]; //
-    employment_conditions_years_old: [number, number]; //
+    employment_conditions_years_old: [number, number | null]; //
     id: string;
     key_indicators: string[]; //
     rights_price: [number, number]; //

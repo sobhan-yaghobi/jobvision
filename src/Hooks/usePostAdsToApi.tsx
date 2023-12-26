@@ -1,22 +1,26 @@
-import React from "react";
-import { useMutation } from "@tanstack/react-query";
-import supabaseFetch from "../Services/supabaseFetch";
+import { useState } from "react";
 import { TypeAdvertisingQuery } from "../Components/AdvertisingBox/AdvertisingBox.type";
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl = "https://ykbyhslhgdnxflfmfzbu.supabase.co";
+const supabaseKey = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlrYnloc2xoZ2RueGZsZm1memJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDE0MjIwOTEsImV4cCI6MjAxNjk5ODA5MX0.kA3uYoFZ-LuLOiGXayJJtOkmBCfSFWjgAUehHzl30KU`;
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+export type adsBoxPostType = Omit<TypeAdvertisingQuery, "created_at" | "id">;
 
 type usePostAdsToApiProps = {
-    data: TypeAdvertisingQuery;
+    adsBox: adsBoxPostType;
 };
-const usePostAdsToApi = ({ data }: usePostAdsToApiProps) => {
-    const { isSuccess } = useMutation({
-        mutationFn: async () =>
-            await supabaseFetch.post("advertisings", data, {
-                headers: {
-                    "Content-Type": "application/json",
-                    Prefer: "return=minimal",
-                },
-            }),
-    });
-    return { isSuccess };
+
+const usePostAdsToApi = () => {
+    const [isLoading, setIsLoading] = useState(true);
+    const postAction = async ({ adsBox }: usePostAdsToApiProps) => {
+        const { error } = await supabase.from("advertisings").insert([{ ...adsBox }]);
+        setIsLoading(typeof error !== "undefined" ? false : true);
+    };
+    console.log("isLoading ", isLoading);
+
+    return { postAction, isLoading };
 };
 
 export default usePostAdsToApi;

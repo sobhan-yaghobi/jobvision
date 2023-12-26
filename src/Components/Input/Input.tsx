@@ -223,7 +223,13 @@ const SelectInput: React.FC<TypeSelectInput> = (props) => {
             inputRef.current?.classList.remove("hidden");
             inputRef.current?.focus();
         };
+        const setBlurAction = (value: string) => {
+            value.length > 0 ? setList((prev) => [...prev, value.trim()]) : null;
+            setValue("");
+            list.length > 0 ? inputRef.current?.classList.add("hidden") : null;
+        };
         useEffect(() => props.callBackFn(list), [list]);
+        useEffect(() => (props.isReset ? setList([]) : undefined), [props.isReset]);
         return (
             <div
                 onClick={activeInput}
@@ -246,7 +252,7 @@ const SelectInput: React.FC<TypeSelectInput> = (props) => {
                 <input
                     id={props.id}
                     ref={inputRef}
-                    onBlur={() => (list.length ? inputRef.current?.classList.add("hidden") : null)}
+                    onBlur={(e) => setBlurAction(e.target.value)}
                     value={value}
                     onKeyDownCapture={(e) => (e.key === "Enter" ? keyPressAction(e) : null)}
                     onChange={(e) => setValue(e.target.value)}
@@ -258,7 +264,7 @@ const SelectInput: React.FC<TypeSelectInput> = (props) => {
                                 : "برای اضافه کردن Enter کیبورد رو فشار دهید"
                             : undefined
                     }
-                    className={twMerge(InputUtils.className.inputClassName, "")}
+                    className={twMerge(InputUtils.className.inputClassName)}
                 />
             </div>
         );
@@ -277,6 +283,7 @@ const SelectInput: React.FC<TypeSelectInput> = (props) => {
             InputUtils.AutoCompleteAction(isClose ? "Blur" : "Focus", showAutoComplete, setShowAutoComplete);
         };
         useEffect(() => listUpdateAction(), [list]);
+        useEffect(() => (props.isReset ? setList([]) : undefined), [props.isReset]);
         return (
             <div
                 onClick={() => {

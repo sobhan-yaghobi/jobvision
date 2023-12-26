@@ -1,5 +1,5 @@
 // Types
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -7,17 +7,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import useShowMssAndNotif from "../../../Hooks/useShowMssAndNotif";
 import useGenderType from "../../../Hooks/useGenderType";
 import { FieldError, FieldErrorsImpl, Merge, SubmitHandler, useForm } from "react-hook-form";
+import useAdsFilterCategories from "../../../Hooks/useAdsFilterCategories";
 
 // Functions
-import { checkRefine, messageRequiredGenerator, messageSuccess } from "../../../Utils/Utils";
+import { checkRefine, getItem, messageRequiredGenerator, messageSuccess } from "../../../Utils/Utils";
 
 import { CheckBox, NumberInput, SelectInput, TextInput } from "../../../Components/Input/Input";
 import Button from "../../../Components/Button/Button";
 import { TypeOptionInput } from "../../../Components/Input/Input.type";
-import { TypeAdvertisingQuery } from "../../../Components/AdvertisingBox/AdvertisingBox.type";
 
 import { BiTimer, BiTrip } from "react-icons/bi";
-import { PiStudentDuotone } from "react-icons/pi";
+import usePostAdsToApi, { adsBoxPostType } from "../../../Hooks/usePostAdsToApi";
+import { TypeFilterTypes } from "../../../Components/JobsFilter/JobsFilter.type";
 
 const AddAdsFormSchema = z.object({
     title: z.string().min(1, messageRequiredGenerator("عنوان آگهی")),
@@ -32,10 +33,11 @@ const AddAdsFormSchema = z.object({
     status_responsible_employer: z.boolean().optional(),
     ads_tags: z.array(z.string()).min(1, messageRequiredGenerator("تگ های آگهی")),
     type: z.object({
-        acceptTrainees: z.boolean().optional(),
-        acceptTelecommuting: z.boolean().optional(),
+        INTERSHIP: z.boolean().optional(),
+        TELECOMMUTING: z.boolean().optional(),
         benefits_and_facilities: z.array(z.string()),
-        military_order: z.boolean().optional(),
+        MILITARY_ORDER: z.boolean().optional(),
+        IS_EMPLOYMENT_OF_THE_DISABLED: z.boolean().optional(),
         seniority_level: z.string().min(1, messageRequiredGenerator("سطح ارشدیت")),
         work_experience: z.string().min(1, messageRequiredGenerator("سابقه کار")),
     }),
@@ -43,7 +45,7 @@ const AddAdsFormSchema = z.object({
         .object({
             isTo: z.boolean().optional(),
             from: z.string(),
-            to: z.string(),
+            to: z.string().optional(),
         })
         .superRefine(({ isTo, from, to }, ctx) =>
             checkRefine({
@@ -54,7 +56,7 @@ const AddAdsFormSchema = z.object({
                     path: ["from"],
                 },
                 to: {
-                    value: to,
+                    value: to ?? "",
                     message: messageRequiredGenerator("حداکثر حقوق"),
                     path: ["to"],
                 },
@@ -66,7 +68,7 @@ const AddAdsFormSchema = z.object({
         .object({
             isTo: z.boolean().optional(),
             from: z.string().min(1, messageRequiredGenerator("حداقل سن")),
-            to: z.string(),
+            to: z.string().optional(),
         })
         .superRefine(({ isTo, from, to }, ctx) =>
             checkRefine({
@@ -77,7 +79,7 @@ const AddAdsFormSchema = z.object({
                     path: ["from"],
                 },
                 to: {
-                    value: to,
+                    value: to ?? "",
                     message: messageRequiredGenerator("حداکثر سن"),
                     path: ["to"],
                 },
@@ -88,38 +90,48 @@ const AddAdsFormSchema = z.object({
 });
 type TypeAddAdsFormSchema = z.infer<typeof AddAdsFormSchema>;
 
-export const BenefitsTypeArray: TypeOptionInput[] = [
-    { label: "وام", value: "BENEFITS_AND_FACILITIES_LOAN" },
-    { label: "پارکینگ", value: "BENEFITS_AND_FACILITIES_PARKING" },
-    { label: "پاداش", value: "BENEFITS_AND_FACILITIES_REWARD" },
-];
-
-export const seniorityLevelArray: TypeOptionInput[] = [
-    { label: "کارگر", value: "SENIORITY_LEVEL_MANUAL_WORKER" },
-    { label: "کارمند", value: "SENIORITY_LEVEL_EMPLOYEE" },
-    { label: "کارشناس", value: "SENIORITY_LEVEL_EXPERT" },
-    { label: "کارشناس ارشد", value: "SENIORITY_LEVEL_MA" },
-    { label: "مدیر میانی", value: "SENIORITY_LEVEL_MID_LEVEL_MANAGER" },
-    { label: "معاونت", value: "SENIORITY_LEVEL_ASSISTANCE" },
-    { label: "مدیرارشد", value: "SENIORITY_LEVEL_CHIEF" },
-];
-
-export const typeOfCooperationOption: TypeOptionInput[] = [
-    { label: "تمام وقت", value: "TYPE_OF_COOPERTION_FULL_TIME" },
-    { label: "پاره وقت", value: "TYPE_OF_COOPERTION_PART_TIME" },
-    { label: "قراردادی", value: "TYPE_OF_COOPERTION_CONTRACTUAL_TIME" },
-];
-
-export const workExperienceArray: TypeOptionInput[] = [
-    { label: "کمتر از دو سال", value: "WORK_EXPERIENCE_UNDER_2_YR" },
-    { label: "بین دو تا پنج سال", value: "WORK_EXPERIENCE_AMONG_2_5_YR" },
-    { label: "بین پنج تا هشت سال", value: "WORK_EXPERIENCE_AMONG_5_8_YR" },
-    { label: "بین هشت تا دوازده سال", value: "WORK_EXPERIENCE_AMONG_8_12_YR" },
-    { label: "بالای دوازده سال", value: "WORK_EXPERIENCE_OVER_12_YR" },
-];
-
 const AddAdvertising: React.FC = () => {
+    const [isMultipleInputArrayReset, setIsMultipleInputArrayReset] = useState(false);
     const { options: genderOption } = useGenderType();
+    const { categoryMergeArray } = useAdsFilterCategories();
+    const optionGenerator = ({
+        main_id,
+        value,
+        label,
+    }: {
+        main_id: string;
+        value: keyof TypeFilterTypes;
+        label: keyof TypeFilterTypes;
+    }) =>
+        getItem({
+            array: categoryMergeArray,
+            key: "category_type",
+            main_id,
+        })
+            .at(0)
+            ?.sub.map((item) => ({ value: item[value], label: item[label] })) ?? ([] as TypeOptionInput[]);
+
+    const BenefitsTypeArray: TypeOptionInput[] = optionGenerator({
+        main_id: "BENEFITS_AND_FACILITIES",
+        value: "type",
+        label: "title",
+    });
+    const seniorityLevelArray: TypeOptionInput[] = optionGenerator({
+        main_id: "SENIORITY_LEVEL",
+        value: "type",
+        label: "title",
+    });
+    const typeOfCooperationOption: TypeOptionInput[] = optionGenerator({
+        main_id: "COOPERTION",
+        label: "title",
+        value: "title",
+    });
+    const workExperienceArray: TypeOptionInput[] = optionGenerator({
+        main_id: "WORK_EXPERIENCE",
+        value: "type",
+        label: "title",
+    });
+
     const { ShowContext, showMess } = useShowMssAndNotif({ placementOfNotif: "bottomLeft" });
     const {
         register,
@@ -133,38 +145,72 @@ const AddAdvertising: React.FC = () => {
     } = useForm<TypeAddAdsFormSchema>({
         resolver: zodResolver(AddAdsFormSchema),
     });
+    const { postAction, isLoading } = usePostAdsToApi();
+    const resetAction = () => {
+        reset();
+        setIsMultipleInputArrayReset(true);
+        setTimeout(() => {
+            setIsMultipleInputArrayReset(false);
+        }, 1000);
+    };
+    const submitAction: SubmitHandler<TypeAddAdsFormSchema> = async ({
+        title,
+        ads_tags,
+        business_trips,
+        cooperation_ads_type,
+        employment_conditions_education,
+        employment_conditions_gender,
+        employment_conditions_softwares,
+        employment_conditions_years_old,
+        key_indicators,
+        rights_price,
+        status_is_important,
+        status_responsible_employer,
+        type,
+        work_time,
+    }) => {
+        const filter_types = Object.entries({ ...type })
+            .map((item) => {
+                if (typeof item[1] === "boolean" && item[1] ? item[0] : null) {
+                    return item[0];
+                } else if (typeof item[1] === "string") {
+                    return item[1];
+                } else if (Array.isArray(item[1])) {
+                    return item[1].map((item) => item);
+                } else {
+                    return "";
+                }
+            })
+            .flatMap((item) => (Array.isArray(item) ? item : [item]))
+            .filter((item) => item !== "");
 
-    const submitAction: SubmitHandler<TypeAddAdsFormSchema> = (data) => {
-        // ads_tags: ['برنامه نویسی فرانت اند', 'برنامه نویسی', 'فرانت اند', 'توسعه دهنده فرانت اند', 'طراح سایت'],
-        // business_trips: "سفر به جزیره قشم",
-        // cooperation_ads_type: "TYPE_OF_COOPERTION_PART_TIME",
-        // employment_conditions_education: ['مدرک زبان معتبر', 'لیسانس', 'دپیلم', 'فوق دیپلم']
-        // employment_conditions_gender: "Male",
-        // employment_conditions_softwares: ['react - پیشرفته', 'pure js - متوسط'],
-        // employment_conditions_years_old: {isTo: true, from: '19', to: '43'},
-        // key_indicators: ['3 سال سباقه کار با - react', 'pure js', 'tailwind', 'sass'],
-        // rights_price: {isTo: true, from: '31', to: '50'},
-        // status_is_important: true,
-        // status_responsible_employer: true,
-        // title: "کارآموز طراحی سایت",
-        // type: {
-        //     acceptTrainees: true,
-        //     acceptTelecommuting: true,
-        //     benefits_and_facilities: Array,
-        //     military_order: true,
-        //     seniority_level: 'SENIORITY_LEVEL_EXPERT'
-        // }
-        // work_time: "از شنبه تا دوشنبه"
-        const newAdsBox: TypeAdvertisingQuery = {} as TypeAdvertisingQuery;
-        console.log("newAdsBox", newAdsBox);
-
-        return new Promise<void>((resolve) => {
-            setTimeout(() => {
-                showMess({ type: "success", message: messageSuccess("ثبت آگهی") });
-                reset();
-                resolve();
-            }, 2000);
-        });
+        const newAdsBox: adsBoxPostType = {
+            title,
+            rights_price: [
+                parseInt(rights_price.from),
+                typeof rights_price.to !== "undefined" ? parseInt(rights_price.to) : -1,
+            ],
+            work_time: work_time ?? "",
+            cooperation_ads_type,
+            business_trips: business_trips ?? "",
+            key_indicators,
+            employment_conditions_years_old: [
+                parseInt(employment_conditions_years_old.from),
+                typeof employment_conditions_years_old.to !== "undefined"
+                    ? parseInt(employment_conditions_years_old.to)
+                    : -1,
+            ],
+            employment_conditions_gender,
+            employment_conditions_softwares,
+            employment_conditions_education,
+            status_is_important: status_is_important ?? false,
+            status_cv_pending: false,
+            status_responsible_employer: status_responsible_employer ?? false,
+            ads_tags,
+            ads_types: filter_types,
+            company_id: "d2ccbf80-0646-46d2-a4da-2f25c5ffc8d3",
+        };
+        await postAction({ adsBox: newAdsBox });
     };
 
     const showMultipleError = (
@@ -190,8 +236,6 @@ const AddAdvertising: React.FC = () => {
         });
     };
     useEffect(() => {
-        console.log("errors", errors);
-
         typeof errors.rights_price !== "undefined" ? showMultipleError(errors.rights_price) : null;
         typeof errors.employment_conditions_years_old !== "undefined"
             ? showMultipleError(errors.employment_conditions_years_old)
@@ -203,6 +247,13 @@ const AddAdvertising: React.FC = () => {
             });
         });
     }, [errors]);
+
+    useEffect(() => {
+        if (!isLoading) {
+            showMess({ type: "success", message: messageSuccess("ثبت آگهی") });
+            resetAction();
+        }
+    }, [isLoading]);
 
     const is_to_rights_price = watch("rights_price.isTo");
     const is_to_employment_conditions_years_old = watch("employment_conditions_years_old.isTo");
@@ -316,6 +367,7 @@ const AddAdvertising: React.FC = () => {
                         placeholder="برای مثال : لیسانس دکترا ، مدرک زبان معتبر و..."
                         id="Edicu"
                         mode="Multiple"
+                        isReset={isMultipleInputArrayReset}
                         callBackFn={(param: string[]) => {
                             setValue("employment_conditions_education", param);
                         }}
@@ -329,6 +381,7 @@ const AddAdvertising: React.FC = () => {
                         placeholder="برای مثال : 3 سال سابقه کار و react - پیشرفته و..."
                         id="keyIndicatorsMenu"
                         mode="Multiple"
+                        isReset={isMultipleInputArrayReset}
                         callBackFn={(param: string[]) => {
                             setValue("key_indicators", param);
                         }}
@@ -342,6 +395,7 @@ const AddAdvertising: React.FC = () => {
                         placeholder="برای مثال : react - متوسط و..."
                         id="SoftwaresMenu"
                         mode="Multiple"
+                        isReset={isMultipleInputArrayReset}
                         callBackFn={(param: string[]) => {
                             setValue("employment_conditions_softwares", param);
                         }}
@@ -356,6 +410,7 @@ const AddAdvertising: React.FC = () => {
                         placeholder="برای مثال : برنامه نویسی فرانت اند ، برنامه نویسی ری اکت و ..."
                         id="ads_tags"
                         mode="Multiple"
+                        isReset={isMultipleInputArrayReset}
                         callBackFn={(param: string[]) => {
                             setValue("ads_tags", param);
                         }}
@@ -374,6 +429,7 @@ const AddAdvertising: React.FC = () => {
                             mode="Multiple_Option"
                             register={register("type.benefits_and_facilities")}
                             options={BenefitsTypeArray}
+                            isReset={isMultipleInputArrayReset}
                             callBackFn={(param: string[]) => {
                                 setValue("type.benefits_and_facilities", param);
                             }}
@@ -441,14 +497,15 @@ const AddAdvertising: React.FC = () => {
                         <CheckBox
                             control={control}
                             label="امکان دریافت کارآموز"
-                            name={register("type.acceptTrainees").name}
+                            name={register("type.INTERSHIP").name}
                         />
+                        <CheckBox control={control} label="امکان دورکاری" name={register("type.TELECOMMUTING").name} />
                         <CheckBox
                             control={control}
-                            label="امکان دورکاری"
-                            name={register("type.acceptTelecommuting").name}
+                            label="امکان استخدام معلولین"
+                            name={register("type.IS_EMPLOYMENT_OF_THE_DISABLED").name}
                         />
-                        <CheckBox control={control} label="امریه سربازی" name={register("type.military_order").name} />
+                        <CheckBox control={control} label="امریه سربازی" name={register("type.MILITARY_ORDER").name} />
                     </div>
                 </section>
 
