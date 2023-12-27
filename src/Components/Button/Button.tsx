@@ -54,7 +54,7 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = (props) => {
         props.textColor === "light" ? `text-jv-light` : props.textColor === "primary" ? `text-jv-primary` : "";
 
     const defaultClass = `
-      select-none whitespace-nowrap px-4 py-3
+        min-w-fit flex items-center justify-center overflow-hidden select-none whitespace-nowrap px-4 py-3
        ${props.textColor === "primary" ? "bg-jv-light" : "bg-jv-primary"}
        ${!props.noBorder ? `border-2 border-solid rounded-lg ${borderColorStyle} ` : ""}`;
 
@@ -63,9 +63,7 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = (props) => {
         sizeClass,
         textColorStyle,
         props.isDefault ? "" : defaultClass,
-        typeof props.ClassName === "undefined"
-            ? "min-w-fit flex items-center justify-center overflow-hidden"
-            : props.ClassName
+        props.ClassName ?? ""
     );
 
     return (
@@ -129,7 +127,7 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = (props) => {
                                 animate="visible"
                                 exit="exit"
                                 transition={TweenEaseOutVeryShortly}
-                                className="flex items-center justify-center origin-center absolute -translate-y-1/2 top-1/2"
+                                className="flex items-center justify-center origin-center"
                             >
                                 {props.IconType === "REACT_ICON" ? (
                                     <props.Icon
