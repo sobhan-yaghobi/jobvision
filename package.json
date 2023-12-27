@@ -27,7 +27,8 @@
         "react-spinners": "^0.13.8",
         "swiper": "^10.2.0",
         "tailwind-merge": "^1.14.0",
-        "zod": "^3.22.4"
+        "zod": "^3.22.4",
+        "zustand": "^4.4.7"
     },
     "devDependencies": {
         "@types/lodash": "^4.14.198",

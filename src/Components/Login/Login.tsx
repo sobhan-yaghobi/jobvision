@@ -8,15 +8,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TextInput, PasswordInput } from "../Input/Input";
 import Button from "../Button/Button";
 
-// Context
-import { AuthContext } from "../../Context/AuthContext";
-
 // Functions
-import { useForm } from "react-hook-form";
 import { messageSuccess } from "../../Utils/Utils";
 
 // Hooks
+import { useForm } from "react-hook-form";
 import useShowMssAndNotif from "../../Hooks/useShowMssAndNotif";
+import useLoginModal from "../../Store/useLoginModal";
 
 // Icons
 import Logo from "/Svg/Logo/PrimaryLogoNoShape.svg";
@@ -33,7 +31,7 @@ const loginFormSchema = z.object({
 });
 
 const Login: React.FC = () => {
-    const authContext = useContext(AuthContext);
+    const { setIsShow } = useLoginModal((state) => state);
     const { ShowContext, showMess } = useShowMssAndNotif({ placementOfNotif: "bottomLeft" });
 
     const {
@@ -48,7 +46,7 @@ const Login: React.FC = () => {
             setTimeout(() => {
                 showMess({ type: "success", message: messageSuccess("ثبت نام") });
                 reset();
-                authContext.setLoginModal(false);
+                setIsShow(false);
                 resolve();
             }, 2000);
         });

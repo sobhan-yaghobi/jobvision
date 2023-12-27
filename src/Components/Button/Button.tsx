@@ -129,7 +129,7 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = (props) => {
                                 animate="visible"
                                 exit="exit"
                                 transition={TweenEaseOutVeryShortly}
-                                className="flex items-center justify-center origin-center absolute"
+                                className="flex items-center justify-center origin-center absolute -translate-y-1/2 top-1/2"
                             >
                                 {props.IconType === "REACT_ICON" ? (
                                     <props.Icon

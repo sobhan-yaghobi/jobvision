@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 // Types
 import { ItemGenerator, LinkGenerator, MenuDesktopItemGenerate, SubMenuGenerator } from "../Menu/Menu";
 
@@ -14,6 +14,9 @@ import {
 import { ShowHideMenuItemChildToLeftOrRight } from "../../Animations/HeaderAnimation";
 
 // Hooks
+import useMenuFetch from "../../Hooks/useMenuFetch";
+import { useNavigate } from "react-router-dom";
+import useLoginModal from "../../Store/useLoginModal";
 import useShowMenu from "../../Hooks/useShowMenu/useShowMenu";
 
 // Components
@@ -21,6 +24,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Button from "../Button/Button";
 import Login from "../Login/Login";
 import Modal from "../Modal/Modal";
+import { SkeletonElm } from "../Skeleton/Skeleton";
 
 // Icons
 import WhiteLogo from "/Svg/Logo/WhiteColorLogo.svg";
@@ -29,13 +33,9 @@ import LeftIcon from "/Svg/Left.svg";
 import ArrowLeftIconWhite from "/Svg/ArrowLeftWhiteColor.svg";
 import { AiOutlineClose } from "react-icons/ai";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
-import { AuthContext } from "../../Context/AuthContext";
-import useMenuFetch from "../../Hooks/useMenuFetch";
-import { useNavigate } from "react-router-dom";
-import { SkeletonElm } from "../Skeleton/Skeleton";
 
 const Header: React.FC = () => {
-    const authContext = useContext(AuthContext);
+    const { isShow: isShowLoginModal, setIsShow: setIsShowLoginModal } = useLoginModal((state) => state);
     const { menuMergeArray: menu, isLoading } = useMenuFetch();
     const navigate = useNavigate();
 
@@ -58,7 +58,7 @@ const Header: React.FC = () => {
         }
     };
     // Login
-    const closeLoginModalAction = () => authContext.setLoginModal(false);
+    const closeLoginModalAction = () => setIsShowLoginModal(false);
     return (
         <>
             <div className="w-full h-20 relative">
@@ -78,7 +78,7 @@ const Header: React.FC = () => {
                         <div className="w-5/12 sm:w-4/12 text-center flex items-center justify-end">
                             <Button
                                 noBorder
-                                ClickHandler={() => authContext.setLoginModal(true)}
+                                ClickHandler={() => setIsShowLoginModal(true)}
                                 textColor="light"
                                 size="small"
                                 ClassName="text-xs sm:text-base px-3"
@@ -152,7 +152,7 @@ const Header: React.FC = () => {
                         <div className="header-desktop-left w-6/12 flex items-center justify-end">
                             <div className="mx-5 flex border-l-[1px] border-jv-primary border-solid">
                                 <Button
-                                    ClickHandler={() => authContext.setLoginModal(true)}
+                                    ClickHandler={() => setIsShowLoginModal(true)}
                                     textColor="light"
                                     size="middle"
                                     isLoading={false}
@@ -335,7 +335,7 @@ const Header: React.FC = () => {
             </AnimatePresence>
             {/*//? -------------------- Finish Mobile Header DropDown -------------------- */}
             <Modal
-                isOpen={authContext.loginModalShow}
+                isOpen={isShowLoginModal}
                 OpenAction={{ mode: "Functional", function: closeLoginModalAction }}
                 centerd
                 footer={null}
