@@ -86,6 +86,14 @@ const checkRefine = ({
     return z.NEVER;
 };
 
+const setLocalStorage = ({ key, value }: { key: string; value: unknown }) =>
+    localStorage.setItem(key, JSON.stringify(value));
+
+const getLocalStorage = <T>({ key }: { key: string }): T => {
+    const savedDataString = localStorage.getItem(key);
+    const savedData = savedDataString ? JSON.parse(savedDataString) : ({} as T);
+    return savedData;
+};
 export {
     getTime,
     messageLengthGenerator,
@@ -95,4 +103,6 @@ export {
     toLowerCaseAction,
     getItem,
     checkRefine,
+    setLocalStorage,
+    getLocalStorage,
 };

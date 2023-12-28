@@ -18,6 +18,7 @@ import useMenuFetch from "../../Hooks/useMenuFetch";
 import { useNavigate } from "react-router-dom";
 import useLoginModal from "../../Store/useLoginModal";
 import useShowMenu from "../../Hooks/useShowMenu/useShowMenu";
+import useAuth from "../../Store/useAuth";
 
 // Components
 import { AnimatePresence, motion } from "framer-motion";
@@ -33,9 +34,11 @@ import LeftIcon from "/Svg/Left.svg";
 import ArrowLeftIconWhite from "/Svg/ArrowLeftWhiteColor.svg";
 import { AiOutlineClose } from "react-icons/ai";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
+import { BiUser } from "react-icons/bi";
 
 const Header: React.FC = () => {
-    const { isShow: isShowLoginModal, setIsShow: setIsShowLoginModal } = useLoginModal((state) => state);
+    const { isLoggedIn } = useAuth();
+    const { isShow: isShowLoginModal, setIsShow: setIsShowLoginModal } = useLoginModal();
     const { menuMergeArray: menu, isLoading } = useMenuFetch();
     const navigate = useNavigate();
 
@@ -76,16 +79,20 @@ const Header: React.FC = () => {
                         </div>
 
                         <div className="w-5/12 sm:w-4/12 text-center flex items-center justify-end">
-                            <Button
-                                noBorder
-                                ClickHandler={() => setIsShowLoginModal(true)}
-                                textColor="light"
-                                size="small"
-                                ClassName="text-xs sm:text-base px-3"
-                                isLoading={false}
-                            >
-                                ورود/ثبت نام کارجو
-                            </Button>
+                            {isLoggedIn ? (
+                                <></>
+                            ) : (
+                                <Button
+                                    noBorder
+                                    ClickHandler={() => setIsShowLoginModal(true)}
+                                    textColor="light"
+                                    size="small"
+                                    ClassName="text-xs sm:text-base px-3"
+                                    isLoading={false}
+                                >
+                                    ورود/ثبت نام کارجو
+                                </Button>
+                            )}
                         </div>
                     </div>
                     {/*//? -------------------- Finish Mobile Header -------------------- */}
@@ -151,16 +158,30 @@ const Header: React.FC = () => {
                         </div>
                         <div className="header-desktop-left w-6/12 flex items-center justify-end">
                             <div className="mx-5 flex border-l-[1px] border-jv-primary border-solid">
+                                {isLoggedIn ? (
+                                    <Button
+                                        ClickHandler={() => navigate("/cmsEmployer")}
+                                        textColor="light"
+                                        size="middle"
+                                        ClassName="py-2 px-4"
+                                        isLoading={false}
+                                    >
+                                        <BiUser className="text-xl ml-2" />
+                                        پنل کارفرما
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        ClickHandler={() => setIsShowLoginModal(true)}
+                                        textColor="light"
+                                        size="middle"
+                                        isLoading={false}
+                                    >
+                                        ورود/ثبت نام کارجو
+                                    </Button>
+                                )}
+
                                 <Button
-                                    ClickHandler={() => setIsShowLoginModal(true)}
-                                    textColor="light"
-                                    size="middle"
-                                    isLoading={false}
-                                >
-                                    ورود/ثبت نام کارجو
-                                </Button>
-                                <Button
-                                    ClickHandler={() => navigate("/cmsEmployer")}
+                                    ClickHandler={() => {}}
                                     textColor="primary"
                                     size="middle"
                                     ClassName="!bg-transparent !border-none"

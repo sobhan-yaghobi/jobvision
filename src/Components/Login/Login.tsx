@@ -12,8 +12,9 @@ import Button from "../Button/Button";
 import { messageSuccess } from "../../Utils/Utils";
 
 // Hooks
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import useShowMssAndNotif from "../../Hooks/useShowMssAndNotif";
+import useAuth from "../../Store/useAuth";
 import useLoginModal from "../../Store/useLoginModal";
 
 // Icons
@@ -27,11 +28,15 @@ const loginFormSchema = z.object({
         z.string().email("ایمیل یا تلفن همراه معتبر نمیباشد"),
         z.string().regex(/^(\+98|0)?9\d{9}$/g, "ایمیل یا تلفن همراه معتبر نمیباشد"),
     ]),
-    password: z.string().min(8, "حداقل 8 کارکتر برای رمز عبور نیاز داریم"),
+    password: z
+        .string()
+        .regex(/^[-_.\/<>?a-zA-Z0-9-]+$/, "پسورد باید با حروف اینگلیسی نوشته بشه")
+        .min(8, "حداقل 8 کارکتر برای رمز عبور نیاز داریم"),
 });
 
 const Login: React.FC = () => {
-    const { setIsShow } = useLoginModal((state) => state);
+    const { setUserInfo } = useAuth();
+    const { setIsShow } = useLoginModal();
     const { ShowContext, showMess } = useShowMssAndNotif({ placementOfNotif: "bottomLeft" });
 
     const {
@@ -41,9 +46,14 @@ const Login: React.FC = () => {
         handleSubmit,
     } = useForm<TypeLoginFormSchema>({ resolver: zodResolver(loginFormSchema) });
 
-    const submitAction = () => {
+    const submitAction: SubmitHandler<TypeLoginFormSchema> = (formData) => {
         return new Promise<void>((resolve) => {
             setTimeout(() => {
+                setUserInfo({
+                    email_or_phoneNumber: formData.username_OR_email,
+                    password: formData.password,
+                    company_id: null,
+                });
                 showMess({ type: "success", message: messageSuccess("ثبت نام") });
                 reset();
                 setIsShow(false);
@@ -74,11 +84,13 @@ const Login: React.FC = () => {
                     placeholder="ایمیل یا شماره تلفن"
                     register={{ ...register("username_OR_email") }}
                     className={[{ inputwrapperClassName: "mb-3" }]}
+                    isError={errors?.username_OR_email?.message}
                 ></TextInput>
                 <PasswordInput
-                    placeholder="رمر عبور"
+                    placeholder="رمز عبور"
                     register={{ ...register("password") }}
                     className={[{ inputwrapperClassName: "mb-3" }]}
+                    isError={errors?.password?.message}
                 ></PasswordInput>
                 <Button
                     size="middle"

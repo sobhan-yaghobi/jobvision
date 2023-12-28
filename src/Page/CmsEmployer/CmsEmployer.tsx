@@ -25,13 +25,14 @@ import { BiGitPullRequest } from "react-icons/bi";
 import { BsCheckAll } from "react-icons/bs";
 import { RxLapTimer } from "react-icons/rx";
 import { TbGitPullRequestClosed } from "react-icons/tb";
-import { RiGitPullRequestFill } from "react-icons/ri";
+import { RiGitPullRequestFill, RiUserReceivedFill } from "react-icons/ri";
 import Logo from "/Svg/Logo/PrimaryColorLogo.svg";
 import reportIcon from "/images/report.webp";
 import { HiOutlineLogout } from "react-icons/hi";
 import { CiEdit } from "react-icons/ci";
 import { AiFillCaretDown } from "react-icons/ai";
 import { FaFileCirclePlus } from "react-icons/fa6";
+import useAuth from "../../Store/useAuth";
 
 const pageItems: MenuItemType[] = [
     {
@@ -98,6 +99,7 @@ const quickAccessArray = [
 ];
 
 const CmsEmployer: React.FC = () => {
+    const { setUserInfo } = useAuth();
     const { list, mainItemKey, clickItemHandler } = useItemCmsPage();
     return (
         <>
@@ -163,9 +165,17 @@ const CmsEmployer: React.FC = () => {
                             <Link to="/">
                                 <span
                                     title="خروج از پنل"
-                                    className="button-Cms-type text-jv-danger ml-2 border-jv-lightDanger  hover:bg-jv-lightDanger"
+                                    className="button-Cms-type text-jv-danger ml-2 border-jv-lightDanger  hover:bg-jv-lightDanger text-xl"
                                 >
                                     <HiOutlineLogout className="text-inherit transition-none" />
+                                </span>
+                            </Link>
+                            <Link to="/" onClick={() => setUserInfo(undefined)}>
+                                <span
+                                    title="خروج از حساب"
+                                    className="button-Cms-type text-jv-danger ml-2 border-jv-lightDanger  hover:bg-jv-lightDanger text-xl"
+                                >
+                                    <RiUserReceivedFill className="text-inherit transition-none" />
                                 </span>
                             </Link>
                         </div>

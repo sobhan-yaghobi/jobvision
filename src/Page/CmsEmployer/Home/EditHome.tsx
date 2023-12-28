@@ -59,7 +59,6 @@ const EditHome: React.FC = () => {
 
     const setEstablishDate = (date: number) => setValue("establishedyear", new Date(date));
     const submitAction = (data: TypeCompanyFormSchema) => {
-        console.log(data);
         return new Promise<void>((resolve) => {
             setTimeout(() => {
                 showMess({ type: "success", message: messageSuccess("آپدیت اطلاعات شرکت") });

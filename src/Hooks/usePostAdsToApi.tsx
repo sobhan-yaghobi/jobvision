@@ -18,8 +18,6 @@ const usePostAdsToApi = () => {
         const { error } = await supabase.from("advertisings").insert([{ ...adsBox }]);
         setIsLoading(typeof error !== "undefined" ? false : true);
     };
-    console.log("isLoading ", isLoading);
-
     return { postAction, isLoading };
 };
 
