@@ -4,7 +4,7 @@ export type companyType = {
     compnay_slogan: string;
     created_at: string;
     desc: string;
-    established_year: number;
+    established_year: Date;
     id: string;
     industry: string;
     location: string;

@@ -91,8 +91,14 @@ const setLocalStorage = ({ key, value }: { key: string; value: unknown }) =>
 
 const getLocalStorage = <T>({ key }: { key: string }): T => {
     const savedDataString = localStorage.getItem(key);
-    const savedData = savedDataString ? JSON.parse(savedDataString) : ({} as T);
-    return savedData;
+    if (savedDataString) {
+        try {
+            return JSON.parse(savedDataString);
+        } catch (error) {
+            return {} as T;
+        }
+    }
+    return {} as T;
 };
 export {
     getTime,

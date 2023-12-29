@@ -1,7 +1,5 @@
 import React, { useEffect } from "react";
 import { z } from "zod";
-
-import { useForm } from "react-hook-form";
 import {
     messageLengthGenerator,
     messageRequiredGenerator,
@@ -9,17 +7,22 @@ import {
     messageUrlNotValid,
 } from "../../../Utils/Utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import { useForm } from "react-hook-form";
 import useShowMssAndNotif from "../../../Hooks/useShowMssAndNotif";
 
-import { DateInput, NumberInput, SelectInput, TextInput, TextareaInput } from "../../../Components/Input/Input";
+import { DateInput, NumberInput, TextInput, TextareaInput } from "../../../Components/Input/Input";
+import Button from "../../../Components/Button/Button";
 
 import { BsImages } from "react-icons/bs";
 import { BiLinkAlt, BiMap } from "react-icons/bi";
 import { PiSpeakerHigh } from "react-icons/pi";
-import { DateObject } from "react-multi-date-picker";
+import { FaBuilding } from "react-icons/fa";
+import logo from "/Svg/Logo/PrimaryColorLogo.svg";
 
 import Persian_cl from "react-date-object/calendars/persian";
-import Button from "../../../Components/Button/Button";
+import { DateObject } from "react-multi-date-picker";
+import usePostCompanyToApi, { companyPostType } from "../../../Hooks/usePostCompanyToApi";
 
 const CompanyFormSchema = z.object({
     name: z.string().min(3, messageLengthGenerator("Min", "نام شرکت", 3)).trim(),
@@ -27,13 +30,15 @@ const CompanyFormSchema = z.object({
     logo: z.string().min(1, messageRequiredGenerator("لینک لوگو شرکت")).url(messageUrlNotValid("لوگو شرکت")).trim(),
     website: z.string().url(messageUrlNotValid("وب سایت شرکت")).trim(),
     desc: z.string().min(1, messageRequiredGenerator("درباره ی شرکت")).trim(),
-    CompanySlogan: z
+    compnay_slogan: z
         .string()
         .min(1, messageRequiredGenerator("شعار شرکت"))
         .max(50, messageLengthGenerator("Max", "شعار شرکت شما", 50))
         .trim(),
-    establishedyear: z.date({ required_error: messageRequiredGenerator("سال تاسیس شرکت") }),
-    OrganizationEmploy: z.string().min(1, messageRequiredGenerator("تعداد کارکنان")),
+    established_year: z.date({ required_error: messageRequiredGenerator("سال تاسیس شرکت") }),
+    organization_employ: z.string().min(1, messageRequiredGenerator("تعداد کارکنان")),
+    type_of_activity: z.string().min(1, messageRequiredGenerator("نوع فعالیت شرکت")),
+    industry: z.string().min(1, messageRequiredGenerator("نوع صنعت شرکت")),
 });
 type TypeCompanyFormSchema = z.infer<typeof CompanyFormSchema>;
 
@@ -56,15 +61,45 @@ const EditHome: React.FC = () => {
             });
         });
     }, [errors]);
-
-    const setEstablishDate = (date: number) => setValue("establishedyear", new Date(date));
-    const submitAction = (data: TypeCompanyFormSchema) => {
+    const { postAction } = usePostCompanyToApi();
+    const setEstablishDate = (date: number) => setValue("established_year", new Date(date));
+    const submitAction = ({
+        compnay_slogan,
+        desc,
+        established_year,
+        industry,
+        location,
+        logo,
+        name,
+        organization_employ,
+        type_of_activity,
+        website,
+    }: TypeCompanyFormSchema) => {
         return new Promise<void>((resolve) => {
-            setTimeout(() => {
-                showMess({ type: "success", message: messageSuccess("آپدیت اطلاعات شرکت") });
-                reset();
-                resolve();
-            }, 2000);
+            const newCompany: companyPostType = {
+                compnay_slogan,
+                desc,
+                established_year: established_year,
+                industry,
+                location,
+                logo,
+                name,
+                organization_employ: parseInt(organization_employ),
+                type_of_activity,
+                website,
+                score_company: Math.floor(Math.random() * 5),
+                score_experience_of_job_seekers: Math.floor(Math.random() * 5),
+                score_popularity: Math.floor(Math.random() * 5),
+                score_responsiveness: Math.floor(Math.random() * 5),
+            };
+            postAction({
+                newCompany,
+                successFunctionHandler: () => {
+                    showMess({ type: "success", message: messageSuccess("آپدیت اطلاعات شرکت") });
+                    reset();
+                    resolve();
+                },
+            });
         });
     };
     return (
@@ -75,10 +110,12 @@ const EditHome: React.FC = () => {
                 <section>
                     <h5 className="mr-2">لوگو</h5>
                     <div className="flex mt-2">
-                        <img className="rounded-full h-20 shadow-xl ml-5" src="/images/company-Sheypoor.webp" alt="" />
+                        <div className="w-24 flex items-center justify-center rounded-2xl p-3 shadow-xl ml-5">
+                            <img className="w-full" src={logo} alt="" />
+                        </div>
                         <div className="w-full">
                             <TextInput
-                                icon={<BsImages></BsImages>}
+                                icon={<BsImages />}
                                 placeholder="...لینک لوگو شرکت"
                                 register={register("logo")}
                                 className={[{ inputClassName: "text-left" }]}
@@ -104,7 +141,7 @@ const EditHome: React.FC = () => {
                     <TextInput
                         placeholder="برای مثال تهران ، بهارستان"
                         register={register("location")}
-                        icon={<BiMap></BiMap>}
+                        icon={<BiMap />}
                         iconSide="Right"
                         isError={errors.location?.message}
                     ></TextInput>
@@ -114,7 +151,7 @@ const EditHome: React.FC = () => {
                     <TextInput
                         placeholder="برای مثال www.jobvision.ir"
                         register={register("website")}
-                        icon={<BiLinkAlt></BiLinkAlt>}
+                        icon={<BiLinkAlt />}
                         className={[{ inputClassName: "text-left" }]}
                         isError={errors.website?.message}
                     ></TextInput>
@@ -131,19 +168,39 @@ const EditHome: React.FC = () => {
                     <h5 className="mr-2">شعار شرکت</h5>
                     <TextInput
                         placeholder="برای مثال : متفاوت بیندیشید"
-                        register={register("CompanySlogan")}
-                        icon={<PiSpeakerHigh></PiSpeakerHigh>}
+                        register={register("compnay_slogan")}
+                        icon={<PiSpeakerHigh />}
                         iconSide="Right"
-                        isError={errors.CompanySlogan?.message}
+                        isError={errors.compnay_slogan?.message}
+                    ></TextInput>
+                </section>
+                <section className="my-5">
+                    <h5 className="mr-2">نوع فعالیت شرکت</h5>
+                    <TextInput
+                        placeholder="برای مثال : تولیدی پوشاک"
+                        register={register("type_of_activity")}
+                        icon={<FaBuilding />}
+                        iconSide="Right"
+                        isError={errors.type_of_activity?.message}
+                    ></TextInput>
+                </section>
+                <section className="my-5">
+                    <h5 className="mr-2">صنعت شرکت</h5>
+                    <TextInput
+                        placeholder="برای مثال : صادرات پوشاک"
+                        register={register("industry")}
+                        icon={<FaBuilding />}
+                        iconSide="Right"
+                        isError={errors.industry?.message}
                     ></TextInput>
                 </section>
                 <section>
                     <h5 className="mr-2">تعداد کارکنان شرکت</h5>
                     <NumberInput
-                        register={register("OrganizationEmploy")}
+                        register={register("organization_employ")}
                         placeholder="برای مثال 13"
                         min={1}
-                        isError={errors.OrganizationEmploy?.message}
+                        isError={errors.organization_employ?.message}
                     ></NumberInput>
                 </section>
                 <section className="my-5">
