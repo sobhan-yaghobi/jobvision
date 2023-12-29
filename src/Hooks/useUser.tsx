@@ -1,5 +1,5 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { supabase } from "../App";
+import { useMutation } from "@tanstack/react-query";
+import supabase from "../Services/supabase";
 import { userInfo } from "../Store/useAuth";
 
 const useUser = () => {

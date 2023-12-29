@@ -1,4 +1,4 @@
-import { supabase } from "../App";
+import supabase from "../Services/supabase";
 import { userInfo } from "../Store/useAuth";
 type postActionProps = {
     userInfo: userInfo;

@@ -1,20 +1,29 @@
-import { useRoutes } from "react-router-dom";
+// Route
 import routes from "./Routes";
+
+// Types
+import { getLocalStorage, isUserInfo } from "./Utils/Utils";
+
+// Hooks
+import { useRoutes } from "react-router-dom";
 import useAuth from "./Store/useAuth";
 import { useEffect } from "react";
-import { getLocalStorage, isUserInfo } from "./Utils/Utils";
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseUrl = "https://ykbyhslhgdnxflfmfzbu.supabase.co";
-const supabaseKey = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlrYnloc2xoZ2RueGZsZm1memJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDE0MjIwOTEsImV4cCI6MjAxNjk5ODA5MX0.kA3uYoFZ-LuLOiGXayJJtOkmBCfSFWjgAUehHzl30KU`;
-
-export const supabase = createClient(supabaseUrl, supabaseKey);
+import useUser from "./Hooks/useUser";
 
 function App() {
     const { setUserInfo } = useAuth();
+    const { mutateAsync: getUser } = useUser();
     useEffect(() => {
         const user = getLocalStorage({ key: "user" });
-        isUserInfo(user) ? setUserInfo(user) : null;
+        if (isUserInfo(user)) {
+            const getUsers = async () => {
+                const userFromApi = await getUser(user.email_or_phoneNumber);
+                if (typeof userFromApi !== "undefined") {
+                    setUserInfo(userFromApi);
+                }
+            };
+            getUsers();
+        }
     }, []);
     const router = useRoutes(routes);
 

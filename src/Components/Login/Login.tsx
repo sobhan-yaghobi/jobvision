@@ -40,7 +40,7 @@ const Login: React.FC = () => {
     const { setUserInfo } = useAuth();
     const { postAction: postUserToApi } = usePostUserToApi();
     const { setIsShow } = useLoginModal();
-    const { mutateAsync: getUser, data: userData } = useUser();
+    const { mutateAsync: getUser } = useUser();
     const { ShowContext, showMess } = useShowMssAndNotif({ placementOfNotif: "bottomLeft" });
 
     const {
@@ -79,20 +79,6 @@ const Login: React.FC = () => {
         } catch (error) {
             showMess({ type: "error", message: "در روند ثبت نام خطایی رخ داد" });
         }
-
-        // return new Promise<void>((resolve) => {
-        //     getUser(formData.username_OR_email);
-        //     console.log("user", userData);
-
-        // setUserInfo({
-        //     email_or_phoneNumber: formData.username_OR_email,
-        //     password: formData.password,
-        //     company_id: null,
-        // });
-        // showMess({ type: "success", message: messageSuccess("ثبت نام") });
-
-        // resolve();
-        // });
     };
 
     useEffect(() => {
