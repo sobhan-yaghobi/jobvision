@@ -14,13 +14,15 @@ import { messageSuccess } from "../../Utils/Utils";
 // Hooks
 import { SubmitHandler, useForm } from "react-hook-form";
 import useShowMssAndNotif from "../../Hooks/useShowMssAndNotif";
-import useAuth from "../../Store/useAuth";
+import useAuth, { userInfo } from "../../Store/useAuth";
 import useLoginModal from "../../Store/useLoginModal";
 
 // Icons
 import Logo from "/Svg/Logo/PrimaryLogoNoShape.svg";
 import { FcGoogle } from "react-icons/fc";
 import { LuLinkedin } from "react-icons/lu";
+import useUser from "../../Hooks/useUser";
+import usePostUserToApi from "../../Hooks/usePostUserToApi";
 
 export type TypeLoginFormSchema = z.infer<typeof loginFormSchema>;
 const loginFormSchema = z.object({
@@ -36,7 +38,9 @@ const loginFormSchema = z.object({
 
 const Login: React.FC = () => {
     const { setUserInfo } = useAuth();
+    const { postAction: postUserToApi } = usePostUserToApi();
     const { setIsShow } = useLoginModal();
+    const { mutateAsync: getUser, data: userData } = useUser();
     const { ShowContext, showMess } = useShowMssAndNotif({ placementOfNotif: "bottomLeft" });
 
     const {
@@ -46,20 +50,49 @@ const Login: React.FC = () => {
         handleSubmit,
     } = useForm<TypeLoginFormSchema>({ resolver: zodResolver(loginFormSchema) });
 
-    const submitAction: SubmitHandler<TypeLoginFormSchema> = (formData) => {
-        return new Promise<void>((resolve) => {
-            setTimeout(() => {
-                setUserInfo({
-                    email_or_phoneNumber: formData.username_OR_email,
-                    password: formData.password,
-                    company_id: null,
+    const submitAction: SubmitHandler<TypeLoginFormSchema> = async (formData) => {
+        const newUser: userInfo = {
+            email_or_phoneNumber: formData.username_OR_email,
+            password: formData.password,
+            company_id: null,
+        };
+        try {
+            const user = await getUser(formData.username_OR_email);
+            if (typeof user === "undefined") {
+                setUserInfo(newUser);
+                postUserToApi({
+                    userInfo: newUser,
+                    successFunctionHandler: () => showMess({ type: "success", message: messageSuccess("ثبت نام") }),
                 });
-                showMess({ type: "success", message: messageSuccess("ثبت نام") });
                 reset();
                 setIsShow(false);
-                resolve();
-            }, 2000);
-        });
+            } else {
+                if (formData.password === user.password) {
+                    setUserInfo(user);
+                    showMess({ type: "success", message: messageSuccess("ثبت نام") });
+                    reset();
+                    setIsShow(false);
+                } else {
+                    showMess({ type: "error", message: "پسورد صحیح نمیباشد" });
+                }
+            }
+        } catch (error) {
+            showMess({ type: "error", message: "در روند ثبت نام خطایی رخ داد" });
+        }
+
+        // return new Promise<void>((resolve) => {
+        //     getUser(formData.username_OR_email);
+        //     console.log("user", userData);
+
+        // setUserInfo({
+        //     email_or_phoneNumber: formData.username_OR_email,
+        //     password: formData.password,
+        //     company_id: null,
+        // });
+        // showMess({ type: "success", message: messageSuccess("ثبت نام") });
+
+        // resolve();
+        // });
     };
 
     useEffect(() => {

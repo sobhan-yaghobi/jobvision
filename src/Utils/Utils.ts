@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { userInfo } from "../Store/useAuth";
 
 export interface TimeType {
     date: number;
@@ -100,6 +101,14 @@ const getLocalStorage = <T>({ key }: { key: string }): T => {
     }
     return {} as T;
 };
+
+const isUserInfo = (user: any): user is userInfo => {
+    return (
+        typeof user.email_or_phoneNumber === "string" &&
+        typeof user.password === "string" &&
+        (typeof user.company_id === "string" || user.company_id === null)
+    );
+};
 export {
     getTime,
     messageLengthGenerator,
@@ -111,4 +120,5 @@ export {
     checkRefine,
     setLocalStorage,
     getLocalStorage,
+    isUserInfo,
 };
