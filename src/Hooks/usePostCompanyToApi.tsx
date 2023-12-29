@@ -1,4 +1,4 @@
-import { supabase } from "../App";
+import supabase from "../Services/supabase";
 import { companyType } from "./useCompanies";
 export type companyPostType = Omit<companyType, "created_at" | "id">;
 type postActionProps = {

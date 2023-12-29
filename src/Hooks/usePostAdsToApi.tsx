@@ -1,13 +1,10 @@
 import { useState } from "react";
 import { TypeAdvertisingQuery } from "../Components/AdvertisingBox/AdvertisingBox.type";
-import { supabase } from "../App";
-
+import supabase from "../Services/supabase";
 export type adsBoxPostType = Omit<TypeAdvertisingQuery, "created_at" | "id">;
-
 type usePostAdsToApiProps = {
     adsBox: adsBoxPostType;
 };
-
 const usePostAdsToApi = () => {
     const [isLoading, setIsLoading] = useState(true);
     const postAction = async ({ adsBox }: usePostAdsToApiProps) => {
@@ -16,5 +13,4 @@ const usePostAdsToApi = () => {
     };
     return { postAction, isLoading };
 };
-
 export default usePostAdsToApi;
