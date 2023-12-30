@@ -1,9 +1,5 @@
 import { lazy } from "react";
 import PrivateRoute from "./Components/PrivateRoute/PrivateRoute";
-// import ReqeustAccept from ;
-// import ReqeustReject from ;
-// import RequestWait from ;
-// import ReqeustAll from ;
 type routesProps = {
     path: string;
     element: React.ReactNode;

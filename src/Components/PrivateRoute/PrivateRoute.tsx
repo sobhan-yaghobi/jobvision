@@ -12,12 +12,6 @@ const PrivateRoute: React.FC<React.PropsWithChildren> = ({ children }) => {
         }
     }, [isLoggedIn, setIsShow]);
 
-
-
-
-
-
-    
     if (isLoggedIn) {
         return children;
     } else {
