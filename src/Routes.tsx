@@ -1,4 +1,5 @@
 import { lazy } from "react";
+import PrivateRoute from "./Components/PrivateRoute/PrivateRoute";
 // import ReqeustAccept from ;
 // import ReqeustReject from ;
 // import RequestWait from ;
@@ -26,7 +27,11 @@ const routes: routesProps[] = [
     { path: "/jobs", element: <Jobs /> },
     {
         path: "/cmsEmployer",
-        element: <CmsEmployer />,
+        element: (
+            <PrivateRoute>
+                <CmsEmployer />
+            </PrivateRoute>
+        ),
         children: [
             { path: "", element: <CmsHome /> },
             { path: "Advertsisings", element: <CmsAdvertising /> },

@@ -91,7 +91,7 @@ const AdvertisingBox: React.FC<AdvertisingBoxProps> = (props) => {
         return (
             <>
                 <div
-                    onClick={() => navigate(`/jobs?advertisingId=${jobData.id}`)}
+                    onClick={() => navigate(`/jobs?advertisingId=${jobData.id}`, { replace: false })}
                     id="Box"
                     className={className.wrapperBoxClass}
                 >
