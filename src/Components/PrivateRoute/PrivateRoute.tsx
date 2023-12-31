@@ -10,7 +10,7 @@ const PrivateRoute: React.FC<React.PropsWithChildren> = ({ children }) => {
         if (!isLoggedIn) {
             setIsShow(true);
         }
-    }, [isLoggedIn, setIsShow]);
+    }, [isLoggedIn]);
 
     if (isLoggedIn) {
         return children;

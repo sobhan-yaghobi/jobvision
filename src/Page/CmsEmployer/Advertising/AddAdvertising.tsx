@@ -19,6 +19,10 @@ import { TypeOptionInput } from "../../../Components/Input/Input.type";
 import { BiTimer, BiTrip } from "react-icons/bi";
 import usePostAdsToApi, { adsBoxPostType } from "../../../Hooks/usePostAdsToApi";
 import { TypeFilterTypes } from "../../../Components/JobsFilter/JobsFilter.type";
+import useAuth from "../../../Store/useAuth";
+import { message } from "antd";
+import { CiWarning } from "react-icons/ci";
+import { Link } from "react-router-dom";
 
 const AddAdsFormSchema = z.object({
     title: z.string().min(1, messageRequiredGenerator("عنوان آگهی")),
@@ -145,7 +149,7 @@ const AddAdvertising: React.FC = () => {
     } = useForm<TypeAddAdsFormSchema>({
         resolver: zodResolver(AddAdsFormSchema),
     });
-    const { postAction, isLoading } = usePostAdsToApi();
+    const { postAction } = usePostAdsToApi();
     const resetAction = () => {
         reset();
         setIsMultipleInputArrayReset(true);
@@ -153,6 +157,7 @@ const AddAdvertising: React.FC = () => {
             setIsMultipleInputArrayReset(false);
         }, 1000);
     };
+    const { userInfo } = useAuth();
     const submitAction: SubmitHandler<TypeAddAdsFormSchema> = async ({
         title,
         ads_tags,
@@ -169,48 +174,61 @@ const AddAdvertising: React.FC = () => {
         type,
         work_time,
     }) => {
-        const filter_types = Object.entries({ ...type })
-            .map((item) => {
-                if (typeof item[1] === "boolean" && item[1] ? item[0] : null) {
-                    return item[0];
-                } else if (typeof item[1] === "string") {
-                    return item[1];
-                } else if (Array.isArray(item[1])) {
-                    return item[1].map((item) => item);
-                } else {
-                    return "";
-                }
-            })
-            .flatMap((item) => (Array.isArray(item) ? item : [item]))
-            .filter((item) => item !== "");
+        return new Promise<void>((resolve) => {
+            if (userInfo?.company_id) {
+                const filter_types = Object.entries({ ...type })
+                    .map((item) => {
+                        if (typeof item[1] === "boolean" && item[1] ? item[0] : null) {
+                            return item[0];
+                        } else if (typeof item[1] === "string") {
+                            return item[1];
+                        } else if (Array.isArray(item[1])) {
+                            return item[1].map((item) => item);
+                        } else {
+                            return "";
+                        }
+                    })
+                    .flatMap((item) => (Array.isArray(item) ? item : [item]))
+                    .filter((item) => item !== "");
 
-        const newAdsBox: adsBoxPostType = {
-            title,
-            rights_price: [
-                parseInt(rights_price.from),
-                typeof rights_price.to !== "undefined" ? parseInt(rights_price.to) : -1,
-            ],
-            work_time: work_time ?? "",
-            cooperation_ads_type,
-            business_trips: business_trips ?? "",
-            key_indicators,
-            employment_conditions_years_old: [
-                parseInt(employment_conditions_years_old.from),
-                typeof employment_conditions_years_old.to !== "undefined"
-                    ? parseInt(employment_conditions_years_old.to)
-                    : -1,
-            ],
-            employment_conditions_gender,
-            employment_conditions_softwares,
-            employment_conditions_education,
-            status_is_important: status_is_important ?? false,
-            status_cv_pending: false,
-            status_responsible_employer: status_responsible_employer ?? false,
-            ads_tags,
-            ads_types: filter_types,
-            company_id: "d2ccbf80-0646-46d2-a4da-2f25c5ffc8d3",
-        };
-        await postAction({ adsBox: newAdsBox });
+                const newAdsBox: adsBoxPostType = {
+                    title,
+                    rights_price: [
+                        parseInt(rights_price.from),
+                        typeof rights_price.to !== "undefined" ? parseInt(rights_price.to) : -1,
+                    ],
+                    work_time: work_time ?? "",
+                    cooperation_ads_type,
+                    business_trips: business_trips ?? "",
+                    key_indicators,
+                    employment_conditions_years_old: [
+                        parseInt(employment_conditions_years_old.from),
+                        typeof employment_conditions_years_old.to !== "undefined"
+                            ? parseInt(employment_conditions_years_old.to)
+                            : -1,
+                    ],
+                    employment_conditions_gender,
+                    employment_conditions_softwares,
+                    employment_conditions_education,
+                    status_is_important: status_is_important ?? false,
+                    status_cv_pending: false,
+                    status_responsible_employer: status_responsible_employer ?? false,
+                    ads_tags,
+                    ads_types: filter_types,
+                    company_id: "d2ccbf80-0646-46d2-a4da-2f25c5ffc8d3",
+                };
+                postAction({
+                    adsBox: newAdsBox,
+                    successFunctionHandler: () => {
+                        showMess({ type: "success", message: messageSuccess("ثبت آگهی") });
+                        resetAction();
+                        resolve();
+                    },
+                });
+            } else {
+                showMess({ type: "error", message: "قبل از ساخت آگهی اول شرکت خود را ثبت کنید" });
+            }
+        });
     };
 
     const showMultipleError = (
@@ -248,20 +266,30 @@ const AddAdvertising: React.FC = () => {
         });
     }, [errors]);
 
-    useEffect(() => {
-        if (!isLoading) {
-            showMess({ type: "success", message: messageSuccess("ثبت آگهی") });
-            resetAction();
-        }
-    }, [isLoading]);
-
     const is_to_rights_price = watch("rights_price.isTo");
     const is_to_employment_conditions_years_old = watch("employment_conditions_years_old.isTo");
 
     return (
         <>
             {ShowContext}
+            {userInfo?.company_id ? null : (
+                <div className="text-jv-warning flex items-center justify-between bg-jv-lightDanger p-3 rounded-lg mb-5">
+                    <div className="flex items-center gap-2">
+                        <CiWarning className="text-2xl" />
+                        قبل از ساخت آگهی اول شرکت خود را ثبت کنید
+                    </div>
+                    <Link
+                        style={{ textDecoration: "underline" }}
+                        className="text-jv-primary"
+                        to="/cmsEmployer?page=edit_home"
+                        target="_blank"
+                    >
+                        برو بریم
+                    </Link>
+                </div>
+            )}
             <h3>فرم ثبت آگهی تازه</h3>
+
             <form onSubmit={handleSubmit(submitAction)} className="my-10">
                 <section>
                     <h5 className="mr-2">عنوان آگهی</h5>

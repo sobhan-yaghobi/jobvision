@@ -4,13 +4,15 @@ import supabase from "../Services/supabase";
 export type adsBoxPostType = Omit<TypeAdvertisingQuery, "created_at" | "id">;
 type usePostAdsToApiProps = {
     adsBox: adsBoxPostType;
+    successFunctionHandler: () => void;
 };
 const usePostAdsToApi = () => {
-    const [isLoading, setIsLoading] = useState(true);
-    const postAction = async ({ adsBox }: usePostAdsToApiProps) => {
+    const postAction = async ({ adsBox, successFunctionHandler }: usePostAdsToApiProps) => {
         const { error } = await supabase.from("advertisings").insert([{ ...adsBox }]);
-        setIsLoading(typeof error !== "undefined" ? false : true);
+        if (typeof error !== "undefined") {
+            successFunctionHandler();
+        }
     };
-    return { postAction, isLoading };
+    return { postAction };
 };
 export default usePostAdsToApi;
