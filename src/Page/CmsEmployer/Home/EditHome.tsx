@@ -23,6 +23,8 @@ import logo from "/Svg/Logo/PrimaryColorLogo.svg";
 import Persian_cl from "react-date-object/calendars/persian";
 import { DateObject } from "react-multi-date-picker";
 import usePostCompanyToApi, { companyPostType } from "../../../Hooks/usePostCompanyToApi";
+import useAuth from "../../../Store/useAuth";
+import usePostUserToApi from "../../../Hooks/usePostUserToApi";
 
 const CompanyFormSchema = z.object({
     name: z.string().min(3, messageLengthGenerator("Min", "نام شرکت", 3)).trim(),
@@ -61,7 +63,9 @@ const EditHome: React.FC = () => {
             });
         });
     }, [errors]);
-    const { postAction } = usePostCompanyToApi();
+    const { userInfo, setUserInfo } = useAuth();
+    const { postAction, updateAction } = usePostCompanyToApi();
+    const { updateAction: updateUserCompanyAction } = usePostUserToApi();
     const setEstablishDate = (date: number) => setValue("established_year", new Date(date));
     const submitAction = ({
         compnay_slogan,
@@ -92,14 +96,38 @@ const EditHome: React.FC = () => {
                 score_popularity: Math.floor(Math.random() * 5),
                 score_responsiveness: Math.floor(Math.random() * 5),
             };
-            postAction({
-                newCompany,
-                successFunctionHandler: () => {
-                    showMess({ type: "success", message: messageSuccess("آپدیت اطلاعات شرکت") });
-                    reset();
-                    resolve();
-                },
-            });
+            if (userInfo?.company_id) {
+                updateAction({
+                    id: userInfo.company_id,
+                    company: newCompany,
+                    successFunctionHandler: () => {
+                        showMess({ type: "success", message: messageSuccess("آپدیت اطلاعات شرکت") });
+                        reset();
+                        resolve();
+                    },
+                });
+            } else {
+                if (userInfo) {
+                    updateUserCompanyAction({
+                        companyId: userInfo.company_id,
+                        userId: userInfo.email_or_phoneNumber,
+                        successFunctionHandler: (data) => {
+                            data && data.company_id ? setUserInfo({ ...userInfo, company_id: data.company_id }) : null;
+                        },
+                    });
+                }
+                postAction({
+                    newCompany,
+                    successFunctionHandler: (companyData) => {
+                        if (companyData) {
+                            userInfo ? setUserInfo({ ...userInfo, company_id: companyData.id }) : null;
+                            showMess({ type: "success", message: messageSuccess("ثبت اطلاعات شرکت") });
+                            reset();
+                            resolve();
+                        }
+                    },
+                });
+            }
         });
     };
     return (
@@ -217,7 +245,7 @@ const EditHome: React.FC = () => {
                     ClickHandler={() => {}}
                     isLoading={isSubmitting}
                 >
-                    آپدیت
+                    {userInfo?.company_id ? "آپدیت" : "ثبت"}
                 </Button>
             </form>
         </>
