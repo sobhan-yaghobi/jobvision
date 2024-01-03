@@ -11,7 +11,7 @@ import { useEffect } from "react";
 import useUser from "./Hooks/useUser";
 
 function App() {
-    const { setUserInfo } = useAuth();
+    const { setUserInfo, userInfo } = useAuth();
     const { mutateAsync: getUser } = useUser();
     useEffect(() => {
         const user = getLocalStorage({ key: "user" });
@@ -25,6 +25,9 @@ function App() {
             getUsers();
         }
     }, []);
+    useEffect(() => {
+        console.log("userInfo in App.tsx", userInfo);
+    }, [userInfo]);
     const router = useRoutes(routes);
 
     return <>{router}</>;

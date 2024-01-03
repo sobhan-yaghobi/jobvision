@@ -1,5 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import supabaseFetch from "../Services/supabaseFetch";
+import supabase from "../Services/supabase";
 export type companyType = {
     compnay_slogan: string;
     created_at: string;
@@ -22,6 +23,9 @@ type useCompaniesProps =
     | { mode: "single"; id: string }
     | {
           mode: "array";
+      }
+    | {
+          mode: "Mutate";
       };
 
 const useCompanies = (props: useCompaniesProps) => {
@@ -39,6 +43,17 @@ const useCompanies = (props: useCompaniesProps) => {
                 .then((res) => res.data),
         enabled: props.mode === "single",
     });
+    const { data, mutate, isSuccess } = useMutation({
+        mutationKey: ["company"],
+        mutationFn: async (param: string) => {
+            const { data: company } = await supabase
+                .from("companies")
+                .select("*")
+                .eq("id", param)
+                .returns<[companyType]>();
+            return company?.at(0);
+        },
+    });
 
     return {
         companies: typeof companiesQuery !== "undefined" ? companiesQuery : ([] as companyType[]),
@@ -48,6 +63,11 @@ const useCompanies = (props: useCompaniesProps) => {
             (props.mode === "single" && companyStatus === "success")
                 ? false
                 : true,
+        mutate: {
+            mutateFn: mutate,
+            data,
+            isSuccess,
+        },
     };
 };
 

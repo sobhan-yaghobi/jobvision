@@ -23,11 +23,7 @@ const routes: routesProps[] = [
     { path: "/jobs", element: <Jobs /> },
     {
         path: "/cmsEmployer",
-        element: (
-            <PrivateRoute>
-                <CmsEmployer />
-            </PrivateRoute>
-        ),
+        element: <CmsEmployer />,
         children: [
             { path: "", element: <CmsHome /> },
             { path: "Advertsisings", element: <CmsAdvertising /> },

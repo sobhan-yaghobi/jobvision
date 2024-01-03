@@ -3,7 +3,7 @@ import { companyType } from "./useCompanies";
 export type companyPostType = Omit<companyType, "created_at" | "id">;
 type postActionProps = {
     newCompany: companyPostType;
-    successFunctionHandler: (data: companyType | null) => void;
+    successFunctionHandler: (data: companyType | undefined) => void;
 };
 type updateActionProps = Omit<postActionProps, "newCompany"> & {
     company: companyPostType;
@@ -11,22 +11,24 @@ type updateActionProps = Omit<postActionProps, "newCompany"> & {
 };
 const usePostCompanyToApi = () => {
     const postAction = async ({ newCompany, successFunctionHandler }: postActionProps) => {
-        const { error, data } = await supabase
+        const { error, data: dataQuery } = await supabase
             .from("companies")
             .insert([{ ...newCompany }])
             .select()
-            .returns<companyType>();
+            .returns<[companyType]>();
+        const data = dataQuery ? dataQuery.at(0) : ({} as companyType);
         if (typeof error !== "undefined") {
             successFunctionHandler(data);
         }
     };
     const updateAction = async ({ id, company, successFunctionHandler }: updateActionProps) => {
-        const { data, error } = await supabase
+        const { error, data: dataQuery } = await supabase
             .from("companies")
             .update({ ...company })
             .eq("id", id)
             .select()
-            .returns<companyType>();
+            .returns<[companyType]>();
+        const data = dataQuery ? dataQuery.at(0) : ({} as companyType);
         if (typeof error !== "undefined") {
             successFunctionHandler(data);
         }

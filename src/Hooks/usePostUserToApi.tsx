@@ -7,7 +7,7 @@ type postActionProps = {
 type updateActionProps = {
     userId: userInfo["email_or_phoneNumber"];
     companyId: userInfo["company_id"];
-    successFunctionHandler?: (data: userInfo | null) => void;
+    successFunctionHandler?: (data: userInfo | undefined) => void;
 };
 const usePostUserToApi = () => {
     const postAction = async ({ userInfo, successFunctionHandler }: postActionProps) => {
@@ -17,12 +17,14 @@ const usePostUserToApi = () => {
         }
     };
     const updateAction = async ({ companyId, userId, successFunctionHandler }: updateActionProps) => {
-        const { error, data } = await supabase
+        const { error, data: dataQuery } = await supabase
             .from("users")
             .update({ company_id: companyId })
             .eq("email_or_phoneNumber", userId)
             .select()
-            .returns<userInfo>();
+            .returns<[userInfo]>();
+
+        const data = dataQuery ? dataQuery.at(0) : ({} as userInfo);
         if (typeof error !== "undefined" && typeof successFunctionHandler !== "undefined") {
             successFunctionHandler(data);
         }
