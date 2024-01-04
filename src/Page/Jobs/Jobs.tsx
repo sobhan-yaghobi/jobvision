@@ -3,6 +3,10 @@ import React, { useState, useRef } from "react";
 import useSearchForm from "../../Hooks/useSearchForm";
 import useBoxList from "../../Hooks/useBoxList";
 
+// Date
+import DateObject from "react-date-object";
+import persian from "react-date-object/calendars/persian";
+
 // Types
 import {
     BoxsOrderType,
@@ -14,12 +18,7 @@ import {
 } from "./Jobs.type";
 
 // Animations
-import {
-    ShortShowFromBottom,
-    ShowAndHideOpacity_Ex,
-    ShowFromBottom_EX,
-    ShowItemsDelay_Var,
-} from "../../Animations/UtilsAnimation";
+import { ShortShowFromBottom, ShowAndHideOpacity_Ex, ShowFromBottom_EX } from "../../Animations/UtilsAnimation";
 
 // Components
 import Header from "../../Components/Header/Header";
@@ -33,7 +32,6 @@ import { Link } from "react-router-dom";
 import { ScoreIconGenerator } from "../../Utils/UtilsComponent";
 import JobsFilter from "../../Components/JobsFilter/JobsFilter";
 import ErrorBox from "../../Components/ErrorBox/ErrorBox";
-import CompanyBox from "../../Components/CompanyBox/CompanyBox";
 
 // Icons
 import { AiFillCaretDown, AiOutlineHeart, AiOutlineShareAlt } from "react-icons/ai";
@@ -557,7 +555,12 @@ const BoxInfo: React.FC<BoxInfoProps> = ({ type, jobInfo }) => {
                     <div className="text-sm pr-3 flex flex-wrap">
                         <div className="min-w-[50%] pl-5 mt-5">
                             <h5>سال تاسیس</h5>
-                            <p className="truncate text-jv-lightGray2x">{jobCompany.established_year}</p>
+                            <p className="truncate text-jv-lightGray2x">
+                                {new DateObject({
+                                    date: new Date(jobCompany?.established_year),
+                                    calendar: persian,
+                                }).format()}
+                            </p>
                         </div>
                         <div className="min-w-[50%] pl-5 mt-5">
                             <h5>اندازه سازمان</h5>
