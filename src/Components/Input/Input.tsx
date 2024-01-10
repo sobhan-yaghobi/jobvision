@@ -26,12 +26,6 @@ import { AiOutlineEye } from "react-icons/ai";
 import { AiFillCaretDown } from "react-icons/ai";
 import { AiOutlineClose } from "react-icons/ai";
 
-// Date Picker
-import DatePicker from "react-multi-date-picker";
-import Jalali from "react-date-object/calendars/jalali";
-import persian_fa from "react-date-object/locales/persian_fa";
-import { DateObject } from "react-multi-date-picker";
-
 export namespace InputUtils {
     export const className: TypeClassNameInputRequird = {
         inputwrapperClassName:
@@ -145,31 +139,6 @@ const TextInput: React.FC<React.PropsWithChildren<TypeTextInput>> = (props) => {
     );
 };
 
-const DateInput: React.FC<TypeDateInput> = ({ placeholder, date, setDate }) => {
-    return (
-        <>
-            <DatePicker
-                calendar={Jalali}
-                value={date}
-                placeholder={placeholder}
-                locale={persian_fa}
-                maxDate={new Date()}
-                onChange={(date: DateObject) => setDate(date.valueOf())}
-                style={{
-                    padding: ".5rem",
-                    fontFamily: "dana",
-                    background: "transparent",
-                    borderColor: "var(--lightGray3xColor)",
-                }}
-                calendarPosition="top-right"
-                fixMainPosition
-                fixRelativePosition
-                hideOnScroll
-            />
-        </>
-    );
-};
-
 const NumberInput: React.FC<TypeNumberInput> = ({
     placeholder,
     defValue,
@@ -221,4 +190,4 @@ const CheckBox: React.FC<CheckBoxProps> = ({ control, name, label, value }) => {
     );
 };
 
-export { TextInput, DateInput, NumberInput, CheckBox };
+export { TextInput, NumberInput, CheckBox };
