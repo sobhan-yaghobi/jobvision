@@ -11,7 +11,7 @@ type useAuthStateType = {
     isLoggedIn: boolean;
 };
 
-type useAuthActionType = {
+export type useAuthActionType = {
     setUserInfo: (userInfo: useAuthStateType["userInfo"]) => void;
 };
 
