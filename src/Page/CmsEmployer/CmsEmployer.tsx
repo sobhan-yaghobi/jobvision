@@ -7,14 +7,19 @@ import useItemCmsPage from "../../Hooks/useItemCmsPage";
 import useAuth from "../../Store/useAuth";
 
 // Components
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Button from "../../Components/Button/Button";
 import { Outlet } from "react-router-dom";
 import QuickAccessSideBar from "../../Components/QuickAccessSideBar/QuickAccessSideBar";
 import MenuCms from "../../Components/MenuCms/MenuCms";
 
 // Animations
-import { ShortShowFromBottom, ShortShowFromTop, SpringBackOutVeryShortly } from "../../Animations/UtilsAnimation";
+import {
+    ShortShowFromBottom,
+    ShortShowFromTop,
+    ShowAndHideOpacity_Ex,
+    SpringBackOutVeryShortly,
+} from "../../Animations/UtilsAnimation";
 
 // Icons
 import { GoHomeFill } from "react-icons/go";
@@ -101,15 +106,29 @@ const CmsEmployer: React.FC = () => {
     return (
         <>
             <div className="w-full h-screen flex justify-between p-4 relative">
-                <div className={`w-full h-full absolute top-0 left-0 ${isQuickAccessBar ? "block" : "hidden"}`}>
-                    <div
-                        className="w-7/12 h-full bg-jv-bgColor z-40 absolute top-0 right-0"
-                        onClick={() => setIsQuickAccessBar(false)}
-                    ></div>
-                    <div className="w-5/12 h-full p-5 bg-jv-light z-50 absolute top-0 left-0">
-                        <QuickAccessSideBar quickAccessArray={quickAccessArray} setUserState={setUserInfo} />
-                    </div>
-                </div>
+                <AnimatePresence>
+                    {isQuickAccessBar ? (
+                        <motion.div
+                            variants={ShowAndHideOpacity_Ex}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            className={`w-full h-full absolute top-0 left-0 z-40`}
+                        >
+                            <div
+                                className="w-7/12 h-full bg-jv-bgColor absolute top-0 right-0"
+                                onClick={() => setIsQuickAccessBar(false)}
+                            ></div>
+                            <div className="w-5/12 h-full p-5 bg-jv-light absolute top-0 left-0">
+                                <QuickAccessSideBar
+                                    setIsClose={setIsQuickAccessBar}
+                                    quickAccessArray={quickAccessArray}
+                                    setUserState={setUserInfo}
+                                />
+                            </div>
+                        </motion.div>
+                    ) : null}
+                </AnimatePresence>
                 <div className="w-3/12 lg:w-2/12 p-1 flex flex-col justify-between text-jv-lightGray2x">
                     <div className="flex items-center justify-between pl-2">
                         <img className="h-10 self-start" src={Logo} alt="" />

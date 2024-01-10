@@ -1,9 +1,10 @@
 import React from "react";
-import { HiOutlineLogout } from "react-icons/hi";
-import { RiUserReceivedFill } from "react-icons/ri";
 import { Link, NavLink } from "react-router-dom";
 import RequestNotificationBox from "../RequestNotificationBox/RequestNotificationBox";
 import { useAuthActionType, userInfo } from "../../Store/useAuth";
+import { HiOutlineLogout } from "react-icons/hi";
+import { RiUserReceivedFill } from "react-icons/ri";
+import { IoMdClose } from "react-icons/io";
 type QuickAccessSideBarProps = {
     quickAccessArray: {
         title: string;
@@ -11,28 +12,37 @@ type QuickAccessSideBarProps = {
         icon: React.ReactNode;
     }[];
     setUserState: useAuthActionType["setUserInfo"];
+    setIsClose?: React.Dispatch<React.SetStateAction<boolean>>;
 };
-const QuickAccessSideBar: React.FC<QuickAccessSideBarProps> = ({ quickAccessArray, setUserState }) => {
+const QuickAccessSideBar: React.FC<QuickAccessSideBarProps> = ({ quickAccessArray, setUserState, setIsClose }) => {
     return (
         <>
             <div className="h-3/6 flex flex-col items-center">
-                <div className="w-full flex items-center justify-end">
-                    <Link to="/">
-                        <span
-                            title="خروج از پنل"
-                            className="button-Cms-type text-jv-danger ml-2 border-jv-lightDanger  hover:bg-jv-lightDanger text-xl"
-                        >
-                            <HiOutlineLogout className="text-inherit transition-none" />
-                        </span>
-                    </Link>
-                    <Link to="/" onClick={() => setUserState(undefined)}>
-                        <span
-                            title="خروج از حساب"
-                            className="button-Cms-type text-jv-danger ml-2 border-jv-lightDanger  hover:bg-jv-lightDanger text-xl"
-                        >
-                            <RiUserReceivedFill className="text-inherit transition-none" />
-                        </span>
-                    </Link>
+                <div className="w-full flex items-center justify-between">
+                    <button
+                        className="button-Cms-type text-jv-danger ml-2 border-jv-lightDanger  hover:bg-jv-lightDanger text-xl"
+                        onClick={() => (typeof setIsClose !== "undefined" ? setIsClose(false) : null)}
+                    >
+                        <IoMdClose />
+                    </button>
+                    <div className="flex items-center">
+                        <Link to="/">
+                            <span
+                                title="خروج از پنل"
+                                className="button-Cms-type text-jv-danger ml-2 border-jv-lightDanger  hover:bg-jv-lightDanger text-xl"
+                            >
+                                <HiOutlineLogout className="text-inherit transition-none" />
+                            </span>
+                        </Link>
+                        <Link to="/" onClick={() => setUserState(undefined)}>
+                            <span
+                                title="خروج از حساب"
+                                className="button-Cms-type text-jv-danger ml-2 border-jv-lightDanger  hover:bg-jv-lightDanger text-xl"
+                            >
+                                <RiUserReceivedFill className="text-inherit transition-none" />
+                            </span>
+                        </Link>
+                    </div>
                 </div>
                 <img className="rounded-full h-16 shadow-xl" src="/images/company-Sheypoor.webp" alt="" />
                 <h3 className="mt-3 text-jv-lightGray2x">شیپور</h3>
