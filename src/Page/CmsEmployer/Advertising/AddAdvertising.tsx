@@ -12,7 +12,8 @@ import useAdsFilterCategories from "../../../Hooks/useAdsFilterCategories";
 // Functions
 import { checkRefine, getItem, messageRequiredGenerator, messageSuccess } from "../../../Utils/Utils";
 
-import { CheckBox, NumberInput, SelectInput, TextInput } from "../../../Components/Input/Input";
+import { CheckBox, NumberInput, TextInput } from "../../../Components/Input/Input";
+import SelectInput from "../../../Components/Input/SelectInput";
 import Button from "../../../Components/Button/Button";
 import { TypeOptionInput } from "../../../Components/Input/Input.type";
 
