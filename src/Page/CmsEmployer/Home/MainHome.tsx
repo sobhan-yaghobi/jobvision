@@ -30,15 +30,15 @@ const MainHome: React.FC = () => {
     };
     return (
         <>
-            <section className="w-full group mt-8 py-2 px-4 h-36 rounded-lg bg-jv-primary relative">
-                <div className="absolute flex flex-row-reverse w-5/12 bottom-0 left-4 overflow-hidden group">
+            <section className="w-full group mt-8 md:py-2 pt-4 md:pt-0 px-4 h-fit md:h-36 rounded-lg bg-jv-primary relative flex flex-col-reverse">
+                <div className="md:absolute flex flex-row-reverse w-full md:w-5/12 bottom-0 left-4 overflow-hidden group">
                     <img
-                        className="w-10/12 group-hover:w-full duration-700 ease-in-out"
+                        className="w-full md:w-10/12 md:group-hover:w-full duration-700 ease-in-out"
                         src="/images/cmsHome.webp"
                         alt=""
                     />
                 </div>
-                <div className="w-6/12 h-full text-jv-light flex flex-col justify-evenly">
+                <div className="w-full md:w-6/12 h-full pb-4 md:pb-0 text-jv-light flex flex-col justify-evenly">
                     <h4>سلامم کارفرمای عزیز</h4>
                     <p className="text-xs">
                         لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است،
@@ -62,11 +62,11 @@ const MainHome: React.FC = () => {
                         مشاهده همه
                     </Link>
                 </div>
-                <div className="grid grid-cols-2 grid-rows-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 grid-rows-2">
                     {ProgressCardArray.map((item, index) => (
                         <div
                             key={`jobs-hire-box-${index}`}
-                            className="bg-jv-lightPrimary py-2 px-5 m-2 rounded-lg flex items justify-between"
+                            className="bg-jv-lightPrimary py-2 px-5 md:m-2 my-2 rounded-lg flex items justify-between"
                         >
                             <div className="flex items-center">
                                 <h1 className="ml-5 text-3xl text-jv-lightGray">{item.userCount}</h1>
