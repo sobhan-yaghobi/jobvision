@@ -14,7 +14,8 @@ import useAuth from "../../../Store/useAuth";
 import usePostCompanyToApi, { companyPostType } from "../../../Hooks/usePostCompanyToApi";
 import usePostUserToApi from "../../../Hooks/usePostUserToApi";
 
-import { DateInput, NumberInput, TextInput, TextareaInput } from "../../../Components/Input/Input";
+import { DateInput, NumberInput, TextInput } from "../../../Components/Input/Input";
+import TextareaInput from "../../../Components/Input/TextareaInput";
 import Button from "../../../Components/Button/Button";
 
 import { BsImages } from "react-icons/bs";
