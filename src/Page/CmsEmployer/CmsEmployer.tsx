@@ -1,6 +1,6 @@
 // Types
 import React, { useState } from "react";
-import { ItemGeneratorPorps, MenuItemType } from "./CmsEmployer.type";
+import MenuItemCms, { MenuItemCmsType } from "../../Components/MenuItemCms/MenuItemCms";
 
 // Functions
 
@@ -30,11 +30,11 @@ import Logo from "/Svg/Logo/PrimaryColorLogo.svg";
 import reportIcon from "/images/report.webp";
 import { HiOutlineLogout } from "react-icons/hi";
 import { CiEdit } from "react-icons/ci";
-import { AiFillCaretDown } from "react-icons/ai";
 import { FaFileCirclePlus } from "react-icons/fa6";
 import useAuth from "../../Store/useAuth";
+import MenuCms from "../../Components/MenuCms/MenuCms";
 
-const pageItems: MenuItemType[] = [
+const pageItems: MenuItemCmsType[] = [
     {
         label: "خانه",
         key: "Home",
@@ -107,7 +107,7 @@ const CmsEmployer: React.FC = () => {
                 <div className="w-2/12 p-1 flex flex-col justify-between text-jv-lightGray2x">
                     <img className="h-10 self-start" src={Logo} alt="" />
                     <div className="mt-1 h-full overflow-y-auto no-scrollbar">
-                        <Menu />
+                        <MenuCms pageItems={pageItems} />
                     </div>
                     <div className="w-full h-[35%] text-center rounded-lg bg-slate-100 flex flex-col items-center">
                         <img className="h-[45%] mb-2" src={reportIcon} alt="" />
@@ -222,84 +222,6 @@ const CmsEmployer: React.FC = () => {
                 </div>
             </div>
         </>
-    );
-};
-
-const Menu: React.FC = () => {
-    const [mainSubItem, setMainSubItem] = useState({} as MenuItemType);
-    const className = {
-        wrapperMenu: "w-full overflow-hidden duration-700 grid",
-        wrapperMenuActive: "grid-rows-[1fr] pr-3",
-        wrapperMenuDisable: "grid-rows-[0fr]",
-        listMenu: "w-full bg-transparent min-h-0 px-1 overflow-hidden",
-        itemMenu: "cms_navlink",
-        itemMenuActive: "bg-jv-lightPrimary text-jv-primary",
-        itemMenuDisable: "hover:text-jv-lightGray hover:bg-jv-light",
-        titleItem: "mr-3 truncate transition-none",
-        fillCaretDown: "absolute left-2 bg-transparent text-xs transition-none",
-    };
-
-    return (
-        <div className={className.wrapperMenu}>
-            <ul className={className.listMenu}>
-                {pageItems.map((item) => (
-                    <React.Fragment key={item.key}>
-                        {typeof item.children === "undefined" ? (
-                            <span onClick={() => setMainSubItem({} as MenuItemType)}>
-                                <ItemGenerator item={item} />
-                            </span>
-                        ) : (
-                            <>
-                                <div
-                                    onClick={() =>
-                                        item.key === mainSubItem.key
-                                            ? setMainSubItem({} as MenuItemType)
-                                            : setMainSubItem(item)
-                                    }
-                                    className={`${className.itemMenu} ${
-                                        item.key === mainSubItem.key
-                                            ? className.itemMenuActive
-                                            : className.itemMenuDisable
-                                    }`}
-                                >
-                                    <div className="flex">
-                                        {item.icon}
-                                        <p className={className.titleItem}>{item.label}</p>
-                                    </div>
-                                    <AiFillCaretDown className={className.fillCaretDown} />
-                                </div>
-                                <div
-                                    className={twMerge(
-                                        className.wrapperMenu,
-                                        item.key === mainSubItem.key
-                                            ? className.wrapperMenuActive
-                                            : className.wrapperMenuDisable
-                                    )}
-                                >
-                                    <ul className={className.listMenu}>
-                                        {item.children.map((subItem) => (
-                                            <ItemGenerator key={`sub_item_${subItem.key}`} item={subItem} />
-                                        ))}
-                                    </ul>
-                                </div>
-                            </>
-                        )}
-                    </React.Fragment>
-                ))}
-            </ul>
-        </div>
-    );
-};
-const ItemGenerator: React.FC<ItemGeneratorPorps> = ({ item }) => {
-    return (
-        <NavLink
-            end={item.link === "" ? true : false}
-            to={typeof item.link !== "undefined" ? item.link : item.key.toString()}
-            className={`cms_navlink`}
-        >
-            {item.icon}
-            <p className={`mr-3 truncate transition-none`}>{item.label}</p>
-        </NavLink>
     );
 };
 
