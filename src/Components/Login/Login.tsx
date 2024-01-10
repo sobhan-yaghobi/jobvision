@@ -5,7 +5,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // Components
-import { TextInput, PasswordInput } from "../Input/Input";
+import { TextInput } from "../Input/Input";
+import PasswordInput from "../Input/PasswordInput";
 import Button from "../Button/Button";
 
 // Functions

@@ -32,7 +32,7 @@ import Jalali from "react-date-object/calendars/jalali";
 import persian_fa from "react-date-object/locales/persian_fa";
 import { DateObject } from "react-multi-date-picker";
 
-namespace InputUtils {
+export namespace InputUtils {
     export const className: TypeClassNameInputRequird = {
         inputwrapperClassName:
             "parentInput m-0 py-2 px-3 text-xs relative w-full inline-flex bg-jv-transparent border-[1px] border-solid border-[#d9d9d9] rounded-lg !leading-[1.5714285714285714] hover:border-jv-primary hover:border-e-[1px] shadow-[rgba(5, 145, 255, 0.1)]",
@@ -142,42 +142,6 @@ const TextInput: React.FC<React.PropsWithChildren<TypeTextInput>> = (props) => {
                 </InputUtils.AutoCompleteGenerator>
             ) : null}
         </span>
-    );
-};
-
-const PasswordInput: React.FC<TypeTextInput> = (props) => {
-    const [isPassShow, setIsPassShow] = useState(false);
-    return (
-        <>
-            <span
-                className={twMerge(
-                    InputUtils.className.inputwrapperClassName,
-                    InputUtils.isClassNameUndefined(
-                        typeof props.className !== "undefined" ? props.className[0].inputwrapperClassName : undefined
-                    ),
-                    `flex items-center ${props.iconSide === "Right" ? "flex-row-reverse" : ""}`,
-                    Boolean(props.isError) ? InputUtils.className.dangerInputClassName : ""
-                )}
-            >
-                <input
-                    type={isPassShow ? "text" : "password"}
-                    className={`w-full group-focus:border-jv-primary ${InputUtils.className.inputClassName}`}
-                    placeholder={props.placeholder}
-                    {...props.register}
-                />
-                <span
-                    onClick={() => setIsPassShow((prev) => !prev)}
-                    className="cursor-pointer text-lg flex items-center relative"
-                >
-                    <span
-                        className={`${
-                            isPassShow ? "w-full" : "w-0"
-                        } h-[1px] rotate-45 bg-jv-black absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2`}
-                    ></span>
-                    <AiOutlineEye />
-                </span>
-            </span>
-        </>
     );
 };
 
@@ -435,4 +399,4 @@ const CheckBox: React.FC<CheckBoxProps> = ({ control, name, label, value }) => {
     );
 };
 
-export { TextInput, PasswordInput, SelectInput, TextareaInput, DateInput, NumberInput, CheckBox };
+export { TextInput, SelectInput, TextareaInput, DateInput, NumberInput, CheckBox };
