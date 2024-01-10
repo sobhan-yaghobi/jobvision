@@ -14,7 +14,8 @@ import useAuth from "../../../Store/useAuth";
 import usePostCompanyToApi, { companyPostType } from "../../../Hooks/usePostCompanyToApi";
 import usePostUserToApi from "../../../Hooks/usePostUserToApi";
 
-import { NumberInput, TextInput } from "../../../Components/Input/Input";
+import { TextInput } from "../../../Components/Input/Input";
+import NumberInput from "../../../Components/Input/NumberInput";
 import DateInput from "../../../Components/Input/DateInput";
 import TextareaInput from "../../../Components/Input/TextareaInput";
 import Button from "../../../Components/Button/Button";
