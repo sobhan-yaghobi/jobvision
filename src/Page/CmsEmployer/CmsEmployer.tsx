@@ -34,6 +34,7 @@ import reportIcon from "/images/report.webp";
 import { CiEdit } from "react-icons/ci";
 import { FaFileCirclePlus } from "react-icons/fa6";
 import { MdSettings } from "react-icons/md";
+import { CiMenuKebab } from "react-icons/ci";
 
 const pageItems: MenuItemCmsType[] = [
     {
@@ -103,9 +104,19 @@ const CmsEmployer: React.FC = () => {
     const { setUserInfo } = useAuth();
     const { list, mainItemKey, clickItemHandler } = useItemCmsPage();
     const [isQuickAccessBar, setIsQuickAccessBar] = useState(false);
+
+    const ItemOfNavbar = ({ showMenu }: { showMenu: boolean }) => (
+        <>
+            {showMenu ? <CiMenuKebab className="text-jv-lightGray2x" /> : null}
+            <img className="h-10 self-start" src={Logo} alt="" />
+            <div className="lg:hidden cursor-pointer flex" onClick={() => setIsQuickAccessBar(true)}>
+                <MdSettings className="text-2xl text-jv-lightGray2x" />
+            </div>
+        </>
+    );
     return (
         <>
-            <div className="w-full h-screen flex justify-between p-4 relative">
+            <div className="w-full h-screen flex justify-between p-4 relative flex-col md:flex-row">
                 <AnimatePresence>
                     {isQuickAccessBar ? (
                         <motion.div
@@ -116,10 +127,10 @@ const CmsEmployer: React.FC = () => {
                             className={`w-full h-full absolute top-0 left-0 z-40`}
                         >
                             <div
-                                className="w-7/12 h-full bg-jv-bgColor absolute top-0 right-0"
+                                className="w-full h-full bg-jv-bgColor absolute top-0 right-0"
                                 onClick={() => setIsQuickAccessBar(false)}
                             ></div>
-                            <div className="w-5/12 h-full p-5 bg-jv-light absolute top-0 left-0">
+                            <div className="w-6/12 md:w-5/12 h-full p-5 bg-jv-light absolute top-0 left-0">
                                 <QuickAccessSideBar
                                     setIsClose={setIsQuickAccessBar}
                                     quickAccessArray={quickAccessArray}
@@ -129,12 +140,10 @@ const CmsEmployer: React.FC = () => {
                         </motion.div>
                     ) : null}
                 </AnimatePresence>
-                <div className="w-3/12 lg:w-2/12 p-1 flex flex-col justify-between text-jv-lightGray2x">
+                {/*  */}
+                <div className="hidden md:flex md:w-3/12 lg:w-2/12 p-1 flex-col justify-between text-jv-lightGray2x">
                     <div className="flex items-center justify-between pl-2">
-                        <img className="h-10 self-start" src={Logo} alt="" />
-                        <div className="lg:hidden" onClick={() => setIsQuickAccessBar(true)}>
-                            <MdSettings className="text-2xl" />
-                        </div>
+                        <ItemOfNavbar showMenu={false} />
                     </div>
                     <div className="mt-1 h-full overflow-y-auto no-scrollbar">
                         <MenuCms pageItems={pageItems} />
@@ -154,7 +163,13 @@ const CmsEmployer: React.FC = () => {
                         </Button>
                     </div>
                 </div>
-                <div className="w-9/12 lg:w-7/12 h-full mx-4">
+                <div className="md:hidden bg-jv-light py-3 px-4 mb-4 rounded-lg">
+                    <div className="flex items-center justify-between pl-2">
+                        <ItemOfNavbar showMenu={true} />
+                    </div>
+                </div>
+                {/*  */}
+                <div className="w-full md:w-9/12 lg:w-7/12 h-full md:mx-4">
                     <div className="h-full flex flex-col overflow-hidden">
                         <motion.ul
                             variants={ShortShowFromTop}
