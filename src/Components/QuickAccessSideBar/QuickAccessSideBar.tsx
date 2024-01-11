@@ -1,10 +1,12 @@
-import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import RequestNotificationBox from "../RequestNotificationBox/RequestNotificationBox";
 import { useAuthActionType, userInfo } from "../../Store/useAuth";
 import { HiOutlineLogout } from "react-icons/hi";
 import { RiUserReceivedFill } from "react-icons/ri";
 import { IoMdClose } from "react-icons/io";
+import Modal from "../Modal/Modal";
+import Button from "../Button/Button";
 type QuickAccessSideBarProps = {
     quickAccessArray: {
         title: string;
@@ -15,6 +17,8 @@ type QuickAccessSideBarProps = {
     setIsClose?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const QuickAccessSideBar: React.FC<QuickAccessSideBarProps> = ({ quickAccessArray, setUserState, setIsClose }) => {
+    const navigate = useNavigate();
+    const [isLogout, setIsLogout] = useState(false);
     return (
         <>
             <div className="h-3/6 flex flex-col items-center">
@@ -34,14 +38,13 @@ const QuickAccessSideBar: React.FC<QuickAccessSideBarProps> = ({ quickAccessArra
                                 <HiOutlineLogout className="text-inherit transition-none" />
                             </span>
                         </Link>
-                        <Link to="/" onClick={() => setUserState(undefined)}>
-                            <span
-                                title="خروج از حساب"
-                                className="button-Cms-type text-jv-danger ml-2 border-jv-lightDanger  hover:bg-jv-lightDanger text-xl"
-                            >
-                                <RiUserReceivedFill className="text-inherit transition-none" />
-                            </span>
-                        </Link>
+                        <span
+                            onClick={() => setIsLogout(true)}
+                            title="خروج از حساب"
+                            className="button-Cms-type text-jv-danger ml-2 border-jv-lightDanger  hover:bg-jv-lightDanger text-xl"
+                        >
+                            <RiUserReceivedFill className="text-inherit transition-none" />
+                        </span>
                     </div>
                 </div>
                 <img className="rounded-full h-16 shadow-xl" src="/images/company-Sheypoor.webp" alt="" />
@@ -84,6 +87,39 @@ const QuickAccessSideBar: React.FC<QuickAccessSideBarProps> = ({ quickAccessArra
                     </div>
                 </div>
             </div>
+            <Modal
+                isOpen={isLogout}
+                OpenAction={{ mode: "SetState", setState: setIsLogout }}
+                centerd
+                footer={null}
+                height={"auto"}
+                width={400}
+            >
+                <div>از خارج شدن مطمعنی !؟</div>
+                <div className="flex my-2 gap-2">
+                    <Button
+                        ClickHandler={() => {
+                            setUserState(undefined);
+                            navigate("/");
+                        }}
+                        ClassName="border-jv-danger text-jv-danger hover:bg-jv-lightDanger"
+                        size="small"
+                        textColor="primary"
+                        isLoading={false}
+                    >
+                        اره
+                    </Button>
+                    <Button
+                        ClickHandler={() => setIsLogout(false)}
+                        ClassName="hover:bg-jv-lightPrimary"
+                        size="small"
+                        textColor="primary"
+                        isLoading={false}
+                    >
+                        نه باوا
+                    </Button>
+                </div>
+            </Modal>
         </>
     );
 };
