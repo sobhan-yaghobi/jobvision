@@ -10,7 +10,7 @@ import {
     ShowAndHideScale_Ex,
     ShowOpacity,
     ShowShortFromBottomHiden_Var,
-} from "../../Animations/UtilsAnimation";
+} from "../../Animations/Animation";
 
 // Hooks
 

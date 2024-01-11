@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { messageType, MessageArray } from "./MapCircle.type";
 
 // Animations
-import { ShowAndHideScale_Ex } from "../../Animations/UtilsAnimation";
+import { ShowAndHideScale_Ex } from "../../Animations/Animation";
 
 // Functions
 import { sample } from "lodash";

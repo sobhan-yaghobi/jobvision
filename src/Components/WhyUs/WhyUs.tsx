@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { WhyUsDescType, WhyUsType, whyUsArray } from "../../Page/Home/Home.type";
 import { chunk } from "lodash";
-import { ShowAndHideOpacity_Ex, ShowItemsDelay_Var } from "../../Animations/UtilsAnimation";
+import { ShowAndHideOpacity_Ex, ShowItemsDelay_Var } from "../../Animations/Animation";
 import useAnimationStop from "../../Hooks/useAnimationStop";
 import { motion, AnimatePresence } from "framer-motion";
 import useWindowsSize from "../../Hooks/useWindowsSize";

@@ -3,7 +3,7 @@ import React from "react";
 import { IconType } from "react-icons";
 
 // Animation
-import { ShortStripVerticalAnimation_Ex_Var, TweenEaseOutVeryShortly } from "../../Animations/UtilsAnimation";
+import { ShortStripVerticalAnimation_Ex_Var, TweenEaseOutVeryShortly } from "../../Animations/Animation";
 
 // Components
 import { AnimatePresence, motion } from "framer-motion";

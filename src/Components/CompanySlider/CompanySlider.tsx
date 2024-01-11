@@ -3,7 +3,7 @@ import React from "react";
 import CompanyBox from "../CompanyBox/CompanyBox";
 
 import { motion } from "framer-motion";
-import { ShowItemsDelay_Var } from "../../Animations/UtilsAnimation";
+import { ShowItemsDelay_Var } from "../../Animations/Animation";
 
 // Slider
 import { Swiper, SwiperSlide } from "swiper/react";

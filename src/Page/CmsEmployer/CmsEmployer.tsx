@@ -19,7 +19,7 @@ import {
     ShortShowFromTop,
     ShowAndHideOpacity_Ex,
     SpringBackOutVeryShortly,
-} from "../../Animations/UtilsAnimation";
+} from "../../Animations/Animation";
 
 // Icons
 import { GoHomeFill } from "react-icons/go";

@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { ShowSvgPath } from "../../Animations/UtilsAnimation";
+import { ShowSvgPath } from "../../Animations/Animation";
 
 interface ErrorBoxProps {
     errTitle: string;

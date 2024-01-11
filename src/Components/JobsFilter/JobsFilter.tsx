@@ -15,7 +15,7 @@ import {
 } from "./JobsFilter.type";
 
 // Animations
-import { ShowAndHideOpacity_Ex, ShowFromBottom_EX, ShowOpacity } from "../../Animations/UtilsAnimation";
+import { ShowAndHideOpacity_Ex, ShowFromBottom_EX, ShowOpacity } from "../../Animations/Animation";
 
 // Functions
 import { includes } from "lodash";

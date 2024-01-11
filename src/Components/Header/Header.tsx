@@ -10,8 +10,8 @@ import {
     ShowAndHideScale_Ex,
     ShowHideClipFromBottom_Ex,
     ShowOpacity,
-} from "../../Animations/UtilsAnimation";
-import { ShowHideMenuItemChildToLeftOrRight } from "../../Animations/HeaderAnimation";
+    ShowHideMenuItemChildToLeftOrRight,
+} from "../../Animations/Animation";
 
 // Hooks
 import useMenuFetch from "../../Hooks/useMenuFetch";

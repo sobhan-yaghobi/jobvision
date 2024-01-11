@@ -10,7 +10,7 @@ import {
 } from "./menu.type";
 
 // Animations
-import { ShowOpacity } from "../../Animations/UtilsAnimation";
+import { ShowOpacity } from "../../Animations/Animation";
 
 // Components
 import { motion } from "framer-motion";

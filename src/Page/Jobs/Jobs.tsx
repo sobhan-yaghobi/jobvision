@@ -18,7 +18,7 @@ import {
 } from "./Jobs.type";
 
 // Animations
-import { ShortShowFromBottom, ShowAndHideOpacity_Ex, ShowFromBottom_EX } from "../../Animations/UtilsAnimation";
+import { ShortShowFromBottom, ShowAndHideOpacity_Ex, ShowFromBottom_EX } from "../../Animations/Animation";
 
 // Components
 import Header from "../../Components/Header/Header";
