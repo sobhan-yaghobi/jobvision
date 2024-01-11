@@ -68,26 +68,40 @@ const Header: React.FC = () => {
                 <header className="fixed h-20 w-full px-0 rounded-b-xl bg-jv-primary shadow-lg lg:bg-jv-white z-40">
                     {/*//? -------------------- Start Mobile Header -------------------- */}
                     <div className="header-mobile  w-full h-full p-2 lg:hidden flex items-center justify-between">
-                        <div className="w-4/12 sm:px-3 flex items-center justify-start">
-                            <Button noBorder ClickHandler={menuMobileToggle} textColor="light" isLoading={false}>
-                                {menuMobile.isOpen ? <AiOutlineClose /> : <HiOutlineMenuAlt1 className="rotate-180" />}
-                            </Button>
-                        </div>
+                        <div className="flex">
+                            <div className="w-fit sm:px-3 ml-5 flex items-center justify-start">
+                                <Button noBorder ClickHandler={menuMobileToggle} textColor="light" isLoading={false}>
+                                    {menuMobile.isOpen ? (
+                                        <AiOutlineClose />
+                                    ) : (
+                                        <HiOutlineMenuAlt1 className="rotate-180" />
+                                    )}
+                                </Button>
+                            </div>
 
-                        <div className="w-4/12 sm:px-3 flex items-center justify-center">
-                            <img className="w-7/12 md:w-5/12 " src={WhiteLogo} alt="" />
+                            <div className="w-fit sm:px-3 flex items-center justify-center">
+                                <img className="w-full scale-150 md:w-5/12 " src={WhiteLogo} alt="" />
+                            </div>
                         </div>
 
                         <div className="w-5/12 sm:w-4/12 text-center flex items-center justify-end">
                             {isLoggedIn ? (
-                                <></>
+                                <Button
+                                    ClickHandler={() => navigate("/cmsEmployer")}
+                                    textColor="light"
+                                    size="middle"
+                                    ClassName="py-2 px-4 shadow-lg border-none hover:shadow-jv-bgColor"
+                                    isLoading={false}
+                                >
+                                    <BiUser className="text-xl ml-2" />
+                                    پنل کارفرما
+                                </Button>
                             ) : (
                                 <Button
-                                    noBorder
                                     ClickHandler={() => setIsShowLoginModal(true)}
                                     textColor="light"
                                     size="small"
-                                    ClassName="text-xs sm:text-base px-3"
+                                    ClassName="text-xs sm:text-base px-3 shadow-lg border-none hover:shadow-jv-bgColor"
                                     isLoading={false}
                                 >
                                     ورود/ثبت نام کارجو
