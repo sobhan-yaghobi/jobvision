@@ -1,28 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 
 // Types
-import {
-    TypeClassNameInputRequird,
-    TypeMainInput,
-    TypeIconGenerator,
-    TypeAutoCompleteGenerator,
-    TypeSelectInput,
-    TypeDateInput,
-    TypeNumberInput,
-    TypeTextInput,
-    CheckBoxProps,
-    TypeOptionInput,
-} from "./Input.type";
-
-// Components
-import { Controller } from "react-hook-form";
-import { Checkbox } from "antd";
+import { TypeClassNameInputRequird, TypeIconGenerator, TypeAutoCompleteGenerator, TypeTextInput } from "./Input.type";
 
 // Functions
 import { twMerge } from "tailwind-merge";
 
 // Icons
-import { AiOutlineEye } from "react-icons/ai";
 import { AiFillCaretDown } from "react-icons/ai";
 import { AiOutlineClose } from "react-icons/ai";
 
