@@ -55,7 +55,7 @@ const Login: React.FC = () => {
         const newUser: userInfo = {
             email_or_phoneNumber: formData.username_OR_email,
             password: formData.password,
-            company_id: null,
+            company: null,
         };
         try {
             const user = await getUser(formData.username_OR_email);

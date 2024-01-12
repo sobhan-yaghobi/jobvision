@@ -1,9 +1,10 @@
 import { create } from "zustand";
 import { setLocalStorage } from "../Utils/Utils";
+import { companyType } from "../Hooks/useCompanies";
 export type userInfo = {
     email_or_phoneNumber: string;
     password: string;
-    company_id: string | null;
+    company: companyType | null;
 };
 
 type useAuthStateType = {

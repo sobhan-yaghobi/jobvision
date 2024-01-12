@@ -24,11 +24,9 @@ import { BsImages } from "react-icons/bs";
 import { BiLinkAlt, BiMap } from "react-icons/bi";
 import { PiSpeakerHigh } from "react-icons/pi";
 import { FaBuilding } from "react-icons/fa";
-import logo from "/Svg/Logo/PrimaryColorLogo.svg";
 
 import Persian_cl from "react-date-object/calendars/persian";
 import { DateObject } from "react-multi-date-picker";
-import useCompanies, { companyType } from "../../../Hooks/useCompanies";
 
 const CompanyFormSchema = z.object({
     name: z.string().min(3, messageLengthGenerator("Min", "نام شرکت", 3)).trim(),
@@ -53,9 +51,6 @@ const EditHome: React.FC = () => {
     const { postAction, updateAction: updateCompanyAction } = usePostCompanyToApi();
     const { updateAction: updateCompanyIdOfUser } = usePostUserToApi();
     const setEstablishDate = (date: number) => setValue("established_year", new Date(date));
-    const {
-        mutate: { mutateFn, data, isSuccess },
-    } = useCompanies({ mode: "Mutate" });
 
     const { ShowContext, showMess } = useShowMssAndNotif({ placementOfNotif: "bottomLeft" });
     const {
@@ -71,18 +66,17 @@ const EditHome: React.FC = () => {
     });
 
     useEffect(() => {
-        if (userInfo?.company_id) {
-            mutateFn(userInfo?.company_id);
+        if (userInfo?.company) {
             reset(
-                data
+                userInfo.company
                     ? ({
-                          ...data,
-                          organization_employ: data.organization_employ.toString(),
+                          ...userInfo.company,
+                          organization_employ: userInfo?.company?.organization_employ?.toString(),
                       } as TypeCompanyFormSchema)
                     : undefined
             );
         }
-    }, [userInfo, isSuccess]);
+    }, [userInfo]);
 
     useEffect(() => {
         Object.keys(errors).map((item) => {
@@ -123,9 +117,9 @@ const EditHome: React.FC = () => {
                 score_responsiveness: Math.floor(Math.random() * 5),
             };
             if (isLoggedIn && userInfo) {
-                if (userInfo?.company_id) {
+                if (userInfo?.company?.id) {
                     updateCompanyAction({
-                        id: userInfo.company_id,
+                        id: userInfo.company?.id,
                         company: newCompany,
                         successFunctionHandler: () => {
                             reset();
@@ -142,12 +136,7 @@ const EditHome: React.FC = () => {
                                     companyId: companyData.id,
                                     userId: userInfo.email_or_phoneNumber as string,
                                     successFunctionHandler: () => {
-                                        console.log("{ ...userInfo, company_id: companyData.id }", {
-                                            ...userInfo,
-                                            company_id: companyData.id,
-                                        });
-
-                                        setUserInfo({ ...userInfo, company_id: companyData.id });
+                                        setUserInfo({ ...userInfo, company: companyData });
                                         reset();
                                         resolve();
                                         showMess({ type: "success", message: messageSuccess("ثبت اطلاعات شرکت") });
@@ -169,14 +158,18 @@ const EditHome: React.FC = () => {
                     <h5 className="mr-2">لوگو</h5>
                     <div className="flex mt-2">
                         <div className="w-24 flex items-center justify-center rounded-2xl p-3 shadow-xl ml-5">
-                            <img className="w-full" src={logo} alt="" />
+                            <img
+                                className="w-full"
+                                src={getValues("logo") ? getValues("logo") : userInfo?.company?.logo}
+                                alt=""
+                            />
                         </div>
                         <div className="w-full">
                             <TextInput
                                 icon={<BsImages />}
                                 placeholder="...لینک لوگو شرکت"
                                 register={register("logo")}
-                                className={[{ inputClassName: "text-left" }]}
+                                className={[{ inputClassName: "text-left flex flex-row-reverse" }]}
                                 isError={errors.logo?.message}
                             ></TextInput>
                             <p className="mt-2 text-xs text-jv-lightGray2x w-1/2">
@@ -277,7 +270,7 @@ const EditHome: React.FC = () => {
                     ClickHandler={() => {}}
                     isLoading={isSubmitting}
                 >
-                    {userInfo?.company_id ? "آپدیت" : "ثبت"}
+                    {userInfo?.company ? "آپدیت" : "ثبت"}
                 </Button>
             </form>
         </>

@@ -178,7 +178,7 @@ const AddAdvertising: React.FC = () => {
         work_time,
     }) => {
         return new Promise<void>((resolve) => {
-            if (userInfo?.company_id) {
+            if (userInfo?.company) {
                 const filter_types = Object.entries({ ...type })
                     .map((item) => {
                         if (typeof item[1] === "boolean" && item[1] ? item[0] : null) {
@@ -275,7 +275,7 @@ const AddAdvertising: React.FC = () => {
     return (
         <>
             {ShowContext}
-            {userInfo?.company_id ? null : (
+            {userInfo?.company ? null : (
                 <div className="text-jv-warning flex items-center justify-between bg-jv-lightDanger p-3 rounded-lg mb-5">
                     <div className="flex items-center gap-2">
                         <CiWarning className="text-2xl" />

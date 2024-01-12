@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import RequestNotificationBox from "../RequestNotificationBox/RequestNotificationBox";
-import { useAuthActionType, userInfo } from "../../Store/useAuth";
+import useAuth, { useAuthActionType, userInfo } from "../../Store/useAuth";
 import { HiOutlineLogout } from "react-icons/hi";
 import { RiUserReceivedFill } from "react-icons/ri";
 import { IoMdClose } from "react-icons/io";
@@ -17,6 +17,7 @@ type QuickAccessSideBarProps = {
     setIsClose?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const QuickAccessSideBar: React.FC<QuickAccessSideBarProps> = ({ quickAccessArray, setUserState, setIsClose }) => {
+    const { userInfo } = useAuth();
     const navigate = useNavigate();
     const [isLogout, setIsLogout] = useState(false);
     return (
@@ -47,8 +48,8 @@ const QuickAccessSideBar: React.FC<QuickAccessSideBarProps> = ({ quickAccessArra
                         </span>
                     </div>
                 </div>
-                <img className="rounded-full h-16 shadow-xl" src="/images/company-Sheypoor.webp" alt="" />
-                <h3 className="mt-3 text-jv-lightGray2x">شیپور</h3>
+                <img className="rounded-full h-16 shadow-xl" src={userInfo?.company?.logo} alt="" />
+                <h3 className="mt-3 text-jv-lightGray2x">{userInfo?.company?.name}</h3>
                 <ul className="w-full my-5 flex items-center justify-evenly">
                     {quickAccessArray.map((item, index) => (
                         <NavLink

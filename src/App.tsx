@@ -25,9 +25,6 @@ function App() {
             getUsers();
         }
     }, []);
-    useEffect(() => {
-        console.log("userInfo in App.tsx", userInfo);
-    }, [userInfo]);
     const router = useRoutes(routes);
 
     return <>{router}</>;

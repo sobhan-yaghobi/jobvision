@@ -106,7 +106,7 @@ const isUserInfo = (user: any): user is userInfo => {
     return (
         typeof user.email_or_phoneNumber === "string" &&
         typeof user.password === "string" &&
-        (typeof user.company_id === "string" || user.company_id === null)
+        (typeof user.company !== "undefined" || user.company_id === null)
     );
 };
 export {
