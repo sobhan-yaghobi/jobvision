@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { z } from "zod";
+import { object, z } from "zod";
 import {
     messageLengthGenerator,
     messageRequiredGenerator,
@@ -27,6 +27,7 @@ import { FaBuilding } from "react-icons/fa";
 
 import Persian_cl from "react-date-object/calendars/persian";
 import { DateObject } from "react-multi-date-picker";
+import { isEqual, omit } from "lodash";
 
 const CompanyFormSchema = z.object({
     name: z.string().min(3, messageLengthGenerator("Min", "نام شرکت", 3)).trim(),
@@ -60,7 +61,7 @@ const EditHome: React.FC = () => {
         getFieldState,
         reset,
         getValues,
-        formState: { errors, isSubmitting },
+        formState: { errors, isSubmitting, defaultValues },
     } = useForm<TypeCompanyFormSchema>({
         resolver: zodResolver(CompanyFormSchema),
     });
@@ -72,6 +73,7 @@ const EditHome: React.FC = () => {
                     ? ({
                           ...userInfo.company,
                           organization_employ: userInfo?.company?.organization_employ?.toString(),
+                          established_year: new Date(userInfo.company.established_year),
                       } as TypeCompanyFormSchema)
                     : undefined
             );
@@ -111,22 +113,50 @@ const EditHome: React.FC = () => {
                 organization_employ: parseInt(organization_employ),
                 type_of_activity,
                 website,
-                score_company: Math.floor(Math.random() * 5),
-                score_experience_of_job_seekers: Math.floor(Math.random() * 5),
-                score_popularity: Math.floor(Math.random() * 5),
-                score_responsiveness: Math.floor(Math.random() * 5),
+                score_company:
+                    userInfo && userInfo?.company?.score_company
+                        ? userInfo.company.score_company
+                        : Math.floor(Math.random() * 5),
+                score_experience_of_job_seekers:
+                    userInfo && userInfo?.company?.score_experience_of_job_seekers
+                        ? userInfo.company.score_experience_of_job_seekers
+                        : Math.floor(Math.random() * 5),
+                score_popularity:
+                    userInfo && userInfo?.company?.score_popularity
+                        ? userInfo.company.score_popularity
+                        : Math.floor(Math.random() * 5),
+                score_responsiveness:
+                    userInfo && userInfo?.company?.score_responsiveness
+                        ? userInfo.company.score_responsiveness
+                        : Math.floor(Math.random() * 5),
             };
             if (isLoggedIn && userInfo) {
-                if (userInfo?.company?.id) {
-                    updateCompanyAction({
-                        id: userInfo.company?.id,
-                        company: newCompany,
-                        successFunctionHandler: () => {
-                            reset();
-                            resolve();
-                            showMess({ type: "success", message: messageSuccess("آپدیت اطلاعات شرکت") });
-                        },
-                    });
+                if (userInfo.company) {
+                    if (
+                        isEqual(
+                            {
+                                ...omit(userInfo.company, ["created_at", "id"]),
+                                established_year: new Date(userInfo.company?.established_year),
+                            },
+                            {
+                                ...omit(newCompany),
+                                established_year: new Date(newCompany?.established_year),
+                            }
+                        )
+                    ) {
+                        showMess({ type: "warning", message: "اطلاعاتی آپدیت نکرده اید" });
+                        resolve();
+                    } else {
+                        updateCompanyAction({
+                            id: userInfo.company.id,
+                            company: newCompany,
+                            successFunctionHandler: () => {
+                                reset();
+                                resolve();
+                                showMess({ type: "success", message: messageSuccess("آپدیت اطلاعات شرکت") });
+                            },
+                        });
+                    }
                 } else {
                     postAction({
                         newCompany,
