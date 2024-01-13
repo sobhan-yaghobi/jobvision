@@ -7,6 +7,7 @@ import { RiUserReceivedFill } from "react-icons/ri";
 import { IoMdClose } from "react-icons/io";
 import Modal from "../Modal/Modal";
 import Button from "../Button/Button";
+import { SkeletonElm } from "../Skeleton/Skeleton";
 type QuickAccessSideBarProps = {
     quickAccessArray: {
         title: string;
@@ -48,8 +49,18 @@ const QuickAccessSideBar: React.FC<QuickAccessSideBarProps> = ({ quickAccessArra
                         </span>
                     </div>
                 </div>
-                <img className="rounded-full h-16 shadow-xl" src={userInfo?.company?.logo} alt="" />
-                <h3 className="mt-3 text-jv-lightGray2x">{userInfo?.company?.name}</h3>
+                {typeof userInfo?.company === "undefined" ? (
+                    <>
+                        <SkeletonElm className={[{ wrapper: "w-16 h-16 rounded-full" }]} />
+                        <SkeletonElm className={[{ wrapper: "w-16 h-5 rounded-md mt-3" }]} />
+                    </>
+                ) : (
+                    <>
+                        <img className="rounded-full h-16 shadow-xl" src={userInfo?.company?.logo} alt="" />
+                        <h3 className="mt-3 text-jv-lightGray2x">{userInfo?.company?.name}</h3>
+                    </>
+                )}
+
                 <ul className="w-full my-5 flex items-center justify-evenly">
                     {quickAccessArray.map((item, index) => (
                         <NavLink
