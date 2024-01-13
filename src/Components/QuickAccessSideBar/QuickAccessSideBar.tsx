@@ -24,13 +24,20 @@ const QuickAccessSideBar: React.FC<QuickAccessSideBarProps> = ({ quickAccessArra
     return (
         <>
             <div className="h-3/6 flex flex-col items-center">
-                <div className="w-full flex items-center justify-between">
-                    <button
-                        className="button-Cms-type text-jv-danger ml-2 border-jv-lightDanger  hover:bg-jv-lightDanger text-xl"
-                        onClick={() => (typeof setIsClose !== "undefined" ? setIsClose(false) : null)}
-                    >
-                        <IoMdClose />
-                    </button>
+                <div
+                    className={`w-full flex items-center  ${
+                        typeof setIsClose !== "undefined" ? "justify-between" : "justify-end"
+                    }`}
+                >
+                    {typeof setIsClose !== "undefined" ? (
+                        <button
+                            className="button-Cms-type text-jv-danger ml-2 border-jv-lightDanger  hover:bg-jv-lightDanger text-xl"
+                            onClick={() => setIsClose(false)}
+                        >
+                            <IoMdClose />
+                        </button>
+                    ) : null}
+
                     <div className="flex items-center">
                         <Link to="/">
                             <span
