@@ -104,6 +104,7 @@ const TextInput: React.FC<React.PropsWithChildren<TypeTextInput>> = (props) => {
                 className={twMerge(InputUtils.className.inputClassName, props.className?.[0].inputClassName)}
                 type="text"
                 placeholder={props.placeholder}
+                style={{ direction: props.direction ? props.direction : "unset" }}
                 autoComplete="off"
                 onBlur={() => InputUtils.AutoCompleteAction("Blur", showAutoComplete, setShowAutoComplete)}
                 onFocus={() => InputUtils.AutoCompleteAction("Focus", showAutoComplete, setShowAutoComplete)}

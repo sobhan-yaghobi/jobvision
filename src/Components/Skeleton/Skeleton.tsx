@@ -60,7 +60,7 @@ type CustomSkeletonProps = {
 };
 const CustomSkeleton: React.FC<React.PropsWithChildren<CustomSkeletonProps>> = ({ className, loading, children }) => {
     if (loading) {
-        <SkeletonElm className={className}></SkeletonElm>;
+        return <SkeletonElm className={className}></SkeletonElm>;
     } else {
         return children;
     }

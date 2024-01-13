@@ -28,6 +28,7 @@ import { FaBuilding } from "react-icons/fa";
 import Persian_cl from "react-date-object/calendars/persian";
 import { DateObject } from "react-multi-date-picker";
 import { isEqual, omit } from "lodash";
+import { CustomSkeleton, SkeletonElm } from "../../../Components/Skeleton/Skeleton";
 
 const CompanyFormSchema = z.object({
     name: z.string().min(3, messageLengthGenerator("Min", "نام شرکت", 3)).trim(),
@@ -60,8 +61,9 @@ const EditHome: React.FC = () => {
         handleSubmit,
         getFieldState,
         reset,
+        watch,
         getValues,
-        formState: { errors, isSubmitting, defaultValues },
+        formState: { errors, isSubmitting },
     } = useForm<TypeCompanyFormSchema>({
         resolver: zodResolver(CompanyFormSchema),
     });
@@ -88,6 +90,8 @@ const EditHome: React.FC = () => {
             });
         });
     }, [errors]);
+
+    const logoField = watch("logo");
 
     const submitAction = ({
         compnay_slogan,
@@ -150,7 +154,11 @@ const EditHome: React.FC = () => {
                         updateCompanyAction({
                             id: userInfo.company.id,
                             company: newCompany,
-                            successFunctionHandler: () => {
+                            successFunctionHandler: (companyData) => {
+                                setUserInfo({
+                                    ...userInfo,
+                                    company: typeof companyData !== "undefined" ? companyData : null,
+                                });
                                 reset();
                                 resolve();
                                 showMess({ type: "success", message: messageSuccess("آپدیت اطلاعات شرکت") });
@@ -187,21 +195,29 @@ const EditHome: React.FC = () => {
                 <section>
                     <h5 className="mr-2">لوگو</h5>
                     <div className="flex mt-2">
-                        <div className="w-24 flex items-center justify-center rounded-2xl p-3 shadow-xl ml-5">
-                            <img
-                                className="w-full"
-                                src={getValues("logo") ? getValues("logo") : userInfo?.company?.logo}
-                                alt=""
-                            />
-                        </div>
+                        {userInfo?.company?.logo ? (
+                            <div className="w-24 flex items-center justify-center rounded-2xl p-3 shadow-xl ml-5">
+                                <img className="w-full" src={logoField ? logoField : userInfo?.company?.logo} alt="" />
+                            </div>
+                        ) : (
+                            <SkeletonElm
+                                className={[{ wrapper: "w-24 h-24 rounded-2xl shadow-xl ml-5" }]}
+                            ></SkeletonElm>
+                        )}
                         <div className="w-full">
-                            <TextInput
-                                icon={<BsImages />}
-                                placeholder="...لینک لوگو شرکت"
-                                register={register("logo")}
-                                className={[{ inputClassName: "text-left flex flex-row-reverse" }]}
-                                isError={errors.logo?.message}
-                            ></TextInput>
+                            <CustomSkeleton
+                                loading={typeof userInfo?.company !== "undefined" ? false : true}
+                                className={[{ wrapper: "w-full h-10 rounded-lg" }]}
+                            >
+                                <TextInput
+                                    direction="ltr"
+                                    icon={<BsImages />}
+                                    placeholder="...لینک لوگو شرکت"
+                                    register={register("logo")}
+                                    className={[{ inputClassName: "text-left flex flex-row-reverse" }]}
+                                    isError={errors.logo?.message}
+                                ></TextInput>
+                            </CustomSkeleton>
                             <p className="mt-2 text-xs text-jv-lightGray2x w-1/2">
                                 پیشنهاد میشود مقدار پیکسل لوگو شرکت 800 * 800 و فرمت عکس JPG یا PNG باشد و همچنین فرمت
                                 GIF نامعتبر میباشد
@@ -211,87 +227,133 @@ const EditHome: React.FC = () => {
                 </section>
                 <section className="my-5">
                     <h5 className="mr-2">نام شرکت</h5>
-                    <TextInput
-                        placeholder="برای مثال جاب ویژن"
-                        register={register("name")}
-                        isError={errors.name?.message}
-                    ></TextInput>
+                    <CustomSkeleton
+                        loading={typeof userInfo?.company !== "undefined" ? false : true}
+                        className={[{ wrapper: "w-full h-10 rounded-lg" }]}
+                    >
+                        <TextInput
+                            placeholder="برای مثال جاب ویژن"
+                            register={register("name")}
+                            isError={errors.name?.message}
+                        ></TextInput>
+                    </CustomSkeleton>
                 </section>
                 <section>
                     <h5 className="mr-2">موقعیت شرکت</h5>
-                    <TextInput
-                        placeholder="برای مثال تهران ، بهارستان"
-                        register={register("location")}
-                        icon={<BiMap />}
-                        iconSide="Right"
-                        isError={errors.location?.message}
-                    ></TextInput>
+
+                    <CustomSkeleton
+                        loading={typeof userInfo?.company !== "undefined" ? false : true}
+                        className={[{ wrapper: "w-full h-10 rounded-lg" }]}
+                    >
+                        <TextInput
+                            placeholder="برای مثال تهران ، بهارستان"
+                            register={register("location")}
+                            icon={<BiMap />}
+                            iconSide="Right"
+                            isError={errors.location?.message}
+                        ></TextInput>
+                    </CustomSkeleton>
                 </section>
                 <section className="my-5">
                     <h5 className="mr-2">وب سایت شرکت</h5>
-                    <TextInput
-                        placeholder="برای مثال www.jobvision.ir"
-                        register={register("website")}
-                        icon={<BiLinkAlt />}
-                        className={[{ inputClassName: "text-left" }]}
-                        isError={errors.website?.message}
-                    ></TextInput>
+                    <CustomSkeleton
+                        loading={typeof userInfo?.company !== "undefined" ? false : true}
+                        className={[{ wrapper: "w-full h-10 rounded-lg" }]}
+                    >
+                        <TextInput
+                            direction="ltr"
+                            placeholder="برای مثال www.jobvision.ir"
+                            register={register("website")}
+                            icon={<BiLinkAlt />}
+                            className={[{ inputClassName: "text-left" }]}
+                            isError={errors.website?.message}
+                        ></TextInput>
+                    </CustomSkeleton>
                 </section>
                 <section>
                     <h5 className="mr-2"> درباره شرکت</h5>
-                    <TextareaInput
-                        placeholder="سخنی از سمت شرکت شما برای جویندگان شغل..."
-                        register={register("desc")}
-                        isError={errors.desc?.message}
-                    ></TextareaInput>
+                    <CustomSkeleton
+                        loading={typeof userInfo?.company !== "undefined" ? false : true}
+                        className={[{ wrapper: "w-full h-10 rounded-lg" }]}
+                    >
+                        <TextareaInput
+                            placeholder="سخنی از سمت شرکت شما برای جویندگان شغل..."
+                            register={register("desc")}
+                            isError={errors.desc?.message}
+                        ></TextareaInput>
+                    </CustomSkeleton>
                 </section>
                 <section className="my-5">
                     <h5 className="mr-2">شعار شرکت</h5>
-                    <TextInput
-                        placeholder="برای مثال : متفاوت بیندیشید"
-                        register={register("compnay_slogan")}
-                        icon={<PiSpeakerHigh />}
-                        iconSide="Right"
-                        isError={errors.compnay_slogan?.message}
-                    ></TextInput>
+                    <CustomSkeleton
+                        loading={typeof userInfo?.company !== "undefined" ? false : true}
+                        className={[{ wrapper: "w-full h-10 rounded-lg" }]}
+                    >
+                        <TextInput
+                            placeholder="برای مثال : متفاوت بیندیشید"
+                            register={register("compnay_slogan")}
+                            icon={<PiSpeakerHigh />}
+                            iconSide="Right"
+                            isError={errors.compnay_slogan?.message}
+                        ></TextInput>
+                    </CustomSkeleton>
                 </section>
                 <section className="my-5">
                     <h5 className="mr-2">نوع فعالیت شرکت</h5>
-                    <TextInput
-                        placeholder="برای مثال : تولیدی پوشاک"
-                        register={register("type_of_activity")}
-                        icon={<FaBuilding />}
-                        iconSide="Right"
-                        isError={errors.type_of_activity?.message}
-                    ></TextInput>
+                    <CustomSkeleton
+                        loading={typeof userInfo?.company !== "undefined" ? false : true}
+                        className={[{ wrapper: "w-full h-10 rounded-lg" }]}
+                    >
+                        <TextInput
+                            placeholder="برای مثال : تولیدی پوشاک"
+                            register={register("type_of_activity")}
+                            icon={<FaBuilding />}
+                            iconSide="Right"
+                            isError={errors.type_of_activity?.message}
+                        ></TextInput>
+                    </CustomSkeleton>
                 </section>
                 <section className="my-5">
                     <h5 className="mr-2">صنعت شرکت</h5>
-                    <TextInput
-                        placeholder="برای مثال : صادرات پوشاک"
-                        register={register("industry")}
-                        icon={<FaBuilding />}
-                        iconSide="Right"
-                        isError={errors.industry?.message}
-                    ></TextInput>
+                    <CustomSkeleton
+                        loading={typeof userInfo?.company !== "undefined" ? false : true}
+                        className={[{ wrapper: "w-full h-10 rounded-lg" }]}
+                    >
+                        <TextInput
+                            placeholder="برای مثال : صادرات پوشاک"
+                            register={register("industry")}
+                            icon={<FaBuilding />}
+                            iconSide="Right"
+                            isError={errors.industry?.message}
+                        ></TextInput>
+                    </CustomSkeleton>
                 </section>
                 <section>
                     <h5 className="mr-2">تعداد کارکنان شرکت</h5>
-                    <NumberInput
-                        register={register("organization_employ")}
-                        placeholder="برای مثال 13"
-                        min={1}
-                        isError={errors.organization_employ?.message}
-                    ></NumberInput>
+                    <CustomSkeleton
+                        loading={typeof userInfo?.company !== "undefined" ? false : true}
+                        className={[{ wrapper: "w-2/12 h-10 rounded-lg" }]}
+                    >
+                        <NumberInput
+                            register={register("organization_employ")}
+                            placeholder="برای مثال 13"
+                            min={1}
+                            isError={errors.organization_employ?.message}
+                        ></NumberInput>
+                    </CustomSkeleton>
                 </section>
                 <section className="my-5">
                     <h5 className="mr-2">سال تاسیس</h5>
-
-                    <DateInput
-                        date={new Date(getValues("established_year"))}
-                        placeholder={`برای مثال ${new DateObject().convert(Persian_cl)}`}
-                        setDate={setEstablishDate}
-                    ></DateInput>
+                    <CustomSkeleton
+                        loading={typeof userInfo?.company !== "undefined" ? false : true}
+                        className={[{ wrapper: "w-2/12 h-10 rounded-lg" }]}
+                    >
+                        <DateInput
+                            date={new Date(getValues("established_year"))}
+                            placeholder={`برای مثال ${new DateObject().convert(Persian_cl)}`}
+                            setDate={setEstablishDate}
+                        ></DateInput>
+                    </CustomSkeleton>
                 </section>
                 <Button
                     ClassName="mt-5 w-full"
