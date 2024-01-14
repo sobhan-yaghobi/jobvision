@@ -4,8 +4,9 @@ import { AiFillCaretDown } from "react-icons/ai";
 import { twMerge } from "tailwind-merge";
 type MenuCmsProps = {
     pageItems: MenuItemCmsType[];
+    mainSubItemQuery?: string;
 };
-const MenuCms: React.FC<MenuCmsProps> = ({ pageItems }) => {
+const MenuCms: React.FC<MenuCmsProps> = ({ pageItems, mainSubItemQuery }) => {
     const [mainSubItem, setMainSubItem] = useState({} as MenuItemCmsType);
     const className = {
         wrapperMenu: "w-full overflow-hidden duration-700 grid",
@@ -18,6 +19,12 @@ const MenuCms: React.FC<MenuCmsProps> = ({ pageItems }) => {
         titleItem: "mr-3 truncate transition-none",
         fillCaretDown: "absolute left-2 bg-transparent text-xs transition-none",
     };
+    const isItemInSub = (item: MenuItemCmsType): boolean =>
+        typeof item.children !== "undefined"
+            ? item.children.some(
+                  (item) => item.key.toString().toLocaleLowerCase() === mainSubItemQuery?.toLocaleLowerCase()
+              )
+            : false;
     return (
         <div className={className.wrapperMenu}>
             <ul className={className.listMenu}>
@@ -36,7 +43,7 @@ const MenuCms: React.FC<MenuCmsProps> = ({ pageItems }) => {
                                             : setMainSubItem(item)
                                     }
                                     className={`${className.itemMenu} ${
-                                        item.key === mainSubItem.key
+                                        item.key === mainSubItem.key || isItemInSub(item)
                                             ? className.itemMenuActive
                                             : className.itemMenuDisable
                                     }`}

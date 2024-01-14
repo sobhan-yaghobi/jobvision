@@ -108,7 +108,9 @@ const CmsEmployer: React.FC = () => {
     const [isQuickAccessBar, setIsQuickAccessBar] = useState(false);
 
     const [isMobileMenuOpen, setIsMenuMobileOpen] = useState(false);
+
     const location = useLocation();
+    const pageQuery = location.pathname.split("/").at(-1);
     useEffect(() => {
         setIsMenuMobileOpen(false);
     }, [location]);
@@ -129,7 +131,7 @@ const CmsEmployer: React.FC = () => {
                             exit="exit"
                             className="absolute w-full h-fit rounded-lg top-full mt-5 p-5 shadow-xl shadow-jv-gray bg-jv-light z-50"
                         >
-                            <MenuCms pageItems={pageItems}></MenuCms>
+                            <MenuCms mainSubItemQuery={pageQuery} pageItems={pageItems}></MenuCms>
                         </motion.div>
                     ) : null}
                 </>
