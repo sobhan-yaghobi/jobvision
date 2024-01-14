@@ -74,7 +74,7 @@ const Login: React.FC = () => {
                     reset();
                     setIsShow(false);
                 } else {
-                    showMess({ type: "error", message: "پسورد صحیح نمیباشد" });
+                    showMess({ type: "error", message: "پسورد یا نام کاربری صحیح نمیباشد" });
                 }
             }
         } catch (error) {
