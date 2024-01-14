@@ -114,19 +114,6 @@ const ShortShowFromTop: Variants = {
     },
 };
 
-const ShortShowFromTop_Ex: Variants = {
-    hidden: {
-        clipPath: "inset(100% 50% 0% 50% round 10px)",
-        zIndex: 30,
-    },
-    visible: {
-        clipPath: "inset(0% 0% 0% 0% round 0px)",
-    },
-    exit: {
-        clipPath: "inset(100% 50% 0% 50% round 10px)",
-    },
-};
-
 const ShowHideClipFromBottom_Ex: Variants = {
     hidden: {
         clipPath: "inset(100% 50% 0% 50% round 10px)",
@@ -220,7 +207,6 @@ export {
     ShowSvgPath,
     ShortShowFromBottom,
     ShortShowFromTop,
-    ShortShowFromTop_Ex,
     ShowHideClipFromBottom_Ex,
     ShowFromBottom_Var,
     ShowFromRight,
