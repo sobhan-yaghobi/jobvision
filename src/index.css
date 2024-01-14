@@ -4,14 +4,14 @@
 
 @font-face {
     font-family: "DanaBold";
-    src: url("font/dana-fanum/dana-fanum-bold.woff") format("woff"),
-        url("font/dana-fanum/dana-fanum-bold.woff2") format("woff2");
+    src: url("/font/dana-fanum/dana-fanum-bold.woff") format("woff"),
+        url("/font/dana-fanum/dana-fanum-bold.woff2") format("woff2");
 }
 
 @font-face {
     font-family: "Dana";
-    src: url("font/dana-fanum/dana-fanum-regular.woff") format("woff"),
-        url("font/dana-fanum/dana-fanum-regular.woff2") format("woff2");
+    src: url("/font/dana-fanum/dana-fanum-regular.woff") format("woff"),
+        url("/font/dana-fanum/dana-fanum-regular.woff2") format("woff2");
 }
 
 :root {

@@ -1,10 +1,11 @@
 // Types
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MenuItemCmsType } from "../../Components/MenuItemCms/MenuItemCms";
 
 // Hooks
 import useItemCmsPage from "../../Hooks/useItemCmsPage";
 import useAuth from "../../Store/useAuth";
+import { useLocation } from "react-router-dom";
 
 // Components
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,6 +19,7 @@ import {
     ShortShowFromBottom,
     ShortShowFromTop,
     ShowAndHideOpacity_Ex,
+    ShowOpacity,
     SpringBackOutVeryShortly,
 } from "../../Animations/Animation";
 
@@ -105,9 +107,33 @@ const CmsEmployer: React.FC = () => {
     const { list, mainItemKey, clickItemHandler } = useItemCmsPage();
     const [isQuickAccessBar, setIsQuickAccessBar] = useState(false);
 
+    const [isMobileMenuOpen, setIsMenuMobileOpen] = useState(false);
+    const location = useLocation();
+    useEffect(() => {
+        setIsMenuMobileOpen(false);
+    }, [location]);
+
     const ItemOfNavbar = ({ showMenu }: { showMenu: boolean }) => (
         <>
-            {showMenu ? <CiMenuKebab className="text-jv-lightGray2x" /> : null}
+            {showMenu ? (
+                <>
+                    <CiMenuKebab
+                        onClick={() => setIsMenuMobileOpen((prev) => !prev)}
+                        className={`text-jv-lightGray2x text-xl ${isMobileMenuOpen ? "fill-jv-primary" : ""}`}
+                    />
+                    {isMobileMenuOpen ? (
+                        <motion.div
+                            variants={ShowOpacity}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            className="absolute w-full h-fit rounded-lg top-full mt-5 p-5 shadow-xl shadow-jv-gray bg-jv-light z-50"
+                        >
+                            <MenuCms pageItems={pageItems}></MenuCms>
+                        </motion.div>
+                    ) : null}
+                </>
+            ) : null}
             <img className="h-10 self-start" src={Logo} alt="" />
             <div className="lg:hidden cursor-pointer flex" onClick={() => setIsQuickAccessBar(true)}>
                 <MdSettings className="text-2xl text-jv-lightGray2x" />
@@ -117,6 +143,12 @@ const CmsEmployer: React.FC = () => {
     return (
         <>
             <div className="w-full h-screen flex justify-between p-4 relative flex-col md:flex-row">
+                <div
+                    onClick={() => setIsMenuMobileOpen(false)}
+                    className={`md:hidden ${
+                        isMobileMenuOpen ? "fixed w-full h-full bg-jv-bgColor top-0 left-0 z-40" : ""
+                    }`}
+                ></div>
                 <AnimatePresence>
                     {isQuickAccessBar ? (
                         <motion.div
@@ -124,13 +156,13 @@ const CmsEmployer: React.FC = () => {
                             initial="hidden"
                             animate="visible"
                             exit="exit"
-                            className={`w-full h-full absolute top-0 left-0 z-40`}
+                            className={`w-full h-full fixed top-0 left-0 z-40`}
                         >
                             <div
                                 className="w-full h-full bg-jv-bgColor absolute top-0 right-0"
                                 onClick={() => setIsQuickAccessBar(false)}
                             ></div>
-                            <div className="w-6/12 md:w-5/12 h-full p-5 bg-jv-light absolute top-0 left-0">
+                            <div className="w-full md:w-5/12 h-full p-5 bg-jv-light absolute top-0 left-0">
                                 <QuickAccessSideBar
                                     setIsClose={setIsQuickAccessBar}
                                     quickAccessArray={quickAccessArray}
@@ -142,7 +174,7 @@ const CmsEmployer: React.FC = () => {
                 </AnimatePresence>
                 {/*  */}
                 <div className="hidden md:flex md:w-3/12 lg:w-2/12 p-1 flex-col justify-between text-jv-lightGray2x">
-                    <div className="flex items-center justify-between pl-2">
+                    <div className="flex items-center justify-between pl-2 relative">
                         <ItemOfNavbar showMenu={false} />
                     </div>
                     <div className="mt-1 h-full overflow-y-auto no-scrollbar">
@@ -163,8 +195,9 @@ const CmsEmployer: React.FC = () => {
                         </Button>
                     </div>
                 </div>
+
                 <div className="md:hidden bg-jv-light py-3 px-4 mb-4 rounded-lg">
-                    <div className="flex items-center justify-between pl-2">
+                    <div className="flex items-center justify-between pl-2 relative">
                         <ItemOfNavbar showMenu={true} />
                     </div>
                 </div>
