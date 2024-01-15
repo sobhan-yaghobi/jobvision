@@ -13,7 +13,6 @@ The JobVision Clone project is a reproduction of the functionality and look of t
 3. [Usage](#usage)
 4. [Features](#features)
 5. [Contributing](#contributing)
-6. [License](#license)
 
 ## Description
 
@@ -31,18 +30,15 @@ Once the dependencies are installed, you can start the development server:
 
 <img src="public/readme/run_project.svg" alt="run project image">
 
-Visit http://localhost:3000 in your web browser to see the JobVision Clone website.
+Visit `http://localhost:5173` in your web browser to see the JobVision Clone website (**Your port may be different**).
 
 ## Features
 
--   [Feature 1]
--   [Feature 2]
-    ...
+-   `Add your comapny`
+-   `Add your company advertising`
+-   `Search between the advertising's`
+-   other features are in coming , wait for it ;)
 
 ## Contributing
 
 We welcome contributions! Feel free to submit a pull request or open an issue.
-
-## License
-
-This project is licensed under the [insert chosen license, such as MIT] License - see the [LICENSE.md](LICENSE.md) file for details.
