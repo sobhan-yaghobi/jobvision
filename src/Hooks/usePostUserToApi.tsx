@@ -6,7 +6,7 @@ type postActionProps = {
 };
 type updateActionProps = {
     userId: userInfo["email_or_phoneNumber"];
-    companyId: userInfo["company_id"];
+    companyId: string;
     successFunctionHandler?: (data: userInfo | undefined) => void;
 };
 const usePostUserToApi = () => {
