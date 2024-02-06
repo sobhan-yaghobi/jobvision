@@ -71,6 +71,7 @@ const QuickAccessSideBar: React.FC<QuickAccessSideBarProps> = ({ quickAccessArra
                 <ul className="w-full my-5 flex items-center justify-evenly">
                     {quickAccessArray.map((item, index) => (
                         <NavLink
+                            onClick={() => typeof setIsClose !== "undefined" && setIsClose(false)}
                             key={`quick_access_item_${index}`}
                             to={item.link}
                             className="select-none cursor-pointer text-jv-primary flex flex-col items-center justify-center group relative"
