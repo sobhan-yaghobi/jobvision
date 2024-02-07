@@ -84,13 +84,13 @@ const QuickAccessSideBar: React.FC<QuickAccessSideBarProps> = ({ quickAccessArra
                     ))}
                 </ul>
             </div>
-            <div className="h-3/6 w-full">
-                <div className="px-1 h-full flex flex-col overflow-y-auto">
+            <div className="h-3/6 w-full flex flex-col justify-end">
+                <div className="px-1 flex flex-col overflow-y-auto">
                     <h3 className="text-jv-lightGray2x">درخواست های اخیر</h3>
                     <div className="my-1">
                         <span className="text-jv-lightGray2x text-xs pr-1">امروز</span>
                         <ul>
-                            {Array(2)
+                            {Array(6)
                                 .fill("")
                                 .map((item, index) => (
                                     <li key={index}>
