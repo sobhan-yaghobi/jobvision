@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import RequestNotificationBox from "../RequestNotificationBox/RequestNotificationBox";
-import useAuth, { useAuthActionType, userInfo } from "../../Store/useAuth";
+import useAuth, { useAuthActionType } from "../../Store/useAuth";
 import { HiOutlineLogout } from "react-icons/hi";
 import { RiUserReceivedFill } from "react-icons/ri";
 import { IoMdClose } from "react-icons/io";
 import Modal from "../Modal/Modal";
 import Button from "../Button/Button";
 import { SkeletonElm } from "../Skeleton/Skeleton";
+
 type QuickAccessSideBarProps = {
     quickAccessArray: {
         title: string;
@@ -90,7 +91,7 @@ const QuickAccessSideBar: React.FC<QuickAccessSideBarProps> = ({ quickAccessArra
                     <div className="my-1">
                         <span className="text-jv-lightGray2x text-xs pr-1">امروز</span>
                         <ul>
-                            {Array(6)
+                            {Array(2)
                                 .fill("")
                                 .map((item, index) => (
                                     <li key={index}>
