@@ -15,7 +15,7 @@ import {
 
 // Hooks
 import useMenuFetch from "../../Hooks/useMenuFetch";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useLoginModal from "../../Store/useLoginModal";
 import useShowMenu from "../../Hooks/useShowMenu/useShowMenu";
 import useAuth from "../../Store/useAuth";
@@ -80,7 +80,9 @@ const Header: React.FC = () => {
                             </div>
 
                             <div className="w-fit sm:px-3 flex items-center justify-center">
-                                <img className="w-full scale-150 md:w-5/12 " src={WhiteLogo} alt="" />
+                                <Link to={"/"}>
+                                    <img className="w-full scale-150 md:w-5/12 " src={WhiteLogo} alt="" />
+                                </Link>
                             </div>
                         </div>
 
@@ -204,7 +206,9 @@ const Header: React.FC = () => {
                                     بخش کارفرمایان
                                 </Button>
                             </div>
-                            <img src={PrimaryLogo} alt="" />
+                            <Link to={"/"}>
+                                <img src={PrimaryLogo} alt="" />
+                            </Link>
                         </div>
                     </div>
                     {/*//? -------------------- Finish Desktop Header -------------------- */}
