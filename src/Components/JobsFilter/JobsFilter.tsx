@@ -440,7 +440,7 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
                         className={`w-full h-d-screen fixed bg-jv-bgColor lg:hidden bottom-0 right-0 text-right ${
                             menuMobile ? "z-20" : "z-10"
                         }`}
-                        variants={ShowFromBottom_EX}
+                        variants={ShowAndHideOpacity_Ex}
                         initial="hidden"
                         animate="visible"
                         exit="exit"
@@ -455,8 +455,10 @@ const JobsFilter: React.FC<JobsFilterProps> = ({ setSelectedFilter, isFilterOnPr
                         ></div>
                         <motion.div
                             className="w-full pt-5 fixed overflow-hidden bottom-0 right-0 rounded-t-xl bg-jv-white"
-                            initial={{ opacity: 0 }}
-                            whileInView={{ opacity: 1 }}
+                            variants={ShowFromBottom_EX}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
                             transition={{ delay: 0.4 }}
                         >
                             {Object.entries(mainFilterMenu).length &&
